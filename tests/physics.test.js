@@ -1,0 +1,7 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';
+import {STATIONS,acceleration,step,newRun,stoppingDistance,assistBrake} from '../dist/physics.js';
+test('RailLabの駅間距離と総延長',()=>{assert.deepEqual(STATIONS.slice(1).map((x,i)=>x.s-STATIONS[i].s),[4000,4200,5200,5300,3400]);assert.equal(STATIONS.at(-1).s,22100);});
+test('起動加速度2.1・常用/非常減速度3.6',()=>{assert.equal(acceleration(0,5)*3.6,2.1);assert.equal(acceleration(20,-7)*3.6,-3.6);assert.equal(acceleration(20,-8)*3.6,-3.6);assert.equal(acceleration(0,5,true),0);});
+test('非常制動停止距離・逆走なし・速度上限',()=>{const r=newRun();r.v=72/3.6;r.notch=-8;for(let i=0;i<3000;i++)step(r,.01);assert.equal(r.v,0);assert.ok(Math.abs(r.s-stoppingDistance(72,7))<.1);r.notch=5;for(let i=0;i<120000;i++)step(r,.02);assert.ok(r.v<=110/3.6);});
+test('停車アシストで全5駅を走破可能',()=>{const r=newRun();let station=1;r.notch=5;for(let i=0;i<1000000&&station<6;i++){const d=STATIONS[station].s-r.s;assistBrake(r,d);if(Math.abs(STATIONS[station].s-r.s)<12&&r.v<.12){station++;r.assistBraking=false;r.notch=5;}else step(r,.02);}assert.equal(station,6);assert.ok(Math.abs(r.s-22100)<12);});
+test('OSM線路が連続・全駅の営業キロに一致',()=>{const data=JSON.parse(readFileSync(new URL('../dist/assets/route-geometry.json',import.meta.url)));assert.equal(data.points[0][0],0);assert.equal(data.points.at(-1)[0],22100);for(let i=1;i<data.points.length;i++){assert.ok(data.points[i][0]>data.points[i-1][0]);assert.ok(data.points[i].every(Number.isFinite));}for(const s of STATIONS)assert.ok(data.points.some(p=>p[0]===s.s));});
