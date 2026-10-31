@@ -52,6 +52,7 @@ export class SoundEngine {
       this.nodes=await Promise.all(this.config.tracks.map(async track=>({track,buffer:await load(track.url),gain:null,source:null})));
       this.effects={};
       await Promise.all(Object.entries(this.config.effects).map(async([key,effect])=>{this.effects[key]=await load(effect.url);}));
+      this.departureBuffer=await load('departure-chime.wav');
       this.ready=true;
     })().catch(e=>{this.error=e.message; this.loading=null; throw e;});
     return this.loading;
@@ -63,6 +64,7 @@ export class SoundEngine {
   setPaused(value) {
     this.paused=Boolean(value);
     if (this.master) this.master.gain.setTargetAtTime(this.paused?0:this.level,this.ctx.currentTime,.02);
+    if(this.ctx)(this.paused?this.ctx.suspend():this.ctx.resume()).catch(()=>{});
   }
   async resume() { if (this.ctx) await this.ctx.resume(); this.setPaused(false); }
   update(speed,notch,dt) {
@@ -103,7 +105,25 @@ export class SoundEngine {
     source.connect(this.master); source.start();
     source.onended=()=>source.disconnect();
   }
+  async playDeparture() {
+    const generation=this.departureGeneration??0;
+    if(!this.ready)await this.init();
+    if(generation!==(this.departureGeneration??0))return false;
+    if(this.paused)throw Error('運転が一時停止されています');
+    if(this.departure)return this.departure.promise;
+    const source=this.ctx.createBufferSource();source.buffer=this.departureBuffer;source.connect(this.master);
+    let finish;const promise=new Promise(resolve=>{finish=resolve;});
+    const active={source,promise,finish};this.departure=active;
+    source.onended=()=>{source.disconnect();if(this.departure===active)this.departure=null;finish(true);};
+    source.start();return promise;
+  }
+  cancelDeparture(){
+    this.departureGeneration=(this.departureGeneration??0)+1;
+    const active=this.departure;if(!active)return;
+    this.departure=null;active.source.onended=null;active.source.stop();active.source.disconnect();active.finish(false);
+  }
   stop() {
+    this.cancelDeparture();
     for (const node of this.nodes) if (node.source) {node.source.stop();node.source.disconnect();node.gain.disconnect();node.source=null;node.gain=null;}
     this.fade=0; this.tickAccumulator=0;
   }
