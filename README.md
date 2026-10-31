@@ -34,7 +34,7 @@ P1〜P5、B1〜B7・非常。停止位置±3m以内で3秒停車すると自動�
 - **黒磯〜新白河0〜22.1km**：提供BVEデータから勾配81点・速度切替43点、主要構造物7件を参照。元がE531系用のため曲線＋10km/hは採用せず、701系の上限110km/hで抑えています。BVEと営業キロの差を6駅で校正しています。
 - **新白河以北〜福島22.1〜109.5km**：地図と動画を参考にした試作区間。実際の勾配・常設速度制限は未確認です。勾配0‰・仮の車両上限110km/hを使用し、その旨を運転画面に表示します。BVE終点の下り勾配や20km/h制限を北へ引き延ばしていません。高さは新白河の相対高さから仮に一定とします。
 - 車両性能：[指定の701系記事](https://ja.wikipedia.org/wiki/JR東日本701系電車)を基準に起動2.1km/h/s、常用・非常3.6km/h/s、最高110km/h。高速域の引張力低下・抵抗・ノッチ配分は試作の仮定です。
-- トップ画面はユーザー提供のJR-east-701-1500(F2-510).jpg。運転台はユーザーの参考写真に合わせた丸形計器と左右レバーの簡略表現です。
+- トップ画面はユーザー提供のJR-east-701-1500(F2-510).jpg。運転台はユーザー指定Aki_N/PanelのPanel_19.txt（クモハ701-19・非ワンマン）の実画像を使用。背景4タイルとcommonの速度・圧力針を同じ座標変換で描画し、元のLocation/Origin/Radiusで回転軸を計器中心に合わせています。昼夜画像と戸閉灯・ブレーキ表示を使用します。走行性能の1500番台設定とは別の運転台バリエーションです。
 
 ## 動画を参考にした景観
 
@@ -56,4 +56,4 @@ P1〜P5、B1〜B7・非常。停止位置±3m以内で3秒停車すると自動�
 
 `route-geometry-notes.md`、`bve-profile-notes.md`、`bve-structures-notes.md`、`sound-analysis.md`、`video-reference-notes.md` に出典・校正方法・限界を記録しています。
 
-地図データ・派生線形：© OpenStreetMap contributors、[ODbL 1.0](https://opendatacommons.org/licenses/odbl/1-0/)。元OSMデータと数値JSONを同梱。Three.jsはMIT（assets/vendor/LICENSE）。写真・音源・提供BVEデータの権利は各権利者に帰属します。元BVEのモデル・テクスチャや参考動画の画像・音声は配布資産に複製していません。
+地図データ・派生線形：© OpenStreetMap contributors、[ODbL 1.0](https://opendatacommons.org/licenses/odbl/1-0/)。元OSMデータと数値JSONを同梱。Three.jsはMIT（assets/vendor/LICENSE）。写真・音源・提供BVEデータの権利は各権利者に帰属します。路線構造物の元BVEモデル・テクスチャや参考動画の画像・音声は配布資産に複製していません。運転台については今回の明示指定に従い、元PNGを無加工で同梱しています。詳細はcab-panel-notes.md。
