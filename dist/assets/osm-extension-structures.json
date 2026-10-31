@@ -1,0 +1,752 @@
+{
+  "schema": "osm-extension-structures-v1",
+  "fromS": 22100,
+  "toS": 109500,
+  "structures": [
+    {
+      "kind": "bridge",
+      "sStart": 25552.36,
+      "sEnd": 25566.05,
+      "sourceWayId": 616243298,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "1",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "bridge",
+      "sStart": 25821.54,
+      "sEnd": 26003.97,
+      "sourceWayId": 616243305,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "1",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "bridge",
+      "sStart": 29395.83,
+      "sEnd": 29427.06,
+      "sourceWayId": 616243310,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "1",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "tunnel",
+      "sStart": 30775.03,
+      "sEnd": 31153.4,
+      "sourceWayId": 279828343,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "-1",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "tunnel": "yes",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "bridge",
+      "sStart": 34401.81,
+      "sEnd": 34430.82,
+      "sourceWayId": 616147731,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "1",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "tunnel",
+      "sStart": 39194.02,
+      "sEnd": 39201.03,
+      "sourceWayId": 967448338,
+      "tagValue": "yes",
+      "name": "JR東北線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "-1",
+        "name": "JR東北線",
+        "railway": "rail",
+        "tunnel": "yes",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "bridge",
+      "sStart": 48618.62,
+      "sEnd": 48659.79,
+      "sourceWayId": 616035440,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "1",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "bridge",
+      "sStart": 50607.57,
+      "sEnd": 50617.98,
+      "sourceWayId": 616035444,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "1",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "bridge",
+      "sStart": 51187.86,
+      "sEnd": 51263.46,
+      "sourceWayId": 609929269,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "1",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "bridge",
+      "sStart": 55027.69,
+      "sEnd": 55074.36,
+      "sourceWayId": 609929274,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "1",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "bridge",
+      "sStart": 57333.18,
+      "sEnd": 57340.98,
+      "sourceWayId": 609929281,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "1",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "bridge",
+      "sStart": 59201.33,
+      "sEnd": 59253.61,
+      "sourceWayId": 282839200,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "bridge",
+      "sStart": 64130.03,
+      "sEnd": 64222.71,
+      "sourceWayId": 590600520,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "1",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "bridge",
+      "sStart": 67186.32,
+      "sEnd": 67237.08,
+      "sourceWayId": 1453810170,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "1",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "bridge",
+      "sStart": 68518.07,
+      "sEnd": 68566.4,
+      "sourceWayId": 616028947,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "1",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "bridge",
+      "sStart": 73080.66,
+      "sEnd": 73168.28,
+      "sourceWayId": 616028955,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "1",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "bridge",
+      "sStart": 77728.06,
+      "sEnd": 77736.82,
+      "sourceWayId": 616028963,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "1",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "bridge",
+      "sStart": 77774.12,
+      "sEnd": 77823.76,
+      "sourceWayId": 616028977,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "1",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "bridge",
+      "sStart": 77964.43,
+      "sEnd": 77978.17,
+      "sourceWayId": 616028973,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "1",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "bridge",
+      "sStart": 78519.51,
+      "sEnd": 78527.56,
+      "sourceWayId": 616028972,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "1",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "bridge",
+      "sStart": 82961.56,
+      "sEnd": 82997.18,
+      "sourceWayId": 616029017,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "1",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "bridge",
+      "sStart": 85625.92,
+      "sEnd": 85657.55,
+      "sourceWayId": 616025857,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "1",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "bridge",
+      "sStart": 88285.81,
+      "sEnd": 88318.85,
+      "sourceWayId": 616025862,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "1",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "bridge",
+      "sStart": 89818.38,
+      "sEnd": 89830.91,
+      "sourceWayId": 616025873,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "1",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "bridge",
+      "sStart": 90017.21,
+      "sEnd": 90025.62,
+      "sourceWayId": 616025870,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "1",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "bridge",
+      "sStart": 90597.7,
+      "sEnd": 90615.09,
+      "sourceWayId": 616025875,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "1",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "bridge",
+      "sStart": 93474.37,
+      "sEnd": 93484.78,
+      "sourceWayId": 616025878,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "1",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "bridge",
+      "sStart": 93868.99,
+      "sEnd": 93902.16,
+      "sourceWayId": 1453810156,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "1",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "bridge",
+      "sStart": 94094.77,
+      "sEnd": 94101.78,
+      "sourceWayId": 616024421,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "1",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "bridge",
+      "sStart": 95230.83,
+      "sEnd": 95237.8,
+      "sourceWayId": 616024418,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "1",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "bridge",
+      "sStart": 95463.75,
+      "sEnd": 95509.86,
+      "sourceWayId": 616023392,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "bridge",
+      "sStart": 98843.85,
+      "sEnd": 98852.78,
+      "sourceWayId": 616023406,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "1",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "tunnel",
+      "sStart": 101379.95,
+      "sEnd": 101620.5,
+      "sourceWayId": 107262371,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "-1",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "tunnel": "yes",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "bridge",
+      "sStart": 104611.97,
+      "sEnd": 104620.89,
+      "sourceWayId": 106204171,
+      "tagValue": "yes",
+      "name": "JR東北線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "1",
+        "name": "JR東北線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "bridge",
+      "sStart": 105477.29,
+      "sEnd": 105487.91,
+      "sourceWayId": 616023437,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "1",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "bridge",
+      "sStart": 105744.76,
+      "sEnd": 105766.05,
+      "sourceWayId": 616023439,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "1",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "bridge",
+      "sStart": 107707.23,
+      "sEnd": 107746.75,
+      "sourceWayId": 107579407,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "1",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "bridge",
+      "sStart": 108220.92,
+      "sEnd": 108230.66,
+      "sourceWayId": 361568940,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "1",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "bridge",
+      "sStart": 108263.88,
+      "sEnd": 108277.63,
+      "sourceWayId": 361568930,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "1",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "bridge",
+      "sStart": 108319.19,
+      "sEnd": 108541.56,
+      "sourceWayId": 137281351,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "1",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    },
+    {
+      "kind": "bridge",
+      "sStart": 108850.92,
+      "sEnd": 108864.69,
+      "sourceWayId": 361568964,
+      "tagValue": "yes",
+      "name": "JR東北本線",
+      "source": "OpenStreetMap",
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "gauge": "1067",
+        "layer": "1",
+        "name": "JR東北本線",
+        "railway": "rail",
+        "voltage": "20000"
+      }
+    }
+  ],
+  "attribution": "© OpenStreetMap contributors",
+  "license": "ODbL 1.0",
+  "sourceUrl": "https://www.openstreetmap.org/copyright",
+  "notes": [
+    "Only explicit OSM bridge/tunnel tags on consecutive selected mainline path edges are included.",
+    "These are map-tagged horizontal intervals, not detailed civil-engineering models or measured pier/tunnel profiles.",
+    "Multiple adjacent intervals can represent one structure split into OSM ways.",
+    "Existing BVE structures have not been modified."
+  ]
+}

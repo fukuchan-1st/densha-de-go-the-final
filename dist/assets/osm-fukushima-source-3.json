@@ -1,0 +1,1023 @@
+{
+  "version": 0.6,
+  "generator": "Overpass API 0.7.62.11 87bfad18",
+  "osm3s": {
+    "timestamp_osm_base": "2026-10-31T17:09:21Z",
+    "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
+  },
+  "elements": [
+
+{
+  "type": "node",
+  "id": 206431759,
+  "lat": 37.7545400,
+  "lon": 140.4592144,
+  "tags": {
+    "highspeed": "yes",
+    "name": "福島",
+    "name:de": "Fukushima",
+    "name:en": "Fukushima",
+    "name:ja": "福島",
+    "name:ja-Hira": "ふくしま",
+    "name:ja-Latn": "Fukushima",
+    "name:ko": "후쿠시마",
+    "name:ru": "Фукусима",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "train": "yes",
+    "voltage": "1500",
+    "wikidata": "Q800799",
+    "wikipedia": "ja:福島駅 (福島県)"
+  }
+},
+{
+  "type": "node",
+  "id": 263067234,
+  "lat": 37.4496368,
+  "lon": 140.4793865,
+  "tags": {
+    "KSJ2:LIN": "磐越東線",
+    "KSJ2:STN": "三春",
+    "name": "三春",
+    "name:en": "Miharu",
+    "name:ja": "三春",
+    "name:ja_rm": "Miharu",
+    "name:ko": "미하루",
+    "note": "National-Land Numerical Information (Railway) 2007, MLIT Japan",
+    "note:ja": "国土数値情報（鉄道データ）平成19年　国土交通省",
+    "railway": "station",
+    "source": "KSJ2",
+    "source_ref": "http://nlftp.mlit.go.jp/ksj/jpgis/datalist/KsjTmplt-N02-v1_1.html",
+    "wikidata": "Q6845263",
+    "wikipedia": "ja:三春駅"
+  }
+},
+{
+  "type": "node",
+  "id": 263068451,
+  "lat": 37.4167025,
+  "lon": 140.4349979,
+  "tags": {
+    "KSJ2:LIN": "磐越東線",
+    "KSJ2:STN": "舞木",
+    "name": "舞木",
+    "name:en": "Mogi",
+    "name:ja": "舞木",
+    "name:ja_rm": "Mōgi",
+    "name:ko": "모기",
+    "note": "National-Land Numerical Information (Railway) 2007, MLIT Japan",
+    "note:ja": "国土数値情報（鉄道データ）平成19年　国土交通省",
+    "railway": "station",
+    "source": "KSJ2",
+    "source_ref": "http://nlftp.mlit.go.jp/ksj/jpgis/datalist/KsjTmplt-N02-v1_1.html",
+    "wikidata": "Q6951115",
+    "wikipedia": "ja:舞木駅"
+  }
+},
+{
+  "type": "node",
+  "id": 263070191,
+  "lat": 37.4807488,
+  "lon": 140.2708220,
+  "tags": {
+    "KSJ2:LIN": "磐越西線",
+    "KSJ2:STN": "磐梯熱海",
+    "name": "磐梯熱海",
+    "name:en": "Bandai-Atami",
+    "name:ja": "磐梯熱海",
+    "name:ja_rm": "Bandai-Atami",
+    "name:ko": "반다이아타미",
+    "note": "National-Land Numerical Information (Railway) 2007, MLIT Japan",
+    "note:ja": "国土数値情報（鉄道データ）平成19年　国土交通省",
+    "railway": "station",
+    "source": "KSJ2",
+    "source_ref": "http://nlftp.mlit.go.jp/ksj/jpgis/datalist/KsjTmplt-N02-v1_1.html",
+    "wikidata": "Q4854327",
+    "wikipedia": "ja:磐梯熱海駅"
+  }
+},
+{
+  "type": "node",
+  "id": 263070211,
+  "lat": 37.4882460,
+  "lon": 140.1627630,
+  "tags": {
+    "KSJ2:LIN": "磐越西線",
+    "KSJ2:STN": "上戸",
+    "name": "上戸",
+    "name:en": "Joko",
+    "name:ja": "上戸",
+    "name:ja_rm": "Jōko",
+    "name:ko": "조코",
+    "note": "National-Land Numerical Information (Railway) 2007, MLIT Japan",
+    "note:ja": "国土数値情報（鉄道データ）平成19年　国土交通省",
+    "railway": "station",
+    "source": "KSJ2",
+    "source_ref": "http://nlftp.mlit.go.jp/ksj/jpgis/datalist/KsjTmplt-N02-v1_1.html",
+    "wikidata": "Q6322221",
+    "wikipedia": "ja:上戸駅 (福島県)"
+  }
+},
+{
+  "type": "node",
+  "id": 263070214,
+  "lat": 37.4720105,
+  "lon": 140.3101404,
+  "tags": {
+    "KSJ2:LIN": "磐越西線",
+    "KSJ2:STN": "安子ヶ島",
+    "name": "安子ヶ島",
+    "name:en": "Akogashima",
+    "name:ja": "安子ヶ島",
+    "name:ja_rm": "Akogashima",
+    "name:ko": "아코가시마",
+    "note": "National-Land Numerical Information (Railway) 2007, MLIT Japan",
+    "note:ja": "国土数値情報（鉄道データ）平成19年　国土交通省",
+    "railway": "station",
+    "source": "KSJ2",
+    "source_ref": "http://nlftp.mlit.go.jp/ksj/jpgis/datalist/KsjTmplt-N02-v1_1.html",
+    "wikidata": "Q4701501",
+    "wikipedia": "ja:安子ケ島駅"
+  }
+},
+{
+  "type": "node",
+  "id": 263070226,
+  "lat": 37.4957047,
+  "lon": 140.2194585,
+  "tags": {
+    "name": "中山宿",
+    "name:en": "Nakayamajuku",
+    "name:ja": "中山宿",
+    "name:ja_rm": "Nakayamajuku",
+    "name:ko": "나카야마주쿠",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "source_ref": "http://nlftp.mlit.go.jp/ksj/jpgis/datalist/KsjTmplt-N02-v1_1.html",
+    "train": "yes",
+    "wikidata": "Q6960391",
+    "wikipedia": "ja:中山宿駅"
+  }
+},
+{
+  "type": "node",
+  "id": 263070231,
+  "lat": 37.4517848,
+  "lon": 140.3419825,
+  "tags": {
+    "KSJ2:LIN": "磐越西線",
+    "KSJ2:STN": "喜久田",
+    "addr:city": "郡山市喜久田町堀之内字椚内",
+    "description": "無人駅",
+    "name": "喜久田",
+    "name:en": "Kikuta",
+    "name:ja": "喜久田",
+    "name:ja_rm": "Kikuta",
+    "name:ko": "기쿠타",
+    "network": "磐越西線",
+    "note": "National-Land Numerical Information (Railway) 2007, MLIT Japan",
+    "note:ja": "国土数値情報（鉄道データ）平成19年　国土交通省",
+    "operator": "JR東日本仙台支社",
+    "railway": "station",
+    "source": "KSJ2",
+    "source_ref": "http://nlftp.mlit.go.jp/ksj/jpgis/datalist/KsjTmplt-N02-v1_1.html",
+    "wikidata": "Q6406438",
+    "wikipedia": "ja:喜久田駅"
+  }
+},
+{
+  "type": "node",
+  "id": 263071314,
+  "lat": 37.5156040,
+  "lon": 140.1435941,
+  "tags": {
+    "KSJ2:LIN": "磐越西線",
+    "KSJ2:STN": "関都",
+    "name": "関都",
+    "name:en": "Sekito",
+    "name:ja": "関都",
+    "name:ja_rm": "Sekito",
+    "name:ko": "세키토",
+    "note": "National-Land Numerical Information (Railway) 2007, MLIT Japan",
+    "note:ja": "国土数値情報（鉄道データ）平成19年　国土交通省",
+    "railway": "station",
+    "source": "KSJ2",
+    "source_ref": "http://nlftp.mlit.go.jp/ksj/jpgis/datalist/KsjTmplt-N02-v1_1.html",
+    "wikidata": "Q7447211",
+    "wikipedia": "ja:関都駅"
+  }
+},
+{
+  "type": "node",
+  "id": 263071317,
+  "lat": 37.5004562,
+  "lon": 140.1475060,
+  "tags": {
+    "KSJ2:LIN": "磐越西線",
+    "KSJ2:STN": "猪苗代湖畔",
+    "name": "猪苗代湖畔",
+    "name:en": "Inawashirokohan",
+    "name:ja": "猪苗代湖畔",
+    "name:ja_rm": "Inawashirokohan",
+    "name:ko": "이나와시로코한",
+    "note": "National-Land Numerical Information (Railway) 2007, MLIT Japan",
+    "note:ja": "国土数値情報（鉄道データ）平成19年　国土交通省",
+    "railway": "station",
+    "source": "KSJ2",
+    "source_ref": "http://nlftp.mlit.go.jp/ksj/jpgis/datalist/KsjTmplt-N02-v1_1.html",
+    "wikidata": "Q6013842",
+    "wikipedia": "ja:猪苗代湖畔駅"
+  }
+},
+{
+  "type": "node",
+  "id": 264176799,
+  "lat": 37.6807621,
+  "lon": 140.4519528,
+  "tags": {
+    "name": "金谷川",
+    "name:en": "Kanayagawa",
+    "name:ja-Hira": "かなやがわ",
+    "name:ja-Latn": "Kanayagawa",
+    "name:ko": "가나야가와",
+    "name:ru": "Канаягава",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "train": "yes",
+    "wikidata": "Q874004",
+    "wikipedia": "ja:金谷川駅"
+  }
+},
+{
+  "type": "node",
+  "id": 264177037,
+  "lat": 37.6537618,
+  "lon": 140.4842295,
+  "tags": {
+    "name": "松川",
+    "name:en": "Matsukawa",
+    "name:ja-Hira": "まつかわ",
+    "name:ja-Latn": "Matsukawa",
+    "name:ko": "마쓰카와",
+    "name:ru": "Мацукава",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "train": "yes",
+    "wikidata": "Q874011",
+    "wikipedia": "ja:松川駅"
+  }
+},
+{
+  "type": "node",
+  "id": 264177181,
+  "lat": 37.6122242,
+  "lon": 140.4664518,
+  "tags": {
+    "name": "安達",
+    "name:en": "Adachi",
+    "name:ja-Hira": "あだち",
+    "name:ja-Latn": "Adachi",
+    "name:ko": "아다치",
+    "name:ru": "Адати",
+    "network": "JR 東北本線",
+    "operator": "東日本旅客鉄道",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "start_date": "1917-07-11",
+    "train": "yes",
+    "wikidata": "Q874853",
+    "wikipedia": "ja:安達駅"
+  }
+},
+{
+  "type": "node",
+  "id": 264177195,
+  "lat": 37.4464083,
+  "lon": 140.3883896,
+  "tags": {
+    "name": "日和田",
+    "name:en": "Hiwada",
+    "name:ja-Hira": "ひわだ",
+    "name:ja-Latn": "Hiwada",
+    "name:ko": "히와다",
+    "name:ru": "Хивада",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "train": "yes",
+    "wikidata": "Q874097",
+    "wikipedia": "ja:日和田駅"
+  }
+},
+{
+  "type": "node",
+  "id": 264177271,
+  "lat": 37.4828489,
+  "lon": 140.3879072,
+  "tags": {
+    "name": "五百川",
+    "name:en": "Gohyakugawa",
+    "name:ja-Hira": "ごひゃくがわ",
+    "name:ja-Latn": "Gohyakugawa",
+    "name:ko": "고햐쿠가와",
+    "name:ru": "Гохякугава",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "train": "yes",
+    "wikidata": "Q876966",
+    "wikipedia": "ja:五百川駅"
+  }
+},
+{
+  "type": "node",
+  "id": 264177536,
+  "lat": 37.1373864,
+  "lon": 140.2597808,
+  "tags": {
+    "name": "久田野",
+    "name:en": "Kutano",
+    "name:ja-Hira": "くたの",
+    "name:ja-Latn": "Kutano",
+    "name:ko": "구타노",
+    "name:ru": "Кутано",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "train": "yes",
+    "wikidata": "Q873174",
+    "wikipedia": "ja:久田野駅"
+  }
+},
+{
+  "type": "node",
+  "id": 264177583,
+  "lat": 37.1301635,
+  "lon": 140.2129901,
+  "tags": {
+    "name": "白河",
+    "name:en": "Shirakawa",
+    "name:ja-Hira": "しらかわ",
+    "name:ja-Latn": "Shirakawa",
+    "name:ko": "시라카와",
+    "name:ru": "Сиракава",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "train": "yes",
+    "wikidata": "Q872774",
+    "wikipedia": "ja:白河駅"
+  }
+},
+{
+  "type": "node",
+  "id": 264178068,
+  "lat": 37.5894592,
+  "lon": 140.4355421,
+  "tags": {
+    "name": "二本松",
+    "name:en": "Nihonmatsu",
+    "name:ja-Hira": "にほんまつ",
+    "name:ja-Latn": "Nihonmatsu",
+    "name:ko": "니혼마쓰",
+    "name:ru": "Нихоммацу",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "train": "yes",
+    "wikidata": "Q874110",
+    "wikipedia": "ja:二本松駅"
+  }
+},
+{
+  "type": "node",
+  "id": 264178071,
+  "lat": 37.1583899,
+  "lon": 140.2986949,
+  "tags": {
+    "name": "泉崎",
+    "name:en": "Izumizaki",
+    "name:ja-Hira": "いずみざき",
+    "name:ja-Latn": "Izumizaki",
+    "name:ko": "이즈미자키",
+    "name:ru": "Идзумидзаки",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "train": "yes",
+    "wikidata": "Q873238",
+    "wikipedia": "ja:泉崎駅"
+  }
+},
+{
+  "type": "node",
+  "id": 264180767,
+  "lat": 37.5632110,
+  "lon": 140.4136675,
+  "tags": {
+    "name": "杉田",
+    "name:en": "Sugita",
+    "name:ja-Hira": "すぎた",
+    "name:ja-Latn": "Sugita",
+    "name:ko": "스기타",
+    "name:ru": "Сугита",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "train": "yes",
+    "wikidata": "Q873973",
+    "wikipedia": "ja:杉田駅 (福島県)"
+  }
+},
+{
+  "type": "node",
+  "id": 3647437878,
+  "lat": 37.7716676,
+  "lon": 140.3900590,
+  "tags": {
+    "name": "庭坂",
+    "name:en": "Niwasaka",
+    "name:ja-Hira": "にわさか",
+    "name:ja-Latn": "Niwasaka",
+    "name:ko": "니와사카",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "train": "yes",
+    "wikidata": "Q7041878",
+    "wikipedia": "ja:庭坂駅"
+  }
+},
+{
+  "type": "node",
+  "id": 3647437881,
+  "lat": 37.7660596,
+  "lon": 140.4252667,
+  "tags": {
+    "name": "笹木野",
+    "name:en": "Sasakino",
+    "name:ja-Hira": "ささのき",
+    "name:ja-Latn": "Sasakino",
+    "name:ko": "사사키노",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "train": "yes",
+    "wikidata": "Q7424994",
+    "wikipedia": "ja:笹木野駅"
+  }
+},
+{
+  "type": "node",
+  "id": 3721569613,
+  "lat": 37.1230906,
+  "lon": 140.1884461,
+  "tags": {
+    "highspeed": "yes",
+    "name": "新白河",
+    "name:de": "Shin-Shirakawa",
+    "name:en": "Shin-Shirakawa",
+    "name:ja": "新白河",
+    "name:ja-Hira": "しんしらかわ",
+    "name:ja-Latn": "Shinshirakawa",
+    "name:ko": "신시라카와",
+    "name:ru": "Син-Сиракава",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "train": "yes",
+    "wikidata": "Q1136381",
+    "wikipedia": "ja:新白河駅"
+  }
+},
+{
+  "type": "node",
+  "id": 3800631016,
+  "lat": 37.3984880,
+  "lon": 140.3887980,
+  "tags": {
+    "addr:city": "郡山市",
+    "highspeed": "yes",
+    "name": "郡山",
+    "name:de": "Koriyama",
+    "name:en": "Koriyama",
+    "name:ja-Hira": "こおりやま",
+    "name:ja-Latn": "Kōriyama",
+    "name:ko": "고리야마",
+    "name:ru": "Корияма",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "train": "yes",
+    "wikidata": "Q385879",
+    "wikipedia": "ja:郡山駅 (福島県)"
+  }
+},
+{
+  "type": "node",
+  "id": 4707675980,
+  "lat": 37.4205168,
+  "lon": 140.3693902,
+  "tags": {
+    "description": "開業2017年4月1日(土) 待合室、駅倉庫、自動券売機、Suica対応改札機",
+    "name": "郡山富田",
+    "name:en": "Kōriyamatomita",
+    "name:ko": "고리야마마토미타",
+    "network": "JR磐越西線",
+    "operator": "JR東日本仙台支社",
+    "railway": "station",
+    "start_date": "2017-04-01",
+    "wikidata": "Q20973651",
+    "wikipedia": "ja:郡山富田駅"
+  }
+},
+{
+  "type": "node",
+  "id": 5614956746,
+  "lat": 37.2697802,
+  "lon": 140.4059849,
+  "tags": {
+    "name": "川東",
+    "name:en": "Kawahigashi",
+    "name:ja-Hira": "かわひがし",
+    "name:ja-Latn": "Kawahigashi",
+    "name:ko": "가와히가시",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "GSImaps/ort",
+    "train": "yes",
+    "wikidata": "Q11478848",
+    "wikipedia": "ja:川東駅 (福島県)"
+  }
+},
+{
+  "type": "node",
+  "id": 5614956807,
+  "lat": 37.2144368,
+  "lon": 140.4056503,
+  "tags": {
+    "name": "泉郷",
+    "name:en": "Izumigo",
+    "name:ja-Hira": "いずみごう",
+    "name:ja-Latn": "Izumigō",
+    "name:ko": "이즈미고",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "GSImaps/ort",
+    "train": "yes",
+    "wikidata": "Q11554944",
+    "wikipedia": "ja:泉郷駅"
+  }
+},
+{
+  "type": "node",
+  "id": 5614956820,
+  "lat": 37.3307905,
+  "lon": 140.4066159,
+  "tags": {
+    "name": "磐城守山",
+    "name:en": "Iwaki-Moriyama",
+    "name:ja-Hira": "いわきもりやま",
+    "name:ja-Latn": "Iwakimoriyama",
+    "name:ko": "이와키모리야마",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "GSImaps/ort",
+    "train": "yes",
+    "wikidata": "Q11587868",
+    "wikipedia": "ja:磐城守山駅"
+  }
+},
+{
+  "type": "node",
+  "id": 5614956892,
+  "lat": 37.3570454,
+  "lon": 140.3691401,
+  "tags": {
+    "name": "安積永盛",
+    "name:en": "Asaka-Nagamori",
+    "name:ja-Hira": "あさかながもり",
+    "name:ja-Latn": "Asakanagamori",
+    "name:ko": "아사카나가모리",
+    "name:ru": "Асака-Нагамори",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "GSImaps/ort",
+    "train": "yes",
+    "wikidata": "Q876716",
+    "wikipedia": "ja:安積永盛駅"
+  }
+},
+{
+  "type": "node",
+  "id": 5615095656,
+  "lat": 37.2954857,
+  "lon": 140.4300262,
+  "tags": {
+    "name": "小塩江",
+    "name:en": "Oshioe",
+    "name:ja-Hira": "おしおえ",
+    "name:ja-Latn": "Oshioe",
+    "name:ko": "오시오에",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "GSImaps/ort",
+    "train": "yes",
+    "wikidata": "Q11459562",
+    "wikipedia": "ja:小塩江駅"
+  }
+},
+{
+  "type": "node",
+  "id": 5615160085,
+  "lat": 37.3136439,
+  "lon": 140.4311843,
+  "tags": {
+    "name": "谷田川",
+    "name:en": "Yatagawa",
+    "name:ja-Hira": "やたがわ",
+    "name:ja-Latn": "Yatagawa",
+    "name:ko": "야타가와",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "GSImaps/ort",
+    "train": "yes",
+    "wikidata": "Q11633047",
+    "wikipedia": "ja:谷田川駅"
+  }
+},
+{
+  "type": "node",
+  "id": 5776775841,
+  "lat": 37.3004758,
+  "lon": 140.3719175,
+  "tags": {
+    "name": "須賀川",
+    "name:en": "Sukagawa",
+    "name:ja-Hira": "すかがわ",
+    "name:ja-Latn": "Sukagawa",
+    "name:ko": "스카가와",
+    "name:ru": "Сукагава",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "train": "yes",
+    "wikidata": "Q876991",
+    "wikipedia": "ja:須賀川駅"
+  }
+},
+{
+  "type": "node",
+  "id": 5777600138,
+  "lat": 37.7670403,
+  "lon": 140.4553275,
+  "tags": {
+    "name": "美術館図書館前",
+    "name:en": "Bijutsukan-Toshokan-mae",
+    "name:ja": "美術館図書館前",
+    "name:ja_rm": "Bijutsukan-Toshokan-mae",
+    "name:ko": "비주쓰칸토쇼칸마에",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "wheelchair": "yes",
+    "wikidata": "Q4907293",
+    "wikipedia": "ja:美術館図書館前駅"
+  }
+},
+{
+  "type": "node",
+  "id": 5779102810,
+  "lat": 37.7603335,
+  "lon": 140.4594125,
+  "tags": {
+    "name": "曽根田",
+    "name:en": "Soneda",
+    "name:ja": "曽根田",
+    "name:ja-Hira": "そねだ",
+    "name:ja-Latn": "Soneda",
+    "name:ko": "소네다",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "wikidata": "Q7560926",
+    "wikipedia": "ja:曽根田駅"
+  }
+},
+{
+  "type": "node",
+  "id": 5793100367,
+  "lat": 37.7999635,
+  "lon": 140.4775375,
+  "tags": {
+    "name": "東福島",
+    "name:en": "Higashi-Fukushima",
+    "name:ja-Hira": "ひがしふくしま",
+    "name:ja-Latn": "Higashifukushima",
+    "name:ko": "히가시후쿠시마",
+    "name:ru": "Хигаси-Фукусима",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "train": "yes",
+    "wikidata": "Q874513",
+    "wikipedia": "ja:東福島駅"
+  }
+},
+{
+  "type": "node",
+  "id": 5793100368,
+  "lat": 37.7236700,
+  "lon": 140.4557566,
+  "tags": {
+    "name": "南福島",
+    "name:en": "Minami-Fukushima",
+    "name:ja-Hira": "みなみふくしま",
+    "name:ja-Latn": "Minamifukushima",
+    "name:ko": "미나미후쿠시마",
+    "name:ru": "Минами-Фукусима",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "train": "yes",
+    "wikidata": "Q874869",
+    "wikipedia": "ja:南福島駅"
+  }
+},
+{
+  "type": "node",
+  "id": 5824612463,
+  "lat": 37.5141768,
+  "lon": 140.3994933,
+  "tags": {
+    "name": "本宮",
+    "name:en": "Motomiya",
+    "name:ja-Hira": "もとみや",
+    "name:ja-Latn": "Motomiya",
+    "name:ko": "모토미야",
+    "name:ru": "Мотомия",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "train": "yes",
+    "wikidata": "Q873962",
+    "wikipedia": "ja:本宮駅 (福島県)"
+  }
+},
+{
+  "type": "node",
+  "id": 5824659272,
+  "lat": 37.2507164,
+  "lon": 140.3469461,
+  "tags": {
+    "name": "鏡石",
+    "name:en": "Kagamiishi",
+    "name:ja-Hira": "かがみいし",
+    "name:ja-Latn": "Kagamiishi",
+    "name:ko": "가가미이시",
+    "name:ru": "Кагамииси",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "train": "yes",
+    "wikidata": "Q874040",
+    "wikipedia": "ja:鏡石駅"
+  }
+},
+{
+  "type": "node",
+  "id": 5825648000,
+  "lat": 37.2052214,
+  "lon": 140.3280154,
+  "tags": {
+    "name": "矢吹",
+    "name:en": "Yabuki",
+    "name:ja-Hira": "やぶき",
+    "name:ja-Latn": "Yabuki",
+    "name:ko": "야부키",
+    "name:ru": "Ябуки",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "train": "yes",
+    "wikidata": "Q875942",
+    "wikipedia": "ja:矢吹駅"
+  }
+},
+{
+  "type": "node",
+  "id": 6101775670,
+  "lat": 37.1407225,
+  "lon": 140.4441576,
+  "tags": {
+    "name": "磐城石川",
+    "name:en": "Iwaki-Ishikawa",
+    "name:ja-Hira": "いわきいしかわ",
+    "name:ja-Latn": "Iwakiishikawa",
+    "name:ko": "이와키이시카와",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "train": "yes",
+    "wikidata": "Q11587873",
+    "wikipedia": "ja:磐城石川駅"
+  }
+},
+{
+  "type": "node",
+  "id": 6101775671,
+  "lat": 37.1749437,
+  "lon": 140.4210019,
+  "tags": {
+    "name": "野木沢",
+    "name:en": "Nogisawa",
+    "name:ja-Hira": "のぎさわ",
+    "name:ja-Latn": "Nogisawa",
+    "name:ko": "노기사와",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "train": "yes",
+    "wikidata": "Q7047495",
+    "wikipedia": "ja:野木沢駅"
+  }
+},
+{
+  "type": "node",
+  "id": 6101775672,
+  "lat": 37.1924312,
+  "lon": 140.4059722,
+  "tags": {
+    "name": "川辺沖",
+    "name:en": "Kawabeoki",
+    "name:ja-Hira": "かわべおき",
+    "name:ja-Latn": "Kawabeoki",
+    "name:ko": "가와베오키",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "train": "yes",
+    "wikidata": "Q6379436",
+    "wikipedia": "ja:川辺沖駅"
+  }
+},
+{
+  "type": "node",
+  "id": 6110183676,
+  "lat": 37.7760161,
+  "lon": 140.4478924,
+  "tags": {
+    "name": "岩代清水",
+    "name:en": "Iwashiro-Shimizu",
+    "name:ja": "岩代清水",
+    "name:ja-Hira": "いわしろしみず",
+    "name:ja-Latn": "Iwashiro-Shimizu",
+    "name:ko": "이와시로시미즈",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "wikidata": "Q6100743",
+    "wikipedia": "ja:岩代清水駅"
+  }
+},
+{
+  "type": "node",
+  "id": 6110183679,
+  "lat": 37.7783206,
+  "lon": 140.4458747,
+  "tags": {
+    "name": "泉",
+    "name:en": "Izumi",
+    "name:ja": "泉",
+    "name:ja-Hira": "いずみ",
+    "name:ja-Latn": "Izumi",
+    "name:ko": "이즈미",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "wikidata": "Q6102329",
+    "wikipedia": "ja:泉駅 (福島市)"
+  }
+},
+{
+  "type": "node",
+  "id": 6110184487,
+  "lat": 37.7836256,
+  "lon": 140.4409589,
+  "tags": {
+    "name": "上松川",
+    "name:en": "Kami-Matsukawa",
+    "name:ja": "上松川",
+    "name:ja-Hira": "かみまつかわ",
+    "name:ja-Latn": "Kamimatsukawa",
+    "name:ko": "가미마쓰카와",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "wikidata": "Q6358116",
+    "wikipedia": "ja:上松川駅"
+  }
+},
+{
+  "type": "node",
+  "id": 6110184497,
+  "lat": 37.7874445,
+  "lon": 140.4396862,
+  "tags": {
+    "name": "笹谷",
+    "name:en": "Sasaya",
+    "name:ja": "笹谷",
+    "name:ja-Hira": "ささや",
+    "name:ja-Latn": "Sasaya",
+    "name:ko": "사사야",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "wheelchair": "no",
+    "wikidata": "Q7425013",
+    "wikipedia": "ja:笹谷駅"
+  }
+},
+{
+  "type": "node",
+  "id": 6110184508,
+  "lat": 37.7959376,
+  "lon": 140.4410930,
+  "tags": {
+    "name": "桜水",
+    "name:en": "Sakuramizu",
+    "name:ja": "桜水",
+    "name:ja-Hira": "さくらみず",
+    "name:ja-Latn": "Sakuramizu",
+    "name:ko": "사쿠라미즈",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "train": "yes",
+    "wikidata": "Q7403219",
+    "wikipedia": "ja:桜水駅"
+  }
+},
+{
+  "type": "node",
+  "id": 6143048349,
+  "lat": 37.7989917,
+  "lon": 140.4891099,
+  "tags": {
+    "name": "福島学院前",
+    "name:en": "Fukushima Gakuin-mae",
+    "name:ja": "福島学院前",
+    "name:ja-Hira": "ふくしまがくいんまえ",
+    "name:ja-Latn": "Fukushimagakuinmae",
+    "name:ko": "후쿠시마가쿠인마에",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "train": "yes",
+    "wikidata": "Q11593074",
+    "wikipedia": "ja:福島学院前駅"
+  }
+},
+{
+  "type": "node",
+  "id": 6143048351,
+  "lat": 37.7955106,
+  "lon": 140.4796256,
+  "tags": {
+    "name": "卸町",
+    "name:en": "Oroshimachi",
+    "name:ja-Hira": "おろしまち",
+    "name:ja-Latn": "Oroshimachi",
+    "name:ko": "오로시마치",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "train": "yes",
+    "wikidata": "Q21721160",
+    "wikipedia": "ja:卸町駅"
+  }
+},
+{
+  "type": "node",
+  "id": 6549784706,
+  "lat": 37.3695415,
+  "lon": 140.3762576,
+  "tags": {
+    "name": "郡山貨物ターミナル",
+    "name:ko": "고리야마화물터미널",
+    "operator": "日本貨物鉄道株式会社",
+    "public_transport": "station",
+    "railway": "station",
+    "train": "yes",
+    "wikidata": "Q5357915",
+    "wikipedia": "ja:郡山貨物ターミナル駅"
+  }
+}
+
+  ]
+}

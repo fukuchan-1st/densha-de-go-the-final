@@ -1,4 +1,5 @@
-import * as T from './assets/vendor/three.module.js?v=4';
+import {settlementAt} from './route-data.js?v=7';
+import * as T from './assets/vendor/three.module.js?v=7';
 
 // Reproducible, browser-native vegetation. No images or network fetches required.
 function random(seed=701153){return ()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};}
@@ -45,21 +46,19 @@ export function createSurfaceMaterial(kind='ground'){
 }
 
 function addInstances(scene,geometry,material,items){
- if(!items.length)return null;
- const mesh=new T.InstancedMesh(geometry,material,items.length),dummy=new T.Object3D(),color=new T.Color();
- for(let i=0;i<items.length;i++){const a=items[i];dummy.position.set(a.x,a.y,a.z);dummy.scale.set(a.w,a.h,a.d??1);dummy.rotation.set(0,a.rotation??0,0);dummy.updateMatrix();mesh.setMatrixAt(i,dummy.matrix);color.setRGB(a.shade??1,(a.shade??1)*.99,(a.shade??1)*.92);mesh.setColorAt(i,color);}
- mesh.instanceMatrix.needsUpdate=true;if(mesh.instanceColor)mesh.instanceColor.needsUpdate=true;mesh.computeBoundingSphere();scene.add(mesh);return mesh;
+ const meshes=[],dummy=new T.Object3D(),color=new T.Color();
+ for(let base=0;base<items.length;base+=1000){const part=items.slice(base,base+1000),mesh=new T.InstancedMesh(geometry,material,part.length);for(let i=0;i<part.length;i++){const a=part[i];dummy.position.set(a.x,a.y,a.z);dummy.scale.set(a.w,a.h,a.d??1);dummy.rotation.set(0,a.rotation??0,0);dummy.updateMatrix();mesh.setMatrixAt(i,dummy.matrix);color.setRGB(a.shade??1,(a.shade??1)*.99,(a.shade??1)*.92);mesh.setColorAt(i,color);}mesh.instanceMatrix.needsUpdate=true;mesh.computeBoundingSphere();scene.add(mesh);meshes.push(mesh);}return meshes;
 }
 
 export function addVegetation(world){
  const r=random(7011500),broad=[],pine=[],bush=[],grass=[],trunks=[];
  const stationClear=(s,offset)=>(world.isStructureCorridor?.(s,offset)??false)||(offset<0&&offset>-14&&world.stations.some(st=>s>st.s-170&&s<st.s+35));
  const at=(s,offset)=>world.frame(s,offset).p;
- for(let s=-120;s<22400;s+=27){
+ for(let s=-120;s<world.length+300;s+=27){
   for(const side of [-1,1]){
    // Denser woodland stretches alternate with open farmland.
-   const wooded=Math.sin(s/700)+Math.sin(s/211)>.1;
-   if(!wooded&&r()>.4)continue;
+   const wooded=settlementAt(s)<.6&&Math.sin(s/700)+Math.sin(s/211)>.1;
+   if(!wooded&&r()>(settlementAt(s)>.65?.1:.4))continue;
    const ss=s+(r()-.5)*24,offset=side*(15+r()*125),p=at(ss,offset),height=5+r()*8,conifer=r()<.22,shade=.68+r()*.34;
    if(stationClear(ss,offset))continue;
    trunks.push({x:p.x,y:p.y+height*.23,z:p.z,w:.18+r()*.17,h:height*.46,d:.18+r()*.17,shade:.7+r()*.2});
@@ -67,13 +66,13 @@ export function addVegetation(world){
    for(let layer=0;layer<layers;layer++)(conifer?pine:broad).push({x:p.x,y:p.y+height*.57,z:p.z,w:height*(conifer?.63:.94)*(1+r()*.13),h:height*.95,d:1,rotation:layer*Math.PI/layers+r()*.3,shade});
   }
  }
- for(let s=-120;s<22400;s+=15){for(const side of [-1,1]){
+ for(let s=-120;s<world.length+300;s+=15){for(const side of [-1,1]){
   if(r()>.72)continue;
   const ss=s+r()*13,offset=side*(side<0?6+r()*13:9+r()*13);if(stationClear(ss,offset))continue;
   const p=at(ss,offset),height=.7+r()*1.7,width=height*(1.5+r());
   for(let j=0;j<2;j++)bush.push({x:p.x,y:p.y+height*.45,z:p.z,w:width,h:height*1.2,rotation:j*Math.PI/2+r(),shade:.67+r()*.3});
  }}
- for(let s=-110;s<22300;s+=6){for(const side of [-1,1]){
+ for(let s=-110;s<world.length+200;s+=6){for(const side of [-1,1]){
   const ss=s+r()*5,offset=side<0?-(3.2+r()*5.5):7.25+r()*4.5;if(stationClear(ss,offset))continue;
   const p=at(ss,offset),height=.3+r()*.8,width=1.2+r()*2.3;
   for(let j=0;j<2;j++)grass.push({x:p.x,y:p.y+height*.48,z:p.z,w:width,h:height,rotation:r()*Math.PI,shade:.78+r()*.35});
@@ -81,6 +80,6 @@ export function addVegetation(world){
  const broadMap=crownTexture(false),pineMap=crownTexture(true),grassMap=grassTexture();
  const foliage=map=>new T.MeshStandardMaterial({map,alphaTest:.36,side:T.DoubleSide,roughness:1,emissive:'#1e2b13',emissiveIntensity:.28});
  const plane=new T.PlaneGeometry(1,1),mBroad=foliage(broadMap),mPine=foliage(pineMap),mGrass=foliage(grassMap);
- const meshes=[addInstances(world.scene,plane,mBroad,broad),addInstances(world.scene,plane,mPine,pine),addInstances(world.scene,plane,mBroad,bush),addInstances(world.scene,plane,mGrass,grass),addInstances(world.scene,new T.CylinderGeometry(.5,.7,1,5),new T.MeshStandardMaterial({color:'#635844',roughness:1}),trunks)].filter(Boolean);
+ const meshes=[addInstances(world.scene,plane,mBroad,broad),addInstances(world.scene,plane,mPine,pine),addInstances(world.scene,plane,mBroad,bush),addInstances(world.scene,plane,mGrass,grass),addInstances(world.scene,new T.CylinderGeometry(.5,.7,1,5),new T.MeshStandardMaterial({color:'#635844',roughness:1}),trunks)].flat().filter(Boolean);
  return {meshes,treeCount:trunks.length,grassCount:grass.length,dispose(){for(const m of meshes){world.scene.remove(m);m.geometry.dispose();m.material.dispose();}broadMap.dispose();pineMap.dispose();grassMap.dispose();}};
 }

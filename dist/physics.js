@@ -1,5 +1,6 @@
 // Distances: RailLab transport/39. Performance: user supplied 701-series article.
-export const STATIONS = [{name:'黒磯',s:0},{name:'高久',s:4000},{name:'黒田原',s:8200},{name:'豊原',s:13400},{name:'白坂',s:18700},{name:'新白河',s:22100}];
+import {STATIONS} from './route-data.js?v=7';
+export {STATIONS};
 export const SPECS = {startAcceleration:2.1,serviceBrake:3.6,emergencyBrake:3.6,maxSpeed:110,gauge:1.067};
 export function acceleration(v,notch,doors=false,gradePerMille=0) {
   // v in m/s. Published starting acceleration is preserved at P5 / v=0.

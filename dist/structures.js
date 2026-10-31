@@ -1,5 +1,5 @@
-import * as T from './assets/vendor/three.module.js?v=4';
-import {createSurfaceMaterial} from './vegetation.js?v=4';
+import * as T from './assets/vendor/three.module.js?v=7';
+import {createSurfaceMaterial} from './vegetation.js?v=7';
 
 // Procedural visual interpretations of the supplied BVE numerical placements.
 // Original .x geometry and textures are deliberately not redistributed.
@@ -34,8 +34,8 @@ export function addStructures(world,data){
   for(let i=0;i<=steps;i++){const s=T.MathUtils.lerp(x.sStart+.7,x.sEnd-.7,i/steps),f=world.frame(s);for(let k=0;k<cross.length;k++){const [off,y]=cross[k];pos.push(f.p.x+f.right.x*off,f.p.y+y,f.p.z+f.right.z*off);uv.push(off/6,(s-x.sStart)/6);if(i&&k){const n=i*cross.length+k;idx.push(n-cross.length-1,n-1,n-cross.length,n-cross.length,n-1,n);}}}
   const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setIndex(idx);g.computeVertexNormals();world.scene.add(new T.Mesh(g,createSurfaceMaterial('ground')));
  }
- function bridge(x){const a=x.sStart,b=x.sEnd;for(let s=a;s<b;s+=5){const len=Math.min(5,b-s),mid=s+len/2;cube(8.1,.55,len,'#4b4c46',mid,2,-.7);for(const off of[-2.35,6.35]){cube(.25,1.05,len,'#8c3b32',mid,off,-.1);beam(position(s,off,.1),position(s+len,off,1.1),.07,'#81382f');beam(position(s,off,1.1),position(s+len,off,.1),.07,'#81382f');cube(.12,.12,len,'#9f5442',mid,off,1.05);}}
-  for(const s of[a,b]){cube(10,7,2,'#7c7e71',s,2,-7.2);cube(10,.5,3,'#999b8c',s,2,-.85);}
+ function bridge(x){const a=x.sStart,b=x.sEnd,steel=x.sourceType==='osm'?'#626b67':'#8c3b32';for(let s=a;s<b;s+=5){const len=Math.min(5,b-s),mid=s+len/2;cube(8.1,.55,len,'#4b4c46',mid,2,-.7);for(const off of[-2.35,6.35]){cube(.25,1.05,len,steel,mid,off,-.1);beam(position(s,off,.1),position(s+len,off,1.1),.07,steel);beam(position(s,off,1.1),position(s+len,off,.1),.07,steel);cube(.12,.12,len,'#9f5442',mid,off,1.05);}}
+  const depth=x.sourceType==='osm'?2.5:7;for(const s of[a,b]){cube(10,depth,2,'#7c7e71',s,2,-depth-.2);cube(10,.5,3,'#999b8c',s,2,-.85);}
  }
  function roadBridge(x){const s=(x.sStart+x.sEnd)/2,yaw=(x.yawDeg??0)*Math.PI/180;cube(34,.8,8.8,'#a3a599',s,2,6.8,yaw);cube(34,.12,8.2,'#525a56',s,2,7.6,yaw);for(const off of[-9,12])cube(1.1,6.8,1.2,'#989c91',s,off,0,yaw);for(const d of[-4.25,4.25]){const f=world.frame(s+d,2),m=new T.Mesh(box,material('#c6c9bc'));m.scale.set(34,1.1,.16);m.position.copy(f.p);m.position.y+=8.1;m.rotation.y=f.angle+yaw;world.scene.add(m);}}
  function footBridge(x){const s=x.sOrigin??(x.sStart+x.sEnd)/2;cube(15,.4,3.2,'#888e88',s,2,6.2);cube(15,.2,3.6,'#adb8b1',s,2,8.4);for(const off of[-5.5,9.5]){cube(.3,7.2,.3,'#8f9993',s,off,1.1);for(let i=0;i<20;i++)cube(2,.22,.55,'#969d94',s-9+i*.52,off,1.1+i*.25);cube(.15,2.1,3,'#8b9991',s,off,6.4);}for(const d of[-1.5,1.5])cube(15,1.1,.12,'#b8c1b7',s+d,2,6.6);}
