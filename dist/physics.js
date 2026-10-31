@@ -18,13 +18,16 @@ export function step(state,dt,gradePerMille=0) {
 }
 export function stoppingDistance(kmh,brake=4,gradePerMille=0){return (kmh/3.6)**2/(2*Math.max(.05,Math.min(7,brake)/7+9.80665*gradePerMille/1000));}
 export function assistBrake(state,distance,gradePerMille=0){
-  if(distance<stoppingDistance(state.v*3.6,4,gradePerMille)+140)state.assistBraking=true;
+  // Use a fixed conservative envelope: local grade changes must not suddenly
+  // raise the target speed near a station. B4 still has >0.47 m/s² on -10‰.
+  const envelopeDecel=.35;
+  if(distance<state.v*state.v/(2*envelopeDecel)+30)state.assistBraking=true;
   if(!state.assistBraking)return;
-  if(distance<12&&state.v<.7){state.s+=distance;state.v=0;state.notch=-4;return;}
+  if(Math.abs(distance)<=10&&state.v<.7){state.s+=distance;state.v=0;state.notch=-4;return;}
   // Follow a braking envelope. Release between applications instead of holding
   // a fixed brake to zero too far from the platform.
-  const available=Math.max(.12,.5+9.80665*gradePerMille/1000),target=Math.sqrt(Math.max(0,distance-2)*2*available);
-  state.notch=state.v>target?-4:0;
+  const target=Math.sqrt(Math.max(0,distance-2)*2*envelopeDecel);
+  state.notch=distance<0?-7:state.v>target?-4:0;
 }
 export function notchDeltaForKey(code){if(code==='KeyS'||code==='ArrowDown')return 1;if(code==='KeyW'||code==='ArrowUp')return -1;return 0;}
 export function newRun(){return {s:0,v:0,notch:0,doors:false,elapsed:0,next:1,served:0,missed:0,stopReady:false,dwell:0,errors:[],finished:false};}

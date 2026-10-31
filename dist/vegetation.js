@@ -1,4 +1,4 @@
-import * as T from './assets/vendor/three.module.js';
+import * as T from './assets/vendor/three.module.js?v=4';
 
 // Reproducible, browser-native vegetation. No images or network fetches required.
 function random(seed=701153){return ()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};}
@@ -53,7 +53,7 @@ function addInstances(scene,geometry,material,items){
 
 export function addVegetation(world){
  const r=random(7011500),broad=[],pine=[],bush=[],grass=[],trunks=[];
- const stationClear=(s,offset)=>offset<0&&offset>-14&&world.stations.some(st=>s>st.s-170&&s<st.s+35);
+ const stationClear=(s,offset)=>(world.isStructureCorridor?.(s,offset)??false)||(offset<0&&offset>-14&&world.stations.some(st=>s>st.s-170&&s<st.s+35));
  const at=(s,offset)=>world.frame(s,offset).p;
  for(let s=-120;s<22400;s+=27){
   for(const side of [-1,1]){
