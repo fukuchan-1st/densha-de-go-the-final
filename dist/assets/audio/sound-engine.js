@@ -1,4 +1,4 @@
-import {departureFilesFor,STATION_DEPARTURE_AUDIO} from '../../train-operations.js?v=15';
+import {departureFilesFor,STATION_DEPARTURE_AUDIO} from '../../train-operations.js?v=18';
 // Browser port of the supplied RTM RSM2 sound_701.js. Speed input is km/h.
 export function interpolate(points, speed) {
   if (points.length === 1) return 0;
@@ -50,9 +50,11 @@ export class SoundEngine {
         })());
         return cache.get(file);
       };
-      this.nodes=await Promise.all(this.config.tracks.map(async track=>({track,buffer:await load(track.url),gain:null,source:null})));
+      this.nodes=await Promise.all(this.config.tracks.filter(track=>/motor/i.test(track.fileName)).map(async track=>({track,buffer:await load(track.url),gain:null,source:null})));
       this.effects={};
-      await Promise.all(Object.entries(this.config.effects).map(async([key,effect])=>{this.effects[key]=await load(effect.url);}));
+      const bveResponse=await fetch(new URL('./bve/config.json',import.meta.url));if(!bveResponse.ok)throw Error('BVE音源設定を読み込めません');
+      this.bveConfig=await bveResponse.json();
+      await Promise.all(Object.entries(this.bveConfig.files).map(async([key,path])=>{this.effects[key]=await load('bve/'+path);}));
       this.departureBuffers=new Map();
       await Promise.all([...new Set([...Object.values(STATION_DEPARTURE_AUDIO),'departure-chime.wav'])].map(async file=>this.departureBuffers.set(file,await load(file))));
       this.ready=true;
@@ -69,20 +71,23 @@ export class SoundEngine {
     if(this.ctx)(this.paused?this.ctx.suspend():this.ctx.resume()).catch(()=>{});
   }
   async resume() { if (this.ctx) await this.ctx.resume(); this.setPaused(false); }
-  update(speed,notch,dt) {
+  update(speed,notch,dt,environment={}) {
     if (!this.ready || this.paused) return;
     speed=Math.max(0,speed);
+    if(this.lastNotch!==undefined&&this.lastNotch!==notch)this.notchSound(this.lastNotch,notch);
+    this.lastNotch=notch;
+    const motorNotch=environment.doors||(notch===-1&&!environment.holdBraking)?0:notch;
     this.tickAccumulator+=Math.max(0,Math.min(dt,.25));
     while (this.tickAccumulator>=.05) {
       this.tickAccumulator-=.05;
-      if (notch>0) this.fade=Math.min(5,this.fade+1);
-      else if (notch<0) this.fade=Math.max(-5,this.fade-1);
+      if (motorNotch>0) this.fade=Math.min(5,this.fade+1);
+      else if (motorNotch<0) this.fade=Math.max(-5,this.fade-1);
       else this.fade+=this.fade<0?1:this.fade>0?-1:0;
     }
     const t=this.ctx.currentTime;
     this.activeTracks=[];
     for (const node of this.nodes) {
-      const {pitch,volume}=trackValues(node.track,speed,notch,this.fade/5);
+      const {pitch,volume}=trackValues(node.track,speed,motorNotch,this.fade/5);
       if (volume>0) {
         if (!node.source) {
           node.source=this.ctx.createBufferSource();
@@ -98,14 +103,39 @@ export class SoundEngine {
         node.source.stop(); node.source.disconnect(); node.gain.disconnect(); node.source=null; node.gain=null;
       }
     }
+    this.updateBve(speed,notch,environment);
+  }
+  notchSound(previous,next){
+    if(next===-9){this.playEffect('brakeEB');this.playEffect('emergencyAir');return;}
+    if(next<0||previous<0){this.playEffect(next===0?'brakeMin':'brakeStep');if(next>previous&&previous<-1)this.playEffect(previous<=-4?'airHigh':'airRelease');}
+    else this.playEffect(next===5?'powerMax':next===0?'powerMin':'powerStep');
+  }
+  loopEffect(key,volume,pitch=1){
+    this.bveNodes??=new Map();let node=this.bveNodes.get(key);
+    if(volume<=.001){if(node){node.source.stop();node.source.disconnect();node.gain.disconnect();this.bveNodes.delete(key);}return;}
+    if(!node){const source=this.ctx.createBufferSource(),gain=this.ctx.createGain();source.buffer=this.effects[key];if(!source.buffer)return;source.loop=true;gain.gain.value=0;source.connect(gain).connect(this.master);source.start();node={source,gain};this.bveNodes.set(key,node);}
+    node.source.playbackRate.setTargetAtTime(pitch,this.ctx.currentTime,.05);node.gain.gain.setTargetAtTime(volume,this.ctx.currentTime,.08);
+  }
+  updateBve(speed,notch,environment){
+    const surface=environment.surface??'long',level=Math.min(1,speed/45)*.38,pitch=Math.max(.35,Math.min(2,speed/50));
+    for(const [kind,key] of [['long','runLong'],['bridge','runBridge'],['tunnel','runTunnel']])this.loopEffect(key,surface===kind?level:0,pitch);
+    this.loopEffect('noise',.12);
+    this.loopEffect('shoe',notch<-1&&speed>1&&speed<30?Math.min(speed/10,1)*(1-speed/35)*.18:0,pitch);
+    this.loopEffect('flange',speed>10?Math.max(0,Math.min(1,(Math.abs(environment.curvature??0)-.001)*600))*.16:0,Math.max(.6,pitch));
   }
   playEffect(name) {
-    if (!this.ready || this.paused) return;
-    const key=({open:'701dooropn.ogg',close:'701doorcls.ogg'})[name]||name;
-    const buffer=this.effects[key]; if (!buffer) return;
-    const source=this.ctx.createBufferSource(); source.buffer=buffer;
-    source.connect(this.master); source.start();
-    source.onended=()=>source.disconnect();
+    if (!this.ready || this.paused || !this.effects[name]) return Promise.resolve(false);
+    const source=this.ctx.createBufferSource();source.buffer=this.effects[name];source.connect(this.master);
+    this.effectSources??=new Map();let finish;const promise=new Promise(resolve=>finish=resolve);this.effectSources.set(source,finish);
+    source.onended=()=>{source.disconnect();this.effectSources.delete(source);finish(true);};
+    try{source.start();}catch{source.disconnect();this.effectSources.delete(source);finish(false);}return promise;
+  }
+  async playDoorClose(){
+    const generation=this.departureGeneration??0;if(!this.ready)await this.init();
+    if(generation!==(this.departureGeneration??0))return false;
+    if(!this.effects.close)throw Error('戸閉音を読み込めません');
+    const completed=await this.playDepartureBuffer(this.effects.close);
+    return completed&&generation===(this.departureGeneration??0);
   }
   async playDeparture(stationName,onStage=()=>{}) {
     const generation=this.departureGeneration??0;
@@ -136,6 +166,8 @@ export class SoundEngine {
   stop() {
     this.cancelDeparture();
     for (const node of this.nodes) if (node.source) {node.source.stop();node.source.disconnect();node.gain.disconnect();node.source=null;node.gain=null;}
-    this.fade=0; this.tickAccumulator=0;
+    for(const node of this.bveNodes?.values()??[]){node.source.stop();node.source.disconnect();node.gain.disconnect();}this.bveNodes?.clear();
+    for(const [source,finish] of this.effectSources??[]){source.onended=null;source.stop();source.disconnect();finish(false);}this.effectSources?.clear();
+    this.lastNotch=undefined;this.fade=0; this.tickAccumulator=0;
   }
 }

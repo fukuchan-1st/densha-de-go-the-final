@@ -1,5 +1,5 @@
-import {settlementAt} from './route-data.js?v=15';
-import * as T from './assets/vendor/three.module.js?v=15';
+import {settlementAt} from './route-data.js?v=18';
+import * as T from './assets/vendor/three.module.js?v=18';
 
 // Reproducible, browser-native vegetation. No images or network fetches required.
 function random(seed=701153){return ()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};}

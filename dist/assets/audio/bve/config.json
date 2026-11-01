@@ -1,0 +1,161 @@
+{
+  "source": "Aki_N/sound/Mc701-19.txt",
+  "files": {
+    "open": "Other/Dooropn19L.wav",
+    "close": "Other/Doorcls19L.wav",
+    "pilotOn": "Relay/dooron.wav",
+    "pilotOff": "Relay/dooroff.wav",
+    "powerStep": "Master_controller/notch/ML.wav",
+    "powerMax": "Master_controller/notch/MFL.wav",
+    "powerMin": "Master_controller/notch/ME.wav",
+    "brakeStep": "Master_controller/brake/BL2.wav",
+    "brakeMin": "Master_controller/brake/BE.wav",
+    "brakeEB": "Master_controller/brake/BFLEB.wav",
+    "airRelease": "air/Air.wav",
+    "airHigh": "air/airhigh.wav",
+    "emergencyAir": "air/airEB.wav",
+    "hornPrimary": "air/HornL.wav",
+    "hornSecondary": "air/HornA.wav",
+    "hornRelease": "air/HornB.wav",
+    "noise": "Other/MG.wav",
+    "shoe": "Other/rub.wav",
+    "runLong": "Run/run_long.wav",
+    "runBridge": "Run/Run_bridge.wav",
+    "runTunnel": "Run/Run_tonnel.wav",
+    "flange": "Run/Flange0.wav"
+  },
+  "assets": [
+    {
+      "key": "open",
+      "path": "Other/Dooropn19L.wav",
+      "duration": 4.6401666666666666,
+      "sha256": "0123947db4ebc0aaaceed3f64c19a51e06f4b2de95b80f0c2122cac8b57e0757"
+    },
+    {
+      "key": "close",
+      "path": "Other/Doorcls19L.wav",
+      "duration": 5.422666666666666,
+      "sha256": "d8df828435614f7014b9c3a8aa9529931def83bca63ba4c19db74d08c4b43cf2"
+    },
+    {
+      "key": "pilotOn",
+      "path": "Relay/dooron.wav",
+      "duration": 0.38675736961451246,
+      "sha256": "e40efeb44adcd7f5b065a562410cbe59bbc63bca45b298811c04164ee91f7ab3"
+    },
+    {
+      "key": "pilotOff",
+      "path": "Relay/dooroff.wav",
+      "duration": 0.41560090702947844,
+      "sha256": "529af8593027b7da8071550323e591764fe6671d5d84d4a511025fc1e80f3775"
+    },
+    {
+      "key": "powerStep",
+      "path": "Master_controller/notch/ML.wav",
+      "duration": 0.2980045351473923,
+      "sha256": "bc7362ab2b6dc5204c3c496057831bd2439f615d78cf1d9ec5aec843809640d8"
+    },
+    {
+      "key": "powerMax",
+      "path": "Master_controller/notch/MFL.wav",
+      "duration": 0.22900226757369616,
+      "sha256": "97656d7784fc743b06f861e0fb5e5c32e1760a4e1bbfacd82a9b5f5c51923bfd"
+    },
+    {
+      "key": "powerMin",
+      "path": "Master_controller/notch/ME.wav",
+      "duration": 0.23918367346938776,
+      "sha256": "71724327dea47fb0be76355b8de8fb76aaa57c03f14e720787486b25a6634065"
+    },
+    {
+      "key": "brakeStep",
+      "path": "Master_controller/brake/BL2.wav",
+      "duration": 0.26,
+      "sha256": "c3d56555fb2a70bde5153010de1923179f5f2440bf1c1b715ae57f06e1ea6830"
+    },
+    {
+      "key": "brakeMin",
+      "path": "Master_controller/brake/BE.wav",
+      "duration": 0.19850340136054423,
+      "sha256": "7b1a87382639a29c5429626da0fec7d46409932be8bf272d94857ddbd9c408af"
+    },
+    {
+      "key": "brakeEB",
+      "path": "Master_controller/brake/BFLEB.wav",
+      "duration": 0.6273015873015872,
+      "sha256": "8d0df7422b94201e689f8e8b0a92a42ae6f6c17c95c98d300d10d59ba74abee5"
+    },
+    {
+      "key": "airRelease",
+      "path": "air/Air.wav",
+      "duration": 1.3973333333333333,
+      "sha256": "b659bc74510fa43ca21b4788120c6a8c82581f35a791c75053549f6e3ff6bcd1"
+    },
+    {
+      "key": "airHigh",
+      "path": "air/airhigh.wav",
+      "duration": 0.876734693877551,
+      "sha256": "4757d3a0b028a7b9eb23011f357550480911d7d1c544d04299da9bec1bc85528"
+    },
+    {
+      "key": "emergencyAir",
+      "path": "air/airEB.wav",
+      "duration": 1.4403333333333332,
+      "sha256": "4235e4ac33e9de4998edc557d91843f0aadbd23bf4802821d72668fc4f63301a"
+    },
+    {
+      "key": "hornPrimary",
+      "path": "air/HornL.wav",
+      "duration": 0.7079895833333333,
+      "sha256": "016b16f470a3a63b9fb25bb39fc9084fae36f7710f2af385f4cea53e89dbd995"
+    },
+    {
+      "key": "hornSecondary",
+      "path": "air/HornA.wav",
+      "duration": 5.599479166666667,
+      "sha256": "89dbf630b6c45afe144dccc06e22d424c9294af3f0cda2b0b086211e8323a914"
+    },
+    {
+      "key": "hornRelease",
+      "path": "air/HornB.wav",
+      "duration": 0.6011458333333334,
+      "sha256": "bd51949417b5df64f9458e575c9b8e5279a00f99e4c3f345ff2a390aa9f6247b"
+    },
+    {
+      "key": "noise",
+      "path": "Other/MG.wav",
+      "duration": 2.2091979166666667,
+      "sha256": "956782fe2b76609a60a68cbe1147a6fde2c979cba1938a0c8219857293625eec"
+    },
+    {
+      "key": "shoe",
+      "path": "Other/rub.wav",
+      "duration": 0.450625,
+      "sha256": "64bc69dfd618d99be9b36c3511f841fa946a412e285a741ac9f4aff5272be374"
+    },
+    {
+      "key": "runLong",
+      "path": "Run/run_long.wav",
+      "duration": 11.579229166666666,
+      "sha256": "69f9826bbcbb05ae76c01bf7a56a438161dbe9b64defea69b1225c565b0b0395"
+    },
+    {
+      "key": "runBridge",
+      "path": "Run/Run_bridge.wav",
+      "duration": 7.935520833333333,
+      "sha256": "e0350861ff70c7b9b512aff09ba41552323dac0e60176d0112986296f6947fca"
+    },
+    {
+      "key": "runTunnel",
+      "path": "Run/Run_tonnel.wav",
+      "duration": 5.248004535147392,
+      "sha256": "30006ac94a0fff9d1d3b576ed077fc5ba71bbfc5a203db6052c4a39311785559"
+    },
+    {
+      "key": "flange",
+      "path": "Run/Flange0.wav",
+      "duration": 3.63675,
+      "sha256": "70907613a2d574c333a25670d76ba502d6a8b10b36fe1931a53d191a8895dbdf"
+    }
+  ]
+}

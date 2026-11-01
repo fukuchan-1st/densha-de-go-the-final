@@ -20,10 +20,10 @@ test('出発駅の戸閉では停車実績・次駅を進めず、白河の到�
  const s={s:0,v:0,next:1,served:0,errors:[],doors:false};
  assert.equal(beginStartingBoarding(s,0,stations),true);assert.equal(s.doors,true);
  assert.equal(advanceDoorSequence(s,100,0),'announcement');s.announcementDone=true;
- assert.equal(advanceDoorSequence(s,100,.01),'close');assert.equal(completeDoorSequence(s,stations),true);
+ assert.equal(advanceDoorSequence(s,100,.01),'close');s.doorCloseDone=true;assert.equal(completeDoorSequence(s,stations),true);
  assert.equal(s.next,1);assert.equal(s.served,0);assert.deepEqual(s.errors,[]);
  s.s=100;s.startingDeparture=false;advanceDoorSequence(s,100,3);advanceDoorSequence(s,100,15);s.announcementDone=true;advanceDoorSequence(s,100,.01);
- assert.equal(completeDoorSequence(s,stations),true);assert.equal(s.served,1);assert.equal(s.next,2);assert.deepEqual(s.errors,[0]);assert.equal(completeDoorSequence(s,stations),false);
+ s.doorCloseDone=true;assert.equal(completeDoorSequence(s,stations),true);assert.equal(s.served,1);assert.equal(s.next,2);assert.deepEqual(s.errors,[0]);assert.equal(completeDoorSequence(s,stations),false);
 });
 function mockAudio(){
  const sound=new SoundEngine(),sources=[];sound.ready=true;sound.departureBuffers=new Map(['kuroiso.mp3','shirakawa.mp3','departure-chime.wav'].map(x=>[x,x]));
@@ -51,4 +51,16 @@ test('すべての開始駅で戸開し待ち時間なしに一度だけ発車�
   state.announcementDone=true;assert.equal(advanceDoorSequence(state,stations[index+1].s,.01),'close');
  }
  assert.equal(beginStartingBoarding({},3,stations),false);
+});
+
+test('戸閉音の終了まで戸閉灯用のdoors状態と発車禁止を維持し、終了後だけ確定',async()=>{
+ const stations=[{name:'黒磯',s:0},{name:'高久',s:4000}],state={s:0,v:0,next:1,served:0,errors:[]};beginStartingBoarding(state,0,stations);advanceDoorSequence(state,4000,0);state.announcementDone=true;
+ assert.equal(advanceDoorSequence(state,4000,.01),'close');assert.equal(completeDoorSequence(state,stations),false);assert.equal(state.doors,true);
+ const {sound,sources}=mockAudio();sound.effects={close:'BVE-door-close'};let completed=false;
+ const closing=sound.playDoorClose().then(done=>{completed=done;state.doorCloseDone=done;});
+ assert.equal(sources[0].buffer,'BVE-door-close');assert.equal(completed,false);assert.equal(advanceDoorSequence(state,4000,30),null);assert.equal(state.doors,true);
+ sources[0].onended();await closing;assert.equal(advanceDoorSequence(state,4000,.01),'closed');assert.equal(completeDoorSequence(state,stations),true);assert.equal(state.doors,false);assert.equal(state.next,1);
+});
+test('戸閉音の途中でやり直したら戸閉完了通知を返さない',async()=>{
+ const {sound,sources}=mockAudio();sound.effects={close:'BVE-door-close'};const closing=sound.playDoorClose();sound.cancelDeparture();assert.equal(await closing,false);assert.equal(sources.length,1);
 });

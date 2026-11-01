@@ -1,0 +1,171 @@
+Version 1.0
+
+[Run]
+;;Rock_On氏JR線車両パック標準
+0 = Run\Run_long.wav ;ロングレール
+1 = Run\Run_long.wav ;ロングレール
+2 = Run\Run_25mN.wav ;25M定尺レール
+3 = Run\Run_bridge.wav ;鉄橋
+4 = Run\Run_tonnel.wav ;トンネル
+5 = Run\Run_tonnel.wav ;トンネル
+6 = Run\Run_tonnel.wav ;トンネル
+;;独自Run音
+10 = Run\Run_long_25m.wav ;25m溶接ロングレール
+11 = Run\Run_long_25and50.wav ;25m＆50m混合溶接ロングレール
+
+[Compressor]
+Attack = air\cpsta_M.wav
+Loop = air\CpLoop_M.wav
+Release = air\CpEnd_M.wav
+
+
+[Motor]
+;モーター音(MT65形主電動機・三菱IGBT-VVVFインバータ制御)
+0 = Motor\Conv.wav
+1 = Motor\Motor1.wav
+2 = Motor\Motor2.wav
+3 = Motor\Motor3.wav
+4 = Motor\Motor4.wav
+5 = Motor\Motor5.wav
+6 = Motor\Motor6.wav
+7 = Motor\Motor7.wav
+8 = Motor\Motor8.wav
+9 = Motor\Motor9.wav
+10 = Motor\Motor10.wav
+11 = Motor\Motor11.wav
+12 = Motor\Motor12.wav
+13 = Motor\Motor13A.wav
+14 = Motor\Motor14A.wav
+15 = Motor\Motor15.wav
+16 = Motor\Motor16.wav
+17 = Motor\Motor17.wav
+18 = Motor\Motor18.wav
+19 = Motor\Motor19.wav
+20 = Motor\Motor20.wav
+21 = Motor\Motor21.wav
+22 = Motor\Motor22.wav
+23 = Motor\Motor23.wav
+24 = Motor\Motor24.wav
+25 = Motor\Motor25.wav
+26 = Motor\Motor26.wav
+27 = Motor\Motor27.wav
+28 = Motor\Motor28.wav
+29 = Motor\Motor29.wav
+30 = Motor\Motor30.wav
+35 = Motor\Motor11B.wav
+;36 = motor\motor11C.wav
+50 = Motor\Boo.wav
+
+
+[Switch]
+0 = Run\Point.wav
+
+[Master Controller]
+Max = Master_controller\notch\MFL.wav
+Min = Master_controller\notch\ME.wav
+Up =  Master_controller\notch\ML.wav
+Down = Master_controller\notch\ML.wav
+UpFast =  Master_controller\notch\MF.wav
+DownFast = Master_controller\notch\MF.wav
+
+[Brake Handle]
+Apply = Master_controller\brake\BL2.wav
+ApplyFast = Master_controller\brake\BF.wav
+Release = Master_controller\brake\BL2.wav
+ReleaseFast = Master_controller\brake\BL.wav
+Min = Master_controller\brake\BE.wav
+Max = Master_controller\brake\BFLEB.wav
+
+[Horn]
+Primary = air\hornL.wav
+Secondary= air\hornA.wav
+SecondaryRelease= air\hornB.wav
+
+[Brake]
+BC Release High = air\airhigh.wav
+BC Release = air\air.wav
+;BC Release Full = 
+
+
+
+[Door]
+Open Left = Other\DoorOpn19L.wav
+Open Right = Other\DoorOpn19R.wav
+Close Left = Other\DoorCls19L.wav
+Close Right = Other\DoorCls19R.wav
+
+
+[Others]
+Noise = Other\MG.wav
+Shoe = Other\Rub.wav
+
+[Flange]
+0 = Run\Flange0.wav
+1 = Run\Flange1.wav
+
+
+
+[Ats]
+0 = ATS\Ats.wav
+3 = ATS\ded.wav
+10 = ATS\pt_start.wav
+11 = ATS\Sekkin.wav
+12 = ATS\pt_end.wav
+13= ATS\Sekkin.wav
+20 = ATS\Ats_stop.wav
+21 = ATS\ATSL.wav
+22 = ATS\ATSR.wav
+95 = Relay\SRDON.wav
+96 = Relay\SRDOFF.wav
+110 = Other\shock_Regenerationstop.wav
+111 = Switch\SW1A.wav
+112 = Switch\SW1B.wav
+113 = Switch\SW2A.wav
+114 = Switch\SW2B.wav
+115 = Relay\eBrk.wav
+116 = Relay\ebru.wav
+;117 = Other\Wheelslip1.wav
+118 = Switch\light0.wav
+119 = Switch\light1.wav
+120 = Switch\EB_Cancel.wav
+123 = ATS\buza1.wav
+124 = Switch\SW3A.wav
+125 = Switch\SW3B.wav
+;126 = Switch\ATSri.wav
+128 = Other\blind_up.wav
+129 = Other\blind_down.wav
+140 =air\airzeroA.wav
+141 = air\airzeroB.wav
+142 = air\airzeroC.wav
+143 = air\airEB.wav
+183 = Other\sokuuke0.wav
+;184 = Other\sokuuke1.wav
+;185 = Other\sokuuke2.wav
+;186 = Other\sokuuke3.wav
+;187 = Other\sokuuke1.wav
+;188 = Other\sokuuke0.wav
+189 = Other\sokuuke3.wav
+193 = Other\Stopshock0.wav
+194 = Other\Stopshock1.wav
+195 = Other\Stopshock2.wav
+196 = Other\shock6.wav
+197 = Other\sokuuke0.wav
+198 = Other\sokuuke3.wav
+200 = Other\shock0.wav
+201 =  Other\shock4.wav
+202 = Other\shock2.wav
+
+
+[Pilot Lamp]
+on = Relay\Dooron.wav
+off = Relay\Dooroff.wav
+[AirSpring]
+LeftApply = air\baneApplyL.wav
+RightApply = air\baneApplyR.wav
+LeftRelease = air\BanereleaseL.wav
+RightRelease = air\BanereleaseR.wav
+
+[Reverser]
+On  = Master_controller\levercer\rbF.wav
+Off = Master_controller\levercer\rbN.wav
+
