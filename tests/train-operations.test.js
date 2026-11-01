@@ -19,7 +19,7 @@ test('出発駅の戸閉では停車実績・次駅を進めず、白河の到�
  const stations=[{name:'黒磯',s:0},{name:'白河',s:100},{name:'福島',s:200}];
  const s={s:0,v:0,next:1,served:0,errors:[],doors:false};
  assert.equal(beginStartingBoarding(s,0,stations),true);assert.equal(s.doors,true);
- assert.equal(advanceDoorSequence(s,100,15),'announcement');s.announcementDone=true;
+ assert.equal(advanceDoorSequence(s,100,0),'announcement');s.announcementDone=true;
  assert.equal(advanceDoorSequence(s,100,.01),'close');assert.equal(completeDoorSequence(s,stations),true);
  assert.equal(s.next,1);assert.equal(s.served,0);assert.deepEqual(s.errors,[]);
  s.s=100;s.startingDeparture=false;advanceDoorSequence(s,100,3);advanceDoorSequence(s,100,15);s.announcementDone=true;advanceDoorSequence(s,100,.01);
@@ -39,4 +39,16 @@ test('駅音声の終了までホイッスルを開始せず、両方の終了�
 });
 test('駅音声の途中でやり直したらホイッスル・戸閉へ進まない',async()=>{
  const {sound,sources}=mockAudio();const playback=sound.playDeparture('黒磯');sound.cancelDeparture();assert.equal(await playback,false);assert.equal(sources.length,1);
+});
+
+test('すべての開始駅で戸開し待ち時間なしに一度だけ発車音声を開始',()=>{
+ const stations=[{name:'黒磯',s:0},{name:'高久',s:4},{name:'白河',s:25},{name:'福島',s:109}];
+ for(let index=0;index<stations.length-1;index++){
+  const state={doors:false,v:0,s:stations[index].s,next:index+1};
+  assert.equal(beginStartingBoarding(state,index,stations),true);assert.equal(state.doors,true);assert.equal(state.departureStationIndex,index);
+  assert.equal(advanceDoorSequence(state,stations[index+1].s,0),'announcement');assert.equal(state.doors,true);
+  assert.equal(advanceDoorSequence(state,stations[index+1].s,15),null);assert.equal(state.doors,true);
+  state.announcementDone=true;assert.equal(advanceDoorSequence(state,stations[index+1].s,.01),'close');
+ }
+ assert.equal(beginStartingBoarding({},3,stations),false);
 });

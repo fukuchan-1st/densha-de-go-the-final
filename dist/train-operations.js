@@ -1,7 +1,7 @@
 export const STATION_DEPARTURE_AUDIO={'黒磯':'kuroiso.mp3','白河':'shirakawa.mp3'};
 export function departureFilesFor(stationName){return [STATION_DEPARTURE_AUDIO[stationName],'departure-chime.wav'].filter(Boolean);}
 export function beginStartingBoarding(state,index,stations){
- if(!STATION_DEPARTURE_AUDIO[stations[index].name])return false;
+ if(!stations[index]||index>=stations.length-1)return false;
  Object.assign(state,{doors:true,notch:-4,dwell:0,stopWait:0,doorPhase:'boarding',announcementDone:false,departureStationIndex:index,startingDeparture:true});return true;
 }
 export function completeDoorSequence(state,stations){
@@ -27,7 +27,7 @@ export function advanceDoorSequence(state,target,dt){
  }
  if(state.doorPhase==='boarding'){
   state.dwell+=dt;
-  if(state.dwell+1e-9>=BOARDING_WAIT_SECONDS){state.doorPhase='announcement';return 'announcement';}
+  if(state.startingDeparture||state.dwell+1e-9>=BOARDING_WAIT_SECONDS){state.doorPhase='announcement';return 'announcement';}
  }
  if(state.doorPhase==='announcement'&&state.announcementDone){state.doorPhase='closing';return 'close';}
  return null;

@@ -1,5 +1,5 @@
-import * as T from './assets/vendor/three.module.js?v=14';
-import {createSurfaceMaterial} from './vegetation.js?v=14';
+import * as T from './assets/vendor/three.module.js?v=15';
+import {createSurfaceMaterial} from './vegetation.js?v=15';
 
 // Procedural visual interpretations of the supplied BVE numerical placements.
 // Original .x geometry and textures are deliberately not redistributed.

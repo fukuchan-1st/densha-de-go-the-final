@@ -1,5 +1,5 @@
 // Distances: RailLab transport/39. Performance: user supplied 701-series article.
-import {STATIONS} from './route-data.js?v=14';
+import {STATIONS} from './route-data.js?v=15';
 export {STATIONS};
 export const SPECS = {startAcceleration:2.1,serviceBrake:3.6,emergencyBrake:3.6,maxSpeed:110,gauge:1.067};
 export function acceleration(v,notch,doors=false,gradePerMille=0) {

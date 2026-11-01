@@ -1,4 +1,4 @@
-import {departureFilesFor,STATION_DEPARTURE_AUDIO} from '../../train-operations.js?v=14';
+import {departureFilesFor,STATION_DEPARTURE_AUDIO} from '../../train-operations.js?v=15';
 // Browser port of the supplied RTM RSM2 sound_701.js. Speed input is km/h.
 export function interpolate(points, speed) {
   if (points.length === 1) return 0;
