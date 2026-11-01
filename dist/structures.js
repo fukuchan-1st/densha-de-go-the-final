@@ -1,5 +1,5 @@
-import * as T from './assets/vendor/three.module.js?v=18';
-import {createSurfaceMaterial} from './vegetation.js?v=18';
+import * as T from './assets/vendor/three.module.js?v=20';
+import {createSurfaceMaterial} from './vegetation.js?v=20';
 
 // Procedural visual interpretations of the supplied BVE numerical placements.
 // Original .x geometry and textures are deliberately not redistributed.
@@ -34,7 +34,7 @@ export function addStructures(world,data){
   for(let i=0;i<=steps;i++){const s=T.MathUtils.lerp(x.sStart+.7,x.sEnd-.7,i/steps),f=world.frame(s);for(let k=0;k<cross.length;k++){const [off,y]=cross[k];pos.push(f.p.x+f.right.x*off,f.p.y+y,f.p.z+f.right.z*off);uv.push(off/6,(s-x.sStart)/6);if(i&&k){const n=i*cross.length+k;idx.push(n-cross.length-1,n-1,n-cross.length,n-cross.length,n-1,n);}}}
   const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setIndex(idx);g.computeVertexNormals();world.scene.add(new T.Mesh(g,createSurfaceMaterial('ground')));
  }
- function bridge(x){const a=x.sStart,b=x.sEnd,steel=x.sourceType==='osm'?'#626b67':'#8c3b32';for(let s=a;s<b;s+=5){const len=Math.min(5,b-s),mid=s+len/2;cube(8.1,.55,len,'#4b4c46',mid,2,-.7);for(const off of[-2.35,6.35]){cube(.25,1.05,len,steel,mid,off,-.1);beam(position(s,off,.1),position(s+len,off,1.1),.07,steel);beam(position(s,off,1.1),position(s+len,off,.1),.07,steel);cube(.12,.12,len,'#9f5442',mid,off,1.05);}}
+ function bridge(x){const a=x.sStart,b=x.sEnd,steel=x.sourceType==='osm'?'#626b67':'#8c3b32';for(let s=a;s<b;s+=5){const len=Math.min(5,b-s),mid=s+len/2;const rails=world.trackLayout?.activeAt(mid).filter(t=>Math.abs(t.x)<20).map(t=>t.x)??[0,4],left=Math.min(...rails)-2.35,right=Math.max(...rails)+2.35;cube(right-left,.55,len,'#4b4c46',mid,(left+right)/2,-.7);for(const off of[left,right]){cube(.25,1.05,len,steel,mid,off,-.1);beam(position(s,off,.1),position(s+len,off,1.1),.07,steel);beam(position(s,off,1.1),position(s+len,off,.1),.07,steel);cube(.12,.12,len,'#9f5442',mid,off,1.05);}}
   const depth=x.sourceType==='osm'?2.5:7;for(const s of[a,b]){cube(10,depth,2,'#7c7e71',s,2,-depth-.2);cube(10,.5,3,'#999b8c',s,2,-.85);}
  }
  function roadBridge(x){const s=(x.sStart+x.sEnd)/2,yaw=(x.yawDeg??0)*Math.PI/180;cube(34,.8,8.8,'#a3a599',s,2,6.8,yaw);cube(34,.12,8.2,'#525a56',s,2,7.6,yaw);for(const off of[-9,12])cube(1.1,6.8,1.2,'#989c91',s,off,0,yaw);for(const d of[-4.25,4.25]){const f=world.frame(s+d,2),m=new T.Mesh(box,material('#c6c9bc'));m.scale.set(34,1.1,.16);m.position.copy(f.p);m.position.y+=8.1;m.rotation.y=f.angle+yaw;world.scene.add(m);}}
@@ -42,7 +42,7 @@ export function addStructures(world,data){
  function cutting(x){
   for(const side of[-1,1]){const pos=[],uv=[],idx=[];let i=0;for(let s=x.sStart;s<=x.sEnd+3;s+=4,i++){const at=Math.min(s,x.sEnd),f=world.frame(at);for(const[off,y]of[[side*2.9,-.5],[side*10.5,6]]){pos.push(f.p.x+f.right.x*off,f.p.y+y,f.p.z+f.right.z*off);uv.push((Math.abs(off)-2.9)/4,(at-x.sStart)/6);}if(i){const k=i*2;idx.push(k-2,k-1,k,k-1,k+1,k);}}const geo=new T.BufferGeometry();geo.setAttribute('position',new T.Float32BufferAttribute(pos,3));geo.setAttribute('uv',new T.Float32BufferAttribute(uv,2));geo.setIndex(idx);geo.computeVertexNormals();world.scene.add(new T.Mesh(geo,stone));}
  }
- for(const x of structures){if(x.kind==='tunnel'){archLining(x.sStart,x.sEnd);portal(x.sStart);portal(x.sEnd,true);tunnelCover(x);}else if(x.kind==='bridge')bridge(x);else if(x.kind==='overbridge')roadBridge(x);else if(x.kind==='footbridge')footBridge(x);else if(x.kind==='retaining-wall')cutting(x);else if(x.kind==='river'){const mid=(x.sStart+x.sEnd)/2,f=world.frame(mid,2),water=new T.Mesh(new T.PlaneGeometry(150,x.sEnd-x.sStart),new T.MeshStandardMaterial({color:'#547d78',roughness:.3,metalness:.2,side:T.DoubleSide}));water.position.copy(f.p);water.position.y+=x.yOffsetM??-20;water.rotation.x=-Math.PI/2;water.rotation.z=f.angle;world.scene.add(water);}}
+ for(const x of structures){if(x.kind==='tunnel'){archLining(x.sStart,x.sEnd);portal(x.sStart);portal(x.sEnd,true);tunnelCover(x);}else if(x.kind==='bridge')bridge(x);else if(x.kind==='overbridge')roadBridge(x);else if(x.kind==='footbridge'&&!world.trackLayout)footBridge(x);else if(x.kind==='retaining-wall')cutting(x);else if(x.kind==='river'){const mid=(x.sStart+x.sEnd)/2,f=world.frame(mid,2),water=new T.Mesh(new T.PlaneGeometry(150,x.sEnd-x.sStart),new T.MeshStandardMaterial({color:'#547d78',roughness:.3,metalness:.2,side:T.DoubleSide}));water.position.copy(f.p);water.position.y+=x.yOffsetM??-20;water.rotation.x=-Math.PI/2;water.rotation.z=f.angle;world.scene.add(water);}}
  const tunnels=structures.filter(x=>x.kind==='tunnel');
  return {structures,tunnelAt:s=>tunnels.find(x=>s>=x.sStart&&s<=x.sEnd)??null};
 }

@@ -1,12 +1,15 @@
-import * as T from './assets/vendor/three.module.js?v=18';
-import {settlementAt} from './route-data.js?v=18';
-import {DISPLAY_WIDTH,DISPLAY_HEIGHT} from './display.js?v=18';
-import {addStructures} from './structures.js?v=18';
-import {structureRanges,segmentIntersects,corridorOccupied} from './structure-ranges.js?v=18';
-import {addVegetation,createSurfaceMaterial} from './vegetation.js?v=18';
+import {TrackLayout} from './track-layout.js?v=20';
+import {buildRailways,addStations} from './station-scene.js?v=20';
+import * as T from './assets/vendor/three.module.js?v=20';
+import {settlementAt} from './route-data.js?v=20';
+import {DISPLAY_WIDTH,DISPLAY_HEIGHT} from './display.js?v=20';
+import {addStructures} from './structures.js?v=20';
+import {structureRanges,segmentIntersects,corridorOccupied} from './structure-ranges.js?v=20';
+import {addVegetation,createSurfaceMaterial} from './vegetation.js?v=20';
 export class RailWorld {
- constructor(container,geometry,stations,profile,structures){
-  this.structuresData=structures;this.ranges=structureRanges(structures);this.isStructureCorridor=(s,offset)=>corridorOccupied(structures,s,offset);
+ constructor(container,geometry,stations,profile,structures,stationLayouts){
+  this.trackLayout=new TrackLayout(stationLayouts);
+  this.structuresData=structures;this.ranges=structureRanges(structures);this.isStructureCorridor=(s,offset)=>corridorOccupied(structures,s,offset)||this.trackLayout.occupied(s,offset);
   this.profile=profile;
   this.points=geometry.points;this.length=this.points.at(-1)[0]; this.stations=stations; this.container=container;
   this.scene=new T.Scene();this.scene.background=new T.Color('#a9cadd');this.scene.fog=new T.Fog('#b8ccd0',250,1500);
@@ -37,22 +40,24 @@ export class RailWorld {
   let seed=701;const rand=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
   const middle=this.point(this.length/2),ground=new T.Mesh(new T.PlaneGeometry(260000,260000),this.mat('#7a8b50'));ground.rotation.x=-Math.PI/2;ground.position.set(middle.x,-25,middle.z);this.scene.add(ground);
   this.ribbon(2,450,-.12,'#76844d','ground');
-  for(const off of [0,4]){this.ribbon(off,3.3,.02,'#6f736e','ballast');for(const rail of [-.5335,.5335])this.ribbon(off+rail,.075,.19,'#c2c8c7');}
-  const sleepers=[],poles=[],arms=[],houses=[],roofs=[],fields=[];
-  for(let s=-200;s<this.length+400;s+=.72){for(const off of [0,4]){const f=this.frame(s,off);sleepers.push({x:f.p.x,y:f.p.y+.1,z:f.p.z,w:2.05,h:.12,d:.18,r:f.angle,pitch:Math.asin(f.dir.y)});}}
-  this.instances(this.box,'#77786c',sleepers);
-  const wire=[];for(let s=-200;s<this.length+400;s+=40){if(this.ranges.tunnels.some(x=>segmentIntersects(s,s+40,x,4)))continue;const f=this.frame(s,-3.5);poles.push({x:f.p.x,y:f.p.y+3.8,z:f.p.z,w:.2,h:7.6,d:.2});const c=this.frame(s,2);arms.push({x:c.p.x,y:c.p.y+7.3,z:c.p.z,w:11,h:.12,d:.12,r:c.angle});for(const off of [0,4]){const a=this.frame(s,off).p,b=this.frame(s+40,off).p;wire.push(a.x,a.y+5.7,a.z,b.x,b.y+5.7,b.z,a.x,a.y+6.6,a.z,b.x,b.y+6.6,b.z);}}
-  for(const tunnel of this.ranges.tunnels){for(let s=tunnel.sStart;s<tunnel.sEnd;s+=8){const a=this.frame(s).p,b=this.frame(Math.min(s+8,tunnel.sEnd)).p;wire.push(a.x,a.y+4.45,a.z,b.x,b.y+4.45,b.z);}}
+  this.railwayStats=buildRailways(this);
+  const poles=[],arms=[],houses=[],roofs=[],fields=[],wire=[];
+  for(let s=-200;s<this.length+350;s+=40){
+   if(this.ranges.tunnels.some(x=>segmentIntersects(s,s+40,x,4)))continue;
+   const tracks=this.trackLayout.activeAt(s),groups=[];
+   for(const t of tracks){let group=groups.at(-1);if(!group||t.x-group[0].x>28){group=[];groups.push(group);}group.push(t);
+    const end=Math.min(s+40,t.track.knots.at(-1)[0]);if(end<=s)continue;const next=this.trackLayout.activeAt(end).find(x=>x.track.id===t.track.id),a=this.frame(s,t.x).p,b=this.frame(end,next?.x??t.x).p;wire.push(a.x,a.y+t.y+5.7,a.z,b.x,b.y+(next?.y??t.y)+5.7,b.z);
+   }
+   for(const group of groups){const left=group[0].x-2.5,right=group.at(-1).x+2.5,y=Math.max(...group.map(t=>t.y)),center=(left+right)/2;for(const x of[left,right]){const f=this.frame(s,x);poles.push({x:f.p.x,y:f.p.y+y+3.65,z:f.p.z,w:.2,h:7.3,d:.2});}const f=this.frame(s,center);arms.push({x:f.p.x,y:f.p.y+y+7.2,z:f.p.z,w:right-left,h:.13,d:.16,r:f.angle});}
+  }
+  for(const tunnel of this.ranges.tunnels)for(let s=tunnel.sStart;s<tunnel.sEnd;s+=8){const a=this.frame(s).p,b=this.frame(Math.min(s+8,tunnel.sEnd)).p;wire.push(a.x,a.y+4.45,a.z,b.x,b.y+4.45,b.z);}
   this.instances(this.box,'#8c9290',poles);this.instances(this.box,'#656b6a',arms);const wg=new T.BufferGeometry();wg.setAttribute('position',new T.Float32BufferAttribute(wire,3));this.scene.add(new T.LineSegments(wg,new T.LineBasicMaterial({color:'#414c51',transparent:true,opacity:.7})));
   for(let s=-150;s<this.length+500;s+=55)for(const side of [-1,1]){const urban=settlementAt(s);if(rand()<.35+urban*.6){const offset=side*((urban>.6?16:35)+rand()*65);if(this.isStructureCorridor(s,offset))continue;const f=this.frame(s,offset),h=3+rand()*(3+urban*10);houses.push({x:f.p.x,y:f.p.y+h/2,z:f.p.z,w:6+rand()*4,h,d:7,r:f.angle});roofs.push({x:f.p.x,y:f.p.y+h+.25,z:f.p.z,w:8,h:.5,d:9,r:f.angle});}}
   this.instances(this.box,'#bfb6a3',houses);this.instances(this.box,'#5c625d',roofs);
   addVegetation(this);
   for(let s=-100;s<this.length+400;s+=120)for(const side of [-1,1]){if(this.isStructureCorridor(s,side*65)||settlementAt(s)>.5)continue;const f=this.frame(s,side*65);fields.push({x:f.p.x,y:f.p.y-.04,z:f.p.z,w:85,h:.04,d:100,r:f.angle,pitch:Math.asin(f.dir.y)});}const fieldMat=createSurfaceMaterial('field');fieldMat.map.repeat.set(16,18);this.instances(this.box,'#b3b377',fields,fieldMat);
   for(let s=-300;s<this.length+900;s+=750)for(const side of [-1,1]){const f=this.frame(s,side*(650+rand()*500)),hill=new T.Mesh(new T.SphereGeometry(1,16,8),this.mat('#668375'));hill.position.copy(f.p);hill.position.y=f.p.y-30;hill.scale.set(450,110+rand()*130,500);this.scene.add(hill);}
-  this.stations.forEach((st,i)=>{const end=st.s+4;this.mesh(4,1.1,155,'#aaafa5',end-70,-4.5);this.mesh(.18,.02,155,'#d4c465',end-70,-2.6,1.1);this.mesh(4.4,.2,95,'#a9b8b2',end-60,-4.5,4.2);for(let x=-105;x<0;x+=18)this.mesh(.14,3.1,.14,'#a4aead',end+x,-5.5,1.1);this.mesh(5,3.2,12,'#d8d0bc',end-70,-8,1.1);for(const d of [-100,-15]){this.mesh(.08,1.8,.08,'#717e76',end+d,-4.1,1.1);this.sign(st.name,end+d,-4.1,3.05);}
-   this.mesh(.06,1.8,.06,'#ebe9de',st.s,-1.8);this.sign('停車位置',st.s,-1.8,1.8,1.2,.36);
-  });
-  for(const station of this.stations.filter(x=>x.name==='郡山'||x.name==='福島')){for(const off of [8,12]){this.shortRail(station.s-1100,Math.min(this.length+250,station.s+800),off);this.mesh(2.5,1.1,190,'#a8aea5',station.s-85,off+2.4);this.mesh(3,.18,145,'#aab4b0',station.s-70,off+2.4,4.3);}}
+  this.stationStats=addStations(this);
   for(const l of this.profile.limits){if(l.s<1)continue;this.mesh(.08,2.3,.08,'#a2aaa4',l.s,-2.5);this.sign(String(l.kmh),l.s,-2.5,2.55,.7,.55);}
   for(let s=300;s<this.length;s+=650){if(this.ranges.tunnels.some(x=>segmentIntersects(s-.1,s+.1,x)))continue;this.mesh(.13,4.5,.13,'#777e78',s,-2.7);this.mesh(.42,1.05,.25,'#1a2527',s,-2.7,4.1);const f=this.frame(s,-2.7),lamp=new T.Mesh(new T.SphereGeometry(.12,8,8),new T.MeshBasicMaterial({color:'#7afa83'}));lamp.position.set(f.p.x,f.p.y+4.9,f.p.z);this.scene.add(lamp);}
  }
