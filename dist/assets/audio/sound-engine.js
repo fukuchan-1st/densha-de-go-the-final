@@ -1,3 +1,4 @@
+import {departureFilesFor,STATION_DEPARTURE_AUDIO} from '../../train-operations.js?v=14';
 // Browser port of the supplied RTM RSM2 sound_701.js. Speed input is km/h.
 export function interpolate(points, speed) {
   if (points.length === 1) return 0;
@@ -52,7 +53,8 @@ export class SoundEngine {
       this.nodes=await Promise.all(this.config.tracks.map(async track=>({track,buffer:await load(track.url),gain:null,source:null})));
       this.effects={};
       await Promise.all(Object.entries(this.config.effects).map(async([key,effect])=>{this.effects[key]=await load(effect.url);}));
-      this.departureBuffer=await load('departure-chime.wav');
+      this.departureBuffers=new Map();
+      await Promise.all([...new Set([...Object.values(STATION_DEPARTURE_AUDIO),'departure-chime.wav'])].map(async file=>this.departureBuffers.set(file,await load(file))));
       this.ready=true;
     })().catch(e=>{this.error=e.message; this.loading=null; throw e;});
     return this.loading;
@@ -105,17 +107,26 @@ export class SoundEngine {
     source.connect(this.master); source.start();
     source.onended=()=>source.disconnect();
   }
-  async playDeparture() {
+  async playDeparture(stationName,onStage=()=>{}) {
     const generation=this.departureGeneration??0;
     if(!this.ready)await this.init();
     if(generation!==(this.departureGeneration??0))return false;
     if(this.paused)throw Error('運転が一時停止されています');
+    for(const file of departureFilesFor(stationName)){
+      if(generation!==(this.departureGeneration??0))return false;
+      onStage(file==='departure-chime.wav'?'whistle':'station');
+      const buffer=this.departureBuffers.get(file);if(!buffer)throw Error('発車音声を読み込めません');
+      if(!await this.playDepartureBuffer(buffer))return false;
+    }
+    return generation===(this.departureGeneration??0);
+  }
+  playDepartureBuffer(buffer) {
     if(this.departure)return this.departure.promise;
-    const source=this.ctx.createBufferSource();source.buffer=this.departureBuffer;source.connect(this.master);
+    const source=this.ctx.createBufferSource();source.buffer=buffer;source.connect(this.master);
     let finish;const promise=new Promise(resolve=>{finish=resolve;});
     const active={source,promise,finish};this.departure=active;
     source.onended=()=>{source.disconnect();if(this.departure===active)this.departure=null;finish(true);};
-    source.start();return promise;
+    try{source.start();}catch(error){this.departure=null;source.disconnect();throw error;}return promise;
   }
   cancelDeparture(){
     this.departureGeneration=(this.departureGeneration??0)+1;

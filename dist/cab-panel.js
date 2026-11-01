@@ -5,7 +5,7 @@ export function needlePoint(element,x,y,angle){const scale=element.radius/elemen
 export class CabPanel {
  constructor(canvas,config,images){this.canvas=canvas;this.ctx=canvas.getContext('2d');this.config=config;this.images=images;this.night=0;this.bc=0;this.mr=800;this.viewOrigin=panelPoint(...config.this.origin);}
  static async load(canvas){
-  const base=new URL('./assets/cab-panel/',import.meta.url),r=await fetch(new URL('panel-config.json?v=12',base));if(!r.ok)throw Error('運転台の設定を読み込めません');const config=await r.json();
+  const base=new URL('./assets/cab-panel/',import.meta.url),r=await fetch(new URL('panel-config.json?v=14',base));if(!r.ok)throw Error('運転台の設定を読み込めません');const config=await r.json();
   const keys=new Set();for(const t of config.backgroundTiles)for(const k of ['dayImage','nightImage'])if(t[k])keys.add(t[k]);for(const e of config.elements)if(e.useInPrototype)for(const k of ['dayImage','nightImage'])if(e[k])keys.add(e[k]);
   const images=new Map();await Promise.all([...keys].map(async path=>{const image=new Image();image.src=new URL(path,base);await image.decode();const surface=document.createElement('canvas');surface.width=image.width;surface.height=image.height;const ctx=surface.getContext('2d',{willReadFrequently:true});ctx.drawImage(image,0,0);const pixels=ctx.getImageData(0,0,image.width,image.height);let keyed=false;for(let i=0;i<pixels.data.length;i+=4)if(pixels.data[i]===0&&pixels.data[i+1]===0&&pixels.data[i+2]===255&&pixels.data[i+3]){pixels.data[i+3]=0;keyed=true;}if(keyed)ctx.putImageData(pixels,0,0);images.set(path,surface);}));
   canvas.width=1600;canvas.height=900;return new CabPanel(canvas,config,images);

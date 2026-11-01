@@ -1,9 +1,9 @@
-import * as T from './assets/vendor/three.module.js?v=12';
-import {settlementAt} from './route-data.js?v=12';
-import {DISPLAY_WIDTH,DISPLAY_HEIGHT} from './display.js?v=12';
-import {addStructures} from './structures.js?v=12';
-import {structureRanges,segmentIntersects,corridorOccupied} from './structure-ranges.js?v=12';
-import {addVegetation,createSurfaceMaterial} from './vegetation.js?v=12';
+import * as T from './assets/vendor/three.module.js?v=14';
+import {settlementAt} from './route-data.js?v=14';
+import {DISPLAY_WIDTH,DISPLAY_HEIGHT} from './display.js?v=14';
+import {addStructures} from './structures.js?v=14';
+import {structureRanges,segmentIntersects,corridorOccupied} from './structure-ranges.js?v=14';
+import {addVegetation,createSurfaceMaterial} from './vegetation.js?v=14';
 export class RailWorld {
  constructor(container,geometry,stations,profile,structures){
   this.structuresData=structures;this.ranges=structureRanges(structures);this.isStructureCorridor=(s,offset)=>corridorOccupied(structures,s,offset);
