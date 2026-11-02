@@ -1,7 +1,7 @@
-import * as T from './assets/vendor/three.module.js?v=22';
-import {interpolateKnots} from './track-layout.js?v=22';
-import {createSurfaceMaterial} from './vegetation.js?v=22';
-import {segmentIntersects} from './structure-ranges.js?v=22';
+import * as T from './assets/vendor/three.module.js?v=23';
+import {interpolateKnots} from './track-layout.js?v=23';
+import {createSurfaceMaterial} from './vegetation.js?v=23';
+import {segmentIntersects} from './structure-ranges.js?v=23';
 export function buildRailways(world){
  const rails=[],railIndices=[],bed=[],bedIndices=[],sleepers=[],supports=[];const layout=world.trackLayout;
  function vertex(target,s,x,y){const f=world.frame(s,x);target.push(f.p.x,f.p.y+y,f.p.z);}

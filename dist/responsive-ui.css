@@ -45,3 +45,5 @@ body[data-device-layout='phone'] .attribution{font-size:calc(7px / var(--display
 
 #controlDeck #pauseButton{font-size:12px;padding:6px 4px}
 #controlDeck .deck-message:has(#operationStatus:empty){visibility:hidden}
+
+.shake-setting{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:20px 0}.shake-setting select{min-height:44px;min-width:120px;font-size:16px;padding:8px;border-radius:6px;background:#102c38;color:#e5f3ed;border:1px solid #86b6a0}

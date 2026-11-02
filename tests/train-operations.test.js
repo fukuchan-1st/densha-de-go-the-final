@@ -3,7 +3,7 @@ import {advanceDoorSequence,beginStartingBoarding,completeDoorSequence,departure
 import {formatStopDistance} from '../dist/display.js';
 import {SoundEngine} from '../dist/assets/audio/sound-engine.js';
 const stopped=error=>({s:4000+error,v:0,doors:false,notch:-3,dwell:0,finished:false});
-test('±3m以内でも3秒の停車確認後にだけ自動戸開',()=>{for(const error of [-3,-2.99,0,2.99,3]){const s=stopped(error);assert.equal(advanceDoorSequence(s,4000,2.99),null);assert.equal(s.doors,false);assert.equal(advanceDoorSequence(s,4000,.01),'open');assert.equal(s.doors,true);assert.equal(s.notch,-4);}for(const error of [-10,-3.001,3.001,10]){const s=stopped(error);assert.equal(advanceDoorSequence(s,4000,30),null);assert.equal(s.doors,false);}});
+test('±3m以内でも3秒の停車確認後にだけ自動戸開',()=>{for(const error of [-3,-2.99,0,2.99,3]){const s=stopped(error);assert.equal(advanceDoorSequence(s,4000,2.99),null);assert.equal(s.doors,false);assert.equal(advanceDoorSequence(s,4000,.01),'open');assert.equal(s.doors,true);assert.equal(s.notch,-3);}for(const error of [-10,-3.001,3.001,10]){const s=stopped(error);assert.equal(advanceDoorSequence(s,4000,30),null);assert.equal(s.doors,false);}});
 test('待機中の移動または範囲逸脱で3秒の確認をやり直す',()=>{for(const change of [s=>{s.v=.02;},s=>{s.s=4003.01;}]){const s=stopped(0);advanceDoorSequence(s,4000,2);change(s);assert.equal(advanceDoorSequence(s,4000,1),null);assert.equal(s.stopWait,0);s.s=4000;s.v=0;assert.equal(advanceDoorSequence(s,4000,2.99),null);assert.equal(advanceDoorSequence(s,4000,.01),'open');}});
 test('戸開から15秒待ち、音声の終了通知後にのみ戸閉する',()=>{const s=stopped(0);assert.equal(advanceDoorSequence(s,4000,3),'open');assert.equal(advanceDoorSequence(s,4000,14.99),null);assert.equal(advanceDoorSequence(s,4000,.01),'announcement');assert.equal(advanceDoorSequence(s,4000,30),null);assert.equal(s.doors,true);s.announcementDone=true;assert.equal(advanceDoorSequence(s,4000,.01),'close');assert.equal(advanceDoorSequence(s,4000,.01),null);});
 test('終了済みなら戸開せず、乗降タイマーをリセットしない',()=>{const done={...stopped(0),finished:true};assert.equal(advanceDoorSequence(done,4000,30),null);const s=stopped(0);advanceDoorSequence(s,4000,3);advanceDoorSequence(s,4000,4);assert.equal(s.dwell,4);advanceDoorSequence(s,4000,2);assert.equal(s.dwell,6);});
@@ -63,4 +63,18 @@ test('戸閉音の終了まで戸閉灯用のdoors状態と発車禁止を維持
 });
 test('戸閉音の途中でやり直したら戸閉完了通知を返さない',async()=>{
  const {sound,sources}=mockAudio();sound.effects={close:'BVE-door-close'};const closing=sound.playDoorClose();sound.cancelDeparture();assert.equal(await closing,false);assert.equal(sources.length,1);
+});
+
+test('戸開・戸閉開始・戸閉完了はEBからP5まで全ノッチを保持し、乗降中の操作も上書きしない',()=>{
+ const stations=[{name:'黒磯',s:0},{name:'高久',s:4000},{name:'黒田原',s:8200}];
+ for(let notch=-9;notch<=5;notch++){
+  const s={...stopped(0),notch,next:1,served:0,errors:[]};
+  assert.equal(advanceDoorSequence(s,4000,3),'open');assert.equal(s.notch,notch);
+  const changed=notch===-9?0:-9;s.notch=changed;
+  advanceDoorSequence(s,4000,15);s.announcementDone=true;assert.equal(advanceDoorSequence(s,4000,.01),'close');assert.equal(s.notch,changed);
+  assert.equal(completeDoorSequence(s,stations),false);assert.equal(s.notch,changed);s.doorCloseDone=true;
+  assert.equal(completeDoorSequence(s,stations),true);assert.equal(s.notch,changed);assert.equal(s.next,2);
+  const start={...stopped(0),s:0,notch,next:1,served:0,errors:[]};assert.equal(beginStartingBoarding(start,0,stations),true);assert.equal(start.notch,notch);
+  advanceDoorSequence(start,4000,0);start.announcementDone=true;advanceDoorSequence(start,4000,.01);start.doorCloseDone=true;completeDoorSequence(start,stations);assert.equal(start.notch,notch);assert.equal(start.next,1);
+ }
 });

@@ -1,4 +1,4 @@
-import {responsiveLayout} from './responsive-layout.js?v=22';
+import {responsiveLayout} from './responsive-layout.js?v=23';
 export function mountResponsiveUI(){
  const $=id=>document.getElementById(id),deck=document.createElement('aside');deck.id='controlDeck';deck.hidden=true;deck.setAttribute('aria-label','運転操作');
  deck.innerHTML='<div class="deck-core"><div class="deck-status"><div class="deck-speed"><b id="deckSpeed">0</b><small>km/h</small><span id="deckLimit">制限 110</span></div><output id="deckNotch" aria-label="現在のノッチ">N</output><div class="deck-target"><small>次の駅</small><b id="deckNext">高久</b><span id="deckDistance">4,000 m</span><small id="deckDoor">戸閉</small></div></div><div class="deck-primary"></div><div class="deck-utility"></div><div class="deck-strip"></div><div class="deck-message"></div></div><div id="controlExtras" hidden><div class="extras-grid"></div><button id="closeControls" type="button">閉じる</button></div>';
