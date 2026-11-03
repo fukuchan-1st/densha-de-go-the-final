@@ -1,6 +1,28 @@
 import {inflateSync} from './assets/vendor/fflate.module.js';
 
 export async function loadVehicleRecipes(){const r=await fetch(new URL('./assets/final/vehicle-recipes.json',import.meta.url));if(!r.ok)throw Error('車両設定を読み込めません');return r.json();}
+
+class BundledTrainPack {
+ constructor(id){this.root=new URL(`./local-vehicles/${id}/`,import.meta.url);}
+ objectURL(ref){
+  const extension=ref.entryName.slice(ref.entryName.lastIndexOf('.')).toLowerCase();
+  return new URL(`${ref.entryIndex}${extension}`,this.root).href;
+ }
+ async bytes(ref){
+  const response=await fetch(this.objectURL(ref));
+  if(!response.ok)throw Error('アプリ内の音源を読み込めません');
+  return new Uint8Array(await response.arrayBuffer());
+ }
+}
+
+export async function loadBundledTrainPacks(){
+ if(!['127.0.0.1','localhost','[::1]'].includes(location.hostname))return new Map();
+ const response=await fetch(new URL('./local-vehicles/manifest.json',import.meta.url));
+ if(response.status===404)return new Map();
+ if(!response.ok)throw Error('アプリ内の車両一覧を読み込めません');
+ const {trains}=await response.json();
+ return new Map(trains.map(id=>[id,new BundledTrainPack(id)]));
+}
 const crcTable=Uint32Array.from({length:256},(_,n)=>{for(let i=0;i<8;i++)n=n&1?0xedb88320^(n>>>1):n>>>1;return n>>>0;});
 export function crc32(bytes){let n=0xffffffff;for(const b of bytes)n=crcTable[(n^b)&255]^(n>>>8);return (n^0xffffffff)>>>0;}
 const fail=()=>{throw Error('指定の元ZIPと内容が一致しません。未変更の車両ZIPを選んでください。');};

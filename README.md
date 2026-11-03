@@ -1,4 +1,4 @@
-# RAILWAY DRIVE — 4路線 運転乗務
+# RAILWAY DRIVE — 5路線 運転乗務
 
 16:9のメニュー・運転表示を、実際に起動した電車でGO！FINALのトップメニュー・路線選択を参考に作り替えました。黄文字の見出し、青緑のパネル、赤い選択矢印、段違いの路線リストを採用した独自デザインです。ゲームのロゴ・画面素材・モデルは同梱していません。
 
@@ -8,10 +8,11 @@
 |中央線|E233系0番台・12両|東京→高尾・53.1km|23|
 |大阪環状線|323系・8両|大阪→京橋→天王寺→西九条→大阪・21.7km|19|
 |東海道線|207系2000番台・7両|京都→大阪→神戸・75.9km|32|
+|東北本線|701系1500番台・2両|黒磯→郡山→福島・109.5km|23|
 
-いずれも各駅停車。中央線は快速線の駅をすべて停車対象にし、高円寺・阿佐ケ谷・西荻窪にも停車します。途中の駅からも開始できます。従来の東北本線701系はメニュー下部のリンクから開けます。
+いずれも各駅停車。中央線は快速線の駅をすべて停車対象にし、高円寺・阿佐ケ谷・西荻窪にも停車します。途中の駅からも開始できます。東北本線も同じ路線一覧に並び、「運転をはじめる」で選んだ駅から701系の運転画面が開きます。
 
-「車両ZIPを読み込む」で、指定された元ZIPを選択すると、その車両の運転台画像・針・収録音をブラウザー内で利用します。元PNG・WAV・DLLは新4車両の公開ページや配布ZIPに含めていません。ZIPは送信されず、このタブを開いている間だけ利用します。未読込でも独自の3D車両イラスト・簡易運転台・合成音で走れます。E235の提供音は起動時のみ、E233の提供ZIPにモーター音はなく、未収録のモーター音を別車両の音で置き換えてはいません。
+このPCの「起動する.cmd」から開くと、解凍済み車両から取り込んだ運転台・計器・収録音を自動で準備します。起動後は路線と出発駅を選ぶだけです。内蔵データはプロジェクト内の `local-vehicles/` にあり、PC版の起動プログラムから参照します。サイト版の山手線・中央線・大阪環状線・東海道線には簡易運転台と合成音が付きます。E235の提供モーター音は起動時のみで、E233の提供データは走行音・効果音を収録しています。
 
 ノッチは車両別で、E235/E233がP5・B8、323がP5・抑速＋B7、207がP6・B8です。S/↓でP側、W/↑でEB側、XでN、SpaceでEB、Hで警笛。ドア開閉でノッチを変えません。戸開中・戸閉中は力行しません。停車±3mで3秒停止後に戸開、15秒待って合図音・戸閉音を再生し、戸閉音終了後に戸閉灯が点灯します。最初の駅は戸開状態で即座に合図音から開始。±10mマーカー・5m以下cm表示・揺れ強度設定を引き継ぎました。
 
@@ -21,9 +22,29 @@
 
 路線出典は `dist/assets/final/route-data-notes.md`、車両読み込みの詳細は `vehicle-import-notes.md`。開発・検証は `npm start` / `npm test`。ローカル配布版の起動は下記と同じです。
 
+### 路線ボタンの生成指示
+
+組み込みの画像生成ツールを使用しました。東北本線は `cddata/menu/menu_mem_us.dat` 内の枠素材を参照し、残り4路線は生成した東北本線ボタンをデザインの参照にしました。5つの画像は `dist/assets/final/` にあります。
+
+- `tohoku-route-button-v25.png`
+
+  Use case: ui-mockup. Create a single wide rectangular route-selection button background for an early-2000s Japanese train simulator. Refer to the provided extracted game sprite sheet for the simple beveled frame and left thumbnail inset (especially sprite 428), and to the JR East 701 series commuter train design: silver stainless steel, dark windshield, centered end door, broad green stripe with a thin red accent. The button spans the full image edge to edge, target visible aspect about 6.5:1; all key detail is along the central horizontal band so the art can be center cropped to this shape. At the far left, in the leftmost 23 percent, show a close three-quarter front view of that two-car train on a rural northern Japan platform. Across the remaining 77 percent keep the area quiet, deep near-black green with subtle brushed-metal gradient, for real UI text added later. Thin silver and muted turquoise retro bevel around the tile, subtle 2004 game menu texture. No writing, letters, symbols, logos, watermark, exterior scene outside the tile, or separate icons. One continuous UI texture.
+- `yamanote-route-button-v25.png`
+
+  Create one route selection button background for a retro Japanese train simulator, matching the attached Tohoku button asset as closely as possible in layout, scale and visual style. The attached image is a design template. Preserve the full-width horizontal silver and muted turquoise beveled frame centered vertically, the thin vertical separator at exactly 25% width, the near-black brushed green fill in the right 75%, and black padding above and below, using the same 3:1 overall canvas and 5.5:1 button frame. Replace only the small photographic train vignette in the left inset. JR East E235 series Yamanote Line. Its modern flat full-width dark windshield face has a prominent lime green forehead panel and lime green vertical door bands on its stainless sides. Show the train at a Tokyo urban platform. Match the reference vignette's three-quarter front camera angle and headlight realism. The right-hand text area must be empty for live HTML text. No writing, logos, badges, watermark or extra buttons.
+- `chuo-route-button-v25.png`
+
+  Create one route selection button background for a retro Japanese train simulator, matching the attached Tohoku button asset as closely as possible in layout, scale and visual style. The attached image is a design template. Preserve the full-width horizontal silver and muted turquoise beveled frame centered vertically, the thin vertical separator at exactly 25% width, the near-black brushed green fill in the right 75%, and black padding above and below, using the same 3:1 overall canvas and 5.5:1 button frame. Replace only the small photographic train vignette in the left inset. JR East E233 series 0 subseries Chuo Line. Stainless commuter train with a bright vermilion-orange horizontal stripe, rounded dark front windscreen, on an open Tokyo suburban platform. Match the reference vignette's three-quarter front camera angle and headlight realism. The right-hand text area must be empty for live HTML text. No writing, logos, badges, watermark or extra buttons.
+- `osaka-route-button-v25.png`
+
+  Create one route selection button background for a retro Japanese train simulator, matching the attached Tohoku button asset as closely as possible in layout, scale and visual style. The attached image is a design template. Preserve the full-width horizontal silver and muted turquoise beveled frame centered vertically, the thin vertical separator at exactly 25% width, the near-black brushed green fill in the right 75%, and black padding above and below, using the same 3:1 overall canvas and 5.5:1 button frame. Replace only the small photographic train vignette in the left inset. JR West 323 series Osaka Loop Line. Stainless commuter train with a wide charcoal face, orange front and side accents, on a covered Osaka urban platform. Match the reference vignette's three-quarter front camera angle and headlight realism. The right-hand text area must be empty for live HTML text. No writing, logos, badges, watermark or extra buttons.
+- `tokaido-route-button-v25.png`
+
+  Create one route selection button background for a retro Japanese train simulator, matching the attached Tohoku button asset as closely as possible in layout, scale and visual style. The attached image is a design template. Preserve the full-width horizontal silver and muted turquoise beveled frame centered vertically, the thin vertical separator at exactly 25% width, the near-black brushed green fill in the right 75%, and black padding above and below, using the same 3:1 overall canvas and 5.5:1 button frame. Replace only the small photographic train vignette in the left inset. JR West 207 series 2000 subseries. Stainless commuter EMU with a central gangway door and paired front windscreens, a deep navy blue stripe with a slim orange accent, on a Kyoto-Osaka area commuter platform. Match the reference vignette's three-quarter front camera angle and headlight realism. The right-hand text area must be empty for live HTML text. No writing, logos, badges, watermark or extra buttons.
+
 ---
 
-## 従来の東北本線701系（別画面）
+## 東北本線701系の運転
 
 # 東北本線 701系運転プロトタイプ：黒磯〜福島
 

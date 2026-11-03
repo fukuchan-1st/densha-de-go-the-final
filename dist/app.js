@@ -20,6 +20,21 @@ const strip=NOTCH_LABELS;
 $('notchStrip').innerHTML=strip.map((n,i)=>`<button type="button" data-notch="${i+NOTCH_MIN}" aria-label="ノッチ ${n}">${n}</button>`).join('');
 $('startStation').innerHTML=STATIONS.slice(0,-1).map((s,i)=>`<option value="${i}">${s.name}${s.s>=BVE_END?'（以北は試作）':''}</option>`).join('');
 $('startStation').onchange=()=>{$('scenarioRoute').textContent=STATIONS[Number($('startStation').value)].name+' → 福島　'+((ROUTE_LENGTH-STATIONS[Number($('startStation').value)].s)/1000).toFixed(1)+' km';};
+const requestedStation=new URLSearchParams(location.search).get('station');
+if(requestedStation!==null&&$('startStation').querySelector(`option[value="${CSS.escape(requestedStation)}"]`)){
+ $('startStation').value=requestedStation;
+ $('startStation').onchange();
+}
+const directStart=new URLSearchParams(location.search).get('drive')==='1';
+if(directStart){
+ document.documentElement.classList.add('direct-drive');
+ $('menuButton').textContent='路線選択へ';
+ $('pauseMenu').textContent='路線選択へ';
+}
+function returnToRoutes(){location.href='./?v=25&route=tohoku';}
+$('allRoutes').onclick=returnToRoutes;
+$('audioBack').onclick=returnToRoutes;
+$('audioUnlock').addEventListener('cancel',event=>event.preventDefault());
 $('journeyTrack').innerHTML=STATIONS.map(x=>`<span>${x.name}</span>`).join('');
 for(let n=0;n<=120;n+=10){const a=(-130+n/120*260)*Math.PI/180,x=100+Math.sin(a)*72,y=85-Math.cos(a)*72,tx=100+Math.sin(a)*57,ty=85-Math.cos(a)*57;const ns='http://www.w3.org/2000/svg',line=document.createElementNS(ns,'line');line.setAttribute('x1',x);line.setAttribute('y1',y);line.setAttribute('x2',100+Math.sin(a)*65);line.setAttribute('y2',85-Math.cos(a)*65);line.setAttribute('stroke','#424d42');$('ticks').append(line);if(n%20===0){const t=document.createElementNS(ns,'text');t.setAttribute('x',tx);t.setAttribute('y',ty+3);t.setAttribute('fill','#343d31');t.setAttribute('text-anchor','middle');t.setAttribute('font-size','8');t.textContent=n;$('ticks').append(t);}}
 const geometryPromise=fetch('./assets/route-geometry.json?v=23').then(r=>{if(!r.ok)throw Error('線路座標を取得できません');return r.json();});
@@ -31,14 +46,56 @@ $('routeButton').onclick=()=>info(`<p class="eyebrow">ROUTE & ROLLING STOCK</p><
 $('settingsButton').onclick=()=>{info(`<p class="eyebrow">CAB SETTINGS</p><h2>音と揺れ。</h2><p>Motor音はRTM 701soundpack、走行音・ドア音・操作音は指定のBVE音源を使用。元スクリプトの速度別ピッチ・音量を区分線形補間して再生します。</p><label>音量 <span id="volValue">${Math.round(settings.volume*100)}</span>%<input id="volume" type="range" min="0" max="100" value="${settings.volume*100}"></label><label class="shake-setting">走行中の揺れ<select id="shakeStrength"><option value="0">なし</option><option value="0.6">弱め</option><option value="1">標準</option></select></label><p>動画との聴感比較は未実施。Motor音はRTM設定を基準にしています。</p>`);$('volume').oninput=e=>{settings.volume=e.target.value/100;sound.setVolume(settings.volume);$('volValue').textContent=e.target.value;try{localStorage.setItem('tohoku-volume',settings.volume);}catch{}};$('shakeStrength').value=String(settings.shake);$('shakeStrength').onchange=e=>{settings.shake=Number(e.target.value);try{localStorage.setItem('tohoku-shake',settings.shake);}catch{}};};
 async function ensureWorld(){if(world)return;const [g,p,structures,extension,stationLayouts]=await Promise.all([geometryPromise,fetch('./assets/bve-profile.json?v=23').then(r=>{if(!r.ok)throw Error('BVE路線データを取得できません');return r.json();}),fetch('./assets/bve-structures.json?v=23').then(r=>{if(!r.ok)throw Error('BVE構造物データを取得できません');return r.json();}),fetch('./assets/osm-extension-structures.json?v=23').then(r=>{if(!r.ok)throw Error('追加区間の構造物データを取得できません');return r.json();}),fetch('./assets/station-layouts.json?v=23').then(r=>{if(!r.ok)throw Error('駅配線データを取得できません');return r.json();})]);profile=new RouteProfile(p);const allStructures={structures:[...structures.structures,...extension.structures.map(x=>({...x,sourceType:'osm'}))]};world=new RailWorld($('world'),g,STATIONS,profile,allStructures,stationLayouts);panel=await CabPanel.load($('cabCanvas'));world.setCabView(panel.viewOrigin);}
 async function start(){
- $('start').disabled=true;$('start').querySelector('span').textContent='運転席を準備中…';
+ $('start').disabled=true;
+ $('start').querySelector('span').textContent='運転席を準備中…';
  sound.stop();
- // Start AudioContext synchronously within the button's user gesture.
- sound.init().then(()=>{if(mode==='menu'||paused)sound.setPaused(true);}).catch(e=>toast('走行音の読み込み失敗：'+e.message,12));
- try{await ensureWorld();run=newRun();world.resetMotion();const startIndex=Number($('startStation').value);run.startIndex=startIndex;run.startS=STATIONS[startIndex].s;run.s=run.startS;run.next=startIndex+1;run.targetStops=LAST_STATION_INDEX-startIndex;beginStartingBoarding(run,startIndex,STATIONS);mode='drive';paused=false;sound.setPaused(false);$('menu').hidden=true;$('drive').hidden=false;$('continue').hidden=false;ui.setMode('drive');toast(run.startingDeparture?`${STATIONS[run.startIndex].name}で戸開中。発車音声を自動再生してから戸閉します。`:`${STATIONS[run.startIndex].name}を出発。S／↓で力行、W／↑で制動。`,9);}catch(e){bootError=e.message;info(`<h2>運転画面を起動できませんでした</h2><p>${e.message}</p><p>WebGL対応のブラウザーで開いてください。</p>`);}finally{$('start').disabled=false;$('start').querySelector('span').textContent='最初から運転する';}
+ const audioReady=sound.init().catch(error=>toast('走行音の読み込み失敗：'+error.message,12));
+ try{
+  await ensureWorld();
+  const needsAudioGesture=directStart&&['suspended','interrupted'].includes(sound.ctx?.state);
+  if(!needsAudioGesture)await audioReady;
+  run=newRun();
+  world.resetMotion();
+  const startIndex=Number($('startStation').value);
+  run.startIndex=startIndex;
+  run.startS=STATIONS[startIndex].s;
+  run.s=run.startS;
+  run.next=startIndex+1;
+  run.targetStops=LAST_STATION_INDEX-startIndex;
+  beginStartingBoarding(run,startIndex,STATIONS);
+  mode='drive';
+  paused=needsAudioGesture;
+  $('menu').hidden=true;
+  $('drive').hidden=false;
+  $('continue').hidden=false;
+  $('directLoading').hidden=true;
+  ui.setMode('drive');
+  toast(`${STATIONS[startIndex].name}で戸開中。発車音声を自動再生してから戸閉します。`,9);
+  if(needsAudioGesture){
+   $('audioUnlock').showModal();
+   $('enableAudio').onclick=async()=>{
+    await sound.resume();
+    await audioReady;
+    $('audioUnlock').close();
+    paused=false;
+   };
+  }else sound.setPaused(false);
+ }catch(error){
+  bootError=error.message;
+  $('directLoading').hidden=true;
+  info('<h2>運転画面を起動できませんでした</h2><p id="bootError"></p><button id="bootBack">路線選択へ</button>');
+  $('bootError').textContent=error.message;
+  $('bootBack').onclick=returnToRoutes;
+ }finally{
+  $('start').disabled=false;
+  $('start').querySelector('span').textContent='最初から運転する';
+ }
 }
 $('start').onclick=start;
-function toMenu(){mode='menu';paused=true;sound.setPaused(true);$('drive').hidden=true;$('menu').hidden=false;ui.setMode('menu');if($('pauseDialog').open)$('pauseDialog').close();}
+function toMenu(){
+ if(directStart){returnToRoutes();return;}
+ mode='menu';paused=true;sound.setPaused(true);$('drive').hidden=true;$('menu').hidden=false;ui.setMode('menu');if($('pauseDialog').open)$('pauseDialog').close();
+}
 $('menuButton').onclick=toMenu;$('pauseMenu').onclick=toMenu;
 $('continue').onclick=()=>{mode='drive';$('menu').hidden=true;$('drive').hidden=false;ui.setMode('drive');paused=false;sound.resume();};
 function pause(){if(mode!=='drive'||run.finished)return;paused=true;sound.setPaused(true);$('pauseDialog').showModal();}
@@ -75,3 +132,5 @@ function hud(){const kmh=run.v*3.6,next=STATIONS[Math.min(LAST_STATION_INDEX,run
 let last=performance.now();function frame(now){const realDt=Math.max(0,(now-last)/1000),dt=Math.min(.1,realDt);last=now;wall+=dt;if(mode==='drive'&&world){if(!paused){let sim=dt*rate;while(sim>0){const chunk=Math.min(.02,sim);advance(chunk);sim-=chunk;if(paused)break;}if(!paused&&!run.finished)updateDoors(realDt);sound.update(run.v*3.6,run.notch,dt,{doors:run.doors,holdBraking:run.holdBraking,surface:world.routeStructures.tunnelAt(run.s)?'tunnel':world.routeStructures.structures.some(x=>x.kind==='bridge'&&run.s>=x.sStart&&run.s<=x.sEnd)?'bridge':'long',curvature:world.curvature(run.s)});}hud();world.render(run.s,run.v,wall,panorama,run.acceleration??0,settings.shake,paused?0:dt);if(panel)panel.render(run,dt,Boolean(world.routeStructures.tunnelAt(run.s)));$('bveReadout').textContent=`${Math.round(run.v*3.6)} km/h　${strip[run.notch-NOTCH_MIN]}　${run.doorPhase==='closing'?'戸閉中':run.doors?'戸開':'戸閉'}`;rendered=true;}requestAnimationFrame(frame);}requestAnimationFrame(frame);
 // Read-only diagnostics for reproducible local verification; no gameplay shortcuts.
 window.railDiagnostics=()=>({run:{...run},mode,paused,assist,rate,rendered,audioReady:sound.ready,audioError:sound.error,activeTracks:sound.activeTracks,bootError});
+
+if(directStart)start();

@@ -2,3 +2,4 @@ __pycache__/
 *.pyc
 .sites-runtime/
 node_modules/
+/local-vehicles/
