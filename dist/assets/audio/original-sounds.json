@@ -1,0 +1,272 @@
+{
+  "701.motor0": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "701/701_motor0",
+        "stream": false
+      }
+    ]
+  },
+  "701.motor1": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "701/701_motor1",
+        "stream": false
+      }
+    ]
+  },
+  "701.motor2_F": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "701/701_motor2_F",
+        "stream": false
+      }
+    ]
+  },
+  "701.motor3_F": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "701/701_motor3_F",
+        "stream": false
+      }
+    ]
+  },
+  "701.motor3": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "701/701_motor3",
+        "stream": false
+      }
+    ]
+  },
+  "701.motor7": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "701/701_motor7",
+        "stream": false
+      }
+    ]
+  },
+  "701.Motor14": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "701/701_Motor14",
+        "stream": false
+      }
+    ]
+  },
+  "701.Motor18": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "701/701_Motor18",
+        "stream": false
+      }
+    ]
+  },
+  "701.Motor18a": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "701/701_Motor18a",
+        "stream": false
+      }
+    ]
+  },
+  "701.Motor20": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "701/701_Motor20",
+        "stream": false
+      }
+    ]
+  },
+  "701.Motor21": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "701/701_Motor21",
+        "stream": false
+      }
+    ]
+  },
+  "701.Motor22": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "701/701_Motor22",
+        "stream": false
+      }
+    ]
+  },
+  "701.Motor23": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "701/701_Motor23",
+        "stream": false
+      }
+    ]
+  },
+  "701.Motor24-2": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "701/701_Motor24-2",
+        "stream": false
+      }
+    ]
+  },
+  "701.Motor24": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "701/701_Motor24",
+        "stream": false
+      }
+    ]
+  },
+  "701.Motor27": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "701/701_Motor27",
+        "stream": false
+      }
+    ]
+  },
+  "701.Motor29": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "701/701_Motor29",
+        "stream": false
+      }
+    ]
+  },
+  "701.Motor30": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "701/701_Motor30",
+        "stream": false
+      }
+    ]
+  },
+  "701.Motor31": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "701/701_Motor31",
+        "stream": false
+      }
+    ]
+  },
+  "701.Motor32": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "701/701_Motor32",
+        "stream": false
+      }
+    ]
+  },
+  "701.Motor33": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "701/701_Motor33",
+        "stream": false
+      }
+    ]
+  },
+  "701.Motor34": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "701/701_Motor34",
+        "stream": false
+      }
+    ]
+  },
+  "701.Motor35": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "701/701_Motor35",
+        "stream": false
+      }
+    ]
+  },
+  "701.Motor36": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "701/701_Motor36",
+        "stream": false
+      }
+    ]
+  },
+  "701.Motor37": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "701/701_Motor37",
+        "stream": false
+      }
+    ]
+  },
+  "701.run0": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "701/701_run0",
+        "stream": false
+      }
+    ]
+  },
+  "701.209dooropn": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "701/701_209dooropn",
+        "stream": false
+      }
+    ]
+  },
+  "701.doorcls": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "701/701_doorcls",
+        "stream": false
+      }
+    ]
+  },
+  "701.701doorcls": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "701/701_701doorcls",
+        "stream": false
+      }
+    ]
+  },
+  "701.701dooropn": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "701/701_701dooropn",
+        "stream": false
+      }
+    ]
+  }
+}

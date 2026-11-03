@@ -1,0 +1,157 @@
+{
+  "version": 0.6,
+  "generator": "Overpass API 0.7.62.11 87bfad18",
+  "osm3s": {
+    "timestamp_osm_base": "2026-10-30T13:09:46Z",
+    "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
+  },
+  "elements": [
+
+{
+  "type": "node",
+  "id": 264177583,
+  "lat": 37.1301635,
+  "lon": 140.2129901,
+  "tags": {
+    "name": "白河",
+    "name:en": "Shirakawa",
+    "name:ja-Hira": "しらかわ",
+    "name:ja-Latn": "Shirakawa",
+    "name:ko": "시라카와",
+    "name:ru": "Сиракава",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "train": "yes",
+    "wikidata": "Q872774",
+    "wikipedia": "ja:白河駅"
+  }
+},
+{
+  "type": "node",
+  "id": 264180326,
+  "lat": 37.0227939,
+  "lon": 140.1196133,
+  "tags": {
+    "name": "黒田原",
+    "name:en": "Kurodahara",
+    "name:ja-Hira": "くろだはら",
+    "name:ja-Latn": "Kurodahara",
+    "name:ko": "구로다하라",
+    "name:ru": "Куродахара",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "train": "yes",
+    "wikidata": "Q873269",
+    "wikipedia": "ja:黒田原駅"
+  }
+},
+{
+  "type": "node",
+  "id": 264181231,
+  "lat": 37.0554937,
+  "lon": 140.1556233,
+  "tags": {
+    "name": "豊原",
+    "name:en": "Toyohara",
+    "name:ja-Hira": "とよはら",
+    "name:ja-Latn": "Toyohara",
+    "name:ko": "도요하라",
+    "name:ru": "Тоёхара",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "train": "yes",
+    "wikidata": "Q872944",
+    "wikipedia": "ja:豊原駅"
+  }
+},
+{
+  "type": "node",
+  "id": 3721569613,
+  "lat": 37.1230906,
+  "lon": 140.1884461,
+  "tags": {
+    "highspeed": "yes",
+    "name": "新白河",
+    "name:de": "Shin-Shirakawa",
+    "name:en": "Shin-Shirakawa",
+    "name:ja": "新白河",
+    "name:ja-Hira": "しんしらかわ",
+    "name:ja-Latn": "Shinshirakawa",
+    "name:ko": "신시라카와",
+    "name:ru": "Син-Сиракава",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "train": "yes",
+    "wikidata": "Q1136381",
+    "wikipedia": "ja:新白河駅"
+  }
+},
+{
+  "type": "node",
+  "id": 4437997066,
+  "lat": 36.9701908,
+  "lon": 140.0601121,
+  "tags": {
+    "name": "黒磯",
+    "name:de": "Kuroiso",
+    "name:en": "Kuroiso",
+    "name:ja": "黒磯",
+    "name:ja-Hira": "くろいそ",
+    "name:ja-Latn": "Kuroiso",
+    "name:ko": "구로이소",
+    "name:ru": "Куроисо",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "train": "yes",
+    "wikidata": "Q843174",
+    "wikipedia": "ja:黒磯駅"
+  }
+},
+{
+  "type": "node",
+  "id": 5825602938,
+  "lat": 36.9966464,
+  "lon": 140.0873071,
+  "tags": {
+    "name": "高久",
+    "name:en": "Takaku",
+    "name:ja-Hira": "たかく",
+    "name:ja-Latn": "Takaku",
+    "name:ko": "다카쿠",
+    "name:ru": "Такаку",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "train": "yes",
+    "wikidata": "Q872928",
+    "wikipedia": "ja:高久駅"
+  }
+},
+{
+  "type": "node",
+  "id": 5825603320,
+  "lat": 37.0947862,
+  "lon": 140.1843077,
+  "tags": {
+    "name": "白坂",
+    "name:en": "Shirasaka",
+    "name:ja-Hira": "しらさか",
+    "name:ja-Latn": "Shirasaka",
+    "name:ko": "시라사카",
+    "name:ru": "Сирасака",
+    "public_transport": "station",
+    "railway": "station",
+    "source": "KSJ2",
+    "train": "yes",
+    "wikidata": "Q873003",
+    "wikipedia": "ja:白坂駅"
+  }
+}
+
+  ]
+}

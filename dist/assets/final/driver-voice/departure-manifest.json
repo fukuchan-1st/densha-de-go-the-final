@@ -1,0 +1,842 @@
+{
+  "yamanote": [
+    {
+      "station": "東京",
+      "file": "kanko0/departure/0.wav",
+      "source": [
+        "kanko0/yamanote/uta260.wag",
+        "kanko0/com/uta238.wag"
+      ]
+    },
+    {
+      "station": "有楽町",
+      "file": "kanko0/departure/1.wav",
+      "source": [
+        "kanko0/yamanote/uta259.wag",
+        "kanko0/com/uta238.wag"
+      ]
+    },
+    {
+      "station": "新橋",
+      "file": "kanko0/departure/2.wav",
+      "source": [
+        "kanko0/yamanote/uta258.wag",
+        "kanko0/com/uta238.wag"
+      ]
+    },
+    {
+      "station": "浜松町",
+      "file": "kanko0/departure/3.wav",
+      "source": [
+        "kanko0/yamanote/uta257.wag",
+        "kanko0/com/uta238.wag"
+      ]
+    },
+    {
+      "station": "田町",
+      "file": "kanko0/departure/4.wav",
+      "source": [
+        "kanko0/yamanote/uta256.wag",
+        "kanko0/com/uta238.wag"
+      ]
+    },
+    {
+      "station": "高輪ゲートウェイ",
+      "file": "kanko0/departure/5.wav",
+      "source": [
+        "Microsoft Haruka (station name)",
+        "kanko0/com/uta238.wag"
+      ]
+    },
+    {
+      "station": "品川",
+      "file": "kanko0/departure/6.wav",
+      "source": [
+        "kanko0/yamanote/uta255.wag",
+        "kanko0/com/uta238.wag"
+      ]
+    },
+    {
+      "station": "大崎",
+      "file": "kanko0/departure/7.wav",
+      "source": [
+        "kanko0/yamanote/uta254.wag",
+        "kanko0/com/uta238.wag"
+      ]
+    },
+    {
+      "station": "五反田",
+      "file": "kanko0/departure/8.wav",
+      "source": [
+        "kanko0/yamanote/uta253.wag",
+        "kanko0/com/uta238.wag"
+      ]
+    },
+    {
+      "station": "目黒",
+      "file": "kanko0/departure/9.wav",
+      "source": [
+        "kanko0/yamanote/uta252.wag",
+        "kanko0/com/uta238.wag"
+      ]
+    },
+    {
+      "station": "恵比寿",
+      "file": "kanko0/departure/10.wav",
+      "source": [
+        "kanko0/yamanote/uta251.wag",
+        "kanko0/com/uta238.wag"
+      ]
+    },
+    {
+      "station": "渋谷",
+      "file": "kanko0/departure/11.wav",
+      "source": [
+        "kanko0/yamanote/uta250.wag",
+        "kanko0/com/uta238.wag"
+      ]
+    },
+    {
+      "station": "原宿",
+      "file": "kanko0/departure/12.wav",
+      "source": [
+        "kanko0/yamanote/uta249.wag",
+        "kanko0/com/uta238.wag"
+      ]
+    },
+    {
+      "station": "代々木",
+      "file": "kanko0/departure/13.wav",
+      "source": [
+        "kanko0/yamanote/uta248.wag",
+        "kanko0/com/uta238.wag"
+      ]
+    },
+    {
+      "station": "新宿",
+      "file": "kanko0/departure/14.wav",
+      "source": [
+        "kanko0/yamanote/uta247.wag",
+        "kanko0/com/uta238.wag"
+      ]
+    },
+    {
+      "station": "新大久保",
+      "file": "kanko0/departure/15.wav",
+      "source": [
+        "kanko0/yamanote/uta275.wag",
+        "kanko0/com/uta238.wag"
+      ]
+    },
+    {
+      "station": "高田馬場",
+      "file": "kanko0/departure/16.wav",
+      "source": [
+        "kanko0/yamanote/uta274.wag",
+        "kanko0/com/uta238.wag"
+      ]
+    },
+    {
+      "station": "目白",
+      "file": "kanko0/departure/17.wav",
+      "source": [
+        "kanko0/yamanote/uta273.wag",
+        "kanko0/com/uta238.wag"
+      ]
+    },
+    {
+      "station": "池袋",
+      "file": "kanko0/departure/18.wav",
+      "source": [
+        "kanko0/yamanote/uta272.wag",
+        "kanko0/com/uta238.wag"
+      ]
+    },
+    {
+      "station": "大塚",
+      "file": "kanko0/departure/19.wav",
+      "source": [
+        "kanko0/yamanote/uta271.wag",
+        "kanko0/com/uta238.wag"
+      ]
+    },
+    {
+      "station": "巣鴨",
+      "file": "kanko0/departure/20.wav",
+      "source": [
+        "kanko0/yamanote/uta270.wag",
+        "kanko0/com/uta238.wag"
+      ]
+    },
+    {
+      "station": "駒込",
+      "file": "kanko0/departure/21.wav",
+      "source": [
+        "kanko0/yamanote/uta269.wag",
+        "kanko0/com/uta238.wag"
+      ]
+    },
+    {
+      "station": "田端",
+      "file": "kanko0/departure/22.wav",
+      "source": [
+        "kanko0/yamanote/uta268.wag",
+        "kanko0/com/uta238.wag"
+      ]
+    },
+    {
+      "station": "西日暮里",
+      "file": "kanko0/departure/23.wav",
+      "source": [
+        "kanko0/yamanote/uta267.wag",
+        "kanko0/com/uta238.wag"
+      ]
+    },
+    {
+      "station": "日暮里",
+      "file": "kanko0/departure/24.wav",
+      "source": [
+        "kanko0/yamanote/uta266.wag",
+        "kanko0/com/uta238.wag"
+      ]
+    },
+    {
+      "station": "鶯谷",
+      "file": "kanko0/departure/25.wav",
+      "source": [
+        "kanko0/yamanote/uta265.wag",
+        "kanko0/com/uta238.wag"
+      ]
+    },
+    {
+      "station": "上野",
+      "file": "kanko0/departure/26.wav",
+      "source": [
+        "kanko0/yamanote/uta264.wag",
+        "kanko0/com/uta238.wag"
+      ]
+    },
+    {
+      "station": "御徒町",
+      "file": "kanko0/departure/27.wav",
+      "source": [
+        "kanko0/yamanote/uta263.wag",
+        "kanko0/com/uta238.wag"
+      ]
+    },
+    {
+      "station": "秋葉原",
+      "file": "kanko0/departure/28.wav",
+      "source": [
+        "kanko0/yamanote/uta262.wag",
+        "kanko0/com/uta238.wag"
+      ]
+    },
+    {
+      "station": "神田",
+      "file": "kanko0/departure/29.wav",
+      "source": [
+        "kanko0/yamanote/uta261.wag",
+        "kanko0/com/uta238.wag"
+      ]
+    }
+  ],
+  "chuo": [
+    {
+      "station": "東京",
+      "file": "kanko1/departure/0.wav",
+      "source": [
+        "kanko1/chuo/utb276.wag",
+        "kanko1/com/utb238.wag"
+      ]
+    },
+    {
+      "station": "神田",
+      "file": "kanko1/departure/1.wav",
+      "source": [
+        "kanko1/chuo/utb277.wag",
+        "kanko1/com/utb238.wag"
+      ]
+    },
+    {
+      "station": "御茶ノ水",
+      "file": "kanko1/departure/2.wav",
+      "source": [
+        "kanko1/chuo/utb278.wag",
+        "kanko1/com/utb238.wag"
+      ]
+    },
+    {
+      "station": "四ツ谷",
+      "file": "kanko1/departure/3.wav",
+      "source": [
+        "kanko1/chuo/utb282.wag",
+        "kanko1/com/utb238.wag"
+      ]
+    },
+    {
+      "station": "新宿",
+      "file": "kanko1/departure/4.wav",
+      "source": [
+        "kanko1/chuo/utb286.wag",
+        "kanko1/com/utb238.wag"
+      ]
+    },
+    {
+      "station": "中野",
+      "file": "kanko1/departure/5.wav",
+      "source": [
+        "kanko1/chuo/utb289.wag",
+        "kanko1/com/utb238.wag"
+      ]
+    },
+    {
+      "station": "高円寺",
+      "file": "kanko1/departure/6.wav",
+      "source": [
+        "kanko1/chuo/utb290.wag",
+        "kanko1/com/utb238.wag"
+      ]
+    },
+    {
+      "station": "阿佐ケ谷",
+      "file": "kanko1/departure/7.wav",
+      "source": [
+        "kanko1/chuo/utb291.wag",
+        "kanko1/com/utb238.wag"
+      ]
+    },
+    {
+      "station": "荻窪",
+      "file": "kanko1/departure/8.wav",
+      "source": [
+        "kanko1/chuo/utb292.wag",
+        "kanko1/com/utb238.wag"
+      ]
+    },
+    {
+      "station": "西荻窪",
+      "file": "kanko1/departure/9.wav",
+      "source": [
+        "kanko1/chuo/utb293.wag",
+        "kanko1/com/utb238.wag"
+      ]
+    },
+    {
+      "station": "吉祥寺",
+      "file": "kanko1/departure/10.wav",
+      "source": [
+        "kanko1/chuo/utb294.wag",
+        "kanko1/com/utb238.wag"
+      ]
+    },
+    {
+      "station": "三鷹",
+      "file": "kanko1/departure/11.wav",
+      "source": [
+        "kanko1/chuo/utb295.wag",
+        "kanko1/com/utb238.wag"
+      ]
+    },
+    {
+      "station": "武蔵境",
+      "file": "kanko1/departure/12.wav",
+      "source": [
+        "kanko1/chuo/utb296.wag",
+        "kanko1/com/utb238.wag"
+      ]
+    },
+    {
+      "station": "東小金井",
+      "file": "kanko1/departure/13.wav",
+      "source": [
+        "kanko1/chuo/utb297.wag",
+        "kanko1/com/utb238.wag"
+      ]
+    },
+    {
+      "station": "武蔵小金井",
+      "file": "kanko1/departure/14.wav",
+      "source": [
+        "kanko1/chuo/utb298.wag",
+        "kanko1/com/utb238.wag"
+      ]
+    },
+    {
+      "station": "国分寺",
+      "file": "kanko1/departure/15.wav",
+      "source": [
+        "kanko1/chuo/utb299.wag",
+        "kanko1/com/utb238.wag"
+      ]
+    },
+    {
+      "station": "西国分寺",
+      "file": "kanko1/departure/16.wav",
+      "source": [
+        "kanko1/chuo/utb300.wag",
+        "kanko1/com/utb238.wag"
+      ]
+    },
+    {
+      "station": "国立",
+      "file": "kanko1/departure/17.wav",
+      "source": [
+        "kanko1/chuo/utb301.wag",
+        "kanko1/com/utb238.wag"
+      ]
+    },
+    {
+      "station": "立川",
+      "file": "kanko1/departure/18.wav",
+      "source": [
+        "kanko1/chuo/utb302.wag",
+        "kanko1/com/utb238.wag"
+      ]
+    },
+    {
+      "station": "日野",
+      "file": "kanko1/departure/19.wav",
+      "source": [
+        "kanko1/chuo/utb303.wag",
+        "kanko1/com/utb238.wag"
+      ]
+    },
+    {
+      "station": "豊田",
+      "file": "kanko1/departure/20.wav",
+      "source": [
+        "kanko1/chuo/utb304.wag",
+        "kanko1/com/utb238.wag"
+      ]
+    },
+    {
+      "station": "八王子",
+      "file": "kanko1/departure/21.wav",
+      "source": [
+        "kanko1/chuo/utb305.wag",
+        "kanko1/com/utb238.wag"
+      ]
+    },
+    {
+      "station": "西八王子",
+      "file": "kanko1/departure/22.wav",
+      "source": [
+        "kanko1/chuo/utb306.wag",
+        "kanko1/com/utb238.wag"
+      ]
+    }
+  ],
+  "osaka": [
+    {
+      "station": "大阪",
+      "file": "kanko2/departure/0.wav",
+      "source": [
+        "kanko2/osaka/utd309.wag",
+        "kanko2/com/utd238.wag"
+      ]
+    },
+    {
+      "station": "天満",
+      "file": "kanko2/departure/1.wav",
+      "source": [
+        "kanko2/osaka/utd310.wag",
+        "kanko2/com/utd238.wag"
+      ]
+    },
+    {
+      "station": "桜ノ宮",
+      "file": "kanko2/departure/2.wav",
+      "source": [
+        "kanko2/osaka/utd311.wag",
+        "kanko2/com/utd238.wag"
+      ]
+    },
+    {
+      "station": "京橋",
+      "file": "kanko2/departure/3.wav",
+      "source": [
+        "kanko2/osaka/utd312.wag",
+        "kanko2/com/utd238.wag"
+      ]
+    },
+    {
+      "station": "大阪城公園",
+      "file": "kanko2/departure/4.wav",
+      "source": [
+        "kanko2/osaka/utd313.wag",
+        "kanko2/com/utd238.wag"
+      ]
+    },
+    {
+      "station": "森ノ宮",
+      "file": "kanko2/departure/5.wav",
+      "source": [
+        "kanko2/osaka/utd314.wag",
+        "kanko2/com/utd238.wag"
+      ]
+    },
+    {
+      "station": "玉造",
+      "file": "kanko2/departure/6.wav",
+      "source": [
+        "kanko2/osaka/utd315.wag",
+        "kanko2/com/utd238.wag"
+      ]
+    },
+    {
+      "station": "鶴橋",
+      "file": "kanko2/departure/7.wav",
+      "source": [
+        "kanko2/osaka/utd316.wag",
+        "kanko2/com/utd238.wag"
+      ]
+    },
+    {
+      "station": "桃谷",
+      "file": "kanko2/departure/8.wav",
+      "source": [
+        "kanko2/osaka/utd317.wag",
+        "kanko2/com/utd238.wag"
+      ]
+    },
+    {
+      "station": "寺田町",
+      "file": "kanko2/departure/9.wav",
+      "source": [
+        "kanko2/osaka/utd318.wag",
+        "kanko2/com/utd238.wag"
+      ]
+    },
+    {
+      "station": "天王寺",
+      "file": "kanko2/departure/10.wav",
+      "source": [
+        "kanko2/osaka/utd319.wag",
+        "kanko2/com/utd238.wag"
+      ]
+    },
+    {
+      "station": "新今宮",
+      "file": "kanko2/departure/11.wav",
+      "source": [
+        "kanko2/osaka/utd320.wag",
+        "kanko2/com/utd238.wag"
+      ]
+    },
+    {
+      "station": "今宮",
+      "file": "kanko2/departure/12.wav",
+      "source": [
+        "kanko2/osaka/utd321.wag",
+        "kanko2/com/utd238.wag"
+      ]
+    },
+    {
+      "station": "芦原橋",
+      "file": "kanko2/departure/13.wav",
+      "source": [
+        "kanko2/osaka/utd322.wag",
+        "kanko2/com/utd238.wag"
+      ]
+    },
+    {
+      "station": "大正",
+      "file": "kanko2/departure/14.wav",
+      "source": [
+        "kanko2/osaka/utd323.wag",
+        "kanko2/com/utd238.wag"
+      ]
+    },
+    {
+      "station": "弁天町",
+      "file": "kanko2/departure/15.wav",
+      "source": [
+        "kanko2/osaka/utd324.wag",
+        "kanko2/com/utd238.wag"
+      ]
+    },
+    {
+      "station": "西九条",
+      "file": "kanko2/departure/16.wav",
+      "source": [
+        "kanko2/osaka/utd325.wag",
+        "kanko2/com/utd238.wag"
+      ]
+    },
+    {
+      "station": "野田",
+      "file": "kanko2/departure/17.wav",
+      "source": [
+        "kanko2/osaka/utd326.wag",
+        "kanko2/com/utd238.wag"
+      ]
+    },
+    {
+      "station": "福島",
+      "file": "kanko2/departure/18.wav",
+      "source": [
+        "kanko2/osaka/utd327.wag",
+        "kanko2/com/utd238.wag"
+      ]
+    }
+  ],
+  "tokaido": [
+    {
+      "station": "京都",
+      "file": "kanko3/departure/0.wav",
+      "source": [
+        "kanko3/tokaido/ute328.wag",
+        "kanko3/com/ute238.wag"
+      ]
+    },
+    {
+      "station": "西大路",
+      "file": "kanko3/departure/1.wav",
+      "source": [
+        "kanko3/tokaido/ute329.wag",
+        "kanko3/com/ute238.wag"
+      ]
+    },
+    {
+      "station": "桂川",
+      "file": "kanko3/departure/2.wav",
+      "source": [
+        "Microsoft Haruka (station name)",
+        "kanko3/com/ute238.wag"
+      ]
+    },
+    {
+      "station": "向日町",
+      "file": "kanko3/departure/3.wav",
+      "source": [
+        "kanko3/tokaido/ute330.wag",
+        "kanko3/com/ute238.wag"
+      ]
+    },
+    {
+      "station": "長岡京",
+      "file": "kanko3/departure/4.wav",
+      "source": [
+        "kanko3/tokaido/ute331.wag",
+        "kanko3/com/ute238.wag"
+      ]
+    },
+    {
+      "station": "山崎",
+      "file": "kanko3/departure/5.wav",
+      "source": [
+        "kanko3/tokaido/ute332.wag",
+        "kanko3/com/ute238.wag"
+      ]
+    },
+    {
+      "station": "島本",
+      "file": "kanko3/departure/6.wav",
+      "source": [
+        "Microsoft Haruka (station name)",
+        "kanko3/com/ute238.wag"
+      ]
+    },
+    {
+      "station": "高槻",
+      "file": "kanko3/departure/7.wav",
+      "source": [
+        "kanko3/tokaido/ute333.wag",
+        "kanko3/com/ute238.wag"
+      ]
+    },
+    {
+      "station": "摂津富田",
+      "file": "kanko3/departure/8.wav",
+      "source": [
+        "kanko3/tokaido/ute334.wag",
+        "kanko3/com/ute238.wag"
+      ]
+    },
+    {
+      "station": "JR総持寺",
+      "file": "kanko3/departure/9.wav",
+      "source": [
+        "Microsoft Haruka (station name)",
+        "kanko3/com/ute238.wag"
+      ]
+    },
+    {
+      "station": "茨木",
+      "file": "kanko3/departure/10.wav",
+      "source": [
+        "kanko3/tokaido/ute335.wag",
+        "kanko3/com/ute238.wag"
+      ]
+    },
+    {
+      "station": "千里丘",
+      "file": "kanko3/departure/11.wav",
+      "source": [
+        "kanko3/tokaido/ute336.wag",
+        "kanko3/com/ute238.wag"
+      ]
+    },
+    {
+      "station": "岸辺",
+      "file": "kanko3/departure/12.wav",
+      "source": [
+        "kanko3/tokaido/ute337.wag",
+        "kanko3/com/ute238.wag"
+      ]
+    },
+    {
+      "station": "吹田",
+      "file": "kanko3/departure/13.wav",
+      "source": [
+        "kanko3/tokaido/ute338.wag",
+        "kanko3/com/ute238.wag"
+      ]
+    },
+    {
+      "station": "東淀川",
+      "file": "kanko3/departure/14.wav",
+      "source": [
+        "kanko3/tokaido/ute339.wag",
+        "kanko3/com/ute238.wag"
+      ]
+    },
+    {
+      "station": "新大阪",
+      "file": "kanko3/departure/15.wav",
+      "source": [
+        "kanko3/tokaido/ute340.wag",
+        "kanko3/com/ute238.wag"
+      ]
+    },
+    {
+      "station": "大阪",
+      "file": "kanko3/departure/16.wav",
+      "source": [
+        "kanko3/tokaido/ute341.wag",
+        "kanko3/com/ute238.wag"
+      ]
+    },
+    {
+      "station": "塚本",
+      "file": "kanko3/departure/17.wav",
+      "source": [
+        "kanko3/tokaido/ute342.wag",
+        "kanko3/com/ute238.wag"
+      ]
+    },
+    {
+      "station": "尼崎",
+      "file": "kanko3/departure/18.wav",
+      "source": [
+        "kanko3/tokaido/ute343.wag",
+        "kanko3/com/ute238.wag"
+      ]
+    },
+    {
+      "station": "立花",
+      "file": "kanko3/departure/19.wav",
+      "source": [
+        "kanko3/tokaido/ute344.wag",
+        "kanko3/com/ute238.wag"
+      ]
+    },
+    {
+      "station": "甲子園口",
+      "file": "kanko3/departure/20.wav",
+      "source": [
+        "kanko3/tokaido/ute345.wag",
+        "kanko3/com/ute238.wag"
+      ]
+    },
+    {
+      "station": "西宮",
+      "file": "kanko3/departure/21.wav",
+      "source": [
+        "kanko3/tokaido/ute346.wag",
+        "kanko3/com/ute238.wag"
+      ]
+    },
+    {
+      "station": "さくら夙川",
+      "file": "kanko3/departure/22.wav",
+      "source": [
+        "Microsoft Haruka (station name)",
+        "kanko3/com/ute238.wag"
+      ]
+    },
+    {
+      "station": "芦屋",
+      "file": "kanko3/departure/23.wav",
+      "source": [
+        "kanko3/tokaido/ute347.wag",
+        "kanko3/com/ute238.wag"
+      ]
+    },
+    {
+      "station": "甲南山手",
+      "file": "kanko3/departure/24.wav",
+      "source": [
+        "kanko3/tokaido/ute348.wag",
+        "kanko3/com/ute238.wag"
+      ]
+    },
+    {
+      "station": "摂津本山",
+      "file": "kanko3/departure/25.wav",
+      "source": [
+        "kanko3/tokaido/ute349.wag",
+        "kanko3/com/ute238.wag"
+      ]
+    },
+    {
+      "station": "住吉",
+      "file": "kanko3/departure/26.wav",
+      "source": [
+        "kanko3/tokaido/ute350.wag",
+        "kanko3/com/ute238.wag"
+      ]
+    },
+    {
+      "station": "六甲道",
+      "file": "kanko3/departure/27.wav",
+      "source": [
+        "kanko3/tokaido/ute351.wag",
+        "kanko3/com/ute238.wag"
+      ]
+    },
+    {
+      "station": "摩耶",
+      "file": "kanko3/departure/28.wav",
+      "source": [
+        "Microsoft Haruka (station name)",
+        "kanko3/com/ute238.wag"
+      ]
+    },
+    {
+      "station": "灘",
+      "file": "kanko3/departure/29.wav",
+      "source": [
+        "kanko3/tokaido/ute352.wag",
+        "kanko3/com/ute238.wag"
+      ]
+    },
+    {
+      "station": "三ノ宮",
+      "file": "kanko3/departure/30.wav",
+      "source": [
+        "kanko3/tokaido/ute353.wag",
+        "kanko3/com/ute238.wag"
+      ]
+    },
+    {
+      "station": "元町",
+      "file": "kanko3/departure/31.wav",
+      "source": [
+        "kanko3/tokaido/ute354.wag",
+        "kanko3/com/ute238.wag"
+      ]
+    }
+  ]
+}

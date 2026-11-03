@@ -1,0 +1,30 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';
+import {STATIONS,acceleration,step,newRun,stoppingDistance,assistBrake} from '../dist/physics.js';
+import {notchDeltaForKey,NOTCH_MIN,NOTCH_LABELS,clampNotch,serviceBrakeFraction} from '../dist/physics.js';
+import {RouteProfile} from '../dist/route-profile.js';
+const bve=JSON.parse(readFileSync(new URL('../dist/assets/bve-profile.json',import.meta.url))),profile=new RouteProfile(bve);
+test('新白河以北にBVE末尾の20km/hや下り勾配を持ち越さない',()=>{assert.equal(profile.coverageAt(22100),'bve');assert.equal(profile.limitAt(22100),20);for(const s of [22100.1,63400,109500]){assert.equal(profile.coverageAt(s),'prototype');assert.equal(profile.limitAt(s),110);assert.equal(profile.gradeAt(s),0);assert.equal(profile.elevationAt(s),profile.elevationAt(22100));}});
+test('福島まで24駅・109.5kmで駅一覧がデータと一致',()=>{assert.equal(STATIONS.length,24);assert.equal(STATIONS[5].name,'新白河');assert.equal(STATIONS[13].name,'郡山');assert.equal(STATIONS.at(-1).name,'福島');const data=JSON.parse(readFileSync(new URL('../dist/assets/route-stations.json',import.meta.url)));assert.equal(data.lengthM,109500);assert.deepEqual(data.stations.map(x=>[x.name,x.s]),STATIONS.map(x=>[x.name,x.s]));});
+test('指定キーのマスコン方向: S/↓→P5, W/↑→EB',()=>{for(const key of ['KeyS','ArrowDown'])assert.equal(notchDeltaForKey(key),1);for(const key of ['KeyW','ArrowUp'])assert.equal(notchDeltaForKey(key),-1);assert.equal(notchDeltaForKey('KeyX'),0);});
+test('上りは加速を弱め、下りは惰行中も加速する',()=>{assert.ok(acceleration(10,5,false,12)<acceleration(10,5,false,0));assert.ok(acceleration(10,0,false,-10)>0);assert.ok(stoppingDistance(80,4,-10)>stoppingDistance(80,4,12));const r=newRun();r.notch=-4;for(let i=0;i<1000;i++)step(r,.02,-10);assert.equal(r.v,0);});
+test('BVE制限は切替地点で変化し701系の110km/h上限内',()=>{assert.equal(bve.limits.length,43);for(const p of bve.limits){assert.ok(p.kmh<=110&&p.kmh>0);assert.equal(profile.limitAt(p.s),p.kmh);}assert.equal(profile.limitAt(0),110);assert.equal(profile.limitAt(600),45);assert.equal(profile.limitAt(22090),20);});
+test('BVE勾配遷移と積分高さの一致',()=>{for(let i=0;i<bve.grades.length-1;i++){const a=bve.grades[i],b=bve.grades[i+1],mid=(a.s+b.s)/2;assert.ok(Math.abs(profile.gradeAt(mid)-(a.interpolationToNext==='linear'?(a.perMille+b.perMille)/2:a.perMille))<1e-9);}assert.ok(Math.abs(profile.elevationAt(22100)-89.864)<.02);for(let s=10;s<22100;s+=40){const deriv=(profile.elevationAt(s+.001)-profile.elevationAt(s-.001))/.002*1000;assert.ok(Math.abs(deriv-profile.gradeAt(s))<.002);}});
+test('BVE勾配ありでも停車アシストで全24駅の終点まで到達可能',()=>{const r=newRun();let station=1;r.notch=5;for(let i=0;i<1000000&&station<STATIONS.length;i++){const grade=profile.gradeAt(r.s);assistBrake(r,STATIONS[station].s-r.s,grade);if(Math.abs(STATIONS[station].s-r.s)<=10&&r.v<.12){station++;r.assistBraking=false;r.notch=5;}else step(r,.02,grade);}assert.equal(station,STATIONS.length);});
+test('RailLabの駅間距離と総延長',()=>{assert.deepEqual(STATIONS.slice(1,6).map((x,i)=>x.s-STATIONS[i].s),[4000,4200,5200,5300,3400]);assert.equal(STATIONS.at(-1).s,109500);});
+test('起動加速度2.1・常用/非常減速度3.6',()=>{assert.equal(acceleration(0,5)*3.6,2.1);assert.equal(acceleration(20,-8)*3.6,-3.6);assert.equal(acceleration(20,-8)*3.6,-3.6);assert.equal(acceleration(20,-9)*3.6,-3.6);assert.equal(acceleration(0,5,true),0);});
+test('非常制動停止距離・逆走なし・速度上限',()=>{const r=newRun();r.v=72/3.6;r.notch=-9;for(let i=0;i<3000;i++)step(r,.01);assert.equal(r.v,0);assert.ok(Math.abs(r.s-stoppingDistance(72,7))<.1);r.notch=5;for(let i=0;i<120000;i++)step(r,.02);assert.ok(r.v<=110/3.6);});
+test('停車アシストで全23停車駅を走破可能',()=>{const r=newRun();let station=1;r.notch=5;for(let i=0;i<1000000&&station<STATIONS.length;i++){const d=STATIONS[station].s-r.s;assistBrake(r,d);if(Math.abs(STATIONS[station].s-r.s)<=10&&r.v<.12){station++;r.assistBraking=false;r.notch=5;}else step(r,.02);}assert.equal(station,STATIONS.length);assert.ok(Math.abs(r.s-109500)<=10);});
+test('OSM線路が連続・全駅の営業キロに一致',()=>{const data=JSON.parse(readFileSync(new URL('../dist/assets/route-geometry.json',import.meta.url)));assert.equal(data.points[0][0],0);assert.equal(data.points.at(-1)[0],109500);for(let i=1;i<data.points.length;i++){assert.ok(data.points[i][0]>data.points[i-1][0]);assert.ok(data.points[i].every(Number.isFinite));}for(const s of STATIONS)assert.ok(data.points.some(p=>p[0]===s.s));});
+
+test('EB→B7〜B1→抑速→N→P5の全15段を両方向に操作でき、常用最大とEBを区別',()=>{
+ assert.deepEqual(NOTCH_LABELS,['EB','B7','B6','B5','B4','B3','B2','B1','抑速','N','P1','P2','P3','P4','P5']);assert.equal(NOTCH_MIN,-9);
+ let notch=5;const labels=[];for(let i=0;i<15;i++){labels.push(NOTCH_LABELS[notch-NOTCH_MIN]);notch=clampNotch(notch+notchDeltaForKey('ArrowUp'));}assert.deepEqual(labels,NOTCH_LABELS.slice().reverse());assert.equal(notch,-9);
+ for(let i=0;i<14;i++)notch=clampNotch(notch+notchDeltaForKey('ArrowDown'));assert.equal(notch,5);assert.equal(clampNotch(100),5);assert.equal(clampNotch(-100),-9);assert.ok(acceleration(20,-8)<acceleration(20,-7));
+});
+
+test('抑速: 下り坂は投入速度を超えず、上り坂に力行を追加しない',()=>{
+ assert.equal(NOTCH_LABELS[-1-NOTCH_MIN],'抑速');assert.equal(serviceBrakeFraction(-1),0);assert.equal(serviceBrakeFraction(-2),1/7);assert.equal(serviceBrakeFraction(-8),1);
+ const down=newRun();down.v=60/3.6;down.notch=-1;for(let i=0;i<5000;i++)step(down,.02,-20);assert.ok(down.v<=60/3.6+1e-9);assert.ok(down.v>59.9/3.6);
+ const up=newRun();up.v=60/3.6;up.notch=-1;for(let i=0;i<100;i++)step(up,.02,20);assert.ok(up.v<60/3.6);
+ down.notch=0;step(down,.02,-20);down.v=40/3.6;down.notch=-1;step(down,.02,-20);assert.equal(down.holdSpeed,40/3.6);
+});

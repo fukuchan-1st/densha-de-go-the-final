@@ -1,0 +1,1623 @@
+{
+  "source": "701soundpack.zip/assets/minecraft/scripts/sound_701.js",
+  "powerFadeTimeTicks": 5,
+  "powerFadeDelayTicks": 0,
+  "tickRate": 20,
+  "tunnelFadeTimeTicks": 10,
+  "tracks": [
+    {
+      "pitch": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1.2,
+          1
+        ],
+        [
+          1.8,
+          1
+        ]
+      ],
+      "volume": [
+        [
+          0,
+          0
+        ],
+        [
+          0.1,
+          0.3
+        ],
+        [
+          0.6,
+          0.3
+        ],
+        [
+          1,
+          0.3
+        ],
+        [
+          1.8,
+          0
+        ]
+      ],
+      "isMute": false,
+      "isNotchPower": true,
+      "isNotchOff": false,
+      "isNotchBrake": false,
+      "isFadeMixer": true,
+      "isTunnelFade": null,
+      "fileName": "motor0.ogg",
+      "url": "701_motor0.ogg"
+    },
+    {
+      "pitch": [
+        [
+          3,
+          0.625
+        ],
+        [
+          4.8,
+          1
+        ],
+        [
+          6.5,
+          1.354167
+        ]
+      ],
+      "volume": [
+        [
+          0,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          4,
+          0.8
+        ],
+        [
+          5,
+          0.8
+        ],
+        [
+          5.2,
+          0.8
+        ],
+        [
+          5.4,
+          0.8
+        ],
+        [
+          5.6,
+          0.8
+        ],
+        [
+          6.32,
+          0.8
+        ],
+        [
+          6.34,
+          0.8
+        ],
+        [
+          6.5,
+          0
+        ]
+      ],
+      "isMute": false,
+      "isNotchPower": true,
+      "isNotchOff": false,
+      "isNotchBrake": false,
+      "isFadeMixer": true,
+      "isTunnelFade": null,
+      "fileName": "motor1.ogg",
+      "url": "701_motor1.ogg"
+    },
+    {
+      "pitch": [
+        [
+          0,
+          0.5
+        ],
+        [
+          0.3,
+          0.5
+        ],
+        [
+          1,
+          0.5
+        ],
+        [
+          1.2,
+          0.5
+        ],
+        [
+          1.9,
+          0.5
+        ],
+        [
+          2,
+          0.55
+        ],
+        [
+          4,
+          1.325
+        ]
+      ],
+      "volume": [
+        [
+          0,
+          0
+        ],
+        [
+          2.5,
+          0.8
+        ],
+        [
+          3,
+          0.8
+        ],
+        [
+          4,
+          0
+        ]
+      ],
+      "isMute": false,
+      "isNotchPower": true,
+      "isNotchOff": false,
+      "isNotchBrake": false,
+      "isFadeMixer": true,
+      "isTunnelFade": null,
+      "fileName": "motor2_F.ogg",
+      "url": "701_motor2_F.ogg"
+    },
+    {
+      "pitch": [
+        [
+          21.1,
+          0.91342
+        ],
+        [
+          23.1,
+          1
+        ],
+        [
+          24,
+          1.038961
+        ]
+      ],
+      "volume": [
+        [
+          0,
+          0
+        ],
+        [
+          21.1,
+          0
+        ],
+        [
+          21.3,
+          0.8
+        ],
+        [
+          21.5,
+          0.8
+        ],
+        [
+          22,
+          0.8
+        ],
+        [
+          22.1,
+          0.8
+        ],
+        [
+          24,
+          0
+        ]
+      ],
+      "isMute": false,
+      "isNotchPower": true,
+      "isNotchOff": false,
+      "isNotchBrake": false,
+      "isFadeMixer": true,
+      "isTunnelFade": null,
+      "fileName": "motor3_F.ogg",
+      "url": "701_motor3_F.ogg"
+    },
+    {
+      "pitch": [
+        [
+          13.6,
+          0.937931
+        ],
+        [
+          14.5,
+          1
+        ],
+        [
+          18.2,
+          1.255172
+        ]
+      ],
+      "volume": [
+        [
+          0,
+          0
+        ],
+        [
+          13.6,
+          0
+        ],
+        [
+          13.845,
+          0.8
+        ],
+        [
+          14,
+          0.8
+        ],
+        [
+          14.1,
+          0.8
+        ],
+        [
+          14.7,
+          0.8
+        ],
+        [
+          14.74,
+          0.8
+        ],
+        [
+          14.9,
+          0.8
+        ],
+        [
+          15,
+          0.8
+        ],
+        [
+          16,
+          0.8
+        ],
+        [
+          18.2,
+          0
+        ]
+      ],
+      "isMute": false,
+      "isNotchPower": true,
+      "isNotchOff": false,
+      "isNotchBrake": false,
+      "isFadeMixer": true,
+      "isTunnelFade": null,
+      "fileName": "motor3.ogg",
+      "url": "701_motor3.ogg"
+    },
+    {
+      "pitch": [
+        [
+          23,
+          0.730159
+        ],
+        [
+          31.5,
+          1
+        ],
+        [
+          37,
+          1.174603
+        ]
+      ],
+      "volume": [
+        [
+          0,
+          0
+        ],
+        [
+          23,
+          0
+        ],
+        [
+          27,
+          0.8
+        ],
+        [
+          29,
+          0.8
+        ],
+        [
+          29.2,
+          0.8
+        ],
+        [
+          30,
+          0.8
+        ],
+        [
+          30.2,
+          0.8
+        ],
+        [
+          33,
+          0.8
+        ],
+        [
+          37,
+          0
+        ]
+      ],
+      "isMute": false,
+      "isNotchPower": true,
+      "isNotchOff": false,
+      "isNotchBrake": false,
+      "isFadeMixer": true,
+      "isTunnelFade": null,
+      "fileName": "motor7.ogg",
+      "url": "701_motor7.ogg"
+    },
+    {
+      "pitch": [
+        [
+          70,
+          0.883838
+        ],
+        [
+          79.2,
+          1
+        ],
+        [
+          100,
+          1.262626
+        ]
+      ],
+      "volume": [
+        [
+          0,
+          0
+        ],
+        [
+          70,
+          0
+        ],
+        [
+          79.4,
+          0.8
+        ],
+        [
+          80,
+          0.8
+        ],
+        [
+          83,
+          0.8
+        ],
+        [
+          86.4,
+          0.8
+        ],
+        [
+          89,
+          0.8
+        ],
+        [
+          100,
+          0
+        ]
+      ],
+      "isMute": false,
+      "isNotchPower": true,
+      "isNotchOff": false,
+      "isNotchBrake": true,
+      "isFadeMixer": true,
+      "isTunnelFade": null,
+      "fileName": "Motor14.ogg",
+      "url": "701_Motor14.ogg"
+    },
+    {
+      "pitch": [
+        [
+          6.32,
+          0.79
+        ],
+        [
+          8,
+          1
+        ],
+        [
+          10,
+          1.25
+        ]
+      ],
+      "volume": [
+        [
+          0,
+          0
+        ],
+        [
+          6.32,
+          0
+        ],
+        [
+          6.34,
+          0.8
+        ],
+        [
+          6.36,
+          0.8
+        ],
+        [
+          6.5,
+          0.8
+        ],
+        [
+          7,
+          0.8
+        ],
+        [
+          10,
+          0
+        ]
+      ],
+      "isMute": false,
+      "isNotchPower": true,
+      "isNotchOff": false,
+      "isNotchBrake": false,
+      "isFadeMixer": true,
+      "isTunnelFade": null,
+      "fileName": "Motor18.ogg",
+      "url": "701_Motor18.ogg"
+    },
+    {
+      "pitch": [
+        [
+          6.36,
+          0.53
+        ],
+        [
+          12,
+          1
+        ],
+        [
+          13.36,
+          1.08
+        ]
+      ],
+      "volume": [
+        [
+          0,
+          0
+        ],
+        [
+          6.36,
+          0
+        ],
+        [
+          9,
+          0.8
+        ],
+        [
+          10,
+          0.8
+        ],
+        [
+          11,
+          0.8
+        ],
+        [
+          11.8,
+          0.8
+        ],
+        [
+          12,
+          0.8
+        ],
+        [
+          12.2,
+          0.8
+        ],
+        [
+          12.53,
+          0.8
+        ],
+        [
+          13.1,
+          0.8
+        ],
+        [
+          13.4,
+          0.8
+        ],
+        [
+          13.5,
+          0.8
+        ],
+        [
+          13.6,
+          0.8
+        ],
+        [
+          13.775,
+          0.8
+        ],
+        [
+          13.845,
+          0.8
+        ],
+        [
+          14,
+          0
+        ]
+      ],
+      "isMute": false,
+      "isNotchPower": true,
+      "isNotchOff": false,
+      "isNotchBrake": false,
+      "isFadeMixer": true,
+      "isTunnelFade": null,
+      "fileName": "Motor18a.ogg",
+      "url": "701_Motor18a.ogg"
+    },
+    {
+      "pitch": [
+        [
+          14.7,
+          0.803279
+        ],
+        [
+          18.3,
+          1
+        ],
+        [
+          21.5,
+          1.174863
+        ]
+      ],
+      "volume": [
+        [
+          0,
+          0
+        ],
+        [
+          14.7,
+          0
+        ],
+        [
+          16,
+          0.8
+        ],
+        [
+          17,
+          0.8
+        ],
+        [
+          18.2,
+          0.8
+        ],
+        [
+          18.4,
+          0.8
+        ],
+        [
+          18.6,
+          0.8
+        ],
+        [
+          19,
+          0.8
+        ],
+        [
+          20,
+          0.8
+        ],
+        [
+          20.2,
+          0.8
+        ],
+        [
+          20.4,
+          0.8
+        ],
+        [
+          21.1,
+          0.8
+        ],
+        [
+          21.3,
+          0.8
+        ],
+        [
+          21.5,
+          0
+        ]
+      ],
+      "isMute": false,
+      "isNotchPower": true,
+      "isNotchOff": false,
+      "isNotchBrake": false,
+      "isFadeMixer": true,
+      "isTunnelFade": null,
+      "fileName": "Motor20.ogg",
+      "url": "701_Motor20.ogg"
+    },
+    {
+      "pitch": [
+        [
+          21.1,
+          0.821012
+        ],
+        [
+          25.7,
+          1
+        ],
+        [
+          30.2,
+          1.175097
+        ]
+      ],
+      "volume": [
+        [
+          0,
+          0
+        ],
+        [
+          21.1,
+          0
+        ],
+        [
+          22,
+          0.8
+        ],
+        [
+          22.1,
+          0.8
+        ],
+        [
+          23,
+          0.8
+        ],
+        [
+          24,
+          0.8
+        ],
+        [
+          26,
+          0.8
+        ],
+        [
+          30.2,
+          0
+        ]
+      ],
+      "isMute": false,
+      "isNotchPower": true,
+      "isNotchOff": false,
+      "isNotchBrake": false,
+      "isFadeMixer": true,
+      "isTunnelFade": null,
+      "fileName": "Motor21.ogg",
+      "url": "701_Motor21.ogg"
+    },
+    {
+      "pitch": [
+        [
+          33,
+          0.889488
+        ],
+        [
+          37.1,
+          1
+        ],
+        [
+          40,
+          1.078167
+        ]
+      ],
+      "volume": [
+        [
+          0,
+          0
+        ],
+        [
+          33,
+          0
+        ],
+        [
+          33.2,
+          0.8
+        ],
+        [
+          40,
+          0
+        ]
+      ],
+      "isMute": false,
+      "isNotchPower": true,
+      "isNotchOff": false,
+      "isNotchBrake": false,
+      "isFadeMixer": true,
+      "isTunnelFade": null,
+      "fileName": "Motor22.ogg",
+      "url": "701_Motor22.ogg"
+    },
+    {
+      "pitch": [
+        [
+          33.2,
+          0.770302
+        ],
+        [
+          43.1,
+          1
+        ],
+        [
+          55,
+          1.276102
+        ]
+      ],
+      "volume": [
+        [
+          0,
+          0
+        ],
+        [
+          33.2,
+          0
+        ],
+        [
+          37,
+          0.8
+        ],
+        [
+          45,
+          0.8
+        ],
+        [
+          55,
+          0
+        ]
+      ],
+      "isMute": false,
+      "isNotchPower": true,
+      "isNotchOff": false,
+      "isNotchBrake": false,
+      "isFadeMixer": true,
+      "isTunnelFade": null,
+      "fileName": "Motor23.ogg",
+      "url": "701_Motor23.ogg"
+    },
+    {
+      "pitch": [
+        [
+          40,
+          0.793651
+        ],
+        [
+          50.4,
+          1
+        ],
+        [
+          72.2,
+          1.43254
+        ]
+      ],
+      "volume": [
+        [
+          0,
+          0
+        ],
+        [
+          40,
+          0
+        ],
+        [
+          46.8,
+          0.8
+        ],
+        [
+          51,
+          0.8
+        ],
+        [
+          53.2,
+          0.8
+        ],
+        [
+          55,
+          0.8
+        ],
+        [
+          59.2,
+          0.8
+        ],
+        [
+          72.2,
+          0
+        ]
+      ],
+      "isMute": false,
+      "isNotchPower": false,
+      "isNotchOff": false,
+      "isNotchBrake": true,
+      "isFadeMixer": true,
+      "isTunnelFade": null,
+      "fileName": "Motor24-2.ogg",
+      "url": "701_Motor24-2.ogg"
+    },
+    {
+      "pitch": [
+        [
+          40,
+          0.793651
+        ],
+        [
+          50.4,
+          1
+        ],
+        [
+          72.2,
+          1.43254
+        ]
+      ],
+      "volume": [
+        [
+          0,
+          0
+        ],
+        [
+          40,
+          0
+        ],
+        [
+          46.8,
+          0.8
+        ],
+        [
+          51,
+          0.8
+        ],
+        [
+          53.2,
+          0.8
+        ],
+        [
+          65,
+          0.8
+        ],
+        [
+          72.2,
+          0
+        ]
+      ],
+      "isMute": false,
+      "isNotchPower": true,
+      "isNotchOff": false,
+      "isNotchBrake": false,
+      "isFadeMixer": true,
+      "isTunnelFade": null,
+      "fileName": "Motor24.ogg",
+      "url": "701_Motor24.ogg"
+    },
+    {
+      "pitch": [
+        [
+          55,
+          0.772472
+        ],
+        [
+          71.2,
+          1
+        ],
+        [
+          83,
+          1.16573
+        ]
+      ],
+      "volume": [
+        [
+          0,
+          0
+        ],
+        [
+          55,
+          0
+        ],
+        [
+          66,
+          0.8
+        ],
+        [
+          70,
+          0.8
+        ],
+        [
+          72.2,
+          0.8
+        ],
+        [
+          75,
+          0.8
+        ],
+        [
+          83,
+          0
+        ]
+      ],
+      "isMute": false,
+      "isNotchPower": true,
+      "isNotchOff": false,
+      "isNotchBrake": true,
+      "isFadeMixer": true,
+      "isTunnelFade": null,
+      "fileName": "Motor27.ogg",
+      "url": "701_Motor27.ogg"
+    },
+    {
+      "pitch": [
+        [
+          83,
+          1.01467
+        ],
+        [
+          130,
+          1.589242
+        ]
+      ],
+      "volume": [
+        [
+          0,
+          0
+        ],
+        [
+          83,
+          0
+        ],
+        [
+          89,
+          0.8
+        ],
+        [
+          93,
+          0.8
+        ],
+        [
+          95,
+          0.8
+        ],
+        [
+          100,
+          0.8
+        ],
+        [
+          130,
+          0
+        ]
+      ],
+      "isMute": false,
+      "isNotchPower": true,
+      "isNotchOff": false,
+      "isNotchBrake": true,
+      "isFadeMixer": true,
+      "isTunnelFade": null,
+      "fileName": "Motor29.ogg",
+      "url": "701_Motor29.ogg"
+    },
+    {
+      "pitch": [
+        [
+          93,
+          0.869159
+        ],
+        [
+          107,
+          1
+        ],
+        [
+          159.8,
+          1.493458
+        ]
+      ],
+      "volume": [
+        [
+          0,
+          0
+        ],
+        [
+          93,
+          0
+        ],
+        [
+          100,
+          0.8
+        ],
+        [
+          130,
+          0.8
+        ],
+        [
+          159.8,
+          0
+        ]
+      ],
+      "isMute": false,
+      "isNotchPower": true,
+      "isNotchOff": false,
+      "isNotchBrake": true,
+      "isFadeMixer": true,
+      "isTunnelFade": null,
+      "fileName": "Motor30.ogg",
+      "url": "701_Motor30.ogg"
+    },
+    {
+      "pitch": [
+        [
+          38,
+          0.904762
+        ],
+        [
+          42,
+          1
+        ],
+        [
+          55,
+          1.309524
+        ]
+      ],
+      "volume": [
+        [
+          0,
+          0
+        ],
+        [
+          38,
+          0
+        ],
+        [
+          39.2,
+          0.8
+        ],
+        [
+          39.4,
+          0.8
+        ],
+        [
+          39.6,
+          0.8
+        ],
+        [
+          40,
+          0.8
+        ],
+        [
+          45,
+          0.8
+        ],
+        [
+          55,
+          0
+        ]
+      ],
+      "isMute": false,
+      "isNotchPower": false,
+      "isNotchOff": false,
+      "isNotchBrake": true,
+      "isFadeMixer": false,
+      "isTunnelFade": null,
+      "fileName": "Motor31.ogg",
+      "url": "701_Motor31.ogg"
+    },
+    {
+      "pitch": [
+        [
+          33,
+          0.896739
+        ],
+        [
+          36.8,
+          1
+        ],
+        [
+          39.4,
+          1.070652
+        ]
+      ],
+      "volume": [
+        [
+          0,
+          0
+        ],
+        [
+          33,
+          0
+        ],
+        [
+          33.2,
+          0.8
+        ],
+        [
+          35,
+          0.8
+        ],
+        [
+          37,
+          0.8
+        ],
+        [
+          38,
+          0.8
+        ],
+        [
+          38.2,
+          0.8
+        ],
+        [
+          38.4,
+          0.8
+        ],
+        [
+          39.2,
+          0.8
+        ],
+        [
+          39.4,
+          0
+        ]
+      ],
+      "isMute": false,
+      "isNotchPower": false,
+      "isNotchOff": false,
+      "isNotchBrake": true,
+      "isFadeMixer": false,
+      "isTunnelFade": null,
+      "fileName": "Motor32.ogg",
+      "url": "701_Motor32.ogg"
+    },
+    {
+      "pitch": [
+        [
+          23,
+          0.766667
+        ],
+        [
+          30,
+          1
+        ],
+        [
+          35,
+          1.166667
+        ]
+      ],
+      "volume": [
+        [
+          0,
+          0
+        ],
+        [
+          23,
+          0
+        ],
+        [
+          27,
+          0.8
+        ],
+        [
+          29,
+          0.8
+        ],
+        [
+          29.2,
+          0.8
+        ],
+        [
+          30,
+          0.8
+        ],
+        [
+          30.2,
+          0.8
+        ],
+        [
+          33,
+          0.8
+        ],
+        [
+          35,
+          0
+        ]
+      ],
+      "isMute": false,
+      "isNotchPower": false,
+      "isNotchOff": false,
+      "isNotchBrake": true,
+      "isFadeMixer": false,
+      "isTunnelFade": null,
+      "fileName": "Motor33.ogg",
+      "url": "701_Motor33.ogg"
+    },
+    {
+      "pitch": [
+        [
+          19,
+          0.785124
+        ],
+        [
+          24.2,
+          1
+        ],
+        [
+          30.2,
+          1.247934
+        ]
+      ],
+      "volume": [
+        [
+          0,
+          0
+        ],
+        [
+          19,
+          0
+        ],
+        [
+          22,
+          0.8
+        ],
+        [
+          22.1,
+          0.8
+        ],
+        [
+          23,
+          0.8
+        ],
+        [
+          24,
+          0.8
+        ],
+        [
+          26,
+          0.8
+        ],
+        [
+          30.2,
+          0
+        ]
+      ],
+      "isMute": false,
+      "isNotchPower": false,
+      "isNotchOff": false,
+      "isNotchBrake": false,
+      "isFadeMixer": false,
+      "isTunnelFade": null,
+      "fileName": "Motor34.ogg",
+      "url": "701_Motor34.ogg"
+    },
+    {
+      "pitch": [
+        [
+          15.1,
+          0.762626
+        ],
+        [
+          19.8,
+          1
+        ],
+        [
+          26,
+          1.313131
+        ]
+      ],
+      "volume": [
+        [
+          0,
+          0
+        ],
+        [
+          15.1,
+          0
+        ],
+        [
+          15.3,
+          0.8
+        ],
+        [
+          15.5,
+          0.8
+        ],
+        [
+          16,
+          0.8
+        ],
+        [
+          17,
+          0.8
+        ],
+        [
+          18.2,
+          0.8
+        ],
+        [
+          18.4,
+          0.8
+        ],
+        [
+          18.6,
+          0.8
+        ],
+        [
+          19,
+          0.8
+        ],
+        [
+          20,
+          0.8
+        ],
+        [
+          20.2,
+          0.8
+        ],
+        [
+          20.4,
+          0.8
+        ],
+        [
+          21.1,
+          0.8
+        ],
+        [
+          21.3,
+          0.8
+        ],
+        [
+          26,
+          0
+        ]
+      ],
+      "isMute": false,
+      "isNotchPower": false,
+      "isNotchOff": false,
+      "isNotchBrake": false,
+      "isFadeMixer": false,
+      "isTunnelFade": null,
+      "fileName": "Motor35.ogg",
+      "url": "701_Motor35.ogg"
+    },
+    {
+      "pitch": [
+        [
+          9,
+          0.681818
+        ],
+        [
+          13.2,
+          1
+        ],
+        [
+          15.5,
+          1.104242
+        ]
+      ],
+      "volume": [
+        [
+          0,
+          0
+        ],
+        [
+          9,
+          0
+        ],
+        [
+          13.1,
+          0.8
+        ],
+        [
+          13.4,
+          0.8
+        ],
+        [
+          13.5,
+          0.8
+        ],
+        [
+          13.6,
+          0.8
+        ],
+        [
+          13.775,
+          0.8
+        ],
+        [
+          13.845,
+          0.8
+        ],
+        [
+          14,
+          0.8
+        ],
+        [
+          14.1,
+          0.8
+        ],
+        [
+          14.3,
+          0.8
+        ],
+        [
+          14.5,
+          0.8
+        ],
+        [
+          14.7,
+          0.8
+        ],
+        [
+          14.74,
+          0.8
+        ],
+        [
+          14.9,
+          0.8
+        ],
+        [
+          15,
+          0.8
+        ],
+        [
+          15.1,
+          0.8
+        ],
+        [
+          15.3,
+          0.8
+        ],
+        [
+          15.5,
+          0
+        ]
+      ],
+      "isMute": false,
+      "isNotchPower": false,
+      "isNotchOff": false,
+      "isNotchBrake": false,
+      "isFadeMixer": false,
+      "isTunnelFade": null,
+      "fileName": "Motor36.ogg",
+      "url": "701_Motor36.ogg"
+    },
+    {
+      "pitch": [
+        [
+          1.3,
+          0.5
+        ],
+        [
+          9.7,
+          1
+        ],
+        [
+          13.775,
+          1.420103
+        ]
+      ],
+      "volume": [
+        [
+          0,
+          0
+        ],
+        [
+          1.3,
+          0
+        ],
+        [
+          6.36,
+          0.8
+        ],
+        [
+          6.5,
+          0.8
+        ],
+        [
+          7,
+          0.8
+        ],
+        [
+          9,
+          0.8
+        ],
+        [
+          10,
+          0.8
+        ],
+        [
+          11,
+          0.8
+        ],
+        [
+          11.8,
+          0.8
+        ],
+        [
+          12,
+          0.8
+        ],
+        [
+          12.2,
+          0.8
+        ],
+        [
+          13.775,
+          0
+        ]
+      ],
+      "isMute": false,
+      "isNotchPower": false,
+      "isNotchOff": false,
+      "isNotchBrake": false,
+      "isFadeMixer": false,
+      "isTunnelFade": null,
+      "fileName": "Motor37.ogg",
+      "url": "701_Motor37.ogg"
+    },
+    {
+      "pitch": [
+        [
+          0,
+          0.5
+        ],
+        [
+          160,
+          1.3
+        ]
+      ],
+      "volume": [
+        [
+          0,
+          0
+        ],
+        [
+          100,
+          0.8
+        ],
+        [
+          160,
+          0.8
+        ]
+      ],
+      "isMute": false,
+      "isNotchPower": true,
+      "isNotchOff": true,
+      "isNotchBrake": true,
+      "isFadeMixer": false,
+      "isTunnelFade": null,
+      "fileName": "run0.ogg",
+      "url": "701_run0.ogg"
+    }
+  ],
+  "effects": {
+    "209dooropn.ogg": {
+      "fileName": "209dooropn.ogg",
+      "url": "701_209dooropn.ogg"
+    },
+    "doorcls.ogg": {
+      "fileName": "doorcls.ogg",
+      "url": "701_doorcls.ogg"
+    },
+    "701doorcls.ogg": {
+      "fileName": "701doorcls.ogg",
+      "url": "701_701doorcls.ogg"
+    },
+    "701dooropn.ogg": {
+      "fileName": "701dooropn.ogg",
+      "url": "701_701dooropn.ogg"
+    }
+  }
+}

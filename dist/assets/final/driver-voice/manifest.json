@@ -1,0 +1,877 @@
+{
+  "schema": "final-driver-voice-v1",
+  "sourceRoot": "cddata/se",
+  "audioFormat": {
+    "container": "RIFF/WAVE",
+    "codec": "PCM s16le",
+    "channels": 1,
+    "sampleRate": 11025
+  },
+  "transcriptionMethod": "Local Japanese faster-whisper base and small, compared across four bank variants and same-actor concatenations. Homophones rendered as railway terminology. No human listening available.",
+  "banks": [
+    {
+      "id": "kanko0",
+      "label": "山手線",
+      "stemPrefix": "uta",
+      "clips": {
+        "doorsClosed": {
+          "id": 1,
+          "file": "kanko0/uta001.wav",
+          "source": "kanko0/com/uta001.wag",
+          "installed": true,
+          "sha256": "9d5f0ab92f09f00a6e8c4fe5a2b7b82b68f63b36a559c3ac2fb372da02740695",
+          "durationSeconds": 1.023,
+          "phrase": "戸閉め点",
+          "reading": "とじめ・てん",
+          "asrConfidence": "high",
+          "usage": "戸閉表示の点灯後に一度",
+          "recognition": [
+            {
+              "model": "base",
+              "text": "閉じめてん",
+              "avgLogprob": -1.112,
+              "noSpeech": 0.05
+            },
+            {
+              "model": "small",
+              "text": "閉じ目点",
+              "avgLogprob": -0.487,
+              "noSpeech": 0.2323
+            }
+          ]
+        },
+        "departureProceed": {
+          "id": 3,
+          "file": "kanko0/uta003.wav",
+          "source": "kanko0/com/uta003.wag",
+          "installed": true,
+          "sha256": "dd131634e2c0be9a97111e9c534c389af7f0d6dcab6b41d72d2269dad920c630",
+          "durationSeconds": 1.277,
+          "phrase": "出発進行",
+          "reading": "しゅっぱつ・しんこう",
+          "asrConfidence": "high",
+          "usage": "シミュレーターの出発信号が進行のときに確認操作で一度",
+          "recognition": [
+            {
+              "model": "base",
+              "text": "引っ張って進行",
+              "avgLogprob": -0.638,
+              "noSpeech": 0.0823
+            },
+            {
+              "model": "small",
+              "text": "出発進行",
+              "avgLogprob": -0.458,
+              "noSpeech": 0.1223
+            }
+          ]
+        },
+        "entryPrefix": {
+          "id": 7,
+          "file": null,
+          "source": "kanko0/com/uta007.wag",
+          "installed": false,
+          "sha256": "f3c5889546ce557259f1f50e2a74fc3599e8a22bcf5419b3086a3e7655d52719",
+          "durationSeconds": 0.828,
+          "phrase": "場内",
+          "reading": "じょうない",
+          "asrConfidence": "medium",
+          "usage": "場内信号の種別呼称。現示の音声を後続させる場合のみ",
+          "recognition": [
+            {
+              "model": "base",
+              "text": "ジョナイ",
+              "avgLogprob": -0.651,
+              "noSpeech": 0.0325
+            },
+            {
+              "model": "small",
+              "text": "上内",
+              "avgLogprob": -0.892,
+              "noSpeech": 0.0472
+            }
+          ]
+        },
+        "signalStop": {
+          "id": 29,
+          "file": null,
+          "source": "kanko0/com/uta029.wag",
+          "installed": false,
+          "sha256": "4e7af01276eb09b6336b9522f5d94a37bcacfb54aab8188c0e6e98f3fd20023f",
+          "durationSeconds": 0.787,
+          "phrase": "停止",
+          "reading": "ていし",
+          "asrConfidence": "high",
+          "usage": "停止現示の確認操作に対応",
+          "recognition": [
+            {
+              "model": "base",
+              "text": "手指。",
+              "avgLogprob": -1.227,
+              "noSpeech": 0.0773
+            },
+            {
+              "model": "small",
+              "text": "停止",
+              "avgLogprob": -0.174,
+              "noSpeech": 0.1242
+            }
+          ]
+        },
+        "signalProceed": {
+          "id": 33,
+          "file": null,
+          "source": "kanko0/com/uta033.wag",
+          "installed": false,
+          "sha256": "2c993aed8c5bbdbf12fd15c792398fa79e9b4cad019eaaed984cd5f4259ae45c",
+          "durationSeconds": 0.95,
+          "phrase": "進行",
+          "reading": "しんこう",
+          "asrConfidence": "high",
+          "usage": "進行現示の確認操作に対応",
+          "recognition": [
+            {
+              "model": "base",
+              "text": "進行",
+              "avgLogprob": -0.624,
+              "noSpeech": 0.0654
+            },
+            {
+              "model": "small",
+              "text": "進行",
+              "avgLogprob": -1.078,
+              "noSpeech": 0.3164
+            }
+          ]
+        },
+        "stationStop": {
+          "id": 65,
+          "file": "kanko0/uta065.wav",
+          "source": "kanko0/com/uta065.wag",
+          "installed": true,
+          "sha256": "6c1ea09d4b44d54283d07cdcd00a74450d24fceb9900647ece505e4bcb0ff18d",
+          "durationSeconds": 0.698,
+          "phrase": "停車",
+          "reading": "ていしゃ",
+          "asrConfidence": "high",
+          "usage": "次の停車駅への接近時に一度",
+          "recognition": [
+            {
+              "model": "base",
+              "text": "テイシャー",
+              "avgLogprob": -0.78,
+              "noSpeech": 0.1374
+            },
+            {
+              "model": "small",
+              "text": "テーシャー",
+              "avgLogprob": -0.598,
+              "noSpeech": 0.2395
+            }
+          ]
+        },
+        "depart": {
+          "id": 66,
+          "file": null,
+          "source": "kanko0/com/uta066.wag",
+          "installed": false,
+          "sha256": "ff446931bd0a740b6308211c49f59ef055a72b1882af0b6f037c3d87fa6d61bf",
+          "durationSeconds": 0.709,
+          "phrase": "発車",
+          "reading": "はっしゃ",
+          "asrConfidence": "high",
+          "usage": "扉閉めと運転許可後、実際に発車するときに一度",
+          "recognition": [
+            {
+              "model": "base",
+              "text": "発射",
+              "avgLogprob": -0.415,
+              "noSpeech": 0.1602
+            },
+            {
+              "model": "small",
+              "text": "発射",
+              "avgLogprob": -0.222,
+              "noSpeech": 0.082
+            }
+          ]
+        },
+        "checkOkay": {
+          "id": 124,
+          "file": null,
+          "source": "kanko0/com/uta124.wag",
+          "installed": false,
+          "sha256": "182c747338ce455a2437a71285a4316c0d9509e6c886990030d6c390afdc7fc7",
+          "durationSeconds": 0.973,
+          "phrase": "確認よし",
+          "reading": "かくにん・よし",
+          "asrConfidence": "high",
+          "usage": "停止後、ゲーム内で確認項目を満たした操作に対応",
+          "recognition": [
+            {
+              "model": "base",
+              "text": "確認よし",
+              "avgLogprob": -0.368,
+              "noSpeech": 0.0863
+            },
+            {
+              "model": "small",
+              "text": "確認よし",
+              "avgLogprob": -0.481,
+              "noSpeech": 0.0693
+            }
+          ]
+        }
+      },
+      "sameActorSequenceRecognition": "出発進行、閉じ目点、発射、城内、進行、停車、確認用紙。"
+    },
+    {
+      "id": "kanko1",
+      "label": "中央線",
+      "stemPrefix": "utb",
+      "clips": {
+        "doorsClosed": {
+          "id": 1,
+          "file": "kanko1/utb001.wav",
+          "source": "kanko1/com/utb001.wag",
+          "installed": true,
+          "sha256": "12b4f6ea2013946c0e5acc9caf7074868697a9d419ba227f04048509c09e97ef",
+          "durationSeconds": 1.399,
+          "phrase": "戸閉め点",
+          "reading": "とじめ・てん",
+          "asrConfidence": "high",
+          "usage": "戸閉表示の点灯後に一度",
+          "recognition": [
+            {
+              "model": "base",
+              "text": "閉じめ、テム",
+              "avgLogprob": -1.171,
+              "noSpeech": 0.0706
+            },
+            {
+              "model": "small",
+              "text": "閉じ目点",
+              "avgLogprob": -0.628,
+              "noSpeech": 0.2896
+            }
+          ]
+        },
+        "departureProceed": {
+          "id": 3,
+          "file": "kanko1/utb003.wav",
+          "source": "kanko1/com/utb003.wag",
+          "installed": true,
+          "sha256": "ab22be801c2ed52fcd2103da05ef3a1595c12f7d76d58dc02aeff98b1368db0f",
+          "durationSeconds": 1.714,
+          "phrase": "出発進行",
+          "reading": "しゅっぱつ・しんこう",
+          "asrConfidence": "high",
+          "usage": "シミュレーターの出発信号が進行のときに確認操作で一度",
+          "recognition": [
+            {
+              "model": "base",
+              "text": "出発し進行",
+              "avgLogprob": -1.183,
+              "noSpeech": 0.0548
+            },
+            {
+              "model": "small",
+              "text": "しっ…バツシシシンコー",
+              "avgLogprob": -0.962,
+              "noSpeech": 0.0603
+            }
+          ]
+        },
+        "entryPrefix": {
+          "id": 7,
+          "file": null,
+          "source": "kanko1/com/utb007.wag",
+          "installed": false,
+          "sha256": "ce00e41b69559381f9d437463976887ccb5ac76cbd4d9c49d8d8d23d3fc86ba0",
+          "durationSeconds": 0.764,
+          "phrase": "場内",
+          "reading": "じょうない",
+          "asrConfidence": "medium",
+          "usage": "場内信号の種別呼称。現示の音声を後続させる場合のみ",
+          "recognition": [
+            {
+              "model": "base",
+              "text": "状態",
+              "avgLogprob": -1.005,
+              "noSpeech": 0.0128
+            },
+            {
+              "model": "small",
+              "text": "以上ない",
+              "avgLogprob": -0.358,
+              "noSpeech": 0.0567
+            }
+          ]
+        },
+        "signalStop": {
+          "id": 29,
+          "file": null,
+          "source": "kanko1/com/utb029.wag",
+          "installed": false,
+          "sha256": "63e8deebbe62c88742261f0b6c839f635b27ab5a6b66aa7477cfc299e6e04b69",
+          "durationSeconds": 0.998,
+          "phrase": "停止",
+          "reading": "ていし",
+          "asrConfidence": "high",
+          "usage": "停止現示の確認操作に対応",
+          "recognition": [
+            {
+              "model": "base",
+              "text": "デイシー",
+              "avgLogprob": -0.854,
+              "noSpeech": 0.061
+            },
+            {
+              "model": "small",
+              "text": "停止",
+              "avgLogprob": -0.185,
+              "noSpeech": 0.1641
+            }
+          ]
+        },
+        "signalProceed": {
+          "id": 33,
+          "file": null,
+          "source": "kanko1/com/utb033.wag",
+          "installed": false,
+          "sha256": "40cfe0e486b4b15232d5150664df466f4148a83274d89cfe5be95bd6869be72b",
+          "durationSeconds": 1.054,
+          "phrase": "進行",
+          "reading": "しんこう",
+          "asrConfidence": "high",
+          "usage": "進行現示の確認操作に対応",
+          "recognition": [
+            {
+              "model": "base",
+              "text": "進行!",
+              "avgLogprob": -0.95,
+              "noSpeech": 0.094
+            },
+            {
+              "model": "small",
+              "text": "信仰",
+              "avgLogprob": -0.477,
+              "noSpeech": 0.1683
+            }
+          ]
+        },
+        "stationStop": {
+          "id": 65,
+          "file": "kanko1/utb065.wav",
+          "source": "kanko1/com/utb065.wag",
+          "installed": true,
+          "sha256": "712c2d95cec1764d730217dd0da39b593585950a199a2aee10b92b04209ade31",
+          "durationSeconds": 0.897,
+          "phrase": "停車",
+          "reading": "ていしゃ",
+          "asrConfidence": "high",
+          "usage": "次の停車駅への接近時に一度",
+          "recognition": [
+            {
+              "model": "base",
+              "text": "テイシャー",
+              "avgLogprob": -0.648,
+              "noSpeech": 0.0816
+            },
+            {
+              "model": "small",
+              "text": "テンション",
+              "avgLogprob": -0.633,
+              "noSpeech": 0.101
+            }
+          ]
+        },
+        "depart": {
+          "id": 66,
+          "file": null,
+          "source": "kanko1/com/utb066.wag",
+          "installed": false,
+          "sha256": "faf6ffe86e4a4a4a7003511e4eb3aa87c239081fc2069d5d10db3753822c10fd",
+          "durationSeconds": 0.932,
+          "phrase": "発車",
+          "reading": "はっしゃ",
+          "asrConfidence": "high",
+          "usage": "扉閉めと運転許可後、実際に発車するときに一度",
+          "recognition": [
+            {
+              "model": "base",
+              "text": "ハッシャー",
+              "avgLogprob": -0.728,
+              "noSpeech": 0.2128
+            },
+            {
+              "model": "small",
+              "text": "発射!",
+              "avgLogprob": -0.237,
+              "noSpeech": 0.0637
+            }
+          ]
+        },
+        "checkOkay": {
+          "id": 124,
+          "file": null,
+          "source": "kanko1/com/utb124.wag",
+          "installed": false,
+          "sha256": "09a1293f21b8d6536ec90a2c0deeccbf5f11c2dccc97a59cf06762a47f66de89",
+          "durationSeconds": 1.204,
+          "phrase": "確認よし",
+          "reading": "かくにん・よし",
+          "asrConfidence": "high",
+          "usage": "停止後、ゲーム内で確認項目を満たした操作に対応",
+          "recognition": [
+            {
+              "model": "base",
+              "text": "確認よし!",
+              "avgLogprob": -0.732,
+              "noSpeech": 0.0225
+            },
+            {
+              "model": "small",
+              "text": "確認用紙",
+              "avgLogprob": -0.24,
+              "noSpeech": 0.0391
+            }
+          ]
+        }
+      },
+      "sameActorSequenceRecognition": "出発進行、閉じめ、転、発射、状態、進行、停車、確認用紙。"
+    },
+    {
+      "id": "kanko2",
+      "label": "大阪環状線",
+      "stemPrefix": "utd",
+      "clips": {
+        "doorsClosed": {
+          "id": 1,
+          "file": "kanko2/utd001.wav",
+          "source": "kanko2/com/utd001.wag",
+          "installed": true,
+          "sha256": "0627b80b54a7050f252c253e354e09883cc652910d13eaa0e7072fde78d25d49",
+          "durationSeconds": 1.623,
+          "phrase": "戸閉め点",
+          "reading": "とじめ・てん",
+          "asrConfidence": "high",
+          "usage": "戸閉表示の点灯後に一度",
+          "recognition": [
+            {
+              "model": "base",
+              "text": "ドジメ10",
+              "avgLogprob": -1.049,
+              "noSpeech": 0.0524
+            },
+            {
+              "model": "small",
+              "text": "どじめ、てん",
+              "avgLogprob": -0.882,
+              "noSpeech": 0.0645
+            }
+          ]
+        },
+        "departureProceed": {
+          "id": 3,
+          "file": "kanko2/utd003.wav",
+          "source": "kanko2/com/utd003.wag",
+          "installed": true,
+          "sha256": "2f34ee311f9a4156dac1564f613347dd36105937f66123ceb23f01a0446fb93c",
+          "durationSeconds": 1.234,
+          "phrase": "出発進行",
+          "reading": "しゅっぱつ・しんこう",
+          "asrConfidence": "high",
+          "usage": "シミュレーターの出発信号が進行のときに確認操作で一度",
+          "recognition": [
+            {
+              "model": "base",
+              "text": "出発進行",
+              "avgLogprob": -0.582,
+              "noSpeech": 0.023
+            },
+            {
+              "model": "small",
+              "text": "出発進行",
+              "avgLogprob": -0.261,
+              "noSpeech": 0.1433
+            }
+          ]
+        },
+        "entryPrefix": {
+          "id": 7,
+          "file": null,
+          "source": "kanko2/com/utd007.wag",
+          "installed": false,
+          "sha256": "1474e1fc38e8f8df0083f944dc5f05232cb418a1eaff08e517182451360715ee",
+          "durationSeconds": 0.757,
+          "phrase": "場内",
+          "reading": "じょうない",
+          "asrConfidence": "medium",
+          "usage": "場内信号の種別呼称。現示の音声を後続させる場合のみ",
+          "recognition": [
+            {
+              "model": "base",
+              "text": "ジョナイ",
+              "avgLogprob": -0.804,
+              "noSpeech": 0.0195
+            },
+            {
+              "model": "small",
+              "text": "状態",
+              "avgLogprob": -0.685,
+              "noSpeech": 0.1598
+            }
+          ]
+        },
+        "signalStop": {
+          "id": 29,
+          "file": null,
+          "source": "kanko2/com/utd029.wag",
+          "installed": false,
+          "sha256": "6ffa615cd051ceb6ecd4ea6f78b024e48730e437c286e07a8e5d84f626bf2a17",
+          "durationSeconds": 0.711,
+          "phrase": "停止",
+          "reading": "ていし",
+          "asrConfidence": "high",
+          "usage": "停止現示の確認操作に対応",
+          "recognition": [
+            {
+              "model": "base",
+              "text": "停止",
+              "avgLogprob": -0.46,
+              "noSpeech": 0.0276
+            },
+            {
+              "model": "small",
+              "text": "停止",
+              "avgLogprob": -0.311,
+              "noSpeech": 0.0908
+            }
+          ]
+        },
+        "signalProceed": {
+          "id": 33,
+          "file": null,
+          "source": "kanko2/com/utd033.wag",
+          "installed": false,
+          "sha256": "212a4d2eabac3fd86e5f2b3d9dc335c4acdbf9362e993db6a571c81f8118f234",
+          "durationSeconds": 0.818,
+          "phrase": "進行",
+          "reading": "しんこう",
+          "asrConfidence": "high",
+          "usage": "進行現示の確認操作に対応",
+          "recognition": [
+            {
+              "model": "base",
+              "text": "進行。",
+              "avgLogprob": -0.769,
+              "noSpeech": 0.044
+            },
+            {
+              "model": "small",
+              "text": "進行",
+              "avgLogprob": -0.444,
+              "noSpeech": 0.1028
+            }
+          ]
+        },
+        "stationStop": {
+          "id": 65,
+          "file": "kanko2/utd065.wav",
+          "source": "kanko2/com/utd065.wag",
+          "installed": true,
+          "sha256": "a03c9a57c8f67c0123d6a3bdd9c0f62499f61b0ab24b0ff515c5618708225c04",
+          "durationSeconds": 0.947,
+          "phrase": "停車",
+          "reading": "ていしゃ",
+          "asrConfidence": "high",
+          "usage": "次の停車駅への接近時に一度",
+          "recognition": [
+            {
+              "model": "base",
+              "text": "手者。",
+              "avgLogprob": -0.863,
+              "noSpeech": 0.0479
+            },
+            {
+              "model": "small",
+              "text": "テーション",
+              "avgLogprob": -0.672,
+              "noSpeech": 0.0385
+            }
+          ]
+        },
+        "depart": {
+          "id": 66,
+          "file": null,
+          "source": "kanko2/com/utd066.wag",
+          "installed": false,
+          "sha256": "48c4c7c5d73f88cc779ca5a77ef1d5d06286eb5dd75a505f06b25547b039df56",
+          "durationSeconds": 0.691,
+          "phrase": "発車",
+          "reading": "はっしゃ",
+          "asrConfidence": "high",
+          "usage": "扉閉めと運転許可後、実際に発車するときに一度",
+          "recognition": [
+            {
+              "model": "base",
+              "text": "発酵。",
+              "avgLogprob": -0.828,
+              "noSpeech": 0.1752
+            },
+            {
+              "model": "small",
+              "text": "発射!",
+              "avgLogprob": -0.75,
+              "noSpeech": 0.1121
+            }
+          ]
+        },
+        "checkOkay": {
+          "id": 124,
+          "file": null,
+          "source": "kanko2/com/utd124.wag",
+          "installed": false,
+          "sha256": "3983179db000ab2b5da979c6e955c9f5bddaf819cc3cc49b7f1524a4d2869f5d",
+          "durationSeconds": 1.059,
+          "phrase": "確認よし",
+          "reading": "かくにん・よし",
+          "asrConfidence": "high",
+          "usage": "停止後、ゲーム内で確認項目を満たした操作に対応",
+          "recognition": [
+            {
+              "model": "base",
+              "text": "確認よし",
+              "avgLogprob": -0.404,
+              "noSpeech": 0.0248
+            },
+            {
+              "model": "small",
+              "text": "確認よし",
+              "avgLogprob": -0.439,
+              "noSpeech": 0.1034
+            }
+          ]
+        }
+      },
+      "sameActorSequenceRecognition": "出発進行。 閉じ目。 点。 発車。 城内。 進行。 停車。 確認用紙。"
+    },
+    {
+      "id": "kanko3",
+      "label": "東海道線",
+      "stemPrefix": "ute",
+      "clips": {
+        "doorsClosed": {
+          "id": 1,
+          "file": "kanko3/ute001.wav",
+          "source": "kanko3/com/ute001.wag",
+          "installed": true,
+          "sha256": "1076ba7a668a5b7a88f63891613e6b7be9af1d60e6640700c4d57490179f4aec",
+          "durationSeconds": 1.201,
+          "phrase": "戸閉め点",
+          "reading": "とじめ・てん",
+          "asrConfidence": "high",
+          "usage": "戸閉表示の点灯後に一度",
+          "recognition": [
+            {
+              "model": "base",
+              "text": "とじめ10",
+              "avgLogprob": -0.543,
+              "noSpeech": 0.1254
+            },
+            {
+              "model": "small",
+              "text": "閉じ目10",
+              "avgLogprob": -0.49,
+              "noSpeech": 0.1296
+            }
+          ]
+        },
+        "departureProceed": {
+          "id": 3,
+          "file": "kanko3/ute003.wav",
+          "source": "kanko3/com/ute003.wag",
+          "installed": true,
+          "sha256": "ace3e5f6e7fc44c1ee939e6e7775b872c33a81fd4cc710e859cfea417f499181",
+          "durationSeconds": 1.092,
+          "phrase": "出発進行",
+          "reading": "しゅっぱつ・しんこう",
+          "asrConfidence": "high",
+          "usage": "シミュレーターの出発信号が進行のときに確認操作で一度",
+          "recognition": [
+            {
+              "model": "base",
+              "text": "出発進行。",
+              "avgLogprob": -0.8,
+              "noSpeech": 0.0044
+            },
+            {
+              "model": "small",
+              "text": "出発進行",
+              "avgLogprob": -0.4,
+              "noSpeech": 0.0687
+            }
+          ]
+        },
+        "entryPrefix": {
+          "id": 7,
+          "file": null,
+          "source": "kanko3/com/ute007.wag",
+          "installed": false,
+          "sha256": "b7d2c4464f8442f8755ab9b004d29c873a39804702d1825ae5d2ae713e4b0870",
+          "durationSeconds": 0.594,
+          "phrase": "場内",
+          "reading": "じょうない",
+          "asrConfidence": "medium",
+          "usage": "場内信号の種別呼称。現示の音声を後続させる場合のみ",
+          "recognition": [
+            {
+              "model": "base",
+              "text": "状態",
+              "avgLogprob": -0.835,
+              "noSpeech": 0.0525
+            },
+            {
+              "model": "small",
+              "text": "状態",
+              "avgLogprob": -0.512,
+              "noSpeech": 0.111
+            }
+          ]
+        },
+        "signalStop": {
+          "id": 29,
+          "file": null,
+          "source": "kanko3/com/ute029.wag",
+          "installed": false,
+          "sha256": "d4c272bd2d946689e4afbd529c57307ae807f0059771872ce91412fbec873dfc",
+          "durationSeconds": 0.574,
+          "phrase": "停止",
+          "reading": "ていし",
+          "asrConfidence": "high",
+          "usage": "停止現示の確認操作に対応",
+          "recognition": [
+            {
+              "model": "base",
+              "text": "停止",
+              "avgLogprob": -1.11,
+              "noSpeech": 0.0352
+            },
+            {
+              "model": "small",
+              "text": "停止",
+              "avgLogprob": -0.205,
+              "noSpeech": 0.1579
+            }
+          ]
+        },
+        "signalProceed": {
+          "id": 33,
+          "file": null,
+          "source": "kanko3/com/ute033.wag",
+          "installed": false,
+          "sha256": "63e07684db375c0ca3681f668cd66f5d8d18feaf645f9ffc5a224b9f35af378d",
+          "durationSeconds": 0.853,
+          "phrase": "進行",
+          "reading": "しんこう",
+          "asrConfidence": "high",
+          "usage": "進行現示の確認操作に対応",
+          "recognition": [
+            {
+              "model": "base",
+              "text": "進行!",
+              "avgLogprob": -0.699,
+              "noSpeech": 0.0417
+            },
+            {
+              "model": "small",
+              "text": "信仰",
+              "avgLogprob": -0.607,
+              "noSpeech": 0.321
+            }
+          ]
+        },
+        "stationStop": {
+          "id": 65,
+          "file": "kanko3/ute065.wav",
+          "source": "kanko3/com/ute065.wag",
+          "installed": true,
+          "sha256": "81d8cb30e0b4383fac1d10298d888fc42443c7e4f09b2baef6620f57fd6902eb",
+          "durationSeconds": 0.726,
+          "phrase": "停車",
+          "reading": "ていしゃ",
+          "asrConfidence": "high",
+          "usage": "次の停車駅への接近時に一度",
+          "recognition": [
+            {
+              "model": "base",
+              "text": "停車",
+              "avgLogprob": -0.345,
+              "noSpeech": 0.1432
+            },
+            {
+              "model": "small",
+              "text": "停車",
+              "avgLogprob": -0.569,
+              "noSpeech": 0.0466
+            }
+          ]
+        },
+        "depart": {
+          "id": 66,
+          "file": null,
+          "source": "kanko3/com/ute066.wag",
+          "installed": false,
+          "sha256": "2cb2912b259027a2823a35144fd1c888abc13d725d4b66c9d96ded76e5cc61aa",
+          "durationSeconds": 0.676,
+          "phrase": "発車",
+          "reading": "はっしゃ",
+          "asrConfidence": "high",
+          "usage": "扉閉めと運転許可後、実際に発車するときに一度",
+          "recognition": [
+            {
+              "model": "base",
+              "text": "発射",
+              "avgLogprob": -0.787,
+              "noSpeech": 0.0926
+            },
+            {
+              "model": "small",
+              "text": "発射",
+              "avgLogprob": -0.225,
+              "noSpeech": 0.1793
+            }
+          ]
+        },
+        "checkOkay": {
+          "id": 124,
+          "file": null,
+          "source": "kanko3/com/ute124.wag",
+          "installed": false,
+          "sha256": "fce030ecfd6e773a4813fab121de2c5d92b882bfe96e0a208777882f2c620dc5",
+          "durationSeconds": 1.074,
+          "phrase": "確認よし",
+          "reading": "かくにん・よし",
+          "asrConfidence": "high",
+          "usage": "停止後、ゲーム内で確認項目を満たした操作に対応",
+          "recognition": [
+            {
+              "model": "base",
+              "text": "確認よし",
+              "avgLogprob": -0.422,
+              "noSpeech": 0.0455
+            },
+            {
+              "model": "small",
+              "text": "確認よし",
+              "avgLogprob": -0.582,
+              "noSpeech": 0.0961
+            }
+          ]
+        }
+      },
+      "sameActorSequenceRecognition": "出発進行。 閉じ目。 転。 発車。 城内。 進行。 停車。 確認要す。"
+    }
+  ]
+}

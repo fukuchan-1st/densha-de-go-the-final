@@ -1,0 +1,80 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';
+import {advanceDoorSequence,beginStartingBoarding,completeDoorSequence,departureFilesFor} from '../dist/train-operations.js';
+import {formatStopDistance} from '../dist/display.js';
+import {SoundEngine} from '../dist/assets/audio/sound-engine.js';
+const stopped=error=>({s:4000+error,v:0,doors:false,notch:-3,dwell:0,finished:false});
+test('±3m以内でも3秒の停車確認後にだけ自動戸開',()=>{for(const error of [-3,-2.99,0,2.99,3]){const s=stopped(error);assert.equal(advanceDoorSequence(s,4000,2.99),null);assert.equal(s.doors,false);assert.equal(advanceDoorSequence(s,4000,.01),'open');assert.equal(s.doors,true);assert.equal(s.notch,-3);}for(const error of [-10,-3.001,3.001,10]){const s=stopped(error);assert.equal(advanceDoorSequence(s,4000,30),null);assert.equal(s.doors,false);}});
+test('待機中の移動または範囲逸脱で3秒の確認をやり直す',()=>{for(const change of [s=>{s.v=.02;},s=>{s.s=4003.01;}]){const s=stopped(0);advanceDoorSequence(s,4000,2);change(s);assert.equal(advanceDoorSequence(s,4000,1),null);assert.equal(s.stopWait,0);s.s=4000;s.v=0;assert.equal(advanceDoorSequence(s,4000,2.99),null);assert.equal(advanceDoorSequence(s,4000,.01),'open');}});
+test('戸開から15秒待ち、音声の終了通知後にのみ戸閉する',()=>{const s=stopped(0);assert.equal(advanceDoorSequence(s,4000,3),'open');assert.equal(advanceDoorSequence(s,4000,14.99),null);assert.equal(advanceDoorSequence(s,4000,.01),'announcement');assert.equal(advanceDoorSequence(s,4000,30),null);assert.equal(s.doors,true);s.announcementDone=true;assert.equal(advanceDoorSequence(s,4000,.01),'close');assert.equal(advanceDoorSequence(s,4000,.01),null);});
+test('終了済みなら戸開せず、乗降タイマーをリセットしない',()=>{const done={...stopped(0),finished:true};assert.equal(advanceDoorSequence(done,4000,30),null);const s=stopped(0);advanceDoorSequence(s,4000,3);advanceDoorSequence(s,4000,4);assert.equal(s.dwell,4);advanceDoorSequence(s,4000,2);assert.equal(s.dwell,6);});
+test('5m以下はcm表示、手前・行き過ぎの両方向に適用',()=>{for(const d of [5,-5])assert.equal(formatStopDistance(d),'500 cm');assert.equal(formatStopDistance(.5),'50 cm');assert.equal(formatStopDistance(-.01),'1 cm');assert.equal(formatStopDistance(0),'0 cm');assert.equal(formatStopDistance(5.001),'5 m');assert.equal(formatStopDistance(10),'10 m');});
+test('読み込み中に開始し直したら古い発車音声を再生しない',async()=>{const sound=new SoundEngine();let release;sound.init=()=>new Promise(resolve=>{release=resolve;});const playback=sound.playDeparture();sound.cancelDeparture();release();assert.equal(await playback,false);});
+
+test('黒磯と白河だけ駅音声→ホイッスル、他駅はホイッスルのみ',()=>{
+ assert.deepEqual(departureFilesFor('黒磯'),['kuroiso.mp3','departure-chime.wav']);
+ assert.deepEqual(departureFilesFor('白河'),['shirakawa.mp3','departure-chime.wav']);
+ assert.deepEqual(departureFilesFor('新白河'),['departure-chime.wav']);
+});
+test('出発駅の戸閉では停車実績・次駅を進めず、白河の到着戸閉は一度だけ加算',()=>{
+ const stations=[{name:'黒磯',s:0},{name:'白河',s:100},{name:'福島',s:200}];
+ const s={s:0,v:0,next:1,served:0,errors:[],doors:false};
+ assert.equal(beginStartingBoarding(s,0,stations),true);assert.equal(s.doors,true);
+ assert.equal(advanceDoorSequence(s,100,0),'announcement');s.announcementDone=true;
+ assert.equal(advanceDoorSequence(s,100,.01),'close');s.doorCloseDone=true;assert.equal(completeDoorSequence(s,stations),true);
+ assert.equal(s.next,1);assert.equal(s.served,0);assert.deepEqual(s.errors,[]);
+ s.s=100;s.startingDeparture=false;advanceDoorSequence(s,100,3);advanceDoorSequence(s,100,15);s.announcementDone=true;advanceDoorSequence(s,100,.01);
+ s.doorCloseDone=true;assert.equal(completeDoorSequence(s,stations),true);assert.equal(s.served,1);assert.equal(s.next,2);assert.deepEqual(s.errors,[0]);assert.equal(completeDoorSequence(s,stations),false);
+});
+function mockAudio(){
+ const sound=new SoundEngine(),sources=[];sound.ready=true;sound.departureBuffers=new Map(['kuroiso.mp3','shirakawa.mp3','departure-chime.wav'].map(x=>[x,x]));
+ sound.ctx={createBufferSource(){const source={connect(){},start(){sources.push(this);},stop(){},disconnect(){}};return source;}};
+ return {sound,sources};
+}
+test('駅音声の終了までホイッスルを開始せず、両方の終了後にだけ完了',async()=>{
+ const {sound,sources}=mockAudio(),stages=[];let done=false;
+ const playback=sound.playDeparture('白河',stage=>stages.push(stage)).then(v=>{done=v;return v;});
+ assert.equal(sources.length,1);assert.equal(sources[0].buffer,'shirakawa.mp3');assert.equal(done,false);
+ sources[0].onended();await Promise.resolve();assert.equal(sources.length,2);assert.equal(sources[1].buffer,'departure-chime.wav');assert.equal(done,false);
+ sources[1].onended();assert.equal(await playback,true);assert.deepEqual(stages,['station','whistle']);
+});
+test('駅音声の途中でやり直したらホイッスル・戸閉へ進まない',async()=>{
+ const {sound,sources}=mockAudio();const playback=sound.playDeparture('黒磯');sound.cancelDeparture();assert.equal(await playback,false);assert.equal(sources.length,1);
+});
+
+test('すべての開始駅で戸開し待ち時間なしに一度だけ発車音声を開始',()=>{
+ const stations=[{name:'黒磯',s:0},{name:'高久',s:4},{name:'白河',s:25},{name:'福島',s:109}];
+ for(let index=0;index<stations.length-1;index++){
+  const state={doors:false,v:0,s:stations[index].s,next:index+1};
+  assert.equal(beginStartingBoarding(state,index,stations),true);assert.equal(state.doors,true);assert.equal(state.departureStationIndex,index);
+  assert.equal(advanceDoorSequence(state,stations[index+1].s,0),'announcement');assert.equal(state.doors,true);
+  assert.equal(advanceDoorSequence(state,stations[index+1].s,15),null);assert.equal(state.doors,true);
+  state.announcementDone=true;assert.equal(advanceDoorSequence(state,stations[index+1].s,.01),'close');
+ }
+ assert.equal(beginStartingBoarding({},3,stations),false);
+});
+
+test('戸閉音の終了まで戸閉灯用のdoors状態と発車禁止を維持し、終了後だけ確定',async()=>{
+ const stations=[{name:'黒磯',s:0},{name:'高久',s:4000}],state={s:0,v:0,next:1,served:0,errors:[]};beginStartingBoarding(state,0,stations);advanceDoorSequence(state,4000,0);state.announcementDone=true;
+ assert.equal(advanceDoorSequence(state,4000,.01),'close');assert.equal(completeDoorSequence(state,stations),false);assert.equal(state.doors,true);
+ const {sound,sources}=mockAudio();sound.effects={close:'BVE-door-close'};let completed=false;
+ const closing=sound.playDoorClose().then(done=>{completed=done;state.doorCloseDone=done;});
+ assert.equal(sources[0].buffer,'BVE-door-close');assert.equal(completed,false);assert.equal(advanceDoorSequence(state,4000,30),null);assert.equal(state.doors,true);
+ sources[0].onended();await closing;assert.equal(advanceDoorSequence(state,4000,.01),'closed');assert.equal(completeDoorSequence(state,stations),true);assert.equal(state.doors,false);assert.equal(state.next,1);
+});
+test('戸閉音の途中でやり直したら戸閉完了通知を返さない',async()=>{
+ const {sound,sources}=mockAudio();sound.effects={close:'BVE-door-close'};const closing=sound.playDoorClose();sound.cancelDeparture();assert.equal(await closing,false);assert.equal(sources.length,1);
+});
+
+test('戸開・戸閉開始・戸閉完了はEBからP5まで全ノッチを保持し、乗降中の操作も上書きしない',()=>{
+ const stations=[{name:'黒磯',s:0},{name:'高久',s:4000},{name:'黒田原',s:8200}];
+ for(let notch=-9;notch<=5;notch++){
+  const s={...stopped(0),notch,next:1,served:0,errors:[]};
+  assert.equal(advanceDoorSequence(s,4000,3),'open');assert.equal(s.notch,notch);
+  const changed=notch===-9?0:-9;s.notch=changed;
+  advanceDoorSequence(s,4000,15);s.announcementDone=true;assert.equal(advanceDoorSequence(s,4000,.01),'close');assert.equal(s.notch,changed);
+  assert.equal(completeDoorSequence(s,stations),false);assert.equal(s.notch,changed);s.doorCloseDone=true;
+  assert.equal(completeDoorSequence(s,stations),true);assert.equal(s.notch,changed);assert.equal(s.next,2);
+  const start={...stopped(0),s:0,notch,next:1,served:0,errors:[]};assert.equal(beginStartingBoarding(start,0,stations),true);assert.equal(start.notch,notch);
+  advanceDoorSequence(start,4000,0);start.announcementDone=true;advanceDoorSequence(start,4000,.01);start.doorCloseDone=true;completeDoorSequence(start,stations);assert.equal(start.notch,notch);assert.equal(start.next,1);
+ }
+});
