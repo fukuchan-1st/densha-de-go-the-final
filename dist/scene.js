@@ -7,8 +7,9 @@ import {DISPLAY_WIDTH,DISPLAY_HEIGHT} from './display.js?v=23';
 import {addStructures} from './structures.js?v=23';
 import {structureRanges,segmentIntersects,corridorOccupied} from './structure-ranges.js?v=23';
 import {addVegetation,createSurfaceMaterial} from './vegetation.js?v=23';
+import {addTrackSignal} from './track-signal.js';
 export class RailWorld {
- constructor(container,geometry,stations,profile,structures,stationLayouts){
+ constructor(container,geometry,stations,profile,structures,stationLayouts,signals=[]){
   this.suspension=new CabSuspension();
   this.trackLayout=new TrackLayout(stationLayouts);
   this.structuresData=structures;this.ranges=structureRanges(structures);this.isStructureCorridor=(s,offset)=>corridorOccupied(structures,s,offset)||this.trackLayout.occupied(s,offset);
@@ -19,6 +20,7 @@ export class RailWorld {
   this.camera=new T.PerspectiveCamera(60,16/9,.15,2200);
   this.skyLight=new T.HemisphereLight('#e6f0ff','#57583b',1.4);this.scene.add(this.skyLight);const sun=new T.DirectionalLight('#fff0d7',2.2);sun.position.set(-400,600,200);this.scene.add(sun);this.sun=sun;
   this.materials={}; this.box=new T.BoxGeometry(1,1,1); this.build();this.routeStructures=addStructures(this,structures);
+  for(const signal of signals)addTrackSignal(T,this,this.scene,signal);
   addEventListener('resize',()=>{this.renderer.setSize(DISPLAY_WIDTH,DISPLAY_HEIGHT);this.camera.aspect=16/9;this.camera.updateProjectionMatrix();});
  }
  raw(s){const p=this.points;if(s<=0){const a=p[0],b=p[1],t=s/(b[0]-a[0]);return new T.Vector3(a[1]+(b[1]-a[1])*t,0,-a[2]-(b[2]-a[2])*t);}if(s>=this.length){const a=p.at(-2),b=p.at(-1),t=(s-a[0])/(b[0]-a[0]);return new T.Vector3(a[1]+(b[1]-a[1])*t,0,-a[2]-(b[2]-a[2])*t);}let lo=0,hi=p.length-1;while(hi-lo>1){const m=(lo+hi)>>1;if(p[m][0]<=s)lo=m;else hi=m;}const a=p[lo],b=p[hi],t=(s-a[0])/(b[0]-a[0]);return new T.Vector3(T.MathUtils.lerp(a[1],b[1],t),0,-T.MathUtils.lerp(a[2],b[2],t));}
@@ -61,7 +63,6 @@ export class RailWorld {
   for(let s=-300;s<this.length+900;s+=750)for(const side of [-1,1]){const f=this.frame(s,side*(650+rand()*500)),hill=new T.Mesh(new T.SphereGeometry(1,16,8),this.mat('#668375'));hill.position.copy(f.p);hill.position.y=f.p.y-30;hill.scale.set(450,110+rand()*130,500);this.scene.add(hill);}
   this.stationStats=addStations(this);
   for(const l of this.profile.limits){if(l.s<1)continue;this.mesh(.08,2.3,.08,'#a2aaa4',l.s,-2.5);this.sign(String(l.kmh),l.s,-2.5,2.55,.7,.55);}
-  for(let s=300;s<this.length;s+=650){if(this.ranges.tunnels.some(x=>segmentIntersects(s-.1,s+.1,x)))continue;this.mesh(.13,4.5,.13,'#777e78',s,-2.7);this.mesh(.42,1.05,.25,'#1a2527',s,-2.7,4.1);const f=this.frame(s,-2.7),lamp=new T.Mesh(new T.SphereGeometry(.12,8,8),new T.MeshBasicMaterial({color:'#7afa83'}));lamp.position.set(f.p.x,f.p.y+4.9,f.p.z);this.scene.add(lamp);}
  }
  shortRail(start,end,offset){for(const rail of[-.5335,.5335]){const pos=[],idx=[];let i=0;for(let s=start;s<=end;s+=5,i++){const f=this.frame(s,offset+rail);for(const x of[-.04,.04])pos.push(f.p.x+f.right.x*x,f.p.y+.19,f.p.z+f.right.z*x);if(i){const k=i*2;idx.push(k-2,k-1,k,k-1,k+1,k);}}const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.setIndex(idx);g.computeVertexNormals();this.scene.add(new T.Mesh(g,new T.MeshStandardMaterial({color:'#afb7b8',side:T.DoubleSide})));}}
  sign(text,s,offset,y,w=2.9,h=.65){const c=document.createElement('canvas');c.width=512;c.height=128;const cx=c.getContext('2d');cx.fillStyle='#edf0e7';cx.fillRect(0,0,512,128);cx.fillStyle='#34825e';cx.fillRect(0,104,512,24);cx.fillStyle='#173a32';cx.font='bold 66px sans-serif';cx.textAlign='center';cx.fillText(text,256,80);const tx=new T.CanvasTexture(c);tx.colorSpace=T.SRGBColorSpace;const m=new T.Mesh(new T.PlaneGeometry(w,h),new T.MeshBasicMaterial({map:tx,side:T.DoubleSide})),f=this.frame(s,offset);m.position.copy(f.p);m.position.y=f.p.y+y;m.rotation.y=f.angle;this.scene.add(m);}

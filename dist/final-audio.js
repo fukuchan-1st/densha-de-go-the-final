@@ -1,4 +1,4 @@
-import {interpolateColumn} from './final-vehicle.js?v=29';
+import {interpolateColumn} from './final-vehicle.js?v=30';
 import {runPitch} from './assets/audio/run-pitch.js';
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const whistle={entryIndex:'departure-whistle'};

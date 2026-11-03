@@ -6,3 +6,4 @@
 @media(pointer:coarse){#notchStrip{display:none}.main-controls button{min-height:56px}}
 
 @media(max-width:650px){#menuControls #settingsButton{grid-column:1 / -1}}
+#scenarioSelect{max-width:270px}

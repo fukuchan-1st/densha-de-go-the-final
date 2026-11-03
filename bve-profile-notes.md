@@ -68,6 +68,8 @@ JSONの `grades` は `{s, perMille, interpolationToNext}` です。
 
 `Section.SetSpeedLimit` にある信号現示別速度は、この恒久的な線路制限とは別です。先行列車・閉そく・実信号現示・ATS-P/ATS-Snのブレーキパターンは、この抽出には含めていません。
 
+黒磯→新白河の主信号20基と中継信号4基は、北行4129Mの自軌道 `Signal.Put` と支柱の `Sig_Base` を照合し、同じ駅間換算で配置しました。出典の行番号と元の左右位置・高さは `dist/assets/bve-signals.json` にあります。信号機の模型を表示し、運転中の現示やATSは扱いません。
+
 ## 検証
 
 - 0〜22,100mの全区間を覆う81勾配点、43速度切替点。

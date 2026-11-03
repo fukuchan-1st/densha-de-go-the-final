@@ -5,8 +5,8 @@ import {ROUTE_LENGTH,LAST_STATION_INDEX,BVE_END} from './route-data.js?v=23';
 import {mountDisplay,stoppingMarker,formatStopDistance} from './display.js?v=23';
 import {STATIONS,SPECS,step,newRun,stoppingDistance,assistBrake,notchDeltaForKey,NOTCH_MIN,NOTCH_LABELS,clampNotch} from './physics.js?v=23';
 import {RouteProfile} from './route-profile.js?v=23';
-import {RailWorld} from './scene.js?v=23';
-import {SoundEngine} from './assets/audio/sound-engine.js?v=29';
+import {RailWorld} from './scene.js?v=30';
+import {SoundEngine} from './assets/audio/sound-engine.js?v=30';
 const $=id=>document.getElementById(id), sound=new SoundEngine();
 const ui=mountResponsiveUI();const refit=mountDisplay($('simulator'),{layout:()=>ui.layout()});ui.setRefit(refit);ui.onHorn=name=>sound.playEffect(name);
 document.querySelector('.handle-panel').hidden=true;
@@ -31,7 +31,7 @@ if(directStart){
  $('menuButton').textContent='路線選択へ';
  $('pauseMenu').textContent='路線選択へ';
 }
-function returnToRoutes(){location.href='./?v=29&route=tohoku';}
+function returnToRoutes(){location.href='./?v=30&route=tohoku';}
 $('allRoutes').onclick=returnToRoutes;
 $('audioBack').onclick=returnToRoutes;
 $('audioUnlock').addEventListener('cancel',event=>event.preventDefault());
@@ -44,7 +44,7 @@ const help=`<p class="eyebrow">DRIVING GUIDE</p><h2>最初の出発、ここか�
 $('helpButton').onclick=()=>info(help);
 $('routeButton').onclick=()=>info(`<p class="eyebrow">ROUTE & ROLLING STOCK</p><h2>黒磯 → 福島</h2><table>${STATIONS.map((x,i)=>`<tr><td>${x.name}</td><td>${i?((x.s-STATIONS[i-1].s)/1000).toFixed(1)+' km':'出発駅'}</td><td>${(x.s/1000).toFixed(1)} km</td></tr>`).join('')}</table><p>701系1500番台・2両編成。起動加速度2.1 km/h/s、常用・非常減速度3.6 km/h/s、最高速度110 km/h。</p><p>線路の平面形状はOpenStreetMap座標に基づく近似。営業キロに駅間ごと校正。黒磯〜新白河の勾配と常設速度制限は提供BVEデータを参照。新白河以北は動画の沿線傾向と地図の平面線形を参考にした試作で、勾配0‰・上限110km/hの仮設定です。実際の勾配・速度制限を示しません。E531系用の曲線＋10km/hを外し、701系の上限110km/hを適用。駅位置はRailLab距離へ校正。ホームと構内線は駅別に配置し、黒磯〜新白河はBVE、それより北は動画・OSMを参考にしています。上屋・建物・カント・実際の信号は簡略表現です。</p><p>黒磯での701系運転を体験する試作シナリオです。現在の営業運転の再現ではありません。</p><p><a target="_blank" href="https://raillab.jp/transport/39">駅間距離：RailLab</a> · <a target="_blank" href="https://ja.wikipedia.org/wiki/JR東日本701系電車">車両性能：Wikipedia</a> · <a target="_blank" href="https://www.openstreetmap.org/copyright">線路：OSM / ODbL</a></p>`);
 $('settingsButton').onclick=()=>{info(`<p class="eyebrow">CAB SETTINGS</p><h2>音と揺れ。</h2><p>Motor音はRTM 701soundpack、走行音・ドア音・操作音は指定のBVE音源を使用。元スクリプトの速度別ピッチ・音量を区分線形補間して再生します。</p><label>音量 <span id="volValue">${Math.round(settings.volume*100)}</span>%<input id="volume" type="range" min="0" max="100" value="${settings.volume*100}"></label><label class="shake-setting">走行中の揺れ<select id="shakeStrength"><option value="0">なし</option><option value="0.6">弱め</option><option value="1">標準</option></select></label><p>動画との聴感比較は未実施。Motor音はRTM設定を基準にしています。</p>`);$('volume').oninput=e=>{settings.volume=e.target.value/100;sound.setVolume(settings.volume);$('volValue').textContent=e.target.value;try{localStorage.setItem('tohoku-volume',settings.volume);}catch{}};$('shakeStrength').value=String(settings.shake);$('shakeStrength').onchange=e=>{settings.shake=Number(e.target.value);try{localStorage.setItem('tohoku-shake',settings.shake);}catch{}};};
-async function ensureWorld(){if(world)return;const [g,p,structures,extension,stationLayouts]=await Promise.all([geometryPromise,fetch('./assets/bve-profile.json?v=23').then(r=>{if(!r.ok)throw Error('BVE路線データを取得できません');return r.json();}),fetch('./assets/bve-structures.json?v=23').then(r=>{if(!r.ok)throw Error('BVE構造物データを取得できません');return r.json();}),fetch('./assets/osm-extension-structures.json?v=23').then(r=>{if(!r.ok)throw Error('追加区間の構造物データを取得できません');return r.json();}),fetch('./assets/station-layouts.json?v=23').then(r=>{if(!r.ok)throw Error('駅配線データを取得できません');return r.json();})]);profile=new RouteProfile(p);const allStructures={structures:[...structures.structures,...extension.structures.map(x=>({...x,sourceType:'osm'}))]};world=new RailWorld($('world'),g,STATIONS,profile,allStructures,stationLayouts);panel=await CabPanel.load($('cabCanvas'));world.setCabView(panel.viewOrigin);}
+async function ensureWorld(){if(world)return;const [g,p,structures,extension,stationLayouts,signals]=await Promise.all([geometryPromise,fetch('./assets/bve-profile.json?v=23').then(r=>{if(!r.ok)throw Error('BVE路線データを取得できません');return r.json();}),fetch('./assets/bve-structures.json?v=23').then(r=>{if(!r.ok)throw Error('BVE構造物データを取得できません');return r.json();}),fetch('./assets/osm-extension-structures.json?v=23').then(r=>{if(!r.ok)throw Error('追加区間の構造物データを取得できません');return r.json();}),fetch('./assets/station-layouts.json?v=23').then(r=>{if(!r.ok)throw Error('駅配線データを取得できません');return r.json();}),fetch('./assets/bve-signals.json').then(r=>{if(!r.ok)throw Error('BVE信号機データを取得できません');return r.json();})]);profile=new RouteProfile(p);const allStructures={structures:[...structures.structures,...extension.structures.map(x=>({...x,sourceType:'osm'}))]};world=new RailWorld($('world'),g,STATIONS,profile,allStructures,stationLayouts,signals.signals);panel=await CabPanel.load($('cabCanvas'));world.setCabView(panel.viewOrigin);}
 async function start(){
  $('start').disabled=true;
  $('start').querySelector('span').textContent='運転席を準備中…';

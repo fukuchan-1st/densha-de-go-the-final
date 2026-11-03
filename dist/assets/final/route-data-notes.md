@@ -31,6 +31,8 @@ OpenStreetMapから軌間1067mmの在来線線路を取得。貨物線・緩行�
 
 ## 出典・表示すべき帰属
 
+信号機の位置は、大阪環状線4基をFINALの `mapdata/osakaA_D/map.dat`・`osakaB_D/map.dat` の信号モデル配置から、中央線1基をOSMの走行線上のノードから取得した。大阪環状線では昼夜で同じ配置データを確認し、モデルの配置先の線路が現行線形から3m以内に重なるものを採用した。中央線は走行線への所属、進行方向と橋型の取り付けを確認した。信号機の高さ・形状には試作の寸法を使用し、現示は扱っていない。
+
 - [OpenStreetMap contributors](https://www.openstreetmap.org/copyright), ODbL 1.0。地図に由来するデータを提供する画面には「© OpenStreetMap contributors」を表示。
 - [山手線の駅一覧](https://ja.wikipedia.org/wiki/山手線#駅一覧)
 - [中央線快速の駅一覧](https://ja.wikipedia.org/wiki/中央線快速#駅一覧)

@@ -1,0 +1,936 @@
+{
+  "schema": "tohoku-bve-signals-candidate-v1",
+  "coverageEndM": 22100,
+  "signals": [
+    {
+      "s": 399.807322,
+      "x": 2.5,
+      "y": 4.0,
+      "type": "type1",
+      "kind": "main",
+      "sectionRelativeIndex": 0,
+      "trackKey": 0,
+      "bveDistanceM": 1110.0,
+      "sourceFile": "Map_Kuroiso4.txt",
+      "sourceLine": 403,
+      "command": "Signal['type1'].Put(0, 0, 2.5, 4);",
+      "support": {
+        "x": 2.5,
+        "y": 0.0,
+        "sourceLine": 404,
+        "command": "Structure['Sig_Base'].Put(, 2.5, 0, 0, 0, 0, 0, 0, 0);"
+      },
+      "sectionAspectIndexesAtPlacement": [
+        0,
+        2,
+        4
+      ],
+      "source": "BVE Map4129M northbound"
+    },
+    {
+      "s": 1763.00578,
+      "x": -2.25,
+      "y": 4.0,
+      "type": "type1",
+      "kind": "main",
+      "sectionRelativeIndex": 0,
+      "trackKey": 0,
+      "bveDistanceM": 2525.0,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 280,
+      "command": "Signal['type1'].Put(0, 0, -2.25, 4);",
+      "support": {
+        "x": -2.25,
+        "y": 0.0,
+        "sourceLine": 281,
+        "command": "Structure['Sig_Base'].Put(, -2.25, 0, 0, 0, 0, 0, 0, 0);"
+      },
+      "sectionAspectIndexesAtPlacement": [
+        0,
+        2,
+        4
+      ],
+      "source": "BVE Map4129M northbound"
+    },
+    {
+      "s": 3063.583815,
+      "x": 8.5,
+      "y": 4.0,
+      "type": "typeR",
+      "kind": "relay",
+      "sectionRelativeIndex": 0,
+      "trackKey": 0,
+      "bveDistanceM": 3875.0,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 352,
+      "command": "Signal['typeR'].Put(0, 0, 8.5, 4);",
+      "support": {
+        "x": 8.5,
+        "y": 0.0,
+        "sourceLine": 353,
+        "command": "Structure['Sig_Base'].Put(, 8.5, 0, 0, 0, 0, 0, 0, 0);"
+      },
+      "source": "BVE Map4129M northbound"
+    },
+    {
+      "s": 3410.404624,
+      "x": 8.5,
+      "y": 4.0,
+      "type": "type1",
+      "kind": "main",
+      "sectionRelativeIndex": 0,
+      "trackKey": 0,
+      "bveDistanceM": 4235.0,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 387,
+      "command": "Signal['type1'].Put(0, 0, 8.5, 4);",
+      "support": {
+        "x": 8.5,
+        "y": 0.0,
+        "sourceLine": 388,
+        "command": "Structure['Sig_Base'].Put(, 8.5, 0, 0, 0, 0, 0, 0, 0);"
+      },
+      "sectionAspectIndexesAtPlacement": [
+        0,
+        2,
+        4
+      ],
+      "source": "BVE Map4129M northbound"
+    },
+    {
+      "s": 4088.297872,
+      "x": -2.25,
+      "y": 4.0,
+      "type": "type1",
+      "kind": "main",
+      "sectionRelativeIndex": 0,
+      "trackKey": 0,
+      "bveDistanceM": 4930.0,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 535,
+      "command": "Signal['type1'].Put(0, 0, -2.25, 4);",
+      "support": {
+        "x": -2.25,
+        "y": 0.0,
+        "sourceLine": 536,
+        "command": "Structure['Sig_Base'].Put(, -2.25, 0, 0, 0, 0, 0, 0, 0);"
+      },
+      "sectionAspectIndexesAtPlacement": [
+        0,
+        2,
+        4
+      ],
+      "source": "BVE Map4129M northbound"
+    },
+    {
+      "s": 5215.957447,
+      "x": -8.0,
+      "y": 8.1,
+      "type": "type1",
+      "kind": "main",
+      "sectionRelativeIndex": 0,
+      "trackKey": 0,
+      "bveDistanceM": 5990.0,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 598,
+      "command": "Signal['type1'].Put(0, 0, -8, 8.1);",
+      "support": {
+        "x": -8.0,
+        "y": 4.1,
+        "sourceLine": 599,
+        "command": "Structure['Sig_Base'].Put(0, -8, 4.1, 0, 0, 0, 0, 0, 0);"
+      },
+      "sectionAspectIndexesAtPlacement": [
+        0,
+        2,
+        4
+      ],
+      "source": "BVE Map4129M northbound"
+    },
+    {
+      "s": 6564.893617,
+      "x": -2.2,
+      "y": 4.0,
+      "type": "type1",
+      "kind": "main",
+      "sectionRelativeIndex": 0,
+      "trackKey": 0,
+      "bveDistanceM": 7258.0,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 662,
+      "command": "Signal['type1'].Put(0, 0, -2.20, 4);",
+      "support": {
+        "x": -2.2,
+        "y": 0.0,
+        "sourceLine": 663,
+        "command": "Structure['Sig_Base'].Put(, -2.20, 0, 0, 0, 0, 0, 0, 0);"
+      },
+      "sectionAspectIndexesAtPlacement": [
+        0,
+        2,
+        4
+      ],
+      "source": "BVE Map4129M northbound"
+    },
+    {
+      "s": 7662.765957,
+      "x": -4.05,
+      "y": 4.0,
+      "type": "type1",
+      "kind": "main",
+      "sectionRelativeIndex": 0,
+      "trackKey": 0,
+      "bveDistanceM": 8290.0,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 818,
+      "command": "Signal['type1'].Put(0, 0, -4.05, 4);",
+      "support": {
+        "x": -4.05,
+        "y": 0.0,
+        "sourceLine": 819,
+        "command": "Structure['Sig_Base'].Put(, -4.05, 0, 0, 0, 0, 0, 0, 0);"
+      },
+      "sectionAspectIndexesAtPlacement": [
+        0,
+        2,
+        4
+      ],
+      "source": "BVE Map4129M northbound"
+    },
+    {
+      "s": 8490.909091,
+      "x": -2.25,
+      "y": 4.0,
+      "type": "type1",
+      "kind": "main",
+      "sectionRelativeIndex": 0,
+      "trackKey": 0,
+      "bveDistanceM": 9075.0,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 937,
+      "command": "Signal['type1'].Put(0, 0, -2.25, 4);",
+      "support": {
+        "x": -2.25,
+        "y": 0.0,
+        "sourceLine": 938,
+        "command": "Structure['Sig_Base'].Put(, -2.25, 0, 0, 0, 0, 0, 0, 0);"
+      },
+      "sectionAspectIndexesAtPlacement": [
+        0,
+        2,
+        4
+      ],
+      "source": "BVE Map4129M northbound"
+    },
+    {
+      "s": 9441.558442,
+      "x": -2.25,
+      "y": 4.0,
+      "type": "type1",
+      "kind": "main",
+      "sectionRelativeIndex": 0,
+      "trackKey": 0,
+      "bveDistanceM": 9990.0,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 1033,
+      "command": "Signal['type1'].Put(0, 0, -2.25, 4);",
+      "support": {
+        "x": -2.25,
+        "y": 0.0,
+        "sourceLine": 1034,
+        "command": "Structure['Sig_Base'].Put(, -2.25, 0, 0, 0, 0, 0, 0, 0);"
+      },
+      "sectionAspectIndexesAtPlacement": [
+        0,
+        2,
+        4
+      ],
+      "source": "BVE Map4129M northbound"
+    },
+    {
+      "s": 11301.298701,
+      "x": 6.0,
+      "y": 6.3,
+      "type": "type2",
+      "kind": "main",
+      "sectionRelativeIndex": 0,
+      "trackKey": 0,
+      "bveDistanceM": 11780.0,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 1135,
+      "command": "Signal['type2'].Put(0, 0, 6, 6.3);",
+      "support": {
+        "x": 6.0,
+        "y": 2.0,
+        "sourceLine": 1136,
+        "command": "Structure['Sig_Base'].Put(, 6, 2, 0, 0, 0, 0, 0, 0);"
+      },
+      "sectionAspectIndexesAtPlacement": [
+        0,
+        2,
+        3,
+        4
+      ],
+      "source": "BVE Map4129M northbound"
+    },
+    {
+      "s": 12392.207792,
+      "x": -2.25,
+      "y": 4.3,
+      "type": "type2",
+      "kind": "main",
+      "sectionRelativeIndex": 0,
+      "trackKey": 0,
+      "bveDistanceM": 12830.0,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 1163,
+      "command": "Signal['type2'].Put(0, 0, -2.25, 4.3);",
+      "support": {
+        "x": -2.25,
+        "y": 0.0,
+        "sourceLine": 1164,
+        "command": "Structure['Sig_Base'].Put(, -2.25, 0, 0, 0, 0, 0, 0, 0);"
+      },
+      "sectionAspectIndexesAtPlacement": [
+        0,
+        2,
+        3,
+        4
+      ],
+      "source": "BVE Map4129M northbound"
+    },
+    {
+      "s": 12906.493506,
+      "x": -6.5,
+      "y": 7.0,
+      "type": "type1",
+      "kind": "main",
+      "sectionRelativeIndex": 0,
+      "trackKey": 0,
+      "bveDistanceM": 13325.0,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 1178,
+      "command": "Signal['type1'].Put(0, 0, -6.5, 7);",
+      "support": {
+        "x": -6.5,
+        "y": 3.0,
+        "sourceLine": 1179,
+        "command": "Structure['Sig_Base'].Put(, -6.5, 3, 0, 0, 0, 0, 0, 0);"
+      },
+      "sectionAspectIndexesAtPlacement": [
+        0,
+        2,
+        4
+      ],
+      "source": "BVE Map4129M northbound"
+    },
+    {
+      "s": 13358.441558,
+      "x": -4.0,
+      "y": 4.0,
+      "type": "typeR",
+      "kind": "relay",
+      "sectionRelativeIndex": 1,
+      "trackKey": 0,
+      "bveDistanceM": 13760.0,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 1270,
+      "command": "Signal['typeR'].Put(1, 0, -4, 4);",
+      "support": {
+        "x": -4.0,
+        "y": 0.0,
+        "sourceLine": 1271,
+        "command": "Structure['Sig_Base'].Put(, -4, 0, 0, 0, 0, 0, 0, 0);"
+      },
+      "source": "BVE Map4129M northbound"
+    },
+    {
+      "s": 13554.119548,
+      "x": -7.5,
+      "y": 6.0,
+      "type": "type2",
+      "kind": "main",
+      "sectionRelativeIndex": 0,
+      "trackKey": 0,
+      "bveDistanceM": 13980.0,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 1325,
+      "command": "Signal['type2'].Put(0, 0, -7.5, 6);",
+      "support": {
+        "x": -7.5,
+        "y": 1.7,
+        "sourceLine": 1326,
+        "command": "Structure['Sig_Base'].Put(0, -7.5, 1.7, 0, 0, 0, 0, 0, 0);"
+      },
+      "sectionAspectIndexesAtPlacement": [
+        0,
+        2,
+        3,
+        4
+      ],
+      "source": "BVE Map4129M northbound"
+    },
+    {
+      "s": 15463.489499,
+      "x": -2.25,
+      "y": 4.0,
+      "type": "type1",
+      "kind": "main",
+      "sectionRelativeIndex": 0,
+      "trackKey": 0,
+      "bveDistanceM": 16210.0,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 1414,
+      "command": "Signal['type1'].Put(0, 0, -2.25, 4.0);",
+      "support": {
+        "x": -2.25,
+        "y": 0.0,
+        "sourceLine": 1415,
+        "command": "Structure['Sig_Base'].Put(, -2.25, 0, 0, 0, 0, 0, 0, 0);"
+      },
+      "sectionAspectIndexesAtPlacement": [
+        0,
+        2,
+        4
+      ],
+      "source": "BVE Map4129M northbound"
+    },
+    {
+      "s": 16413.893376,
+      "x": -2.25,
+      "y": 3.8,
+      "type": "type2",
+      "kind": "main",
+      "sectionRelativeIndex": 0,
+      "trackKey": 0,
+      "bveDistanceM": 17320.0,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 1495,
+      "command": "Signal['type2'].Put(0, 0, -2.25, 3.8);",
+      "support": {
+        "x": -2.25,
+        "y": -0.5,
+        "sourceLine": 1496,
+        "command": "Structure['Sig_Base'].Put(, -2.25, -0.5, 0, 0, 0, 0, 0, 0);"
+      },
+      "sectionAspectIndexesAtPlacement": [
+        0,
+        2,
+        3,
+        4
+      ],
+      "source": "BVE Map4129M northbound"
+    },
+    {
+      "s": 17360.016155,
+      "x": -2.25,
+      "y": 3.8,
+      "type": "type2",
+      "kind": "main",
+      "sectionRelativeIndex": 0,
+      "trackKey": 0,
+      "bveDistanceM": 18425.0,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 1591,
+      "command": "Signal['type2'].Put(0, 0, -2.25, 3.8);",
+      "support": {
+        "x": -2.25,
+        "y": -0.5,
+        "sourceLine": 1592,
+        "command": "Structure['Sig_Base'].Put(, -2.25, -0.5, 0, 0, 0, 0, 0, 0);"
+      },
+      "sectionAspectIndexesAtPlacement": [
+        0,
+        2,
+        3,
+        4
+      ],
+      "source": "BVE Map4129M northbound"
+    },
+    {
+      "s": 18152.019386,
+      "x": 6.0,
+      "y": 4.0,
+      "type": "typeR",
+      "kind": "relay",
+      "sectionRelativeIndex": 1,
+      "trackKey": 0,
+      "bveDistanceM": 19350.0,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 1656,
+      "command": "Signal['typeR'].Put(1, 0, 6, 4);",
+      "support": {
+        "x": 6.0,
+        "y": 0.0,
+        "sourceLine": 1657,
+        "command": "Structure['Sig_Base'].Put(0, 6, 0, 0, 0, 0, 0, 0, 0);"
+      },
+      "source": "BVE Map4129M northbound"
+    },
+    {
+      "s": 18323.263328,
+      "x": 5.0,
+      "y": 5.3,
+      "type": "type1",
+      "kind": "main",
+      "sectionRelativeIndex": 0,
+      "trackKey": 0,
+      "bveDistanceM": 19550.0,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 1661,
+      "command": "Signal['type1'].Put(0, 0, 5, 5.3);",
+      "support": {
+        "x": 5.0,
+        "y": 1.3,
+        "sourceLine": 1662,
+        "command": "Structure['Sig_Base'].Put(0, 5, 1.3, 0, 0, 0, 0, 0, 0);"
+      },
+      "sectionAspectIndexesAtPlacement": [
+        0,
+        2,
+        4
+      ],
+      "source": "BVE Map4129M northbound"
+    },
+    {
+      "s": 19026.474623,
+      "x": -2.25,
+      "y": 4.3,
+      "type": "type2",
+      "kind": "main",
+      "sectionRelativeIndex": 0,
+      "trackKey": 0,
+      "bveDistanceM": 20340.0,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 1753,
+      "command": "Signal['type2'].Put(0, 0, -2.25, 4.3);",
+      "support": {
+        "x": -2.25,
+        "y": 0.0,
+        "sourceLine": 1754,
+        "command": "Structure['Sig_Base'].Put(, -2.25, 0, 0, 0, 0, 0, 0, 0);"
+      },
+      "sectionAspectIndexesAtPlacement": [
+        0,
+        2,
+        3,
+        4
+      ],
+      "source": "BVE Map4129M northbound"
+    },
+    {
+      "s": 20478.820302,
+      "x": -5.0,
+      "y": 4.3,
+      "type": "type2",
+      "kind": "main",
+      "sectionRelativeIndex": 0,
+      "trackKey": 0,
+      "bveDistanceM": 21897.0,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 1824,
+      "command": "Signal['type2'].Put(0, 0, -5, 4.3);",
+      "support": {
+        "x": -5.0,
+        "y": 0.0,
+        "sourceLine": 1825,
+        "command": "Structure['Sig_Base'].Put(, -5, 0, 0, 0, 0, 0, 0, 0);"
+      },
+      "sectionAspectIndexesAtPlacement": [
+        0,
+        2,
+        3
+      ],
+      "source": "BVE Map4129M northbound"
+    },
+    {
+      "s": 21083.264746,
+      "x": -2.4,
+      "y": 5.0,
+      "type": "typeR",
+      "kind": "relay",
+      "sectionRelativeIndex": 1,
+      "trackKey": 0,
+      "bveDistanceM": 22545.0,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 1835,
+      "command": "Signal['typeR'].Put(1, 0, -2.4, 5);",
+      "support": {
+        "x": -2.4,
+        "y": 1.0,
+        "sourceLine": 1836,
+        "command": "Structure['Sig_Base'].Put(, -2.4, 1, 0, 0, 0, 0, 0, 0);"
+      },
+      "source": "BVE Map4129M northbound"
+    },
+    {
+      "s": 21344.444444,
+      "x": -2.15,
+      "y": 3.4,
+      "type": "type1-s",
+      "kind": "main",
+      "sectionRelativeIndex": 0,
+      "trackKey": 0,
+      "bveDistanceM": 22825.0,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 1864,
+      "command": "Signal['type1-s'].Put(0, 0, -2.15, 3.4);",
+      "support": {
+        "x": -2.55,
+        "y": 0.0,
+        "sourceLine": 1865,
+        "command": "Structure['Sig_Base'].Put(, -2.55, 0, 0, 0, 0, 0, 0, 0);"
+      },
+      "sectionAspectIndexesAtPlacement": [
+        0,
+        2
+      ],
+      "source": "BVE Map4129M northbound"
+    }
+  ],
+  "sectionBoundaries": [
+    {
+      "bveDistanceM": 1110.0,
+      "s": 399.807322,
+      "sourceFile": "Map_Kuroiso4.txt",
+      "sourceLine": 400,
+      "aspectIndexes": [
+        0,
+        2,
+        4
+      ],
+      "command": "Section.BeginNew(0, 2, 4);"
+    },
+    {
+      "bveDistanceM": 2525.0,
+      "s": 1763.00578,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 279,
+      "aspectIndexes": [
+        0,
+        2,
+        4
+      ],
+      "command": "Section.BeginNew(0, 2, 4);"
+    },
+    {
+      "bveDistanceM": 4235.0,
+      "s": 3410.404624,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 386,
+      "aspectIndexes": [
+        0,
+        2,
+        4
+      ],
+      "command": "Section.BeginNew(0, 2, 4);"
+    },
+    {
+      "bveDistanceM": 4930.0,
+      "s": 4088.297872,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 534,
+      "aspectIndexes": [
+        0,
+        2,
+        4
+      ],
+      "command": "Section.BeginNew(0, 2, 4);"
+    },
+    {
+      "bveDistanceM": 5990.0,
+      "s": 5215.957447,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 597,
+      "aspectIndexes": [
+        0,
+        2,
+        4
+      ],
+      "command": "Section.BeginNew(0, 2, 4);"
+    },
+    {
+      "bveDistanceM": 7258.0,
+      "s": 6564.893617,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 661,
+      "aspectIndexes": [
+        0,
+        2,
+        4
+      ],
+      "command": "Section.BeginNew(0, 2, 4);"
+    },
+    {
+      "bveDistanceM": 8290.0,
+      "s": 7662.765957,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 817,
+      "aspectIndexes": [
+        0,
+        2,
+        4
+      ],
+      "command": "Section.BeginNew(0, 2, 4);"
+    },
+    {
+      "bveDistanceM": 9075.0,
+      "s": 8490.909091,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 936,
+      "aspectIndexes": [
+        0,
+        2,
+        4
+      ],
+      "command": "Section.BeginNew(0, 2, 4);"
+    },
+    {
+      "bveDistanceM": 9990.0,
+      "s": 9441.558442,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 1032,
+      "aspectIndexes": [
+        0,
+        2,
+        4
+      ],
+      "command": "Section.BeginNew(0, 2, 4);"
+    },
+    {
+      "bveDistanceM": 11780.0,
+      "s": 11301.298701,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 1134,
+      "aspectIndexes": [
+        0,
+        2,
+        3,
+        4
+      ],
+      "command": "Section.BeginNew(0, 2, 3, 4);"
+    },
+    {
+      "bveDistanceM": 12830.0,
+      "s": 12392.207792,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 1162,
+      "aspectIndexes": [
+        0,
+        2,
+        3,
+        4
+      ],
+      "command": "Section.BeginNew(0, 2, 3, 4);"
+    },
+    {
+      "bveDistanceM": 13325.0,
+      "s": 12906.493506,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 1177,
+      "aspectIndexes": [
+        0,
+        2,
+        4
+      ],
+      "command": "Section.BeginNew(0, 2, 4);"
+    },
+    {
+      "bveDistanceM": 13980.0,
+      "s": 13554.119548,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 1324,
+      "aspectIndexes": [
+        0,
+        2,
+        3,
+        4
+      ],
+      "command": "Section.BeginNew(0, 2, 3, 4);"
+    },
+    {
+      "bveDistanceM": 16210.0,
+      "s": 15463.489499,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 1413,
+      "aspectIndexes": [
+        0,
+        2,
+        4
+      ],
+      "command": "Section.BeginNew(0, 2, 4);"
+    },
+    {
+      "bveDistanceM": 17320.0,
+      "s": 16413.893376,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 1494,
+      "aspectIndexes": [
+        0,
+        2,
+        3,
+        4
+      ],
+      "command": "Section.BeginNew(0, 2, 3, 4);"
+    },
+    {
+      "bveDistanceM": 18425.0,
+      "s": 17360.016155,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 1590,
+      "aspectIndexes": [
+        0,
+        2,
+        3,
+        4
+      ],
+      "command": "Section.BeginNew(0, 2, 3, 4);"
+    },
+    {
+      "bveDistanceM": 19550.0,
+      "s": 18323.263328,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 1660,
+      "aspectIndexes": [
+        0,
+        2,
+        4
+      ],
+      "command": "Section.BeginNew(0, 2, 4);"
+    },
+    {
+      "bveDistanceM": 20340.0,
+      "s": 19026.474623,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 1752,
+      "aspectIndexes": [
+        0,
+        2,
+        3,
+        4
+      ],
+      "command": "Section.BeginNew(0, 2, 3, 4);"
+    },
+    {
+      "bveDistanceM": 21897.0,
+      "s": 20478.820302,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 1823,
+      "aspectIndexes": [
+        0,
+        2,
+        3
+      ],
+      "command": "Section.BeginNew(0, 2, 3);"
+    },
+    {
+      "bveDistanceM": 22825.0,
+      "s": 21344.444444,
+      "sourceFile": "Map_Kuro-Shira.txt",
+      "sourceLine": 1863,
+      "aspectIndexes": [
+        0,
+        2
+      ],
+      "command": "Section.BeginNew(0, 2);"
+    },
+    {
+      "bveDistanceM": 23637.0,
+      "s": 22101.865569,
+      "sourceFile": "CommonE531/ATS-P_Sn.txt",
+      "sourceLine": 30,
+      "aspectIndexes": [
+        0
+      ],
+      "command": "Section.BeginNew(0);"
+    }
+  ],
+  "aspectModels": {
+    "type1": {
+      "0": "signal20",
+      "2": "signal22",
+      "4": "signal24"
+    },
+    "typeR": {
+      "0": "signal30",
+      "2": "signal32",
+      "4": "signal34"
+    },
+    "typeI": {
+      "0": "signal94",
+      "4": "signal90"
+    },
+    "type1-s": {
+      "0": "signal20",
+      "2": "signal22"
+    },
+    "type2": {
+      "0": "Sig4_20",
+      "2": "Sig4_22",
+      "3": "Sig4_23",
+      "4": "Sig4_24"
+    }
+  },
+  "metadata": {
+    "sourceScenario": "Map4129M.txt",
+    "direction": "黒磯 → 新白河",
+    "stationAnchors": [
+      {
+        "name": "黒磯",
+        "bveDistanceM": 695.0,
+        "s": 0
+      },
+      {
+        "name": "高久",
+        "bveDistanceM": 4847.0,
+        "s": 4000
+      },
+      {
+        "name": "黒田原",
+        "bveDistanceM": 8795.0,
+        "s": 8200
+      },
+      {
+        "name": "豊原",
+        "bveDistanceM": 13800.0,
+        "s": 13400
+      },
+      {
+        "name": "白坂",
+        "bveDistanceM": 19990.0,
+        "s": 18700
+      },
+      {
+        "name": "新白河",
+        "bveDistanceM": 23635.0,
+        "s": 22100
+      }
+    ],
+    "files": [
+      {
+        "path": "Map4129M.txt",
+        "sha256": "075dd8d7747cf58fc4a961c68898141ae74f41f00e13d36db6029b87abe75228"
+      },
+      {
+        "path": "Map_Kuroiso4.txt",
+        "sha256": "82ae1e999ad9682e320f72de03a8b45133506d0a8cfdf1487a353d2fc997991d"
+      },
+      {
+        "path": "Map_Kuro-Shira.txt",
+        "sha256": "210bf4f010fc6021cae2476ed31cf40182b4d1e1c16cee5e4886a54a6606b591"
+      },
+      {
+        "path": "CommonE531/ATS-P_Sn.txt",
+        "sha256": "d7e8a17bd5b2a31c1eeddfa458d5d8c2ae2ba7ecfec34e56fd23c22fee521b1d"
+      },
+      {
+        "path": "CommonE531/Signals.csv",
+        "sha256": "d464ccded89c79537656ce24113766713d67ba57f048c7f12f853399e04434e1"
+      }
+    ],
+    "coordinateSystem": "s uses existing calibrated distance. x and y remain BVE own-track lateral offset and height.",
+    "selection": "Dynamic Signal.Put on track 0 only. Static opposite/other-track scenery and section-only boundaries are not driving signals.",
+    "limitations": "Historical community BVE placement reference. AspectModels preserves configured model keys and does not specify present live aspects.",
+    "formatReference": "https://bvets.net/jp/edit/formats/route/map.html"
+  }
+}

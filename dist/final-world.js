@@ -1,5 +1,6 @@
 import * as T from './assets/vendor/three.module.js';
 import {CabSuspension} from './cab-motion.js?v=24';
+import {addTrackSignal} from './track-signal.js';
 const clamp=T.MathUtils.clamp;
 // Original streamed scenery. Track coordinates come from the route JSON; buildings and platforms are approximate.
 export class FinalWorld {
@@ -18,7 +19,7 @@ export class FinalWorld {
  platformLength(){return clamp((this.route.carCount??10)*20+20,180,280);}
  oppositeOffset(s){
   const {st,d}=this.stationNear(s);
-  const island=this.route.stations.indexOf(st)%3===1;
+  const island=(st.layoutIndex??this.route.stations.indexOf(st))%3===1;
   if(island)return 4+4*clamp((350-d)/180,0,1);
   const reference=this.route.parallelTrackReference?.find(row=>row.s===st.s);
   const spacing=reference?.oppositeTrackSpacingM;
@@ -45,11 +46,14 @@ export class FinalWorld {
    const w=8+random()*12,d=10+random()*12;buildings.push({s,x,y:0,w,h,d});if(this.quality!=='light')for(let y=3;y<h-1;y+=3)windows.push({s:s-d/2-.03,x,y,w:w*.65,h:1.1,d:.05});
    if(!urban||random()>.7)trees.push({s:s+12,x:side*(12+random()*7),y:2,w:2+random()*2,h:3+random()*3,d:3});}
   this.instances(group,buildings,index%2?'#b7b5aa':'#b1b7b5');this.instances(group,windows,'#405d68');this.instances(group,trees,'#4d7150');
-  this.route.stations.forEach((st,i)=>{if(Math.floor(st.s/500)!==index)return;const length=this.platformLength(),a=st.s-length+18,b=st.s+18,island=i%3===1;
+  this.route.stations.forEach((st,i)=>{if(Math.floor(st.s/500)!==index)return;const length=this.platformLength(),a=st.s-length+18,b=st.s+18,island=(st.layoutIndex??i)%3===1;
    const platforms=island?[{x:4,w:4.8}]:[{x:-4,w:4.8},{x:this.oppositeOffset(st.s)+4,w:4.8}];for(const p of platforms){this.cube(group,(a+b)/2,p.x,0,p.w,1,b-a,'#a8aaa1');for(const side of[-1,1])this.cube(group,(a+b)/2,p.x+side*(p.w/2-.18),1.01,.2,.025,b-a,'#e3ce67');this.cube(group,st.s-65,p.x,4.2,p.w+.25,.18,105,'#677778');for(let s=st.s-110;s<st.s-12;s+=16)this.cube(group,s,p.x,1,.13,3.2,.13,'#c2c9c3');this.sign(group,st.name,st.s-18,p.x);this.sign(group,st.name,st.s-100,p.x);}
    this.cube(group,st.s,1.65,0,.08,1.2,.08,'#eeeecc');
   });
   for(const structure of this.route.structures??[]){if(structure.sEnd<start||structure.sStart>end)continue;const a=Math.max(start,structure.sStart),b=Math.min(end,structure.sEnd);if(structure.kind==='tunnel'){for(let s=a;s<b;s+=10){this.cube(group,s,-2.2,0,.4,5.2,10,'#686d6e');this.cube(group,s,this.oppositeOffset(s)+2.2,0,.4,5.2,10,'#686d6e');this.cube(group,s,this.oppositeOffset(s)/2,5.2,this.oppositeOffset(s)+4.8,.5,10,'#5d6265');}}else if(structure.kind==='bridge'){for(let s=a;s<b;s+=12){this.cube(group,s,-2,0,.13,1.1,12,'#879797');this.cube(group,s,this.oppositeOffset(s)+2,0,.13,1.1,12,'#879797');}}}
+  for(const signal of this.route.signals??[]){
+   if(signal.s>=start&&signal.s<end)addTrackSignal(T,this,group,signal);
+  }
   this.scene.add(group);return group;
  }
  disposeChunk(group){this.scene.remove(group);group.traverse(o=>{if(o.isInstancedMesh)o.dispose();if(o.geometry&&o.geometry!==this.box)o.geometry.dispose();if(o.material?.map){o.material.map.dispose();o.material.dispose();}});}

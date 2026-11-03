@@ -2,6 +2,7 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {createJourney,controlsFor,notchLabel,driveStep,brakeAssist,finishStop,takeDepartureCall,stopPosition,distanceLabel,interpolateTable} from '../dist/final-model.js';
+import {FINAL_SCENARIOS,scenarioJourney} from '../dist/final-scenarios.js';
 const recipes=JSON.parse(await readFile(new URL('../dist/assets/final/vehicle-recipes.json',import.meta.url))),ids=['yamanote','chuo','osaka','tokaido'],trains=['e235','e233','323','207'];
 const routes=await Promise.all(ids.map(async id=>JSON.parse(await readFile(new URL(`../dist/assets/final/${id}-route.json`,import.meta.url)))));
 test('4路線の全駅・営業キロと線路座標が一致し、ループの終点が起点に戻る',()=>{
@@ -44,4 +45,40 @@ test('運転開始できる全駅に出発駅名と定発の音声がある',asy
    assert.ok(wave.length>22050);
   }
  }
+});
+test('FINALの区間は指定した駅で終了し、環状線の継ぎ目も駅順と音声の対応を保つ',()=>{
+ for(const [index,route] of routes.entries()){
+  for(const scenario of FINAL_SCENARIOS[route.id]){
+   const trip=scenarioJourney(route,scenario);
+   const stations=trip.route.stations;
+   const state=createJourney(trip.route,recipes.trains[index],trip.startIndex,trip.endIndex);
+   assert.equal(stations[trip.startIndex].name,scenario[1]);
+   assert.equal(stations[trip.endIndex].name,scenario[2]);
+   const stationCount=route.stations.length-1;
+   finishStop(state,trip.route);
+   for(let station=trip.startIndex+1;station<=trip.endIndex;station++){
+    assert.equal(state.finished,false);
+    assert.ok(stations[station].s>stations[station-1].s);
+    if(station>=stationCount&&route.loop)assert.equal(stations[station].layoutIndex,station%stationCount);
+    state.s=stations[station].s;
+    finishStop(state,trip.route);
+   }
+   assert.equal(state.finished,true);
+   assert.equal(state.served,trip.endIndex-trip.startIndex);
+   assert.equal(state.departureCall,null);
+  }
+ }
+});
+test('信号機は確認できた配置だけを描画し、環状線の一周後にも距離が対応する',async()=>{
+ const bve=JSON.parse(await readFile(new URL('../dist/assets/bve-signals.json',import.meta.url)));
+ assert.equal(bve.signals.filter(signal=>signal.kind==='main').length,20);
+ assert.equal(bve.signals.filter(signal=>signal.kind==='relay').length,4);
+ assert.ok(bve.signals.every(signal=>signal.s>0&&signal.s<bve.coverageEndM&&signal.support&&signal.sourceLine>0));
+ const chuo=routes[1],osaka=routes[2];
+ assert.equal(chuo.signals.length,1);
+ assert.ok(chuo.sources[0].wayIds.includes(chuo.signals[0].osmWayId));
+ assert.equal(osaka.signals.length,4);
+ assert.ok(osaka.signals.every(signal=>signal.railErrorM<=3&&signal.x<=-2));
+ const loop=scenarioJourney(osaka,FINAL_SCENARIOS.osaka.find(([id])=>id==='07')).route;
+ assert.deepEqual(loop.signals.slice(4).map(signal=>signal.s),osaka.signals.map(signal=>signal.s+osaka.length));
 });

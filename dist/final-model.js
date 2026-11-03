@@ -7,7 +7,7 @@ export function interpolateTable(rows,speed,column=1){
 }
 export function controlsFor(recipe){const labels=recipe.notchLabels,neutral=labels.indexOf('N');return {labels,neutral,min:-neutral,max:labels.length-neutral-1,brakeMax:Math.max(...labels.map(l=>Number(l.match(/^B(\d+)$/)?.[1]??0)))};}
 export function notchLabel(recipe,n){const c=controlsFor(recipe);return c.labels[clamp(n+c.neutral,0,c.labels.length-1)];}
-export function createJourney(route,recipe,startIndex=0){return {s:route.stations[startIndex].s,v:0,notch:0,elapsed:0,next:startIndex+1,startIndex,served:0,missed:0,errors:[],doors:true,doorPhase:'boarding',startingDeparture:true,dwell:0,stopWait:0,finished:false,acceleration:0};}
+export function createJourney(route,recipe,startIndex=0,endIndex=route.stations.length-1){return {s:route.stations[startIndex].s,v:0,notch:0,elapsed:0,next:startIndex+1,startIndex,endIndex,served:0,missed:0,errors:[],doors:true,doorPhase:'boarding',startingDeparture:true,dwell:0,stopWait:0,finished:false,acceleration:0};}
 export function driveStep(state,recipe,dt,grade=0){
  const c=controlsFor(recipe),label=notchLabel(recipe,state.notch),spec=recipe.playableSpecs,old=state.v,kmh=old*3.6;
  let a=-9.80665*grade/1000;
@@ -45,7 +45,7 @@ export function finishStop(state,route){
   state.served++;
   state.next++;
  }
- state.finished=state.next>=route.stations.length;
+ state.finished=state.next>state.endIndex;
  state.departureCall=state.finished?null:stoppedAt;
 }
 export function takeDepartureCall(state){
