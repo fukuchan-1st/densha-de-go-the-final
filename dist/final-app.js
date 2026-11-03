@@ -1,8 +1,8 @@
-import {FinalWorld} from './final-world.js?v=27';
-import {MenuArt} from './final-art.js?v=27';
-import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=27';
-import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,stopPosition,finishStop} from './final-model.js?v=27';
-import {STATIONS as TOHOKU_STATIONS} from './route-data.js?v=27';
+import {FinalWorld} from './final-world.js?v=28';
+import {MenuArt} from './final-art.js?v=28';
+import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=28';
+import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,stopPosition,finishStop} from './final-model.js?v=28';
+import {STATIONS as TOHOKU_STATIONS} from './route-data.js?v=28';
 
 const TOHOKU_TRAIN={id:'701',name:'701系1500番台',playableSpecs:{carCount:2}};
 const $=id=>document.getElementById(id),META=[
@@ -93,7 +93,7 @@ function updateDoors(dt){if(run.finished||run.doorPhase==='audio-error')return;c
 async function start(startIndex=Number($('startStation').value)){
  if(loading||!recipes)return;
  const meta=META[selected];
- if(meta.legacy){location.href=`./tohoku.html?v=27&drive=1&station=${startIndex}`;return;}
+ if(meta.legacy){location.href=`./tohoku.html?v=28&drive=1&station=${startIndex}`;return;}
  loading=true;
  const controlsToLock=document.querySelectorAll('#menuControls button,#menuControls select,#routeCards button');
  controlsToLock.forEach(element=>element.disabled=true);
@@ -152,7 +152,7 @@ let last=performance.now();function frame(now){const dt=Math.min(.08,Math.max(0,
 try {
  const routeLoads=META.map(async meta=>{
   if(meta.legacy)return {id:meta.id,stations:TOHOKU_STATIONS};
-  const response=await fetch(`./assets/final/${meta.id}-route.json?v=27`);
+  const response=await fetch(`./assets/final/${meta.id}-route.json?v=28`);
   if(!response.ok)throw Error('路線データを読み込めません');
   return response.json();
  });

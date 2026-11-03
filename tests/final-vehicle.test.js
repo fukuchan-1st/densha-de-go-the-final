@@ -6,6 +6,7 @@ import {zipSync,strToU8} from '../dist/assets/vendor/fflate.module.js';
 import {LocalTrainPack,crc32,interpolateColumn} from '../dist/final-vehicle.js';
 import {LocalCabPanel,PANEL_CROPS,localNeedlePoint,localNeedleAngle,calibratedSpeedAngle,panelTransparentColor} from '../dist/final-panel.js';
 import {LocalTrainAudio} from '../dist/final-audio.js';
+import {runPitch} from '../dist/assets/audio/run-pitch.js';
 const catalog=JSON.parse(await readFile(new URL('../dist/assets/final/vehicle-recipes.json',import.meta.url),'utf8'));
 test('サイトの運転開始に必要な4車両の画像と音源がすべて同梱される',async()=>{
  const root=new URL('../dist/assets/final/vehicles/',import.meta.url);
@@ -76,6 +77,12 @@ test('モーター音は鳴る速度から再生し惰行に戻すと停止す�
  audio.update(0,-1);
  await Promise.resolve();
  assert.equal(sources.length,1);
+});
+test('転動音は60km/hで原音の2/3倍、90km/hで原音の速度になる',()=>{
+ assert.equal(runPitch(0),.35);
+ assert.equal(runPitch(60),2/3);
+ assert.equal(runPitch(90),1);
+ assert.equal(runPitch(120),4/3);
 });
 test('透明色未指定の運転台では黒を抜かずPNG本来のアルファを保ち、明示指定のみ適用する',()=>{for(const t of catalog.trains){for(const e of t.panel.elements){const color=panelTransparentColor(e,t.panel);if(t.id==='e233'&&['background','pilotlamp'].includes(e.type)&&!e.transparentcolor)assert.equal(color,null);if(e.transparentcolor)assert.equal(color,e.transparentcolor);if(e.subject==='true'&&['e233','e235','323'].includes(t.id)&&!e.transparentcolor)assert.equal(e.image.transparentColor,undefined);}}assert.equal(panelTransparentColor({}, {this:{transparentcolor:'FF0000'}}),'FF0000');});
 test('読み込み車両の戸閉音は終了まで完了せず、停止・やり直しでは完了通知を取り消す',async()=>{

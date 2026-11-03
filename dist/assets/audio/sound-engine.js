@@ -1,4 +1,5 @@
 import {departureFilesFor,STATION_DEPARTURE_AUDIO} from '../../train-operations.js?v=23';
+import {runPitch} from './run-pitch.js';
 // Browser port of the supplied RTM RSM2 sound_701.js. Speed input is km/h.
 export function interpolate(points, speed) {
   if (points.length === 1) return 0;
@@ -118,7 +119,7 @@ export class SoundEngine {
   }
   updateBve(speed,notch,environment){
     const surface=environment.surface??'long',level=Math.min(1,speed/45)*.38,pitch=Math.max(.35,Math.min(2,speed/50));
-    for(const [kind,key] of [['long','runLong'],['bridge','runBridge'],['tunnel','runTunnel']])this.loopEffect(key,surface===kind?level:0,pitch);
+    for(const [kind,key] of [['long','runLong'],['bridge','runBridge'],['tunnel','runTunnel']])this.loopEffect(key,surface===kind?level:0,runPitch(speed));
     this.loopEffect('noise',.12);
     this.loopEffect('shoe',notch<-1&&speed>1&&speed<30?Math.min(speed/10,1)*(1-speed/35)*.18:0,pitch);
     this.loopEffect('flange',speed>10?Math.max(0,Math.min(1,(Math.abs(environment.curvature??0)-.001)*600))*.16:0,Math.max(.6,pitch));

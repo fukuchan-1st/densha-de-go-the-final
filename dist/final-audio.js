@@ -1,4 +1,5 @@
-import {interpolateColumn} from './final-vehicle.js?v=27';
+import {interpolateColumn} from './final-vehicle.js?v=28';
+import {runPitch} from './assets/audio/run-pitch.js';
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const whistle={entryIndex:'departure-whistle'};
 const voiceBanks={e235:['kanko0','uta'],e233:['kanko1','utb'],323:['kanko2','utd'],207:['kanko3','ute']};
@@ -129,10 +130,11 @@ export class LocalTrainAudio {
   if(this.lastNotch!==undefined&&this.lastNotch!==notch)this.playNotch(this.lastNotch,notch).catch(()=>{});
   this.lastNotch=notch;
   const s=this.recipe.sounds,run=this.runRef(surface),runKey='run'+run?.entryIndex;
-  this.tuneLoop(runKey,run,clamp(speed/65,0,.65),clamp(speed/45,.35,2.5));
+  const rollingRate=runPitch(speed);
+  this.tuneLoop(runKey,run,clamp(speed/65,0,.65),rollingRate);
   this.tuneLoop('noise',s.others?.noise,.15,1);
   for(const key of this.loops.keys()){
-   if(key.startsWith('run')&&key!==runKey)this.tuneLoop(key,null,0,1);
+   if(key.startsWith('run')&&key!==runKey)this.tuneLoop(key,null,0,rollingRate);
   }
   const phase=doors?null:notch>0?'power':notch<0&&speed>.1?'brake':null;
   const tables=phase&&this.recipe.motorNoise?.[phase];
