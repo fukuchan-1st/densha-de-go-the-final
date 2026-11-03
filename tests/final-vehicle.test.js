@@ -12,6 +12,12 @@ test('サイトの運転開始に必要な4車両の画像と音源がすべて�
  for(const recipe of catalog.trains){
   const panel=Object.assign(Object.create(LocalCabPanel.prototype),{recipe});
   const audio=Object.assign(Object.create(LocalTrainAudio.prototype),{recipe});
+  if(recipe.id==='e233'){
+   assert.equal(Object.keys(recipe.sounds.motor).length,24);
+   assert.equal(interpolateColumn(recipe.motorNoise.power.volume,16,3),.6);
+   assert.equal(interpolateColumn(recipe.motorNoise.brake.volume,16,5),.6);
+   assert.equal(interpolateColumn(recipe.motorNoise.power.frequency,0,9.3),1);
+  }
   const images=recipe.panel.elements.filter(element=>panel.supported(element))
    .flatMap(element=>[element.image,element.nightImage]).filter(Boolean);
   assert.ok(images.length>0);

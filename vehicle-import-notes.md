@@ -1,6 +1,6 @@
 # 4車両の内蔵データ
 
-サイト版とPC版は `dist/assets/final/vehicles/` の素材を使います。再作成する場合は、`python tools/install-vehicle-assets.py <trainフォルダー>` で解凍済みの素材を照合して `local-vehicles/` に取り込み、`python tools/bundle-vehicle-assets.py` で、運転中に参照するパネルと音源をWebPとMP3に変換します。パネル上の針位置や計器の寸法は原寸の座標を使います。E235系のトンネルでは、長い録音と同じ車両データにある短いトンネル音を使います。以下は最初に車両を取り込んだときの開発資料です。
+サイト版とPC版は `dist/assets/final/vehicles/` の素材を使います。再作成する場合は、`python tools/install-vehicle-assets.py <trainフォルダー>` で解凍済みの素材を照合して `local-vehicles/` に取り込みます。E233系の三菱IGBT音源は `python tools/install-e233-motor.py <三菱IGBTフォルダー>` で追加します。エレトレ作の設定とTrain Soundの音源を使用します。`python tools/bundle-vehicle-assets.py` で、運転中に参照するパネルと音源をWebPとMP3に変換します。パネル上の針位置や計器の寸法は原寸の座標を使います。E235系のトンネルでは、長い録音と同じ車両データにある短いトンネル音を使います。以下は最初に車両を取り込んだときの開発資料です。
 
 `dist/assets/final/vehicle-recipes.json` は元データのバイナリを含まない数値設定とZIP参照です。元PNG/WAV/DLLはホスティングに入れていません。ブラウザーは利用者が選んだ元ZIPを手元で読みます。アップロードはしません。
 

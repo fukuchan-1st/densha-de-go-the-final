@@ -1,6 +1,6 @@
 import {inflateSync} from './assets/vendor/fflate.module.js';
 
-export async function loadVehicleRecipes(){const r=await fetch(new URL('./assets/final/vehicle-recipes.json',import.meta.url));if(!r.ok)throw Error('車両設定を読み込めません');return r.json();}
+export async function loadVehicleRecipes(){const r=await fetch(new URL('./assets/final/vehicle-recipes.json?v=26',import.meta.url));if(!r.ok)throw Error('車両設定を読み込めません');return r.json();}
 
 class BundledTrainPack {
  constructor(id,assets){

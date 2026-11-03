@@ -33,7 +33,7 @@ def install(train, source):
     extracted = source / Path(train["sourceArchive"]).stem
     output = ASSETS / train["id"]
     output.mkdir(parents=True, exist_ok=True)
-    refs = {ref["entryIndex"]: ref for ref in references(train)}
+    refs = {ref["entryIndex"]: ref for ref in references(train) if "rawNameBase64" in ref}
     fallback_by_size = None
     for index, ref in refs.items():
         name = Path(ref["entryName"])
