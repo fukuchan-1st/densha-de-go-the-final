@@ -5,6 +5,13 @@ export const PANEL_CROPS={e235:{x:100,y:0,width:3600,height:2025},e233:{x:0,y:25
 export function localNeedleAngle(e,value){const min=e.minimum??0,max=e.maximum??1,t=clamp((value-min)/(max-min||1),0,1);return (e.initialangle??0)+((e.lastangle??360)-(e.initialangle??0))*t;}
 export function localNeedlePoint(e,x,y,angle){const scale=e.radius/e.origin[1],dx=(x-e.origin[0])*scale,dy=(y-e.origin[1])*scale,r=angle*Math.PI/180;return [e.location[0]+dx*Math.cos(r)-dy*Math.sin(r),e.location[1]+dx*Math.sin(r)+dy*Math.cos(r)];}
 export function calibratedSpeedAngle(knots,speed){if(speed<=knots[0][0])return knots[0][1];for(let i=1;i<knots.length;i++)if(speed<=knots[i][0]){const a=knots[i-1],b=knots[i];return a[1]+(b[1]-a[1])*(speed-a[0])/(b[0]-a[0]);}return knots.at(-1)[1];}
+const speedDigits={e235:['ats231','ats232','ats233'],e233:['ats45','ats46','ats47']};
+export function panelSpeedDigit(vehicle,subject,speed){
+ const position=speedDigits[vehicle]?.indexOf(subject);
+ if(position==null||position<0)return null;
+ const whole=clamp(Math.round(speed),0,199),place=10**(2-position);
+ return position<2&&whole<place?null:Math.floor(whole/place)%10;
+}
 export class LocalCabPanel {
  constructor(canvas,recipe,pack){this.canvas=canvas;this.ctx=canvas.getContext('2d');this.recipe=recipe;this.pack=pack;this.images=new Map();this.bc=0;this.visible=true;this.crop=PANEL_CROPS[recipe.id];const o=recipe.panel.this.origin;this.viewOrigin={x:(o[0]-this.crop.x)*1600/this.crop.width,y:(o[1]-this.crop.y)*900/this.crop.height};canvas.width=1600;canvas.height=900;}
  static async load(canvas,recipe,pack){
@@ -43,15 +50,24 @@ export class LocalCabPanel {
  }
  key(ref){return `${ref.entryIndex}|${ref.transparentColor??''}`;}
  semantic(e){return this.recipe.subjectMappings.vehicle[e.subject]??this.recipe.subjectMappings.common[e.subject];}
- supported(e){return e.type==='background'||e.subject==='true'||['always','doorClosed','speedKmh','mainReservoirKpa','brakeCylinderKpa','absoluteMotorCurrent','motorCurrent','speedGaugeAngleEncoded','brakeIndex','powerIndex','hour','minute','second','controlVoltage','lineVoltage'].includes(this.semantic(e));}
+ isSpeedDigit(e){return e.type==='digitalnumber'&&speedDigits[this.recipe.id]?.includes(e.subject);}
+ supported(e){return this.isSpeedDigit(e)||e.type==='background'||e.subject==='true'||['always','doorClosed','speedKmh','mainReservoirKpa','brakeCylinderKpa','absoluteMotorCurrent','motorCurrent','speedGaugeAngleEncoded','brakeIndex','powerIndex','hour','minute','second','controlVoltage','lineVoltage'].includes(this.semantic(e));}
  setVisible(visible){this.visible=visible;this.canvas.hidden=!visible;}
  render(state,dt=1/60,inTunnel=false){const ctx=this.ctx;ctx.clearRect(0,0,1600,900);if(!this.visible)return;const r=this.recipe.playableSpecs,bIndex=state.notch<0?Math.min(r.brakeNotches+1,-state.notch):0,btarget=bIndex/(r.brakeNotches+1)*380;this.bc+=(btarget-this.bc)*Math.min(1,dt*4);const seconds=8*3600+(state.elapsed??0),speed=state.speedKmh??(state.v??0)*3.6,values={always:1,doorClosed:!state.doors,speedKmh:speed,mainReservoirKpa:820-this.bc*.08,brakeCylinderKpa:this.bc,absoluteMotorCurrent:state.notch>0?state.notch*40:0,motorCurrent:state.notch*35,brakeIndex:bIndex,powerIndex:Math.max(0,state.notch),hour:seconds/3600%12,minute:seconds/60%60,second:seconds%60,controlVoltage:100,lineVoltage:1500};ctx.save();ctx.scale(1600/this.crop.width,900/this.crop.height);ctx.translate(-this.crop.x,-this.crop.y);
   for(const e of this.recipe.panel.elements){if(!this.supported(e))continue;const ref=inTunnel&&e.nightImage?e.nightImage:e.image,image=ref&&this.images.get(this.key(ref));if(!image)continue;const semantic=this.semantic(e),value=values[semantic],loc=e.location??[0,0];if(e.type==='needle'){
     let angle;if(semantic==='speedGaugeAngleEncoded')angle=calibratedSpeedAngle(this.recipe.panel.speedGaugeCalibration.angleKnots,speed);else if(Number.isFinite(value))angle=localNeedleAngle(e,value);else continue;
     ctx.save();ctx.translate(...loc);ctx.rotate(angle*Math.PI/180);const factor=e.radius/(e.origin?.[1]||1);ctx.scale(factor,factor);ctx.drawImage(image.surface,-e.origin[0],-e.origin[1],image.width,image.height);ctx.restore();
-   }else if(e.type==='digitalnumber'){if(!Number.isFinite(value)||!e.interval)continue;const frame=clamp(Math.floor(value),0,Math.floor(image.height/e.interval)-1);ctx.drawImage(image.surface,0,frame*e.interval*image.scaleY,image.surface.width,e.interval*image.scaleY,...loc,image.width,e.interval);
+   }else if(e.type==='digitalnumber'){const digit=this.isSpeedDigit(e)?panelSpeedDigit(this.recipe.id,e.subject,speed):value;if(!Number.isFinite(digit)||!e.interval)continue;const frame=clamp(Math.floor(digit),0,Math.floor(image.height/e.interval)-1);ctx.drawImage(image.surface,0,frame*e.interval*image.scaleY,image.surface.width,e.interval*image.scaleY,...loc,image.width,e.interval);
    }else if(e.type==='background'||value||e.subject==='true')ctx.drawImage(image.surface,...loc,image.width,image.height);
-  }ctx.restore();
+  }
+  if(this.recipe.id==='323'){
+   ctx.textAlign='right';
+   ctx.textBaseline='alphabetic';
+   ctx.font='500 29px Arial, sans-serif';
+   ctx.fillStyle=inTunnel?'#a1b4c8':'#d5dce6';
+   ctx.fillText(String(Math.round(speed)),2429,2326);
+  }
+  ctx.restore();
  }
  dispose(){this.images.clear();this.ctx.clearRect(0,0,1600,900);}
 }

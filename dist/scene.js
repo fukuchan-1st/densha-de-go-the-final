@@ -1,13 +1,13 @@
 import {CabSuspension} from './cab-motion.js?v=23';
 import {TrackLayout} from './track-layout.js?v=23';
-import {buildRailways,addStations} from './station-scene.js?v=23';
+import {buildRailways,addStations} from './station-scene.js?v=32';
 import * as T from './assets/vendor/three.module.js?v=23';
 import {settlementAt} from './route-data.js?v=23';
 import {DISPLAY_WIDTH,DISPLAY_HEIGHT} from './display.js?v=23';
 import {addStructures} from './structures.js?v=23';
 import {structureRanges,segmentIntersects,corridorOccupied} from './structure-ranges.js?v=23';
 import {addVegetation,createSurfaceMaterial} from './vegetation.js?v=23';
-import {addTrackSignal} from './track-signal.js';
+import {addTrackSignal} from './track-signal.js?v=32';
 export class RailWorld {
  constructor(container,geometry,stations,profile,structures,stationLayouts,signals=[]){
   this.suspension=new CabSuspension();

@@ -14,8 +14,8 @@
     "airRelease": "air/Air.wav",
     "airHigh": "air/airhigh.wav",
     "emergencyAir": "air/airEB.wav",
-    "hornPrimary": "air/HornL.wav",
-    "hornSecondary": "air/HornA.wav",
+    "hornPrimary": "air/HornA.wav",
+    "hornSecondary": "air/HornL.wav",
     "hornRelease": "air/HornB.wav",
     "noise": "Other/MG.wav",
     "shoe": "Other/rub.wav",
@@ -104,13 +104,13 @@
       "sha256": "4235e4ac33e9de4998edc557d91843f0aadbd23bf4802821d72668fc4f63301a"
     },
     {
-      "key": "hornPrimary",
+      "key": "hornSecondary",
       "path": "air/HornL.wav",
       "duration": 0.7079895833333333,
       "sha256": "016b16f470a3a63b9fb25bb39fc9084fae36f7710f2af385f4cea53e89dbd995"
     },
     {
-      "key": "hornSecondary",
+      "key": "hornPrimary",
       "path": "air/HornA.wav",
       "duration": 5.599479166666667,
       "sha256": "89dbf630b6c45afe144dccc06e22d424c9294af3f0cda2b0b086211e8323a914"

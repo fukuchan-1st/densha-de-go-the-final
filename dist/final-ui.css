@@ -7,3 +7,6 @@
 
 @media(max-width:650px){#menuControls #settingsButton{grid-column:1 / -1}}
 #scenarioSelect{max-width:270px}
+
+.stop-target{position:absolute;right:100%;top:50%;transform:translateY(-50%);padding:2px 4px;background:#14252ee8;color:#fff4b1;font:700 15px/1.1 Arial,sans-serif;font-style:normal;white-space:nowrap;border-radius:3px;pointer-events:none}
+#hornButton,.extra-horn,#airHornButton{touch-action:none}

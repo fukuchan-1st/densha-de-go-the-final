@@ -1,9 +1,11 @@
-import {FinalWorld} from './final-world.js?v=31';
-import {MenuArt} from './final-art.js?v=31';
-import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=31';
-import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,stopPosition,finishStop,takeDepartureCall} from './final-model.js?v=31';
-import {STATIONS as TOHOKU_STATIONS} from './route-data.js?v=31';
-import {FINAL_SCENARIOS,scenarioJourney} from './final-scenarios.js?v=31';
+import {FinalWorld} from './final-world.js?v=32';
+import {MenuArt} from './final-art.js?v=32';
+import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=32';
+import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,stopPosition,finishStop,takeDepartureCall} from './final-model.js?v=32';
+import {STATIONS as TOHOKU_STATIONS} from './route-data.js?v=32';
+import {FINAL_SCENARIOS,scenarioJourney} from './final-scenarios.js?v=32';
+import {correctStoppedOverrun,nextSignalCall} from './train-operations.js?v=32';
+import {bindHornButton} from './assets/audio/held-horn.js';
 
 const TOHOKU_TRAIN={id:'701',name:'701系1500番台',playableSpecs:{carCount:2}};
 const $=id=>document.getElementById(id),META=[
@@ -52,12 +54,12 @@ function showModal(content,{pause=true}={}){if(mode==='drive'&&pause&&!paused){p
 function closeModal(){ $('modal').close();if(modalPaused&&!run?.finished){paused=false;pauseAudio(false);}modalPaused=false;}
 $('closeModal').onclick=closeModal;$('modal').addEventListener('cancel',e=>{e.preventDefault();closeModal();});
 function settingsDialog(){showModal(`<p class="eyebrow">OPTION</p><h2>音と、乗り心地。</h2><label>音量 <input id="volumeInput" type="range" min="0" max="100" value="${Math.round(settings.volume*100)}"></label><label>走行中の揺れ<select id="shakeInput"><option value="0">なし</option><option value="0.6">弱め</option><option value="1">標準</option></select></label><label>描画<select id="qualityInput"><option value="light">軽量 · iPad / iPhone向け</option><option value="standard">標準 · PC向け</option></select></label><small>描画設定は次の運転開始時に反映します。揺れは停車後に収まり、一時停止中は止まります。</small><p>${META[selected].legacy?'東北本線の音量と揺れは、701系の画面で調整できます。':'アプリ内蔵の運転台と車両別の収録音を使用します。'}</p><div class="dialog-buttons"><button id="helpButton">操作方法</button><button id="dataButton">路線・車両について</button></div>`);$('shakeInput').value=String(settings.shake);$('qualityInput').value=settings.quality;$('volumeInput').oninput=e=>{settings.volume=Number(e.target.value)/100;sound?.setVolume(settings.volume);saveSettings();};$('shakeInput').onchange=e=>{settings.shake=Number(e.target.value);saveSettings();};$('qualityInput').onchange=e=>{settings.quality=e.target.value;saveSettings();};$('helpButton').onclick=helpDialog;$('dataButton').onclick=dataDialog;}
-function helpDialog(){showModal(`<p class="eyebrow">DRIVING GUIDE</p><h2>一駅ずつ、確実に。</h2><p><kbd>S / ↓</kbd> P側へ　<kbd>W / ↑</kbd> EB側へ<br><kbd>X</kbd> 惰行　<kbd>Space</kbd> 非常ブレーキ<br><kbd>H</kbd> 警笛　<kbd>Esc</kbd> 一時停止</p><p>扉は自動です。停止位置±3m以内で3秒停止すると戸開、15秒乗降後に合図音→戸閉音の順に再生し、最後まで鳴ってから戸閉灯が点きます。最初の駅は戸開で開始します。</p><p>停止位置±10mで右端のひし形が上から下へ動きます。残り5m以内はcm表示。停止位置を35m過ぎると通過扱いになります。</p><p>運転士音声は駅の手前150mで「停車」、戸閉灯の点灯後に「戸閉、点」「出発進行」が順に鳴り、発車すると「出発駅名、定発」が続きます。出発の喚呼はこの試作での発車扱いに合わせています。</p><small>停車アシストはブレーキを補助します。通常のドア開閉ではノッチは変わりません。207系はP6、323系は抑速を備えます。</small>`);}
+function helpDialog(){showModal(`<p class="eyebrow">DRIVING GUIDE</p><h2>一駅ずつ、確実に。</h2><p><kbd>S / ↓</kbd> P側へ　<kbd>W / ↑</kbd> EB側へ<br><kbd>X</kbd> 惰行　<kbd>Space</kbd> 非常ブレーキ<br><kbd>Enter 長押し</kbd> 警笛　<kbd>Esc</kbd> 一時停止</p><p>扉は自動です。停止位置±3m以内で3秒停止すると戸開、15秒乗降後に合図音→戸閉音の順に再生し、最後まで鳴ってから戸閉灯が点きます。最初の駅は戸開で開始します。</p><p>停止位置±10mで右端のひし形が上から下へ動きます。残り5m以内はcm表示。5m以上行き過ぎて停止すると、停止位置の0cmに補正します。</p><p>運転士音声は駅の手前150mで「駅名、停車。停止位置と両数」、戸閉灯の点灯後に「戸閉、点」「出発進行」が順に鳴り、発車すると「出発駅名、定発」が続きます。出発の喚呼はこの試作での発車扱いに合わせています。</p><small>停車アシストはブレーキを補助します。通常のドア開閉ではノッチは変わりません。207系はP6、323系は抑速を備えます。</small>`);}
 function dataDialog(){showModal(`<p class="eyebrow">ROUTE & VEHICLE</p><h2>5路線、5車両。</h2><p>山手線 / E235系 · 中央線 / E233系0番台<br>大阪環状線 / 323系 · 東海道線 / 207系2000番台<br>東北本線 / 701系1500番台</p><p>線路の曲がり方はOpenStreetMap、駅間距離は公開駅一覧を使用。4路線のホーム・並走線は地図やJRの構内図を参照し、電車でGO！FINALの映像で見え方を照合しました。建物・停止目標は試作上の概略です。シナリオの運転区間はFINALの公開プレイ記録を参照し、現在の車両で各駅に停まります。</p><p>中央線・大阪環状線は位置を確認できた信号機を描画します。勾配・標高・実際の線路速度制限は取得していません。新4路線は勾配0‰、速度表示の上限は車両性能の設定です。ゲームの実データとは区別しています。</p><p>E235系は提供データの15両設定を参考に、山手線用の11両・起動加速度3.0km/h/sを試作設定。E233系は提供12両、323系8両、207系7両です。力行は提供の速度別引張力表を補間し、常用制動・抵抗は簡易モデルです。</p><p>E235系は提供データの起動時モーター音、E233系は三菱IGBTの力行・制動モーター音を使用します。発車合図には東北本線と共通のホイッスルを使います。4路線の運転士喚呼にはFINALの路線別音声を使います。</p><small class="credits-note"><a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors / ODbL</a> · <a href="./assets/final/route-data-notes.md" target="_blank">路線の出典・検証</a> · <a href="./assets/final/scenario-notes.md" target="_blank">シナリオの出典</a></small>`);}
 $('settingsButton').onclick=settingsDialog;
 $('driveSettings').onclick=settingsDialog;
 function setNotch(n){if(mode!=='drive'||paused||run.finished)return;const c=controlsFor(recipe());run.notch=clamp(n,c.min,c.max);}
-$('brakeButton').onclick=()=>setNotch(run.notch-1);$('powerButton').onclick=()=>setNotch(run.notch+1);$('neutralButton').onclick=()=>setNotch(0);$('ebButton').onclick=()=>setNotch(controlsFor(recipe()).min);$('hornButton').onclick=()=>effect('hornPrimary').catch(()=>{});
+$('brakeButton').onclick=()=>setNotch(run.notch-1);$('powerButton').onclick=()=>setNotch(run.notch+1);$('neutralButton').onclick=()=>setNotch(0);$('ebButton').onclick=()=>setNotch(controlsFor(recipe()).min);bindHornButton($('hornButton'),pressed=>sound?.setHorn(pressed&&!paused&&!run?.finished));
 function toggleExtras(show){$('extras').hidden=!show;$('moreButton').setAttribute('aria-expanded',String(show));}
 $('moreButton').onclick=()=>toggleExtras($('extras').hidden);$('closeExtras').onclick=()=>toggleExtras(false);
 $('viewButton').onclick=()=>{panorama=!panorama;$('cab').hidden=panorama;$('viewButton').textContent=panorama?'運転台を表示':'前面展望';toggleExtras(false);};
@@ -109,11 +111,14 @@ function updateDriverCalls(){
   const station=route().stations[departedFrom];
   sound.callDepartureFrom(station.layoutIndex??departedFrom);
  }
- if(run.doors||run.v<=.01||run.lastCalledStop===run.next)return;
- const distance=route().stations[run.next].s-run.s;
- if(distance<0||distance>150)return;
- run.lastCalledStop=run.next;
- sound.callDriver('stationStop');
+ if(run.finished||run.doors||run.v<=.01)return;
+ const r=route(),station=r.stations[run.next],distance=station.s-run.s;
+ if(run.lastCalledStop!==run.next&&distance>=0&&distance<=150){
+  run.lastCalledStop=run.next;
+  sound.callRouteCue('approach',station.layoutIndex??run.next);
+ }
+ const block=nextSignalCall(r.signals??[],run.s,run.calledSignals??=new Set());
+ if(block!==null)sound.callRouteCue('signal',block);
 }
 $('audioRetry').onclick=()=>{$('audioRetry').hidden=true;closeSequence(token);};
 function updateDoors(dt){if(run.finished||run.doorPhase==='audio-error')return;const st=route().stations[run.next];if(!run.doors){if(run.v<=.01&&Math.abs(st.s-run.s)<=3){run.stopWait+=dt;run.doorPhase='waiting-open';if(run.stopWait>=3){run.v=0;run.doors=true;run.doorPhase='boarding';run.dwell=0;effect('open').catch(()=>{});effect('relayOff').catch(()=>{});}}else{run.stopWait=0;run.doorPhase=null;}}else if(run.doorPhase==='boarding'){run.dwell+=dt;if(run.dwell>=15)closeSequence(token);}}
@@ -122,7 +127,7 @@ async function start(startIndex){
  const meta=META[selected];
  const scenario=selectedScenario();
  const freeStart=Number($('startStation').value);
- if(meta.legacy){location.href=`./tohoku.html?v=31&drive=1&station=${startIndex??freeStart}`;return;}
+ if(meta.legacy){location.href=`./tohoku.html?v=32&drive=1&station=${startIndex??freeStart}`;return;}
  loading=true;
  const controlsToLock=document.querySelectorAll('#menuControls button,#menuControls select,#routeCards button');
  controlsToLock.forEach(element=>element.disabled=true);
@@ -176,16 +181,31 @@ async function start(startIndex){
 $('startDrive').onclick=()=>start();$('retryButton').onclick=()=>{const index=Math.max(run.startIndex,run.next-1);toggleExtras(false);start(index);};
 function showResults(){const errors=run.errors.map(x=>Math.abs(x)),mean=errors.length?errors.reduce((a,b)=>a+b,0)/errors.length:0;showModal(`<p class="eyebrow">DRIVER'S WORK COMPLETE</p><h2>乗務、おつかれさま。</h2><p>${META[selected].name} · ${recipe().name}<br>停車 ${run.served}駅 / 通過 ${run.missed}駅<br>平均停止誤差 ${distanceLabel(mean)}</p><div class="dialog-buttons"><button id="resultMenu" class="start-button">路線選択へ</button></div>`,{pause:false});$('resultMenu').onclick=returnMenu;}
 function hud(){const r=route(),next=r.stations[Math.min(run.next,run.endIndex)],d=next.s-run.s,notch=notchLabel(recipe(),run.notch),speed=Math.round(run.v*3.6),door=run.doorPhase==='closing'?'戸閉中':run.doors?'戸開':'戸閉';$('hudNext').textContent=next.name;$('hudDistance').textContent=run.finished?'運転完了':`${d<0?'超過 ':'あと '}${distanceLabel(d)}`;$('hudSpeed').textContent=speed;$('nativeSpeed').textContent=speed;$('hudNotch').textContent=notch;$('nativeNotch').textContent=notch;$('hudDoors').textContent=door;$('nativeDoor').textContent=door;$('nativeNext').textContent=next.name;$('nativeDistance').textContent=(d<0?'超過 ':'')+distanceLabel(d);$('closedLamp').classList.toggle('lit',!run.doors);const t=8*3600+Math.floor(run.elapsed);$('hudTime').textContent=[Math.floor(t/3600)%24,Math.floor(t/60)%60,t%60].map(x=>String(x).padStart(2,'0')).join(':');$('hudScore').textContent=`停車 ${run.served} / ${run.endIndex-run.startIndex}`;$('speedBar').style.setProperty('--speed',speed/recipe().playableSpecs.maxSpeedKmh*100);const marker=stopPosition(d);$('stopDiamond').hidden=!marker.visible;$('stopDiamond').style.top=marker.percent+'%';$('stopGauge').setAttribute('aria-label',`停止位置±10メートルマーカー ${marker.text}`);$('notchStrip').querySelectorAll('button').forEach(b=>b.classList.toggle('active',Number(b.dataset.notch)===run.notch));
- $('eventText').textContent=run.doorPhase==='waiting-open'?`停車確認 ${Math.min(3,Math.floor(run.stopWait))} / 3秒`:run.doorPhase==='boarding'?`乗降中　戸閉合図まで ${Math.max(0,Math.ceil(15-run.dwell))}秒`:run.doorPhase==='announcement'?'合図音を再生中':run.doorPhase==='closing'?'戸閉中 · 音の終了後に戸閉灯が点灯':run.elapsed<toastUntil?toastText:'';
+ $('eventText').textContent=run.correctedStopError!=null&&run.doorPhase==='waiting-open'?`行き過ぎ ${distanceLabel(run.correctedStopError)} → 停止位置 0 cm に補正`:run.doorPhase==='waiting-open'?`停車確認 ${Math.min(3,Math.floor(run.stopWait))} / 3秒`:run.doorPhase==='boarding'?`乗降中　戸閉合図まで ${Math.max(0,Math.ceil(15-run.dwell))}秒`:run.doorPhase==='announcement'?'合図音を再生中':run.doorPhase==='closing'?'戸閉中 · 音の終了後に戸閉灯が点灯':run.elapsed<toastUntil?toastText:'';
 }
-function advance(dt){if(run.finished)return;const r=route(),train=recipe();if(assist&&!run.doors)brakeAssist(run,r,train);driveStep(run,train,dt,world.grade(run.s));if(run.s>r.stations[run.next].s+35){run.missed++;if(run.next===run.endIndex){run.v=0;paused=true;pauseAudio(true);showModal('<h2>終点の停止位置を過ぎました</h2><p>前の駅からもう一度チャレンジできます。</p><div class="dialog-buttons"><button id="missRetry">前駅から再開</button><button id="missMenu">路線選択へ</button></div>',{pause:false});$('missRetry').onclick=()=>{$('modal').close();start(Math.max(run.startIndex,run.next-1));};$('missMenu').onclick=returnMenu;}else{toast(`${r.stations[run.next].name}を通過しました。`);run.next++;run.stopWait=0;run.assistBraking=false;}}}
-document.addEventListener('keydown',e=>{if(e.target.matches('input,select,textarea')||$('modal').open)return;if(mode==='menu'){if(e.code==='ArrowUp'||e.code==='ArrowDown'){e.preventDefault();if(recipes)choose(selected+(e.code==='ArrowDown'?1:-1));}else if(e.code==='Enter'){if(e.target.closest('button,a')&&!e.target.closest('.route-card'))return;e.preventDefault();start();}return;}if(e.code==='Escape'){e.preventDefault();$('pauseButton').click();return;}if(paused||e.repeat)return;if(['KeyW','ArrowUp','KeyS','ArrowDown','Space'].includes(e.code))e.preventDefault();if(['KeyW','ArrowUp'].includes(e.code))setNotch(run.notch-1);else if(['KeyS','ArrowDown'].includes(e.code))setNotch(run.notch+1);else if(e.code==='KeyX')setNotch(0);else if(e.code==='Space')setNotch(controlsFor(recipe()).min);else if(e.code==='KeyH')effect('hornPrimary').catch(()=>{});else if(e.code==='KeyJ')effect('hornSecondary').catch(()=>{});});
+function advance(dt){
+ if(run.finished)return;
+ const r=route(),train=recipe(),station=r.stations[run.next];
+ if(assist&&!run.doors)brakeAssist(run,r,train);
+ driveStep(run,train,dt,world.grade(run.s));
+ if(correctStoppedOverrun(run,station.s)!==null)return;
+ if(run.next<run.endIndex&&run.s>=r.stations[run.next+1].s-150){
+  toast(`${station.name}を通過しました。`);
+  run.missed++;
+  run.next++;
+  run.stopWait=0;
+  run.assistBraking=false;
+ }
+}
+document.addEventListener('keydown',e=>{if(e.target.matches('input,select,textarea')||$('modal').open)return;if(mode==='menu'){if(e.code==='ArrowUp'||e.code==='ArrowDown'){e.preventDefault();if(recipes)choose(selected+(e.code==='ArrowDown'?1:-1));}else if(e.code==='Enter'){if(e.target.closest('button,a')&&!e.target.closest('.route-card'))return;e.preventDefault();start();}return;}if(e.code==='Escape'){e.preventDefault();$('pauseButton').click();return;}if(e.code==='Enter'){e.preventDefault();if(!paused&&!e.repeat&&!run.finished)sound.setHorn(true);return;}if(paused||e.repeat)return;if(['KeyW','ArrowUp','KeyS','ArrowDown','Space'].includes(e.code))e.preventDefault();if(['KeyW','ArrowUp'].includes(e.code))setNotch(run.notch-1);else if(['KeyS','ArrowDown'].includes(e.code))setNotch(run.notch+1);else if(e.code==='KeyX')setNotch(0);else if(e.code==='Space')setNotch(controlsFor(recipe()).min);else if(e.code==='KeyJ')effect('hornSecondary').catch(()=>{});});
+document.addEventListener('keyup',e=>{if(e.code==='Enter'&&mode==='drive')sound?.setHorn(false);});
+window.addEventListener('blur',()=>sound?.setHorn(false));
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&mode==='drive'&&!paused&&!run.finished)$('pauseButton').click();});
 let last=performance.now();function frame(now){const dt=Math.min(.08,Math.max(0,(now-last)/1000));last=now;if(mode==='drive'&&world&&run){if(!paused){let remaining=dt;while(remaining>0&&!paused){const step=Math.min(.02,remaining);advance(step);remaining-=step;}if(!paused){updateDoors(dt);updateDriverCalls();sound.update(run.v*3.6,run.notch,dt,{doors:run.doors,surface:(route().structures??[]).some(t=>t.kind==='tunnel'&&run.s>=t.sStart&&run.s<=t.sEnd)?'tunnel':(route().structures??[]).some(t=>t.kind==='bridge'&&run.s>=t.sStart&&run.s<=t.sEnd)?'bridge':'long'});}}hud();world.render(run.s,run.v,paused?0:dt,{acceleration:run.acceleration,shake:settings.shake,panorama});if(!panorama)panel?.render(run,paused?0:dt,(route().structures??[]).some(t=>t.kind==='tunnel'&&run.s>=t.sStart&&run.s<=t.sEnd));}requestAnimationFrame(frame);}requestAnimationFrame(frame);
 try {
  const routeLoads=META.map(async meta=>{
   if(meta.legacy)return {id:meta.id,stations:TOHOKU_STATIONS};
-  const response=await fetch(`./assets/final/${meta.id}-route.json?v=31`);
+  const response=await fetch(`./assets/final/${meta.id}-route.json?v=32`);
   if(!response.ok)throw Error('路線データを読み込めません');
   return response.json();
  });

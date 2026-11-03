@@ -1,9 +1,10 @@
-// The fixtures show source positions. The lamp faces have no simulated aspect.
+// Mapped fixtures stay unlit unless the route configures a clear simulated block.
 export function addTrackSignal(T,world,parent,signal){
  const {s,x,y,support}=signal;
  const {p,angle}=world.frame(s,x);
  const group=new T.Group();
  group.position.copy(p);
+ group.position.y+=world.deckHeight?.(s)??0;
  group.rotation.y=angle;
  const lamps=signal.lights??(signal.type==='type2'?4:3);
  const relay=signal.kind==='relay';
@@ -30,7 +31,10 @@ export function addTrackSignal(T,world,parent,signal){
  const colors=relay?['#a3aba3','#a3aba3','#a3aba3']:['#723d38','#8f7141','#3a6956','#917b44'];
  const lens=new T.CylinderGeometry(.083,.083,.04,12);
  for(let i=0;i<lamps;i++){
-  const mesh=new T.Mesh(lens,world.mat(colors[i]));
+  const clear=signal.callBlock&&i===Math.min(lamps-1,2);
+  const material=clear?new T.MeshBasicMaterial({color:'#41ff88'}):world.mat(colors[i]);
+  const mesh=new T.Mesh(lens,material);
+  if(clear)mesh.userData.disposeWithChunk=true;
   mesh.rotation.x=Math.PI/2;
   mesh.position.set(0,y+((lamps-1)/2-i)*spacing,.132);
   group.add(mesh);

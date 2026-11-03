@@ -77,8 +77,8 @@ test('信号機は確認できた配置だけを描画し、環状線の一周�
  assert.equal(bve.signals.filter(signal=>signal.kind==='relay').length,4);
  assert.ok(bve.signals.every(signal=>signal.s>0&&signal.s<bve.coverageEndM&&signal.support&&signal.sourceLine>0));
  const chuo=routes[1],osaka=routes[2];
- assert.equal(chuo.signals.length,1);
- assert.ok(chuo.sources[0].wayIds.includes(chuo.signals[0].osmWayId));
+ assert.equal(chuo.signals.length,2);
+ assert.ok(chuo.signals.every(signal=>chuo.sources[0].wayIds.includes(signal.osmWayId)));
  assert.equal(osaka.signals.length,4);
  assert.ok(osaka.signals.every(signal=>signal.railErrorM<=3&&signal.x<=-2));
  const loop=scenarioJourney(osaka,FINAL_SCENARIOS.osaka.find(([id])=>id==='07')).route;

@@ -1,5 +1,6 @@
-import {interpolateColumn} from './final-vehicle.js?v=31';
+import {interpolateColumn} from './final-vehicle.js?v=32';
 import {runPitch} from './assets/audio/run-pitch.js';
+import {HeldHorn} from './assets/audio/held-horn.js';
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const whistle={entryIndex:'departure-whistle'};
 const voiceBanks={e235:['kanko0','uta'],e233:['kanko1','utb'],323:['kanko2','utd'],207:['kanko3','ute']};
@@ -31,7 +32,7 @@ export class LocalTrainAudio {
  }
  assetRefs(){
   const sounds=this.recipe.sounds;
-  const effects=['open','close','hornPrimary','hornSecondary','powerUp','powerDown','brakeApply','brakeRelease','relayOn','relayOff'];
+  const effects=['open','close','hornPrimary','hornSecondary','hornPrimaryRelease','hornSecondaryRelease','powerUp','powerDown','brakeApply','brakeRelease','relayOn','relayOff'];
   return [...effects.map(name=>this.effectRef(name)),sounds.others?.noise,
    ...surfaces.map(surface=>this.runRef(surface)),...Object.values(sounds.motor??{})].filter(Boolean);
  }
@@ -53,10 +54,12 @@ export class LocalTrainAudio {
   return this.queueDriverCalls(names.map(name=>this.driverCallRef(name)));
  }
  callDepartureFrom(stationIndex){
-  const bank=voiceBanks[this.recipe.id];
-  if(!bank)return Promise.resolve();
-  const entryIndex='departure-'+stationIndex;
-  const driverVoiceFile=`./assets/final/driver-voice/${bank[0]}/departure/${stationIndex}.wav`;
+  return this.callRouteCue('departure',stationIndex);
+ }
+ callRouteCue(kind,index){
+  const bank=voiceBanks[this.recipe.id][0];
+  const entryIndex=kind+'-'+index;
+  const driverVoiceFile=`./assets/final/driver-voice/${bank}/${kind}/${index}.wav`;
   return this.queueDriverCalls([{entryIndex,driverVoiceFile}]);
  }
  queueDriverCalls(refs){
@@ -77,10 +80,19 @@ export class LocalTrainAudio {
    open:door?.openright??door?.['open right']??door?.openleft??door?.['open left'],
    close:door?.closeright??door?.['close right']??door?.closeleft??door?.['close left'],
    hornPrimary:horn?.primary,hornSecondary:horn?.secondary,
+   hornPrimaryRelease:['323','207'].includes(this.recipe.id)?null:horn?.primaryrelease,
+   hornSecondaryRelease:horn?.secondaryrelease,
    powerUp:mastercontroller?.up,powerDown:mastercontroller?.down,
    brakeApply:brakehandle?.apply,brakeRelease:brakehandle?.release,
    relayOn:pilotlamp?.on,relayOff:pilotlamp?.off,air:brake?.bcrelease??brake?.['bc release']
   }[name];
+ }
+ setHorn(pressed){
+  this.horn??=new HeldHorn(this.context,this.master);
+  if(!pressed){this.horn.release();return;}
+  if(this.paused||this.stopped||this.horn.active)return;
+  const name=['323','207'].includes(this.recipe.id)?'hornSecondary':'hornPrimary';
+  this.horn.press(this.buffer(this.effectRef(name)),this.buffer(this.effectRef(name+'Release')));
  }
  playNotch(previous,next){
   if(previous===next)return Promise.resolve(false);
@@ -157,9 +169,9 @@ export class LocalTrainAudio {
   }
  }
  setVolume(n){this.volume=clamp(n,0,1);this.master.gain.value=this.volume;}
- async setPaused(paused){this.paused=paused;if(paused)await this.context.suspend();else await this.context.resume();}
+ async setPaused(paused){this.paused=paused;if(paused){this.horn?.end(true);await this.context.suspend();}else await this.context.resume();}
  pause(){return this.setPaused(true);}
  resume(){return this.setPaused(false);}
- stop(){this.stopped=true;this.lastNotch=undefined;this.generation++;this.driverQueue=null;for(const source of this.sources){try{source.stop();}catch{}}this.sources.clear();this.loops.clear();}
+ stop(){this.horn?.end(true);this.stopped=true;this.lastNotch=undefined;this.generation++;this.driverQueue=null;for(const source of this.sources){try{source.stop();}catch{}}this.sources.clear();this.loops.clear();}
  async dispose(){this.stop();this.buffers.clear();this.master.disconnect();if(this.ownsContext)await this.context.close();}
 }

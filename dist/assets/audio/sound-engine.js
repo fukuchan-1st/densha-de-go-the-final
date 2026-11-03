@@ -1,5 +1,6 @@
-import {departureFilesFor,STATION_DEPARTURE_AUDIO} from '../../train-operations.js?v=23';
+import {departureFilesFor,STATION_DEPARTURE_AUDIO} from '../../train-operations.js?v=32';
 import {runPitch} from './run-pitch.js';
+import {HeldHorn} from './held-horn.js';
 // Browser port of the supplied RTM RSM2 sound_701.js. Speed input is km/h.
 export function interpolate(points, speed) {
   if (points.length === 1) return 0;
@@ -53,10 +54,11 @@ export class SoundEngine {
       };
       this.nodes=await Promise.all(this.config.tracks.filter(track=>/motor/i.test(track.fileName)).map(async track=>({track,buffer:await load(track.url),gain:null,source:null})));
       this.effects={};
-      const bveResponse=await fetch(new URL('./bve/config.json',import.meta.url));if(!bveResponse.ok)throw Error('BVE音源設定を読み込めません');
+      const bveResponse=await fetch(new URL('./bve/config.json?v=32',import.meta.url));if(!bveResponse.ok)throw Error('BVE音源設定を読み込めません');
       this.bveConfig=await bveResponse.json();
       await Promise.all(Object.entries(this.bveConfig.files).map(async([key,path])=>{this.effects[key]=await load('bve/'+path);}));
       this.departureBuffers=new Map();
+      this.routeCueBuffer=load;
       await Promise.all([...new Set([...Object.values(STATION_DEPARTURE_AUDIO),'departure-chime.wav'])].map(async file=>this.departureBuffers.set(file,await load(file))));
       this.ready=true;
     })().catch(e=>{this.error=e.message; this.loading=null; throw e;});
@@ -68,6 +70,7 @@ export class SoundEngine {
   }
   setPaused(value) {
     this.paused=Boolean(value);
+    if(this.paused)this.horn?.end(true);
     if (this.master) this.master.gain.setTargetAtTime(this.paused?0:this.level,this.ctx.currentTime,.02);
     if(this.ctx)(this.paused?this.ctx.suspend():this.ctx.resume()).catch(()=>{});
   }
@@ -124,9 +127,25 @@ export class SoundEngine {
     this.loopEffect('shoe',notch<-1&&speed>1&&speed<30?Math.min(speed/10,1)*(1-speed/35)*.18:0,pitch);
     this.loopEffect('flange',speed>10?Math.max(0,Math.min(1,(Math.abs(environment.curvature??0)-.001)*600))*.16:0,Math.max(.6,pitch));
   }
-  playEffect(name) {
-    if (!this.ready || this.paused || !this.effects[name]) return Promise.resolve(false);
-    const source=this.ctx.createBufferSource();source.buffer=this.effects[name];source.connect(this.master);
+  setHorn(pressed,name='hornPrimary'){
+    if(!pressed){this.horn?.release();return;}
+    if(!this.ready||this.paused)return;
+    this.horn??=new HeldHorn(this.ctx,this.master);
+    const release=name==='hornPrimary'?'hornRelease':null;
+    this.horn.press(this.effects[name],this.effects[release]);
+  }
+  callRouteCue(kind,index){
+    const generation=this.routeCueGeneration;
+    this.routeCueQueue=(this.routeCueQueue??Promise.resolve()).then(async()=>{
+      if(generation!==this.routeCueGeneration||!this.ready)return;
+      const buffer=await this.routeCueBuffer(`./${kind}/${index}.wav`);
+      if(generation===this.routeCueGeneration)await this.playEffectBuffer(buffer);
+    }).catch(()=>{});
+  }
+  playEffect(name){return this.playEffectBuffer(this.paused?null:this.effects?.[name]);}
+  playEffectBuffer(buffer) {
+    if (!this.ready || !buffer) return Promise.resolve(false);
+    const source=this.ctx.createBufferSource();source.buffer=buffer;source.connect(this.master);
     this.effectSources??=new Map();let finish;const promise=new Promise(resolve=>finish=resolve);this.effectSources.set(source,finish);
     source.onended=()=>{source.disconnect();this.effectSources.delete(source);finish(true);};
     try{source.start();}catch{source.disconnect();this.effectSources.delete(source);finish(false);}return promise;
@@ -165,6 +184,9 @@ export class SoundEngine {
     this.departure=null;active.source.onended=null;active.source.stop();active.source.disconnect();active.finish(false);
   }
   stop() {
+    this.horn?.end(true);
+    this.routeCueGeneration=(this.routeCueGeneration??0)+1;
+    this.routeCueQueue=null;
     this.cancelDeparture();
     for (const node of this.nodes) if (node.source) {node.source.stop();node.source.disconnect();node.gain.disconnect();node.source=null;node.gain=null;}
     for(const node of this.bveNodes?.values()??[]){node.source.stop();node.source.disconnect();node.gain.disconnect();}this.bveNodes?.clear();

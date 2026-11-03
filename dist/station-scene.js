@@ -2,6 +2,7 @@ import * as T from './assets/vendor/three.module.js?v=23';
 import {interpolateKnots} from './track-layout.js?v=23';
 import {createSurfaceMaterial} from './vegetation.js?v=23';
 import {segmentIntersects} from './structure-ranges.js?v=23';
+import {addStoppingMarker} from './stop-scene.js';
 export function buildRailways(world){
  const rails=[],railIndices=[],bed=[],bedIndices=[],sleepers=[],supports=[];const layout=world.trackLayout;
  function vertex(target,s,x,y){const f=world.frame(s,x);target.push(f.p.x,f.p.y+y,f.p.z);}
@@ -42,7 +43,8 @@ export function addStations(world){
    totalBounds.push(layout.bounds(p,st.s));
    for(let s=p.start+5;s<p.end;s+=6){const b=layout.bounds(p,s);if(b.width<1)continue;const rails=layout.activeAt(s);for(const [x,direction] of [[b.left,-1],[b.right,1]]){if(rails.some(t=>Math.abs(t.x-(x+direction*1.5))<.6))continue;world.mesh(.06,1.1,.06,'#d0d4ca',s,x-direction*.15,.98);world.mesh(.06,.06,5.8,'#c9d1c7',s,x-direction*.15,1.9);}}
   });
-  const served=st.platforms.find(p=>p.start<=st.s&&p.end>=st.s),bounds=served?layout.bounds(served,st.s):{left:-3,right:-1.5},marker=bounds.right<0?-1.65:1.65;world.mesh(.06,1.7,.06,'#e3e6dc',st.s,marker);world.sign('停車位置',st.s,marker,1.7,1.05,.32);
+  const served=st.platforms.find(p=>p.start<=st.s&&p.end>=st.s),bounds=served?layout.bounds(served,st.s):{right:-1.5};
+  addStoppingMarker(T,world,world.scene,st.s,0,bounds.right<0?-1:1);
   if(st.footbridge!==null){const s=st.footbridge,at=st.platforms.filter(p=>p.start<s&&p.end>s).map(p=>layout.bounds(p,s)).filter(b=>b.width>1.4);if(at.length){const left=Math.min(...at.map(b=>b.left)),right=Math.max(...at.map(b=>b.right)),center=(left+right)/2,width=right-left+.6;world.mesh(width,.34,3,'#8b9e8d',s,center,6.4);world.mesh(width,.18,3.4,st.roofColor,s,center,8.6);for(const dz of[-1.45,1.45])world.mesh(width,1.9,.12,'#a9beb0',s+dz,center,6.74);for(const b of at){const x=b.center;world.mesh(.25,5.5,.25,'#9ba99c',s,x,.98);for(let n=0;n<22;n++)world.mesh(Math.min(1.9,b.width-.3),.24,.5,'#b2b9ac',s-11+n*.5,x,.98+n*.245);}}}
   const rails=layout.activeAt(st.s),xs=[...rails.map(t=>t.x),...totalBounds.flatMap(b=>[b.left,b.right])],side=st.buildingSide==='right'?1:-1,x=side>0?Math.max(...xs)+7:Math.min(...xs)-7,large=['郡山','福島'].includes(st.name);world.mesh(large?15:7,large?9:4,large?55:16,'#d2ccbb',st.s-65,x,.4);world.mesh(large?16:8,.35,large?57:18,'#637b72',st.s-65,x,(large?9:4)+.4);
   stationRecords.push({name:st.name,platforms:st.platforms.length});

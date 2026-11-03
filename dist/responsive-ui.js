@@ -1,3 +1,4 @@
+import {bindHornButton} from './assets/audio/held-horn.js';
 import {responsiveLayout} from './responsive-layout.js?v=23';
 export function mountResponsiveUI(){
  const $=id=>document.getElementById(id),deck=document.createElement('aside');deck.id='controlDeck';deck.hidden=true;deck.setAttribute('aria-label','運転操作');
@@ -8,7 +9,7 @@ export function mountResponsiveUI(){
  for(const id of ['brakeDown','neutral','powerUp'])slot(primary,$(id));
  $('brakeDown').innerHTML='<b>− 制動</b><small>EB側へ</small>';$('neutral').innerHTML='<b>N</b><small>惰行</small>';$('powerUp').innerHTML='<b>力行 ＋</b><small>P5側へ</small>';
  $('emergency').innerHTML='<b>非常</b><small>EB</small>';slot(utility,$('emergency'));
- const horn=document.createElement('button');horn.type='button';horn.id='hornButton';horn.className='main-horn';horn.innerHTML='警笛<small>H</small>';slot(utility,horn);horn.parentElement.classList.add('main-horn-slot');
+ const horn=document.createElement('button');horn.type='button';horn.id='hornButton';horn.className='main-horn';horn.innerHTML='警笛<small>Enter</small>';slot(utility,horn);horn.parentElement.classList.add('main-horn-slot');
  $('pauseButton').textContent='Ⅱ 一時停止';slot(utility,$('pauseButton'));
  const more=document.createElement('button');more.id='moreControls';more.type='button';more.textContent='その他';more.setAttribute('aria-expanded','false');more.setAttribute('aria-controls','controlExtras');slot(utility,more);
  deck.querySelector('.deck-strip').append($('notchStrip'));deck.querySelector('.deck-message').append($('operationStatus'));
@@ -32,7 +33,8 @@ export function mountResponsiveUI(){
   const adaptive=layout.kind!=='desktop';if(adaptive){menuPanel.querySelector('.menu-station-mount').append(selector);menuPanel.querySelector('.menu-nav-mount').append(nav);}else{selectorHome.append(selector);navHome.append(nav);}
   deck.hidden=mode!=='drive';menuPanel.hidden=mode!=='menu'||!adaptive;position(deck,layout.controls);position(menuPanel,layout.menu);return layout.game;
  },update(state){$('deckSpeed').textContent=state.speed;$('deckNotch').textContent=state.notch;$('deckNext').textContent=state.next;$('deckDistance').textContent=state.distance;$('deckDoor').textContent=state.door;$('deckLimit').textContent=state.limit;}};
- horn.onclick=extraHorn.onclick=()=>api.onHorn?.('hornPrimary');airHorn.onclick=()=>api.onHorn?.('hornSecondary');
+ for(const button of [horn,extraHorn])bindHornButton(button,pressed=>api.onHorn?.(pressed,'hornPrimary'));
+ bindHornButton(airHorn,pressed=>api.onHorn?.(pressed,'hornSecondary'));
  media.addEventListener?.('change',()=>refit());window.visualViewport?.addEventListener('resize',()=>refit());window.visualViewport?.addEventListener('scroll',()=>refit());addEventListener('orientationchange',()=>refit());
  return api;
 }

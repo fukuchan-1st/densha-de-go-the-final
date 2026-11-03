@@ -41,7 +41,8 @@ export function finishStop(state,route){
  state.dwell=0;
  if(state.startingDeparture)state.startingDeparture=false;
  else{
-  state.errors.push(state.s-route.stations[state.next].s);
+  state.errors.push(state.correctedStopError??state.s-route.stations[state.next].s);
+  state.correctedStopError=null;
   state.served++;
   state.next++;
  }
