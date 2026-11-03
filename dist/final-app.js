@@ -1,9 +1,9 @@
-import {FinalWorld} from './final-world.js?v=30';
-import {MenuArt} from './final-art.js?v=30';
-import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=30';
-import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,stopPosition,finishStop,takeDepartureCall} from './final-model.js?v=30';
-import {STATIONS as TOHOKU_STATIONS} from './route-data.js?v=30';
-import {FINAL_SCENARIOS,scenarioJourney} from './final-scenarios.js?v=30';
+import {FinalWorld} from './final-world.js?v=31';
+import {MenuArt} from './final-art.js?v=31';
+import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=31';
+import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,stopPosition,finishStop,takeDepartureCall} from './final-model.js?v=31';
+import {STATIONS as TOHOKU_STATIONS} from './route-data.js?v=31';
+import {FINAL_SCENARIOS,scenarioJourney} from './final-scenarios.js?v=31';
 
 const TOHOKU_TRAIN={id:'701',name:'701系1500番台',playableSpecs:{carCount:2}};
 const $=id=>document.getElementById(id),META=[
@@ -53,7 +53,7 @@ function closeModal(){ $('modal').close();if(modalPaused&&!run?.finished){paused
 $('closeModal').onclick=closeModal;$('modal').addEventListener('cancel',e=>{e.preventDefault();closeModal();});
 function settingsDialog(){showModal(`<p class="eyebrow">OPTION</p><h2>音と、乗り心地。</h2><label>音量 <input id="volumeInput" type="range" min="0" max="100" value="${Math.round(settings.volume*100)}"></label><label>走行中の揺れ<select id="shakeInput"><option value="0">なし</option><option value="0.6">弱め</option><option value="1">標準</option></select></label><label>描画<select id="qualityInput"><option value="light">軽量 · iPad / iPhone向け</option><option value="standard">標準 · PC向け</option></select></label><small>描画設定は次の運転開始時に反映します。揺れは停車後に収まり、一時停止中は止まります。</small><p>${META[selected].legacy?'東北本線の音量と揺れは、701系の画面で調整できます。':'アプリ内蔵の運転台と車両別の収録音を使用します。'}</p><div class="dialog-buttons"><button id="helpButton">操作方法</button><button id="dataButton">路線・車両について</button></div>`);$('shakeInput').value=String(settings.shake);$('qualityInput').value=settings.quality;$('volumeInput').oninput=e=>{settings.volume=Number(e.target.value)/100;sound?.setVolume(settings.volume);saveSettings();};$('shakeInput').onchange=e=>{settings.shake=Number(e.target.value);saveSettings();};$('qualityInput').onchange=e=>{settings.quality=e.target.value;saveSettings();};$('helpButton').onclick=helpDialog;$('dataButton').onclick=dataDialog;}
 function helpDialog(){showModal(`<p class="eyebrow">DRIVING GUIDE</p><h2>一駅ずつ、確実に。</h2><p><kbd>S / ↓</kbd> P側へ　<kbd>W / ↑</kbd> EB側へ<br><kbd>X</kbd> 惰行　<kbd>Space</kbd> 非常ブレーキ<br><kbd>H</kbd> 警笛　<kbd>Esc</kbd> 一時停止</p><p>扉は自動です。停止位置±3m以内で3秒停止すると戸開、15秒乗降後に合図音→戸閉音の順に再生し、最後まで鳴ってから戸閉灯が点きます。最初の駅は戸開で開始します。</p><p>停止位置±10mで右端のひし形が上から下へ動きます。残り5m以内はcm表示。停止位置を35m過ぎると通過扱いになります。</p><p>運転士音声は駅の手前150mで「停車」、戸閉灯の点灯後に「戸閉、点」「出発進行」が順に鳴り、発車すると「出発駅名、定発」が続きます。出発の喚呼はこの試作での発車扱いに合わせています。</p><small>停車アシストはブレーキを補助します。通常のドア開閉ではノッチは変わりません。207系はP6、323系は抑速を備えます。</small>`);}
-function dataDialog(){showModal(`<p class="eyebrow">ROUTE & VEHICLE</p><h2>5路線、5車両。</h2><p>山手線 / E235系 · 中央線 / E233系0番台<br>大阪環状線 / 323系 · 東海道線 / 207系2000番台<br>東北本線 / 701系1500番台</p><p>線路の曲がり方はOpenStreetMap、駅間距離は公開駅一覧を使用。大阪環状線の6駅では電車でGO！FINALのマップと照合した並走線の間隔を使用しています。ホーム・建物・停止目標は試作上の概略です。シナリオの運転区間はFINALの公開プレイ記録を参照し、現在の車両で各駅に停まります。</p><p>中央線・大阪環状線は位置を確認できた信号機を描画します。勾配・標高・実際の線路速度制限は取得していません。新4路線は勾配0‰、速度表示の上限は車両性能の設定です。ゲームの実データとは区別しています。</p><p>E235系は提供データの15両設定を参考に、山手線用の11両・起動加速度3.0km/h/sを試作設定。E233系は提供12両、323系8両、207系7両です。力行は提供の速度別引張力表を補間し、常用制動・抵抗は簡易モデルです。</p><p>E235系は提供データの起動時モーター音、E233系は三菱IGBTの力行・制動モーター音を使用します。発車合図には東北本線と共通のホイッスルを使います。4路線の運転士喚呼にはFINALの路線別音声を使います。</p><small class="credits-note"><a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors / ODbL</a> · <a href="./assets/final/route-data-notes.md" target="_blank">路線の出典・検証</a> · <a href="./assets/final/scenario-notes.md" target="_blank">シナリオの出典</a></small>`);}
+function dataDialog(){showModal(`<p class="eyebrow">ROUTE & VEHICLE</p><h2>5路線、5車両。</h2><p>山手線 / E235系 · 中央線 / E233系0番台<br>大阪環状線 / 323系 · 東海道線 / 207系2000番台<br>東北本線 / 701系1500番台</p><p>線路の曲がり方はOpenStreetMap、駅間距離は公開駅一覧を使用。4路線のホーム・並走線は地図やJRの構内図を参照し、電車でGO！FINALの映像で見え方を照合しました。建物・停止目標は試作上の概略です。シナリオの運転区間はFINALの公開プレイ記録を参照し、現在の車両で各駅に停まります。</p><p>中央線・大阪環状線は位置を確認できた信号機を描画します。勾配・標高・実際の線路速度制限は取得していません。新4路線は勾配0‰、速度表示の上限は車両性能の設定です。ゲームの実データとは区別しています。</p><p>E235系は提供データの15両設定を参考に、山手線用の11両・起動加速度3.0km/h/sを試作設定。E233系は提供12両、323系8両、207系7両です。力行は提供の速度別引張力表を補間し、常用制動・抵抗は簡易モデルです。</p><p>E235系は提供データの起動時モーター音、E233系は三菱IGBTの力行・制動モーター音を使用します。発車合図には東北本線と共通のホイッスルを使います。4路線の運転士喚呼にはFINALの路線別音声を使います。</p><small class="credits-note"><a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors / ODbL</a> · <a href="./assets/final/route-data-notes.md" target="_blank">路線の出典・検証</a> · <a href="./assets/final/scenario-notes.md" target="_blank">シナリオの出典</a></small>`);}
 $('settingsButton').onclick=settingsDialog;
 $('driveSettings').onclick=settingsDialog;
 function setNotch(n){if(mode!=='drive'||paused||run.finished)return;const c=controlsFor(recipe());run.notch=clamp(n,c.min,c.max);}
@@ -122,7 +122,7 @@ async function start(startIndex){
  const meta=META[selected];
  const scenario=selectedScenario();
  const freeStart=Number($('startStation').value);
- if(meta.legacy){location.href=`./tohoku.html?v=30&drive=1&station=${startIndex??freeStart}`;return;}
+ if(meta.legacy){location.href=`./tohoku.html?v=31&drive=1&station=${startIndex??freeStart}`;return;}
  loading=true;
  const controlsToLock=document.querySelectorAll('#menuControls button,#menuControls select,#routeCards button');
  controlsToLock.forEach(element=>element.disabled=true);
@@ -185,7 +185,7 @@ let last=performance.now();function frame(now){const dt=Math.min(.08,Math.max(0,
 try {
  const routeLoads=META.map(async meta=>{
   if(meta.legacy)return {id:meta.id,stations:TOHOKU_STATIONS};
-  const response=await fetch(`./assets/final/${meta.id}-route.json?v=30`);
+  const response=await fetch(`./assets/final/${meta.id}-route.json?v=31`);
   if(!response.ok)throw Error('路線データを読み込めません');
   return response.json();
  });

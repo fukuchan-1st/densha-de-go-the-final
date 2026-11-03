@@ -46,5 +46,11 @@ export function scenarioJourney(route,scenario){
   parallelTrackReference:repeatPositions(route.parallelTrackReference),
   signals:repeatPositions(route.signals)
  };
+ if(route.neighborTracks){
+  extended.neighborTracks=[
+   ...route.neighborTracks,
+   ...route.neighborTracks.map(track=>({...track,knots:track.knots.map(([s,...coords])=>[s+length,...coords])}))
+  ];
+ }
  return {route:extended,startIndex,endIndex:endIndex+period};
 }

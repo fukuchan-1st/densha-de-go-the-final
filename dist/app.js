@@ -5,8 +5,8 @@ import {ROUTE_LENGTH,LAST_STATION_INDEX,BVE_END} from './route-data.js?v=23';
 import {mountDisplay,stoppingMarker,formatStopDistance} from './display.js?v=23';
 import {STATIONS,SPECS,step,newRun,stoppingDistance,assistBrake,notchDeltaForKey,NOTCH_MIN,NOTCH_LABELS,clampNotch} from './physics.js?v=23';
 import {RouteProfile} from './route-profile.js?v=23';
-import {RailWorld} from './scene.js?v=30';
-import {SoundEngine} from './assets/audio/sound-engine.js?v=30';
+import {RailWorld} from './scene.js?v=31';
+import {SoundEngine} from './assets/audio/sound-engine.js?v=31';
 const $=id=>document.getElementById(id), sound=new SoundEngine();
 const ui=mountResponsiveUI();const refit=mountDisplay($('simulator'),{layout:()=>ui.layout()});ui.setRefit(refit);ui.onHorn=name=>sound.playEffect(name);
 document.querySelector('.handle-panel').hidden=true;
@@ -31,7 +31,7 @@ if(directStart){
  $('menuButton').textContent='路線選択へ';
  $('pauseMenu').textContent='路線選択へ';
 }
-function returnToRoutes(){location.href='./?v=30&route=tohoku';}
+function returnToRoutes(){location.href='./?v=31&route=tohoku';}
 $('allRoutes').onclick=returnToRoutes;
 $('audioBack').onclick=returnToRoutes;
 $('audioUnlock').addEventListener('cancel',event=>event.preventDefault());

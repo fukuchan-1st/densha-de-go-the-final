@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {createJourney,controlsFor,notchLabel,driveStep,brakeAssist,finishStop,takeDepartureCall,stopPosition,distanceLabel,interpolateTable} from '../dist/final-model.js';
 import {FINAL_SCENARIOS,scenarioJourney} from '../dist/final-scenarios.js';
+import {FinalWorld} from '../dist/final-world.js';
+import {interpolateKnots} from '../dist/track-layout.js';
 const recipes=JSON.parse(await readFile(new URL('../dist/assets/final/vehicle-recipes.json',import.meta.url))),ids=['yamanote','chuo','osaka','tokaido'],trains=['e235','e233','323','207'];
 const routes=await Promise.all(ids.map(async id=>JSON.parse(await readFile(new URL(`../dist/assets/final/${id}-route.json`,import.meta.url)))));
 test('4路線の全駅・営業キロと線路座標が一致し、ループの終点が起点に戻る',()=>{
@@ -81,4 +83,38 @@ test('信号機は確認できた配置だけを描画し、環状線の一周�
  assert.ok(osaka.signals.every(signal=>signal.railErrorM<=3&&signal.x<=-2));
  const loop=scenarioJourney(osaka,FINAL_SCENARIOS.osaka.find(([id])=>id==='07')).route;
  assert.deepEqual(loop.signals.slice(4).map(signal=>signal.s),osaka.signals.map(signal=>signal.s+osaka.length));
+});
+test('駅ごとのホームが走行線に接し、線路との離隔を保つ',()=>{
+ for(const [index,route] of routes.entries()){
+  const world=Object.assign(Object.create(FinalWorld.prototype),{route,points:route.points,length:route.length});
+  const tracks=[{start:0,end:route.length,offset:s=>world.driveOffset(s)}];
+  for(const {knots,height} of route.neighborTracks){
+   assert.ok(knots.every(([s,x],i)=>Number.isFinite(x)&&(i===0||s>knots[i-1][0])));
+   tracks.push({start:knots[0][0],end:knots.at(-1)[0],height,offset:s=>interpolateKnots(knots,s)});
+  }
+  const surveyed=route.stations.slice(0,route.loop?-1:undefined)
+   .filter(st=>route.stationLayouts[st.name]?.platforms?.length);
+  assert.equal(surveyed.length,[30,21,19,33][index]);
+  for(const st of surveyed){
+   const platform=route.stationLayouts[st.name].platforms.find(p=>p.boarding);
+   assert.ok(platform.edges[0][0]<=0&&platform.edges.at(-1)[0]>=0,st.name);
+   const [left,right]=world.platformBounds(st,platform,st.s,tracks),x=world.driveOffset(st.s);
+   assert.ok(right-left>=1,st.name);
+   assert.ok(Math.max(left-x,x-right)>=1.45-1e-6,st.name);
+  }
+ }
+});
+test('高尾の3番線と東海道線の下り線を走行視点と線路が共有する',()=>{
+ const chuo=routes[1],tokaido=routes[3];
+ assert.equal(chuo.drivingTrackSources.at(-1).trackRef,'3');
+ assert.equal(chuo.drivingTrack.at(-1)[0],53100);
+ for(const [name,number] of [['京都','4'],['新大阪','7'],['大阪','6'],['元町','2'],['神戸','4']]){
+  const anchor=tokaido.drivingTrackSources.find(st=>st.name===name);
+  assert.equal(anchor.officialTrackRef??anchor.trackRef,number);
+  const world=Object.assign(Object.create(FinalWorld.prototype),{route:tokaido,points:tokaido.points,length:tokaido.length});
+  assert.ok(Math.abs(world.drivePoint(anchor.s).distanceTo(world.point(anchor.s))-Math.abs(anchor.xM))<.03);
+ }
+ const imamiya=routes[2].stationLayouts['今宮'].platforms;
+ assert.equal(imamiya[0].boarding,true);
+ assert.ok(imamiya[1].height>0);
 });
