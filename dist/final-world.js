@@ -15,7 +15,20 @@ export class FinalWorld {
  curvature(s){const a=this.frame(s-20).dir.setY(0).normalize(),b=this.frame(s+20).dir.setY(0).normalize();return Math.atan2(a.x*b.z-a.z*b.x,a.dot(b))/40;}
  grade(s){return clamp((this.point(s+10).y-this.point(s-10).y)/20*1000,-40,40);}
  stationNear(s){let nearest=null,d=Infinity;for(const st of this.route.stations){const dd=Math.abs(st.s-s);if(dd<d){nearest=st;d=dd;}}return {st:nearest,d};}
- oppositeOffset(s){const {st,d}=this.stationNear(s),i=this.route.stations.indexOf(st);return i%3===1?4+4*clamp((350-d)/180,0,1):4;}
+ platformLength(){return clamp((this.route.carCount??10)*20+20,180,280);}
+ oppositeOffset(s){
+  const {st,d}=this.stationNear(s);
+  const island=this.route.stations.indexOf(st)%3===1;
+  if(island)return 4+4*clamp((350-d)/180,0,1);
+  const reference=this.route.parallelTrackReference?.find(row=>row.s===st.s);
+  const spacing=reference?.oppositeTrackSpacingM;
+  if(!Number.isFinite(spacing))return 4;
+  // Keep the measured gap throughout the platform and blend into the adjacent scene.
+  const platformStart=st.s-this.platformLength()+18;
+  const platformEnd=st.s+18;
+  const outside=Math.max(platformStart-s,s-platformEnd,0);
+  return T.MathUtils.lerp(spacing,4,clamp(outside/100,0,1));
+ }
  cube(group,s,x,y,w,h,d,color){const f=this.frame(s,x),m=new T.Mesh(this.box,this.mat(color));m.position.copy(f.p);m.position.y+=y+h/2;m.rotation.order='YXZ';m.rotation.set(Math.asin(clamp(f.dir.y,-1,1)),f.angle,0);m.scale.set(w,h,d);group.add(m);return m;}
  ribbon(group,start,end,offset,width,height,color,step=7){const pos=[],idx=[];for(let s=start,i=0;s<=end+.01;s=Math.min(end,s+step),i++){const x=typeof offset==='function'?offset(s):offset,f=this.frame(s,x);for(const dx of[-width/2,width/2])pos.push(f.p.x+f.right.x*dx,f.p.y+height,f.p.z+f.right.z*dx);if(i){const k=i*2;idx.push(k-2,k-1,k,k-1,k+1,k);}if(s===end)break;}const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.setIndex(idx);g.computeVertexNormals();const m=new T.Mesh(g,this.mat(color));m.material.side=T.DoubleSide;group.add(m);}
  instances(group,items,color){if(!items.length)return;const m=new T.InstancedMesh(this.box,this.mat(color),items.length),o=new T.Object3D();items.forEach((a,i)=>{const f=this.frame(a.s,a.x);o.position.copy(f.p);o.position.y+=a.y+a.h/2;o.rotation.order='YXZ';o.rotation.set(Math.asin(clamp(f.dir.y,-1,1)),f.angle,0);o.scale.set(a.w,a.h,a.d);o.updateMatrix();m.setMatrixAt(i,o.matrix);});m.computeBoundingSphere();group.add(m);}
@@ -32,8 +45,8 @@ export class FinalWorld {
    const w=8+random()*12,d=10+random()*12;buildings.push({s,x,y:0,w,h,d});if(this.quality!=='light')for(let y=3;y<h-1;y+=3)windows.push({s:s-d/2-.03,x,y,w:w*.65,h:1.1,d:.05});
    if(!urban||random()>.7)trees.push({s:s+12,x:side*(12+random()*7),y:2,w:2+random()*2,h:3+random()*3,d:3});}
   this.instances(group,buildings,index%2?'#b7b5aa':'#b1b7b5');this.instances(group,windows,'#405d68');this.instances(group,trees,'#4d7150');
-  this.route.stations.forEach((st,i)=>{if(Math.floor(st.s/500)!==index)return;const length=clamp((this.route.carCount??10)*20+20,180,280),a=st.s-length+18,b=st.s+18,island=i%3===1;
-   const platforms=island?[{x:4,w:4.8}]:[{x:-4,w:4.8},{x:8,w:4.8}];for(const p of platforms){this.cube(group,(a+b)/2,p.x,0,p.w,1,b-a,'#a8aaa1');for(const side of[-1,1])this.cube(group,(a+b)/2,p.x+side*(p.w/2-.18),1.01,.2,.025,b-a,'#e3ce67');this.cube(group,st.s-65,p.x,4.2,p.w+.25,.18,105,'#677778');for(let s=st.s-110;s<st.s-12;s+=16)this.cube(group,s,p.x,1,.13,3.2,.13,'#c2c9c3');this.sign(group,st.name,st.s-18,p.x);this.sign(group,st.name,st.s-100,p.x);}
+  this.route.stations.forEach((st,i)=>{if(Math.floor(st.s/500)!==index)return;const length=this.platformLength(),a=st.s-length+18,b=st.s+18,island=i%3===1;
+   const platforms=island?[{x:4,w:4.8}]:[{x:-4,w:4.8},{x:this.oppositeOffset(st.s)+4,w:4.8}];for(const p of platforms){this.cube(group,(a+b)/2,p.x,0,p.w,1,b-a,'#a8aaa1');for(const side of[-1,1])this.cube(group,(a+b)/2,p.x+side*(p.w/2-.18),1.01,.2,.025,b-a,'#e3ce67');this.cube(group,st.s-65,p.x,4.2,p.w+.25,.18,105,'#677778');for(let s=st.s-110;s<st.s-12;s+=16)this.cube(group,s,p.x,1,.13,3.2,.13,'#c2c9c3');this.sign(group,st.name,st.s-18,p.x);this.sign(group,st.name,st.s-100,p.x);}
    this.cube(group,st.s,1.65,0,.08,1.2,.08,'#eeeecc');
   });
   for(const structure of this.route.structures??[]){if(structure.sEnd<start||structure.sStart>end)continue;const a=Math.max(start,structure.sStart),b=Math.min(end,structure.sEnd);if(structure.kind==='tunnel'){for(let s=a;s<b;s+=10){this.cube(group,s,-2.2,0,.4,5.2,10,'#686d6e');this.cube(group,s,this.oppositeOffset(s)+2.2,0,.4,5.2,10,'#686d6e');this.cube(group,s,this.oppositeOffset(s)/2,5.2,this.oppositeOffset(s)+4.8,.5,10,'#5d6265');}}else if(structure.kind==='bridge'){for(let s=a;s<b;s+=12){this.cube(group,s,-2,0,.13,1.1,12,'#879797');this.cube(group,s,this.oppositeOffset(s)+2,0,.13,1.1,12,'#879797');}}}

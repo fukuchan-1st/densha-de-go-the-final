@@ -1,5 +1,6 @@
 """Package the panels and sound cues referenced by the four web vehicles."""
 import json
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -20,7 +21,8 @@ const result=trains.map(recipe=>{
   const audio=Object.assign(Object.create(LocalTrainAudio.prototype),{recipe});
   const images=recipe.panel.elements.filter(element=>panel.supported(element))
     .flatMap(element=>[element.image,element.nightImage]).filter(Boolean);
-  return {id:recipe.id,images,audio:audio.assetRefs(),scale:1600/PANEL_CROPS[recipe.id].width};
+  const motors=Object.values(recipe.sounds.motor??{}).map(ref=>ref.entryIndex);
+  return {id:recipe.id,images,audio:audio.assetRefs(),motors,scale:1600/PANEL_CROPS[recipe.id].width};
 });
 process.stdout.write(JSON.stringify(result));
 """
@@ -55,6 +57,12 @@ def bundle():
         for ref in train["audio"]:
             index = ref["entryIndex"]
             if index in entries:
+                continue
+            if index in train["motors"]:
+                filename = f"{index}.wav"
+                shutil.copyfile(source_file(train_id, ref), target / filename)
+                (target / f"{index}.mp3").unlink(missing_ok=True)
+                entries[index] = {"file": filename}
                 continue
             filename = f"{index}.mp3"
             subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-y",

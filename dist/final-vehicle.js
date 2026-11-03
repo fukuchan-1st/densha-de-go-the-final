@@ -1,6 +1,6 @@
 import {inflateSync} from './assets/vendor/fflate.module.js';
 
-export async function loadVehicleRecipes(){const r=await fetch(new URL('./assets/final/vehicle-recipes.json?v=26',import.meta.url));if(!r.ok)throw Error('車両設定を読み込めません');return r.json();}
+export async function loadVehicleRecipes(){const r=await fetch(new URL('./assets/final/vehicle-recipes.json?v=27',import.meta.url));if(!r.ok)throw Error('車両設定を読み込めません');return r.json();}
 
 class BundledTrainPack {
  constructor(id,assets){
@@ -21,7 +21,7 @@ class BundledTrainPack {
 }
 
 export async function loadBundledTrainPacks(){
- const response=await fetch(new URL('./assets/final/vehicles/manifest.json?v=26',import.meta.url));
+ const response=await fetch(new URL('./assets/final/vehicles/manifest.json?v=27',import.meta.url));
  if(!response.ok)throw Error('アプリ内の車両一覧を読み込めません');
  const {trains}=await response.json();
  return new Map(Object.entries(trains).map(([id,assets])=>[id,new BundledTrainPack(id,assets)]));
@@ -64,6 +64,36 @@ export class LocalTrainPack {
  async objectURL(ref){const key=ref.entryIndex;if(this.urls.has(key))return this.urls.get(key);if(this.pending.has(key))return this.pending.get(key);const promise=this.bytes(ref).then(bytes=>{if(this.disposed)throw Error('車両データは解除されています');const type=/\.png$/i.test(ref.entryName)?'image/png':/\.wav$/i.test(ref.entryName)?'audio/wav':'application/octet-stream',url=URL.createObjectURL(new Blob([bytes],{type}));this.urls.set(key,url);return url;}).finally(()=>this.pending.delete(key));this.pending.set(key,promise);return promise;}
  dispose(){this.disposed=true;for(const url of this.urls.values())URL.revokeObjectURL(url);this.urls.clear();this.pending.clear();this.file=null;}
 }
-export function interpolateColumn(table,column,speed,defaultValue=0){const rows=table?.rows?.filter(r=>Number.isFinite(r[0])&&Number.isFinite(r[column+1]));if(!rows?.length)return defaultValue;if(speed<=rows[0][0])return rows[0][column+1];for(let i=1;i<rows.length;i++)if(speed<=rows[i][0]){const a=rows[i-1],b=rows[i];return a[column+1]+(b[column+1]-a[column+1])*(speed-a[0])/(b[0]-a[0]);}return rows.at(-1)[column+1];}
-export {LocalCabPanel} from './final-panel.js?v=26';
-export {LocalTrainAudio} from './final-audio.js?v=26';
+const motorCurves=new WeakMap();
+export function interpolateColumn(table,column,speed,defaultValue=0){
+ if(!table?.rows)return defaultValue;
+ if(!motorCurves.has(table))motorCurves.set(table,new Map());
+ const curves=motorCurves.get(table);
+ const channel=String(column);
+ if(!curves.has(channel)){
+  const labels=table.labels??[];
+  const hasChannelIds=labels.some(label=>/^\d+$/.test(String(label).trim()));
+  const index=hasChannelIds?labels.findIndex(label=>String(label).trim()===channel):Number(column);
+  const points=new Map();
+  if(index>=0){
+   for(const row of table.rows){
+    const value=row[index+1];
+    if(Number.isFinite(row[0])&&Number.isFinite(value))points.set(row[0],value);
+   }
+  }
+  curves.set(channel,[...points].sort(([a],[b])=>a-b));
+ }
+ const points=curves.get(channel);
+ if(!points.length)return defaultValue;
+ if(speed<=points[0][0])return points[0][1];
+ for(let i=1;i<points.length;i++){
+  const [b,y]=points[i];
+  if(speed<=b){
+   const [a,x]=points[i-1];
+   return x+(y-x)*(speed-a)/(b-a);
+  }
+ }
+ return points.at(-1)[1];
+}
+export {LocalCabPanel} from './final-panel.js?v=27';
+export {LocalTrainAudio} from './final-audio.js?v=27';
