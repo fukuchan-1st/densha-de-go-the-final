@@ -31,7 +31,7 @@ if(directStart){
  $('menuButton').textContent='路線選択へ';
  $('pauseMenu').textContent='路線選択へ';
 }
-function returnToRoutes(){location.href='./?v=33&route=tohoku';}
+function returnToRoutes(){location.href='./?v=34&route=tohoku';}
 $('allRoutes').onclick=returnToRoutes;
 $('audioBack').onclick=returnToRoutes;
 $('audioUnlock').addEventListener('cancel',event=>event.preventDefault());
