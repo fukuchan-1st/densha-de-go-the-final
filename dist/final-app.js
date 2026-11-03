@@ -22,6 +22,25 @@ let packs=new Map(),activeRoute;
 const settings={volume:.65,shake:1,quality:matchMedia('(pointer:coarse)').matches?'light':'standard'};
 try{const saved=JSON.parse(localStorage.getItem('railway-drive-settings')??'{}');if(Number.isFinite(saved.volume))settings.volume=clamp(saved.volume,0,1);if([0,.6,1].includes(saved.shake))settings.shake=saved.shake;if(['light','standard'].includes(saved.quality))settings.quality=saved.quality;}catch{}
 const saveSettings=()=>{try{localStorage.setItem('railway-drive-settings',JSON.stringify(settings));}catch{}};
+function playMenuSound(name,{waitForEnd=false}={}){
+ if(settings.volume===0)return;
+ const clip=$('menuSound-'+name);
+ clip.volume=settings.volume;
+ clip.currentTime=0;
+ const playback=clip.play();
+ if(!waitForEnd){playback.catch(()=>{});return;}
+ // The 701 screen loads a new page, so let the decision sound finish before navigating.
+ return new Promise(resolve=>{
+  const finish=()=>{
+   clearTimeout(timeout);
+   clip.removeEventListener('ended',finish);
+   resolve();
+  };
+  const timeout=setTimeout(finish,1700);
+  clip.addEventListener('ended',finish);
+  playback.catch(finish);
+ });
+}
 let menuArt;try{menuArt=new MenuArt($('menuArtwork'));}catch(e){$('menuArtwork').setAttribute('aria-label','車両イラストを表示できませんでした');}
 function fit(){const r=$('stageArea').getBoundingClientRect(),scale=Math.min(r.width/1600,r.height/900);$('stage').style.left='50%';$('stage').style.top='50%';$('stage').style.transform=`translate(-50%,-50%) scale(${scale})`;}
 addEventListener('resize',fit);visualViewport?.addEventListener('resize',fit);new ResizeObserver(fit).observe($('stageArea'));fit();
@@ -46,19 +65,26 @@ function displayScenario(){
  $('routeSummary').textContent=`${from} → ${to} · FINAL区間`;
  $('routeLength').textContent=`${(distance/1000).toFixed(1)} km / 各駅停車`;
 }
-$('scenarioSelect').onchange=displayScenario;
+$('scenarioSelect').onchange=()=>{playMenuSound('cursor');displayScenario();};
+$('startStation').onchange=()=>playMenuSound('cursor');
 function toast(text,seconds=5){toastText=text;toastUntil=(run?.elapsed??0)+seconds;}
 function displayMenu(){const meta=META[selected],r=routes[selected],train=recipe();document.documentElement.style.setProperty('--accent',meta.color);$('trainRoute').textContent=meta.english;$('trainName').innerHTML=`${meta.short}<span>${meta.series??'系'}</span>`;$('formation').textContent=`${train.playableSpecs.carCount}両編成 · 各駅停車`;$('compactRoute').value=String(selected);document.querySelectorAll('.route-card').forEach((el,i)=>{el.classList.toggle('active',i===selected);el.setAttribute('aria-pressed',String(i===selected));});$('startStation').innerHTML=r.stations.slice(0,-1).map((st,i)=>`<option value="${i}">${st.name}</option>`).join('');const scenarios=FINAL_SCENARIOS[meta.id]??[];$('scenarioControl').hidden=!scenarios.length;$('scenarioSelect').replaceChildren(new Option('自由運転',''),...scenarios.map(([id,from,to],i)=>new Option(`#${id} ${from} → ${to}`,String(i))));displayScenario();const imported=meta.legacy||packs.has(train.id);$('assetBadge').textContent=imported?'運転台・収録音 内蔵':'車両素材を確認できません';$('assetBadge').classList.toggle('imported',imported);menuArt?.draw(meta);}
-function choose(i){if(loading)return;selected=(i+META.length)%META.length;displayMenu();}
+function choose(i){
+ if(loading)return;
+ const next=(i+META.length)%META.length;
+ if(selected!==next)playMenuSound('cursor');
+ selected=next;
+ displayMenu();
+}
 function setMode(value){mode=value;document.body.dataset.mode=value;$('menuScreen').hidden=value!=='menu';$('menuControls').hidden=value!=='menu';$('driveScreen').hidden=value!=='drive';$('driveControls').hidden=value!=='drive';fit();}
 async function pauseAudio(value){await sound?.setPaused(value).catch(()=>{});}
 function showModal(content,{pause=true}={}){if(mode==='drive'&&pause&&!paused){paused=true;modalPaused=true;pauseAudio(true);}$('modalContent').innerHTML=content;if(!$('modal').open)$('modal').showModal();}
-function closeModal(){ $('modal').close();if(modalPaused&&!run?.finished){paused=false;pauseAudio(false);}modalPaused=false;}
+function closeModal(){if(mode==='menu')playMenuSound('cancel');$('modal').close();if(modalPaused&&!run?.finished){paused=false;pauseAudio(false);}modalPaused=false;}
 $('closeModal').onclick=closeModal;$('modal').addEventListener('cancel',e=>{e.preventDefault();closeModal();});
 function settingsDialog(){showModal(`<p class="eyebrow">OPTION</p><h2>音と、乗り心地。</h2><label>音量 <input id="volumeInput" type="range" min="0" max="100" value="${Math.round(settings.volume*100)}"></label><label>走行中の揺れ<select id="shakeInput"><option value="0">なし</option><option value="0.6">弱め</option><option value="1">標準</option></select></label><label>描画<select id="qualityInput"><option value="light">軽量 · iPad / iPhone向け</option><option value="standard">標準 · PC向け</option></select></label><small>描画設定は次の運転開始時に反映します。揺れは停車後に収まり、一時停止中は止まります。</small><p>${META[selected].legacy?'東北本線の音量と揺れは、701系の画面で調整できます。':'アプリ内蔵の運転台と車両別の収録音を使用します。'}</p><div class="dialog-buttons"><button id="helpButton">操作方法</button><button id="dataButton">路線・車両について</button></div>`);$('shakeInput').value=String(settings.shake);$('qualityInput').value=settings.quality;$('volumeInput').oninput=e=>{settings.volume=Number(e.target.value)/100;sound?.setVolume(settings.volume);saveSettings();};$('shakeInput').onchange=e=>{settings.shake=Number(e.target.value);saveSettings();};$('qualityInput').onchange=e=>{settings.quality=e.target.value;saveSettings();};$('helpButton').onclick=helpDialog;$('dataButton').onclick=dataDialog;}
 function helpDialog(){showModal(`<p class="eyebrow">DRIVING GUIDE</p><h2>一駅ずつ、確実に。</h2><p><kbd>S / ↓</kbd> P側へ　<kbd>W / ↑</kbd> EB側へ<br><kbd>X</kbd> 惰行　<kbd>Space</kbd> 非常ブレーキ<br><kbd>Enter 長押し</kbd> 警笛　<kbd>Esc</kbd> 一時停止</p><p>扉は自動です。停止位置±3m以内で3秒停止すると戸開、15秒乗降後に合図音→戸閉音の順に再生し、最後まで鳴ってから戸閉灯が点きます。最初の駅は戸開で開始します。</p><p>停止位置±10mで右端のひし形が上から下へ動きます。残り5m以内はcm表示。5m以上行き過ぎて停止すると、停止位置の0cmに補正します。</p><p>運転士音声は駅の手前150mで「駅名、停車。停止位置と両数」、戸閉灯の点灯後に「戸閉、点」「出発進行」が順に鳴り、発車すると「出発駅名、定発」が続きます。出発の喚呼はこの試作での発車扱いに合わせています。</p><small>停車アシストはブレーキを補助します。通常のドア開閉ではノッチは変わりません。207系はP6、323系は抑速を備えます。</small>`);}
 function dataDialog(){showModal(`<p class="eyebrow">ROUTE & VEHICLE</p><h2>6路線、6車両。</h2><p>山手線 / E235系 · 中央線 / E233系0番台<br>大阪環状線 / 323系 · 東海道線 / 207系2000番台<br>東北本線 / 701系1500番台 · 野岩鉄道 / 6050型</p><p>野岩鉄道は提供BVEデータの新藤原〜会津高原尾瀬口を再現。線形、勾配、ホーム、トンネル・橋、明示された速度制限、車内放送を読み込みます。山や林は景観用の近似です。</p><p>線路の曲がり方はOpenStreetMap、駅間距離は公開駅一覧を使用。4路線のホーム・並走線は地図やJRの構内図を参照し、電車でGO！FINALの映像で見え方を照合しました。建物・停止目標は試作上の概略です。シナリオの運転区間はFINALの公開プレイ記録を参照し、現在の車両で各駅に停まります。</p><p>中央線・大阪環状線は位置を確認できた信号機を描画します。FINALを参考にした4路線の速度上限は車両性能の設定です。ゲームの実データとは区別しています。</p><p>E235系は提供データの15両設定を参考に、山手線用の11両・起動加速度3.0km/h/sを試作設定。E233系は提供12両、323系8両、207系7両です。力行は提供の速度別引張力表を補間し、常用制動・抵抗は簡易モデルです。</p><p>E235系は提供データの起動時モーター音、E233系は三菱IGBTの力行・制動モーター音を使用します。発車合図には東北本線と共通のホイッスルを使います。4路線の運転士喚呼にはFINALの路線別音声を使います。</p><small class="credits-note"><a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors / ODbL</a> · <a href="./assets/final/route-data-notes.md" target="_blank">路線の出典・検証</a> · <a href="./assets/final/scenario-notes.md" target="_blank">シナリオの出典</a></small>`);}
-$('settingsButton').onclick=settingsDialog;
+$('settingsButton').onclick=()=>{playMenuSound('confirm');settingsDialog();};
 $('driveSettings').onclick=settingsDialog;
 function setNotch(n){if(mode!=='drive'||paused||run.finished)return;const c=controlsFor(recipe());run.notch=clamp(n,c.min,c.max);}
 $('brakeButton').onclick=()=>setNotch(run.notch-1);$('powerButton').onclick=()=>setNotch(run.notch+1);$('neutralButton').onclick=()=>setNotch(0);$('ebButton').onclick=()=>setNotch(controlsFor(recipe()).min);bindHornButton($('hornButton'),pressed=>sound?.setHorn(pressed&&!paused&&!run?.finished));
@@ -78,7 +104,7 @@ async function cleanup(){
  sound=null;
  activeRoute=null;
 }
-async function returnMenu(){if($('modal').open)$('modal').close();modalPaused=false;paused=true;setMode('menu');toggleExtras(false);await cleanup();run=null;displayMenu();}
+async function returnMenu(){playMenuSound('cancel');if($('modal').open)$('modal').close();modalPaused=false;paused=true;setMode('menu');toggleExtras(false);await cleanup();run=null;displayMenu();}
 $('menuButton').onclick=returnMenu;
 async function effect(name){return sound?.playEffect(name)??false;}
 async function closeSequence(generation){
@@ -142,13 +168,18 @@ async function start(startIndex){
  const meta=META[selected];
  const scenario=selectedScenario();
  const freeStart=Number($('startStation').value);
- if(meta.legacy){location.href=`./tohoku.html?v=33&drive=1&station=${startIndex??freeStart}`;return;}
  loading=true;
  const controlsToLock=document.querySelectorAll('#menuControls button,#menuControls select,#routeCards button');
  controlsToLock.forEach(element=>element.disabled=true);
  $('startDrive').textContent='運転台と音を準備中…';
  let nextSound;
  try{
+  if(meta.legacy){
+   await playMenuSound('confirm',{waitForEnd:true});
+   location.href=`./tohoku.html?v=34&drive=1&station=${startIndex??freeStart}`;
+   return;
+  }
+  if(mode==='menu')playMenuSound('confirm');
   const trip=scenarioJourney(routes[selected],scenario);
   if(!trip)throw Error('運転できるシナリオ区間を確認できません');
   const r=trip.route,train=recipe(),pack=packs.get(train.id);
