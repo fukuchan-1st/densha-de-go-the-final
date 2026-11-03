@@ -101,15 +101,19 @@ test('路線別の運転士喚呼は前の音声が終わってから次を再�
  audio.buffer=async ref=>ref.driverVoiceFile;
  const flush=()=>new Promise(resolve=>setImmediate(resolve));
  const departure=audio.callDriver('doorsClosed','departure');
+ const timeCall=audio.callDepartureFrom(5);
  const approach=audio.callDriver('stationStop');
  await flush();
  assert.deepEqual(played.map(source=>source.buffer),['./assets/final/driver-voice/kanko1/utb001.wav']);
  played[0].onended();
  await flush();
  assert.equal(played[1].buffer,'./assets/final/driver-voice/kanko1/utb003.wav');
+ played[1].onended();
+ await flush();
+ assert.equal(played[2].buffer,'./assets/final/driver-voice/kanko1/departure/5.wav');
  audio.stop();
- await Promise.all([departure,approach]);
- assert.equal(played.length,2);
+ await Promise.all([departure,timeCall,approach]);
+ assert.equal(played.length,3);
 });
 test('4路線の運転士喚呼は元の音声と同じ内容で同梱される',async()=>{
  const root=new URL('../dist/assets/final/driver-voice/',import.meta.url);

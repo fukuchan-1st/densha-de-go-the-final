@@ -32,4 +32,25 @@ export function brakeAssist(state,route,recipe){
 }
 export function distanceLabel(d){const v=Math.abs(d);return v<=5?`${Math.round(v*100)} cm`:`${Math.round(v).toLocaleString('ja-JP')} m`;}
 export function stopPosition(d){return {visible:Math.abs(d)<=10,percent:clamp((10-d)/20*100,0,100),text:Math.abs(d)<.005?'停止位置':`${d>=0?'手前':'超過'} ${distanceLabel(d)}`};}
-export function finishStop(state,route){state.doors=false;state.doorPhase=null;state.assistBraking=false;state.stopWait=0;state.dwell=0;if(state.startingDeparture)state.startingDeparture=false;else{state.errors.push(state.s-route.stations[state.next].s);state.served++;state.next++;}state.finished=state.next>=route.stations.length;}
+export function finishStop(state,route){
+ const stoppedAt=state.startingDeparture?state.startIndex:state.next;
+ state.doors=false;
+ state.doorPhase=null;
+ state.assistBraking=false;
+ state.stopWait=0;
+ state.dwell=0;
+ if(state.startingDeparture)state.startingDeparture=false;
+ else{
+  state.errors.push(state.s-route.stations[state.next].s);
+  state.served++;
+  state.next++;
+ }
+ state.finished=state.next>=route.stations.length;
+ state.departureCall=state.finished?null:stoppedAt;
+}
+export function takeDepartureCall(state){
+ if(state.doors||state.v<1/3.6||state.departureCall==null)return null;
+ const index=state.departureCall;
+ state.departureCall=null;
+ return index;
+}

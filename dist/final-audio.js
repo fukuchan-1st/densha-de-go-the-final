@@ -1,4 +1,4 @@
-import {interpolateColumn} from './final-vehicle.js?v=28';
+import {interpolateColumn} from './final-vehicle.js?v=29';
 import {runPitch} from './assets/audio/run-pitch.js';
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const whistle={entryIndex:'departure-whistle'};
@@ -50,12 +50,22 @@ export class LocalTrainAudio {
   return {entryIndex,driverVoiceFile:`./assets/final/driver-voice/${directory}/${entryIndex}.wav`};
  }
  callDriver(...names){
+  return this.queueDriverCalls(names.map(name=>this.driverCallRef(name)));
+ }
+ callDepartureFrom(stationIndex){
+  const bank=voiceBanks[this.recipe.id];
+  if(!bank)return Promise.resolve();
+  const entryIndex='departure-'+stationIndex;
+  const driverVoiceFile=`./assets/final/driver-voice/${bank[0]}/departure/${stationIndex}.wav`;
+  return this.queueDriverCalls([{entryIndex,driverVoiceFile}]);
+ }
+ queueDriverCalls(refs){
   const generation=this.generation;
   const previous=this.driverQueue??Promise.resolve();
   this.driverQueue=previous.then(async()=>{
-   for(const name of names){
+   for(const ref of refs){
     if(this.stopped||generation!==this.generation)return;
-    await this.playRef(this.driverCallRef(name)).catch(()=>false);
+    await this.playRef(ref).catch(()=>false);
    }
   });
   return this.driverQueue;

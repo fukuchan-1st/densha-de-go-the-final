@@ -1,7 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {createJourney,controlsFor,notchLabel,driveStep,brakeAssist,finishStop,stopPosition,distanceLabel,interpolateTable} from '../dist/final-model.js';
+import {createJourney,controlsFor,notchLabel,driveStep,brakeAssist,finishStop,takeDepartureCall,stopPosition,distanceLabel,interpolateTable} from '../dist/final-model.js';
 const recipes=JSON.parse(await readFile(new URL('../dist/assets/final/vehicle-recipes.json',import.meta.url))),ids=['yamanote','chuo','osaka','tokaido'],trains=['e235','e233','323','207'];
 const routes=await Promise.all(ids.map(async id=>JSON.parse(await readFile(new URL(`../dist/assets/final/${id}-route.json`,import.meta.url)))));
 test('4路線の全駅・営業キロと線路座標が一致し、ループの終点が起点に戻る',()=>{
@@ -12,3 +12,36 @@ test('全4車両で戸開中は発車せず、戸閉確定でも操作した全�
 test('指定の力行表を速度・ノッチごとに補間し、EBは停止して逆走しない',()=>{assert.equal(interpolateTable([[0,10],[10,30]],5),20);for(let i=0;i<4;i++){const recipe=recipes.trains.find(t=>t.id===trains[i]),c=controlsFor(recipe),s=createJourney(routes[i],recipe);s.doors=false;s.notch=c.max;driveStep(s,recipe,.1);assert.ok(s.v>0);s.notch=c.min;for(let j=0;j<100;j++)driveStep(s,recipe,.02);assert.equal(s.v,0);}});
 test('各車両で停車アシストを使って4路線の全停車駅を走破する',()=>{for(let i=0;i<4;i++){const recipe=recipes.trains.find(t=>t.id===trains[i]),route=routes[i],c=controlsFor(recipe),s=createJourney(route,recipe);finishStop(s,route);for(let station=1;station<route.stations.length;station++){s.notch=c.max;let steps=0;while(!s.finished&&s.next===station&&steps++<30000){brakeAssist(s,route,recipe);driveStep(s,recipe,.08);if(s.v<.01&&Math.abs(s.s-route.stations[s.next].s)<=3){s.doors=true;const n=s.notch;finishStop(s,route);assert.equal(s.notch,n);}}assert.ok(steps<30000,`${route.id} ${route.stations[station].name}`);}assert.equal(s.served,route.stations.length-1);assert.ok(s.errors.every(e=>Math.abs(e)<=3));}});
 test('右端マーカーは−10mから＋10mへ上から下に動き、5m以内はcmになる',()=>{assert.equal(stopPosition(10).percent,0);assert.equal(stopPosition(0).percent,50);assert.equal(stopPosition(-10).percent,100);assert.equal(stopPosition(10.01).visible,false);assert.equal(distanceLabel(5),'500 cm');assert.equal(distanceLabel(-.03),'3 cm');});
+test('発車喚呼は戸閉後の発進時に出発駅の番号を一度だけ返す',()=>{
+ const route=routes[1],train=recipes.trains[1],state=createJourney(route,train,5);
+ assert.equal(takeDepartureCall(state),null);
+ finishStop(state,route);
+ assert.equal(takeDepartureCall(state),null);
+ state.v=1;
+ assert.equal(takeDepartureCall(state),5);
+ assert.equal(takeDepartureCall(state),null);
+ state.s=route.stations[6].s;
+ state.v=0;
+ state.doors=true;
+ finishStop(state,route);
+ state.v=1;
+ assert.equal(state.next,7);
+ assert.equal(takeDepartureCall(state),6);
+ state.next=route.stations.length-1;
+ finishStop(state,route);
+ assert.equal(takeDepartureCall(state),null);
+});
+test('運転開始できる全駅に出発駅名と定発の音声がある',async()=>{
+ const root=new URL('../dist/assets/final/driver-voice/',import.meta.url);
+ const manifest=JSON.parse(await readFile(new URL('departure-manifest.json',root)));
+ for(const [bank,route] of routes.entries()){
+  const entries=manifest[route.id];
+  assert.deepEqual(entries.map(entry=>entry.station),route.stations.slice(0,-1).map(station=>station.name));
+  for(const [index,entry] of entries.entries()){
+   assert.equal(entry.file,`kanko${bank}/departure/${index}.wav`);
+   const wave=await readFile(new URL(entry.file,root));
+   assert.equal(wave.toString('ascii',0,4),'RIFF');
+   assert.ok(wave.length>22050);
+  }
+ }
+});
