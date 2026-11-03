@@ -16,7 +16,7 @@ import {readFile} from 'node:fs/promises';
 import {LocalCabPanel,PANEL_CROPS} from './dist/final-panel.js';
 import {LocalTrainAudio} from './dist/final-audio.js';
 const {trains}=JSON.parse(await readFile('dist/assets/final/vehicle-recipes.json','utf8'));
-const result=trains.map(recipe=>{
+const result=trains.filter(recipe=>recipe.archive).map(recipe=>{
   const panel=Object.assign(Object.create(LocalCabPanel.prototype),{recipe});
   const audio=Object.assign(Object.create(LocalTrainAudio.prototype),{recipe});
   const images=recipe.panel.elements.filter(element=>panel.supported(element))
@@ -35,7 +35,8 @@ def source_file(train_id, ref):
 
 def bundle():
     plan = subprocess.check_output(["node", "--input-type=module", "-e", PLAN], cwd=ROOT)
-    manifest = {}
+    manifest_path = OUTPUT / "manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))["trains"] if manifest_path.is_file() else {}
     for train in json.loads(plan):
         train_id = train["id"]
         target = OUTPUT / train_id
@@ -72,7 +73,7 @@ def bundle():
             entries[index] = {"file": filename}
         manifest[train_id] = entries
         print(f"{train_id}: {len(entries)} web assets", flush=True)
-    (OUTPUT / "manifest.json").write_text(json.dumps({"trains": manifest}), encoding="utf-8")
+    manifest_path.write_text(json.dumps({"trains": manifest}), encoding="utf-8")
 
 
 if __name__ == "__main__":

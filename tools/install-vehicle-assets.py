@@ -64,7 +64,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("train", type=Path, help="Folder holding the four extracted BVE packs")
     source = parser.parse_args().train.resolve(strict=True)
-    trains = json.loads(RECIPES.read_text(encoding="utf-8"))["trains"]
+    catalog = json.loads(RECIPES.read_text(encoding="utf-8"))
+    trains = [train for train in catalog["trains"] if "archive" in train]
     for train in trains:
         install(train, source)
     manifest = ASSETS / "manifest.json"

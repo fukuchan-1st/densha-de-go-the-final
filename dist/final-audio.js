@@ -1,4 +1,4 @@
-import {interpolateColumn} from './final-vehicle.js?v=32';
+import {interpolateColumn} from './final-vehicle.js?v=33';
 import {runPitch} from './assets/audio/run-pitch.js';
 import {HeldHorn} from './assets/audio/held-horn.js';
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -24,8 +24,9 @@ export class LocalTrainAudio {
   }
   return this.buffers.get(key);
  }
- runRef(surface){
+ runRef(surface,rollingIndex){
   const run=this.recipe.sounds.run;
+  if(rollingIndex!=null&&run?.[rollingIndex])return run[rollingIndex];
   // E235's slot 4 is a 15-minute recording. Slot 5 is its supplied short tunnel loop.
   const index=surface==='tunnel'?(this.recipe.id==='e235'?'5':'4'):surface==='bridge'?'3':'0';
   return run?.[index]??run?.['0'];
@@ -33,8 +34,10 @@ export class LocalTrainAudio {
  assetRefs(){
   const sounds=this.recipe.sounds;
   const effects=['open','close','hornPrimary','hornSecondary','hornPrimaryRelease','hornSecondaryRelease','powerUp','powerDown','brakeApply','brakeRelease','relayOn','relayOff'];
+  if(this.recipe.id==='6050')effects.push('brakeMin','brakeMax');
+  const rolling=this.recipe.id==='6050'?Object.values(sounds.run??{}):surfaces.map(surface=>this.runRef(surface));
   return [...effects.map(name=>this.effectRef(name)),sounds.others?.noise,
-   ...surfaces.map(surface=>this.runRef(surface)),...Object.values(sounds.motor??{})].filter(Boolean);
+   ...rolling,...Object.values(sounds.motor??{})].filter(Boolean);
  }
  async prepare(){
   await Promise.all([...this.assetRefs(),whistle].map(ref=>this.buffer(ref)));
@@ -57,11 +60,17 @@ export class LocalTrainAudio {
   return this.callRouteCue('departure',stationIndex);
  }
  callRouteCue(kind,index){
-  const bank=voiceBanks[this.recipe.id][0];
+  const bank=voiceBanks[this.recipe.id]?.[0];
+  if(!bank)return Promise.resolve();
   const entryIndex=kind+'-'+index;
   const driverVoiceFile=`./assets/final/driver-voice/${bank}/${kind}/${index}.wav`;
   return this.queueDriverCalls([{entryIndex,driverVoiceFile}]);
  }
+ routeAnnouncementRef(routeId,key){
+  return {entryIndex:`${routeId}-announcement-${key}`,driverVoiceFile:`./assets/final/${routeId}-announcements/${key}.mp3`};
+ }
+ callRouteAnnouncement(routeId,key){return this.queueDriverCalls([this.routeAnnouncementRef(routeId,key)]);}
+ playRouteAnnouncement(routeId,key){return this.playRef(this.routeAnnouncementRef(routeId,key));}
  queueDriverCalls(refs){
   const generation=this.generation;
   const previous=this.driverQueue??Promise.resolve();
@@ -84,6 +93,7 @@ export class LocalTrainAudio {
    hornSecondaryRelease:horn?.secondaryrelease,
    powerUp:mastercontroller?.up,powerDown:mastercontroller?.down,
    brakeApply:brakehandle?.apply,brakeRelease:brakehandle?.release,
+   brakeMin:brakehandle?.min,brakeMax:brakehandle?.max,
    relayOn:pilotlamp?.on,relayOff:pilotlamp?.off,air:brake?.bcrelease??brake?.['bc release']
   }[name];
  }
@@ -96,6 +106,10 @@ export class LocalTrainAudio {
  }
  playNotch(previous,next){
   if(previous===next)return Promise.resolve(false);
+  if(this.recipe.id==='6050'){
+   if(next===-(this.recipe.playableSpecs.brakeNotches+1))return this.playEffect('brakeMax');
+   if(previous<0&&next===0)return this.playEffect('brakeMin');
+  }
   if(next<0||previous<0&&next===0)return this.playEffect(next<previous?'brakeApply':'brakeRelease');
   return this.playEffect(next>previous?'powerUp':'powerDown');
  }
@@ -148,10 +162,10 @@ export class LocalTrainAudio {
   loop.gain?.gain.setTargetAtTime(0,time,.008);
   loop.source?.stop(time+.035);
  }
- update(speed,notch,dt=1/60,{surface='long',doors=false}={}){if(this.paused)return;this.stopped=false;
+ update(speed,notch,dt=1/60,{surface='long',doors=false,rollingIndex}={}){if(this.paused)return;this.stopped=false;
   if(this.lastNotch!==undefined&&this.lastNotch!==notch)this.playNotch(this.lastNotch,notch).catch(()=>{});
   this.lastNotch=notch;
-  const s=this.recipe.sounds,run=this.runRef(surface),runKey='run'+run?.entryIndex;
+  const s=this.recipe.sounds,run=this.runRef(surface,rollingIndex),runKey='run'+run?.entryIndex;
   const rollingRate=runPitch(speed);
   this.tuneLoop(runKey,run,clamp(speed/65,0,.65),rollingRate);
   this.tuneLoop('noise',s.others?.noise,.15,1);
