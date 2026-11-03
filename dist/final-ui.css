@@ -10,3 +10,5 @@
 
 .stop-target{position:absolute;right:100%;top:50%;transform:translateY(-50%);padding:2px 4px;background:#14252ee8;color:#fff4b1;font:700 15px/1.1 Arial,sans-serif;font-style:normal;white-space:nowrap;border-radius:3px;pointer-events:none}
 #hornButton,.extra-horn,#airHornButton{touch-action:none}
+
+#routeCards{top:184px;gap:12px}.route-card{height:94px}.route-card.yagan-card{background-size:100% 100%}#vehicleLimit.overspeed{color:#a30d24;font-weight:700}

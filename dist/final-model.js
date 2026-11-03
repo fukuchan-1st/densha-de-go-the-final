@@ -12,7 +12,7 @@ export function driveStep(state,recipe,dt,grade=0){
  const c=controlsFor(recipe),label=notchLabel(recipe,state.notch),spec=recipe.playableSpecs,old=state.v,kmh=old*3.6;
  let a=-9.80665*grade/1000;
  if(state.doors)a=old>0?-1:0;
- else if(label==='EB')a-=1.15;
+ else if(label==='EB')a-=(recipe.emergencyBrakeKmhPerSecond??4.14)/3.6;
  else if(/^B/.test(label))a-=(Number(label.slice(1))/c.brakeMax)*(recipe.serviceBrakeKmhPerSecond??3.6)/3.6;
  else {
   if(state.notch>0){const rows=recipe.performance?.power?.force?.rows??[],reference=interpolateTable(rows,3,c.max),force=interpolateTable(rows,kmh,state.notch),base=(spec.startingAccelerationKmhPerSecondApprox??2.8)/3.6;
@@ -31,6 +31,12 @@ export function brakeAssist(state,route,recipe){
  state.notch=state.v>target?-Math.min(4,c.brakeMax):0;
 }
 export function distanceLabel(d){const v=Math.abs(d);return v<=5?`${Math.round(v*100)} cm`:`${Math.round(v).toLocaleString('ja-JP')} m`;}
+export function routeLimitAt(route,position){
+ return (route.limits??[]).reduce((limit,section)=>{
+  if(position<section.sStart||position>=section.sEnd)return limit;
+  return limit===null?section.kmh:Math.min(limit,section.kmh);
+ },null);
+}
 export function stopPosition(d){return {visible:Math.abs(d)<=10,percent:clamp((10-d)/20*100,0,100),text:Math.abs(d)<.005?'停止位置':`${d>=0?'手前':'超過'} ${distanceLabel(d)}`};}
 export function finishStop(state,route){
  const stoppedAt=state.startingDeparture?state.startIndex:state.next;

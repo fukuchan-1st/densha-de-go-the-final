@@ -13,7 +13,7 @@ export function panelSpeedDigit(vehicle,subject,speed){
  return position<2&&whole<place?null:Math.floor(whole/place)%10;
 }
 export class LocalCabPanel {
- constructor(canvas,recipe,pack){this.canvas=canvas;this.ctx=canvas.getContext('2d');this.recipe=recipe;this.pack=pack;this.images=new Map();this.bc=0;this.visible=true;this.crop=PANEL_CROPS[recipe.id];const o=recipe.panel.this.origin;this.viewOrigin={x:(o[0]-this.crop.x)*1600/this.crop.width,y:(o[1]-this.crop.y)*900/this.crop.height};canvas.width=1600;canvas.height=900;}
+ constructor(canvas,recipe,pack){this.canvas=canvas;this.ctx=canvas.getContext('2d');this.recipe=recipe;this.pack=pack;this.images=new Map();this.bc=0;this.sap=0;this.bp=recipe.playableSpecs.brakeSystem?.brakePipeInitialKpa;this.visible=true;this.crop=recipe.panel.crop??PANEL_CROPS[recipe.id];const o=recipe.panel.this.origin;this.viewOrigin={x:(o[0]-this.crop.x)*1600/this.crop.width,y:(o[1]-this.crop.y)*900/this.crop.height};canvas.width=1600;canvas.height=900;}
  static async load(canvas,recipe,pack){
   const panel=new LocalCabPanel(canvas,recipe,pack);
   const scale=Math.min(1,1600/panel.crop.width);
@@ -51,9 +51,18 @@ export class LocalCabPanel {
  key(ref){return `${ref.entryIndex}|${ref.transparentColor??''}`;}
  semantic(e){return this.recipe.subjectMappings.vehicle[e.subject]??this.recipe.subjectMappings.common[e.subject];}
  isSpeedDigit(e){return e.type==='digitalnumber'&&speedDigits[this.recipe.id]?.includes(e.subject);}
- supported(e){return this.isSpeedDigit(e)||e.type==='background'||e.subject==='true'||['always','doorClosed','speedKmh','mainReservoirKpa','brakeCylinderKpa','absoluteMotorCurrent','motorCurrent','speedGaugeAngleEncoded','brakeIndex','powerIndex','hour','minute','second','controlVoltage','lineVoltage'].includes(this.semantic(e));}
+ supported(e){return this.isSpeedDigit(e)||e.type==='background'||e.subject==='true'||['always','doorClosed','speedKmh','mainReservoirKpa','brakeCylinderKpa','brakeStraightAirPipeKpa','brakePipeKpa','absoluteMotorCurrent','motorCurrent','speedGaugeAngleEncoded','brakeIndex','powerIndex','hour','minute','second','controlVoltage','lineVoltage'].includes(this.semantic(e));}
  setVisible(visible){this.visible=visible;this.canvas.hidden=!visible;}
- render(state,dt=1/60,inTunnel=false){const ctx=this.ctx;ctx.clearRect(0,0,1600,900);if(!this.visible)return;const r=this.recipe.playableSpecs,bIndex=state.notch<0?Math.min(r.brakeNotches+1,-state.notch):0,btarget=bIndex/(r.brakeNotches+1)*380;this.bc+=(btarget-this.bc)*Math.min(1,dt*4);const seconds=8*3600+(state.elapsed??0),speed=state.speedKmh??(state.v??0)*3.6,values={always:1,doorClosed:!state.doors,speedKmh:speed,mainReservoirKpa:820-this.bc*.08,brakeCylinderKpa:this.bc,absoluteMotorCurrent:state.notch>0?state.notch*40:0,motorCurrent:state.notch*35,brakeIndex:bIndex,powerIndex:Math.max(0,state.notch),hour:seconds/3600%12,minute:seconds/60%60,second:seconds%60,controlVoltage:100,lineVoltage:1500};ctx.save();ctx.scale(1600/this.crop.width,900/this.crop.height);ctx.translate(-this.crop.x,-this.crop.y);
+ render(state,dt=1/60,inTunnel=false){const ctx=this.ctx;ctx.clearRect(0,0,1600,900);if(!this.visible)return;const r=this.recipe.playableSpecs,bIndex=state.notch<0?Math.min(r.brakeNotches+1,-state.notch):0;
+  const brake=r.brakeSystem;
+  const response=Math.min(1,dt*4);
+  const sapTarget=brake?brake.pressureRates[bIndex]*brake.maxServiceKpa:0;
+  const btarget=brake?Math.max(0,(sapTarget-brake.straightPipeOffsetKpa)*brake.straightPipeToCylinderRatio):bIndex/(r.brakeNotches+1)*380;
+  this.bc+=(btarget-this.bc)*response;
+  this.sap+=(sapTarget-this.sap)*response;
+  if(brake)this.bp+=((bIndex>r.brakeNotches?0:brake.brakePipeInitialKpa)-this.bp)*response;
+  const reservoir=brake?(brake.reservoirLowerKpa+brake.reservoirUpperKpa)/2:820;
+  const seconds=(state.clockStart??8*3600)+(state.elapsed??0),speed=state.speedKmh??(state.v??0)*3.6,values={always:1,doorClosed:!state.doors,speedKmh:speed,mainReservoirKpa:reservoir-this.bc*.08,brakeCylinderKpa:this.bc,brakeStraightAirPipeKpa:this.sap,brakePipeKpa:this.bp,absoluteMotorCurrent:state.notch>0?state.notch*40:0,motorCurrent:state.notch*35,brakeIndex:bIndex,powerIndex:Math.max(0,state.notch),hour:seconds/3600%12,minute:seconds/60%60,second:seconds%60,controlVoltage:100,lineVoltage:1500};ctx.save();ctx.scale(1600/this.crop.width,900/this.crop.height);ctx.translate(-this.crop.x,-this.crop.y);
   for(const e of this.recipe.panel.elements){if(!this.supported(e))continue;const ref=inTunnel&&e.nightImage?e.nightImage:e.image,image=ref&&this.images.get(this.key(ref));if(!image)continue;const semantic=this.semantic(e),value=values[semantic],loc=e.location??[0,0];if(e.type==='needle'){
     let angle;if(semantic==='speedGaugeAngleEncoded')angle=calibratedSpeedAngle(this.recipe.panel.speedGaugeCalibration.angleKnots,speed);else if(Number.isFinite(value))angle=localNeedleAngle(e,value);else continue;
     ctx.save();ctx.translate(...loc);ctx.rotate(angle*Math.PI/180);const factor=e.radius/(e.origin?.[1]||1);ctx.scale(factor,factor);ctx.drawImage(image.surface,-e.origin[0],-e.origin[1],image.width,image.height);ctx.restore();
