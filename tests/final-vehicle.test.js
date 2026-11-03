@@ -1,11 +1,33 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {readFile} from 'node:fs/promises';
+import {readFile,stat} from 'node:fs/promises';
 import {zipSync,strToU8} from '../dist/assets/vendor/fflate.module.js';
 import {LocalTrainPack,crc32,interpolateColumn} from '../dist/final-vehicle.js';
-import {PANEL_CROPS,localNeedlePoint,localNeedleAngle,calibratedSpeedAngle,panelTransparentColor} from '../dist/final-panel.js';
+import {LocalCabPanel,PANEL_CROPS,localNeedlePoint,localNeedleAngle,calibratedSpeedAngle,panelTransparentColor} from '../dist/final-panel.js';
 import {LocalTrainAudio} from '../dist/final-audio.js';
 const catalog=JSON.parse(await readFile(new URL('../dist/assets/final/vehicle-recipes.json',import.meta.url),'utf8'));
+test('サイトの運転開始に必要な4車両の画像と音源がすべて同梱される',async()=>{
+ const root=new URL('../dist/assets/final/vehicles/',import.meta.url);
+ const {trains}=JSON.parse(await readFile(new URL('manifest.json',root),'utf8'));
+ for(const recipe of catalog.trains){
+  const panel=Object.assign(Object.create(LocalCabPanel.prototype),{recipe});
+  const audio=Object.assign(Object.create(LocalTrainAudio.prototype),{recipe});
+  const images=recipe.panel.elements.filter(element=>panel.supported(element))
+   .flatMap(element=>[element.image,element.nightImage]).filter(Boolean);
+  assert.ok(images.length>0);
+  for(const cue of ['open','close','hornPrimary'])assert.ok(audio.effectRef(cue));
+  for(const surface of ['long','bridge','tunnel'])assert.ok(audio.runRef(surface));
+  for(const ref of [...images,...audio.assetRefs()]){
+   const asset=trains[recipe.id]?.[ref.entryIndex];
+   assert.ok(asset,`${recipe.id}: ${ref.entryName}`);
+   assert.ok((await stat(new URL(`${recipe.id}/${asset.file}`,root))).size>0);
+  }
+  for(const ref of images){
+   const asset=trains[recipe.id][ref.entryIndex];
+   assert.deepEqual([asset.width,asset.height],[ref.width,ref.height]);
+  }
+ }
+});
 function fixture(){const data=strToU8('train-sample-with-original-crc'),zip=zipSync({'panel.txt':data},{level:6}),d=new DataView(zip.buffer),ref={entryIndex:0,entryName:'panel.txt',rawNameBase64:btoa('panel.txt'),crc32:crc32(data),method:8,compressedSize:d.getUint32(18,true),size:data.length,localHeaderOffset:0};return {data,zip,ref,recipe:{archive:{size:zip.length,entryCount:1}},file:new Blob([zip])};}
 test('ローカルZIPから参照された1ファイルだけを復号しCRC・名前・サイズを照合する',async()=>{const f=fixture(),pack=await LocalTrainPack.open(f.file,f.recipe);assert.deepEqual(await pack.bytes(f.ref),f.data);await assert.rejects(pack.bytes({...f.ref,crc32:f.ref.crc32+1}),/一致/);await assert.rejects(pack.bytes({...f.ref,rawNameBase64:btoa('evil.txt')}),/一致/);await assert.rejects(LocalTrainPack.open(new Blob([f.zip.slice(1)]),f.recipe),/一致/);pack.dispose();await assert.rejects(pack.bytes(f.ref),/解除/);});
 test('ZIP本文の改変をCRCで拒否し、未参照の実行ファイルを読み込まない',async()=>{const f=fixture(),bad=f.zip.slice();bad[30+'panel.txt'.length+2]^=1;const pack=await LocalTrainPack.open(new Blob([bad]),f.recipe);await assert.rejects(pack.bytes(f.ref));const serialized=JSON.stringify(catalog.trains.flatMap(t=>[t.sounds,t.panel.elements.map(e=>[e.image,e.nightImage])])),refs=serialized.match(/entryName[^,]+/g);assert.ok(refs.length>100);assert.ok(!refs.some(r=>/\.(dll|exe)/i.test(r)));});

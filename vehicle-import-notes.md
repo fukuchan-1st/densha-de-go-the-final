@@ -1,6 +1,6 @@
-# 4車両のPC版内蔵データ
+# 4車両の内蔵データ
 
-PC版では、解凍済みのフォルダーを `python tools/install-vehicle-assets.py <trainフォルダー>` に渡してセットアップします。各素材を元の設定と照合して、アプリの `local-vehicles/` にコピーします。セットアップ後は「起動する.cmd」から開き、車両を選ぶと、運転画面を表示する前に計器と走行音を準備します。以下は元ZIPとの照合機能と車両描画の開発資料です。
+サイト版とPC版は `dist/assets/final/vehicles/` の素材を使います。再作成する場合は、`python tools/install-vehicle-assets.py <trainフォルダー>` で解凍済みの素材を照合して `local-vehicles/` に取り込み、`python tools/bundle-vehicle-assets.py` で、運転中に参照するパネルと音源をWebPとMP3に変換します。パネル上の針位置や計器の寸法は原寸の座標を使います。E235系のトンネルでは、長い録音と同じ車両データにある短いトンネル音を使います。以下は最初に車両を取り込んだときの開発資料です。
 
 `dist/assets/final/vehicle-recipes.json` は元データのバイナリを含まない数値設定とZIP参照です。元PNG/WAV/DLLはホスティングに入れていません。ブラウザーは利用者が選んだ元ZIPを手元で読みます。アップロードはしません。
 

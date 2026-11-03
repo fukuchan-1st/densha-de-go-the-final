@@ -3,11 +3,16 @@ import {inflateSync} from './assets/vendor/fflate.module.js';
 export async function loadVehicleRecipes(){const r=await fetch(new URL('./assets/final/vehicle-recipes.json',import.meta.url));if(!r.ok)throw Error('車両設定を読み込めません');return r.json();}
 
 class BundledTrainPack {
- constructor(id){this.root=new URL(`./local-vehicles/${id}/`,import.meta.url);}
- objectURL(ref){
-  const extension=ref.entryName.slice(ref.entryName.lastIndexOf('.')).toLowerCase();
-  return new URL(`${ref.entryIndex}${extension}`,this.root).href;
+ constructor(id,assets){
+  this.root=new URL(`./assets/final/vehicles/${id}/`,import.meta.url);
+  this.assets=assets;
  }
+ objectURL(ref){
+  const asset=this.assets[ref.entryIndex];
+  if(!asset)throw Error('アプリ内の車両素材が見つかりません');
+  return new URL(asset.file,this.root).href;
+ }
+ dimensions(ref){return this.assets[ref.entryIndex];}
  async bytes(ref){
   const response=await fetch(this.objectURL(ref));
   if(!response.ok)throw Error('アプリ内の音源を読み込めません');
@@ -16,12 +21,10 @@ class BundledTrainPack {
 }
 
 export async function loadBundledTrainPacks(){
- if(!['127.0.0.1','localhost','[::1]'].includes(location.hostname))return new Map();
- const response=await fetch(new URL('./local-vehicles/manifest.json',import.meta.url));
- if(response.status===404)return new Map();
+ const response=await fetch(new URL('./assets/final/vehicles/manifest.json?v=26',import.meta.url));
  if(!response.ok)throw Error('アプリ内の車両一覧を読み込めません');
  const {trains}=await response.json();
- return new Map(trains.map(id=>[id,new BundledTrainPack(id)]));
+ return new Map(Object.entries(trains).map(([id,assets])=>[id,new BundledTrainPack(id,assets)]));
 }
 const crcTable=Uint32Array.from({length:256},(_,n)=>{for(let i=0;i<8;i++)n=n&1?0xedb88320^(n>>>1):n>>>1;return n>>>0;});
 export function crc32(bytes){let n=0xffffffff;for(const b of bytes)n=crcTable[(n^b)&255]^(n>>>8);return (n^0xffffffff)>>>0;}
@@ -62,5 +65,5 @@ export class LocalTrainPack {
  dispose(){this.disposed=true;for(const url of this.urls.values())URL.revokeObjectURL(url);this.urls.clear();this.pending.clear();this.file=null;}
 }
 export function interpolateColumn(table,column,speed,defaultValue=0){const rows=table?.rows?.filter(r=>Number.isFinite(r[0])&&Number.isFinite(r[column+1]));if(!rows?.length)return defaultValue;if(speed<=rows[0][0])return rows[0][column+1];for(let i=1;i<rows.length;i++)if(speed<=rows[i][0]){const a=rows[i-1],b=rows[i];return a[column+1]+(b[column+1]-a[column+1])*(speed-a[0])/(b[0]-a[0]);}return rows.at(-1)[column+1];}
-export {LocalCabPanel} from './final-panel.js';
-export {LocalTrainAudio} from './final-audio.js';
+export {LocalCabPanel} from './final-panel.js?v=26';
+export {LocalTrainAudio} from './final-audio.js?v=26';
