@@ -12,3 +12,5 @@
 #hornButton,.extra-horn,#airHornButton{touch-action:none}
 
 #routeCards{top:184px;gap:12px}.route-card{height:94px}.route-card.yagan-card{background-size:100% 100%}#vehicleLimit.overspeed{color:#a30d24;font-weight:700}
+
+#trainSelection{position:absolute;inset:0;z-index:50;display:grid;place-items:center;background:#04191feb;animation:trainSlide .32s ease-out}.selection-card{width:1050px;padding:42px 56px;background:linear-gradient(135deg,#153e43,#071d28);border:2px solid #9dc1ae;border-radius:14px;box-shadow:0 15px 60px #0008}.selection-card>p{letter-spacing:6px;color:#a7c8b6}.selection-card h2{font-size:38px;color:#f3e293}.selection-card label{display:flex;flex-direction:column;gap:12px;margin:22px 0;font-size:23px}.selection-card select{font-size:23px;padding:14px;width:100%;min-height:60px}.selection-actions{display:flex;justify-content:space-between;margin-top:32px;gap:24px}.selection-actions button{font-size:24px;min-height:65px}@keyframes trainSlide{from{transform:translateX(100%);opacity:.2}to{transform:translateX(0);opacity:1}}@media(prefers-reduced-motion:reduce){#trainSelection{animation:none}}
