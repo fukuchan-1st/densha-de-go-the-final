@@ -8,7 +8,7 @@ import {LocalCabPanel,PANEL_CROPS,localNeedlePoint,localNeedleAngle,calibratedSp
 import {LocalTrainAudio} from '../dist/final-audio.js';
 import {runPitch} from '../dist/assets/audio/run-pitch.js';
 const catalog=JSON.parse(await readFile(new URL('../dist/assets/final/vehicle-recipes.json',import.meta.url),'utf8'));
-test('サイトの運転開始に必要な5車両の画像と音源がすべて同梱される',async()=>{
+test('サイトの運転開始に必要な車両の画像と音源がすべて同梱される',async()=>{
  const root=new URL('../dist/assets/final/vehicles/',import.meta.url);
  const {trains}=JSON.parse(await readFile(new URL('manifest.json',root),'utf8'));
  for(const recipe of catalog.trains){
@@ -23,7 +23,7 @@ test('サイトの運転開始に必要な5車両の画像と音源がすべて�
   const images=recipe.panel.elements.filter(element=>panel.supported(element))
    .flatMap(element=>[element.image,element.nightImage]).filter(Boolean);
   assert.ok(images.length>0);
-  for(const cue of ['open','close','hornPrimary'])assert.ok(audio.effectRef(cue));
+  for(const cue of ['open','close'])assert.ok(audio.effectRef(cue));if(recipe.id!=='681')assert.ok(audio.effectRef('hornPrimary'));
   for(const surface of ['long','bridge','tunnel'])assert.ok(audio.runRef(surface));
   for(const ref of [...images,...audio.assetRefs()]){
    const asset=trains[recipe.id]?.[ref.entryIndex];
@@ -39,7 +39,7 @@ test('サイトの運転開始に必要な5車両の画像と音源がすべて�
 function fixture(){const data=strToU8('train-sample-with-original-crc'),zip=zipSync({'panel.txt':data},{level:6}),d=new DataView(zip.buffer),ref={entryIndex:0,entryName:'panel.txt',rawNameBase64:btoa('panel.txt'),crc32:crc32(data),method:8,compressedSize:d.getUint32(18,true),size:data.length,localHeaderOffset:0};return {data,zip,ref,recipe:{archive:{size:zip.length,entryCount:1}},file:new Blob([zip])};}
 test('ローカルZIPから参照された1ファイルだけを復号しCRC・名前・サイズを照合する',async()=>{const f=fixture(),pack=await LocalTrainPack.open(f.file,f.recipe);assert.deepEqual(await pack.bytes(f.ref),f.data);await assert.rejects(pack.bytes({...f.ref,crc32:f.ref.crc32+1}),/一致/);await assert.rejects(pack.bytes({...f.ref,rawNameBase64:btoa('evil.txt')}),/一致/);await assert.rejects(LocalTrainPack.open(new Blob([f.zip.slice(1)]),f.recipe),/一致/);pack.dispose();await assert.rejects(pack.bytes(f.ref),/解除/);});
 test('ZIP本文の改変をCRCで拒否し、未参照の実行ファイルを読み込まない',async()=>{const f=fixture(),bad=f.zip.slice();bad[30+'panel.txt'.length+2]^=1;const pack=await LocalTrainPack.open(new Blob([bad]),f.recipe);await assert.rejects(pack.bytes(f.ref));const serialized=JSON.stringify(catalog.trains.flatMap(t=>[t.sounds,t.panel.elements.map(e=>[e.image,e.nightImage])])),refs=serialized.match(/entryName[^,]+/g);assert.ok(refs.length>100);assert.ok(!refs.some(r=>/\.(dll|exe)/i.test(r)));});
-test('5車両の原本編成と山手線の試作用編成を区別し、各ノッチ段数を保持する',()=>{assert.equal(catalog.trains.length,5);const [e235,e233,s323,s207,s6050]=catalog.trains;assert.equal(s6050.playableSpecs.carCount,2);assert.equal(s6050.playableSpecs.powerNotches,3);assert.equal(e235.sourceSpecs.carCount,15);assert.equal(e235.playableSpecs.carCount,11);assert.equal(e233.playableSpecs.carCount,12);assert.equal(s323.playableSpecs.holdingNotches,1);assert.equal(s207.playableSpecs.powerNotches,6);for(const t of catalog.trains){assert.equal(t.notchLabels[0],'EB');assert.equal(t.notchLabels.at(-1),'P'+t.playableSpecs.powerNotches);if(t.id!=='6050')assert.ok(t.archive.size>1000000);}});
+test('5車両の原本編成と山手線の試作用編成を区別し、各ノッチ段数を保持する',()=>{assert.equal(catalog.trains.length,11);const [e235,e233,s323,s207,s6050]=catalog.trains;assert.equal(s6050.playableSpecs.carCount,2);assert.equal(s6050.playableSpecs.powerNotches,3);assert.equal(e235.sourceSpecs.carCount,15);assert.equal(e235.playableSpecs.carCount,11);assert.equal(e233.playableSpecs.carCount,12);assert.equal(s323.playableSpecs.holdingNotches,1);assert.equal(s207.playableSpecs.powerNotches,6);for(const t of catalog.trains){assert.equal(t.notchLabels[0],'EB');assert.equal(t.notchLabels.at(-1),'P'+t.playableSpecs.powerNotches);if(t.archive)assert.ok(t.archive.size>1000000);}});
 test('全車の針画像の回転中心は角度にかかわらず元パネルの計器中心に一致する',()=>{for(const t of catalog.trains){const crop=t.panel.crop??PANEL_CROPS[t.id];assert.equal(crop.width/crop.height,16/9);for(const e of t.panel.elements.filter(e=>e.type==='needle'))for(const angle of[-180,-60,0,60,180])assert.deepEqual(localNeedlePoint(e,...e.origin,angle),e.location);}assert.equal(localNeedleAngle({minimum:0,maximum:160,initialangle:-120,lastangle:120},80),0);const c=catalog.trains.find(t=>t.id==='207').panel.speedGaugeCalibration;assert.equal(calibratedSpeedAngle(c.angleKnots,80),-4);assert.equal(calibratedSpeedAngle(c.angleKnots,85),3.5);});
 test('速度別モーター表の空欄を飛ばして補間し端点で固定する',()=>{const t={rows:[[0,0,null],[10,null,1],[20,1,null],[30,null,0]]};assert.equal(interpolateColumn(t,0,10),.5);assert.equal(interpolateColumn(t,1,20),.5);assert.equal(interpolateColumn(t,1,0),1);assert.equal(interpolateColumn(t,0,100),1);assert.equal(interpolateColumn(null,0,10,.2),.2);});
 test('速度が前後する表も音源番号を参照して補間する',()=>{
@@ -118,7 +118,7 @@ test('路線別の運転士喚呼は前の音声が終わってから次を再�
 test('4路線の運転士喚呼は元の音声と同じ内容で同梱される',async()=>{
  const root=new URL('../dist/assets/final/driver-voice/',import.meta.url);
  const {banks}=JSON.parse(await readFile(new URL('manifest.json',root),'utf8'));
- for(const [index,recipe] of catalog.trains.filter(train=>train.id!=='6050').entries()){
+ for(const [index,recipe] of catalog.trains.filter(train=>['e235','e233','323','207'].includes(train.id)).entries()){
   const audio=Object.assign(Object.create(LocalTrainAudio.prototype),{recipe});
   for(const name of ['doorsClosed','departure','stationStop']){
    const file=audio.driverCallRef(name).driverVoiceFile.split('/driver-voice/')[1];

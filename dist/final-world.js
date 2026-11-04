@@ -8,7 +8,7 @@ const clamp=T.MathUtils.clamp;
 // Original streamed scenery. Track coordinates come from the route JSON; buildings and platforms are approximate.
 export class FinalWorld {
  constructor(container,route,{quality='standard'}={}){
-  this.route=route;this.points=route.points;this.length=route.stations.at(-1).s;this.chunks=new Map();this.suspension=new CabSuspension();this.materials=new Map();this.rural=route.id==='yagan';
+  this.route=route;this.points=route.points;this.length=route.stations.at(-1).s;this.chunks=new Map();this.suspension=new CabSuspension();this.materials=new Map();this.rural=['yagan','shinonoi','oito','chuo-shinshu','chuo-kofu','chuo-system'].includes(route.id);
   this.scene=new T.Scene();this.scene.background=new T.Color('#a4c5db');this.scene.fog=new T.Fog('#b3c9d3',350,1600);
   this.renderer=new T.WebGLRenderer({antialias:quality!=='light',powerPreference:'high-performance'});this.renderer.setPixelRatio(Math.min(devicePixelRatio,quality==='light'?1:1.5));this.renderer.setSize(1600,900);this.renderer.outputColorSpace=T.SRGBColorSpace;container.replaceChildren(this.renderer.domElement);
   this.camera=new T.PerspectiveCamera(58,16/9,.15,1900);this.sky=new T.HemisphereLight('#e3f4ff','#79766b',2.1);this.scene.add(this.sky);this.sun=new T.DirectionalLight('#fff1d8',2.1);this.sun.position.set(-150,300,90);this.scene.add(this.sun);this.box=new T.BoxGeometry(1,1,1);this.quality=quality;this.panorama=false;this.viewOrigin=null;
