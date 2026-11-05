@@ -1,12 +1,12 @@
-import {serviceChoices,makeServiceRoute} from './train-selection.js?v=37';
+import {serviceChoices,makeServiceRoute} from './train-selection.js?v=39';
 import {GeneratedCab,generatedCab} from './generated-cab.js';
-import {FinalWorld} from './final-world.js?v=37';
-import {MenuArt} from './final-art.js?v=37';
-import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=37';
-import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,routeLimitAt,stopPosition,finishStop,takeDepartureCall} from './final-model.js?v=37';
-import {STATIONS as TOHOKU_STATIONS} from './route-data.js?v=37';
-import {FINAL_SCENARIOS,scenarioJourney} from './final-scenarios.js?v=37';
-import {correctStoppedOverrun,nextSignalCall} from './train-operations.js?v=37';
+import {FinalWorld} from './final-world.js?v=39';
+import {MenuArt} from './final-art.js?v=39';
+import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=39';
+import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,routeLimitAt,stopPosition,finishStop,takeDepartureCall} from './final-model.js?v=39';
+import {STATIONS as TOHOKU_STATIONS} from './route-data.js?v=39';
+import {FINAL_SCENARIOS,scenarioJourney} from './final-scenarios.js?v=39';
+import {correctStoppedOverrun,nextSignalCall} from './train-operations.js?v=39';
 import {bindHornButton} from './assets/audio/held-horn.js';
 
 const TOHOKU_TRAIN={id:'701',name:'701系1500番台',playableSpecs:{carCount:2}};
@@ -181,7 +181,7 @@ async function start(startIndex){
  try{
   if(meta.legacy){
    await playMenuSound('confirm',{waitForEnd:true});
-   location.href=`./tohoku.html?v=37&drive=1&station=${startIndex??freeStart}${generatedCab?'&cab=generated':''}`;
+   location.href=`./tohoku.html?v=39&drive=1&station=${startIndex??freeStart}${generatedCab?'&cab=generated':''}`;
    return;
   }
   if(mode==='menu')playMenuSound('confirm');
@@ -306,7 +306,7 @@ requestAnimationFrame(frame);
 try {
  const routeLoads=META.map(async meta=>{
   if(meta.legacy)return {id:meta.id,stations:TOHOKU_STATIONS};
-  const response=await fetch(`./assets/final/${meta.id}-route.json?v=37`);
+  const response=await fetch(`./assets/final/${meta.id}-route.json?v=39`);
   if(!response.ok)throw Error('路線データを読み込めません');
   return response.json();
  });
@@ -316,7 +316,7 @@ try {
  $('compactRoute').innerHTML=META.map((m,i)=>`<option value="${i}">${m.name} · ${m.train}</option>`).join('');
  $('compactRoute').onchange=event=>{choose(Number(event.target.value));openTrainSelection();};
  const additions=await Promise.all(['chuo-extended','shinonoi-extended','chuo-kofu','chuo-shinshu','shinonoi','oito'].map(async id=>{
- const response=await fetch('./assets/final/'+id+'-route.json?v=37');
+ const response=await fetch('./assets/final/'+id+'-route.json?v=39');
  if(response.ok)extraRoutes.set(id,await response.json());
 }));
  setupTrainSelection();

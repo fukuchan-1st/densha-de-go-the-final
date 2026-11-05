@@ -1,6 +1,7 @@
-import {prepareTurnoutLayout} from './turnout-layout.js?v=37';
-import {addTurnouts} from './turnout-scene.js?v=37';
-import {OpposingTrains} from './opposing-trains.js?v=37';
+import {sampleRouteCurve} from './route-curve.js?v=39';
+import {prepareTurnoutLayout} from './turnout-layout.js?v=39';
+import {addTurnouts} from './turnout-scene.js?v=39';
+import {OpposingTrains} from './opposing-trains.js?v=39';
 import * as T from './assets/vendor/three.module.js';
 import {CabSuspension} from './cab-motion.js?v=24';
 import {addTrackSignal} from './track-signal.js?v=32';
@@ -35,7 +36,7 @@ export class FinalWorld {
   }
  }
  mat(color){if(!this.materials.has(color)){const material=new T.MeshStandardMaterial({color,roughness:.85});if(['#b7b5aa','#b1b7b5'].includes(color)){const canvas=document.createElement('canvas');canvas.width=128;canvas.height=256;const c=canvas.getContext('2d');c.fillStyle='#c4c6c1';c.fillRect(0,0,128,256);for(let y=12;y<250;y+=29)for(let x=9;x<125;x+=24){c.fillStyle=(x+y)%3?'#496570':'#6b7f83';c.fillRect(x,y,13,15);c.fillStyle='#dce1d8';c.fillRect(x+6,y,1,15);c.fillRect(x,y+7,13,1);}material.map=new T.CanvasTexture(canvas);material.map.colorSpace=T.SRGBColorSpace;}this.materials.set(color,material);}return this.materials.get(color);}
- point(s){const p=this.points;let lo=0,hi=p.length-1;if(s<=p[0][0])hi=1;else if(s>=p[hi][0])lo=hi-1;else while(hi-lo>1){const m=(lo+hi)>>1;if(p[m][0]<=s)lo=m;else hi=m;}const a=p[lo],b=p[hi],t=(s-a[0])/Math.max(.001,b[0]-a[0]);return new T.Vector3(a[1]+(b[1]-a[1])*t,(a[3]??0)+((b[3]??0)-(a[3]??0))*t,-a[2]-(b[2]-a[2])*t);}
+ point(s){const [x,z,y]=sampleRouteCurve(this.points,s);return new T.Vector3(x,y,-z);}
  frame(s,offset=0){const p=this.point(s),dir=this.point(s+3).sub(this.point(s-3)).normalize(),right=new T.Vector3(-dir.z,0,dir.x).normalize();p.addScaledVector(right,offset);return {p,dir,right,angle:Math.atan2(-dir.x,-dir.z)};}
  driveOffset(s){return this.route.drivingTrack?interpolateKnots(this.route.drivingTrack,s):0;}
  deckHeight(s){return this.route.elevatedTrack?interpolateKnots(this.route.elevatedTrack,s):0;}
@@ -170,7 +171,7 @@ export class FinalWorld {
    const {start:a,end:b,offset,height=0,heightKnots}=rail;
    const level=s=>this.deckHeight(s)+(heightKnots?.length?interpolateKnots(heightKnots,s):height);
    this.ribbon(group,a,b,offset,3.15,s=>level(s)+.02,'#74746b');
-   for(const dx of[-.5335,.5335])this.ribbon(group,a,b,s=>offset(s)+dx,.07,s=>level(s)+.19,'#b7c3c3');
+   for(const dx of[-.5335,.5335])this.ribbon(group,a,b,s=>offset(s)+dx,.07,s=>level(s)+.19,'#b7c3c3',2);
    for(let s=Math.ceil(a/1.1)*1.1;s<b;s+=1.1)ties.push({s,x:offset(s),y:level(s)+.06,w:2.05,h:.1,d:.18});
    if(height>0){
     for(let s=a;s<b;s+=10){
