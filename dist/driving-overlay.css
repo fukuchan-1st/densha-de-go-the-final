@@ -1,0 +1,75 @@
+/* All driving controls share the 1600 × 900 scene, with no external dock. */
+body[data-mode=drive] #stageArea{inset:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);width:auto;height:auto;position:absolute;margin:0}
+body[data-mode=drive]{--dock-height:0px}
+#driveControls,#controlDeck{display:none!important}
+.driving-overlay{position:absolute;inset:0;z-index:8;pointer-events:none;font:20px Arial,'Yu Gothic',Meiryo,sans-serif;color:#e8f1e9}
+.overlay-controller{position:absolute;left:335px;right:335px;bottom:70px;pointer-events:auto}
+.overlay-guidance{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;background:#071f28d9;border:1px solid #8eb6aa70;border-radius:9px;padding:10px 20px;min-height:78px;justify-content:center;text-align:center;pointer-events:none;box-shadow:0 3px 14px #0005}
+.overlay-guidance>small{font-size:15px;letter-spacing:3px;color:#a9c7b9}
+#eventText.overlay-instruction,.overlay-instruction{position:static;display:block;left:auto;right:auto;bottom:auto;min-height:26px;padding:0;background:none;text-align:center;font-size:22px;line-height:1.4;font-weight:500;color:#fff3bb;text-shadow:0 1px 3px #000}
+.overlay-slider-panel{background:#071f28e8;border:1px solid #9fc5b58c;border-radius:10px;padding:13px 22px 15px;box-shadow:0 4px 18px #0006}
+.overlay-slider-heading{display:flex;align-items:center;justify-content:space-between;font-size:18px;color:#bdd5c8;height:32px}
+.overlay-slider-heading output{font-size:30px;font-weight:700;color:#ffe89a;font-variant-numeric:tabular-nums;min-width:90px;text-align:center}
+#notchSlider{display:block;width:100%;height:54px;margin:5px 0 0;padding:0;border:0;background:transparent;cursor:ew-resize;touch-action:none;appearance:none;-webkit-appearance:none}
+#notchSlider::-webkit-slider-runnable-track{height:11px;border-radius:7px;background:linear-gradient(90deg,#ba6666 0%,#b79674 var(--neutral-position),#78b58f var(--neutral-position),#79bf99 100%);border:1px solid #c9dfc5;box-shadow:0 1px 4px #0009}
+#notchSlider::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:38px;height:49px;border:2px solid #e0edd8;border-radius:8px;background:linear-gradient(90deg,#476464,#abc2ae 47%,#e0e9ca 50%,#abc2ae 53%,#476464);margin-top:-20px;box-shadow:0 3px 7px #0009}
+#notchSlider::-moz-range-track{height:11px;border-radius:7px;background:linear-gradient(90deg,#ba6666,#b79674 var(--neutral-position),#78b58f var(--neutral-position),#79bf99);border:1px solid #c9dfc5}
+#notchSlider::-moz-range-thumb{width:34px;height:45px;border:2px solid #e0edd8;border-radius:8px;background:#a9c0ad}
+#notchSlider:focus-visible{outline:3px solid #ffe38d;outline-offset:5px;border-radius:8px}#notchSlider:disabled{opacity:.55;cursor:default}
+.overlay-notch-labels{display:flex;justify-content:space-between;color:#b7cec3;font-size:15px;line-height:1.4;user-select:none;padding:0 8px;pointer-events:none}
+.overlay-notch-labels span{width:0;text-align:center;white-space:nowrap}
+.overlay-actions{position:absolute;right:42px;top:230px;display:flex;flex-direction:column;gap:9px;pointer-events:auto}
+.overlay-actions button{font-size:18px;min-width:130px;min-height:48px;padding:10px 16px;border:1px solid #91b5a8;border-radius:7px;background:#0a2b32d9;color:#e3efe3;box-shadow:0 3px 7px #0004}
+.overlay-actions small{display:none}
+#extras,#controlExtras{position:absolute;z-index:30;right:42px;top:230px;bottom:auto;width:430px;padding:18px;background:#0a2633f5;border:1px solid #9cc2ae;border-radius:10px;pointer-events:auto}
+#extras{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+#extras button,#controlExtras button{font-size:22px;min-height:60px}
+#controlExtras .extras-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+#controlExtras #closeControls{margin-top:12px;width:100%}
+.overlay-speed{position:absolute;left:45px;bottom:70px;width:255px;min-height:150px;padding:14px 20px;background:#c8d8cce8;color:#123037;border:2px solid #e0ebd5;border-radius:10px}
+.overlay-speed>small{display:block;font-size:17px}.overlay-speed strong{font-size:70px;line-height:1.1}.overlay-speed>span{font-size:20px;margin-left:10px}.overlay-speed p{font-size:16px;margin:7px 0 0}
+.overlay-state{position:absolute;right:45px;bottom:70px;display:flex;align-items:center;gap:18px;padding:10px 18px;background:#153c3ee6;border:2px solid #aac5b0;border-radius:7px}
+.overlay-state b{font-size:46px;color:#ffe38a;min-width:80px;text-align:center}.overlay-state span{font-size:21px}.overlay-state i{width:20px;height:20px;border-radius:50%;background:#463b1b;border:2px solid #a79c65}.overlay-state i.lit{background:#ffe673;box-shadow:0 0 16px #ffe673}
+
+.hud-speed,.hud-notch{bottom:70px}
+#bveReadout{display:none!important}
+.driving-overlay{--overlay-ui-scale:1}
+@media(any-pointer:coarse){
+ .driving-overlay{--overlay-ui-scale:inherit}
+ .overlay-slider-heading{height:calc(32px * var(--overlay-ui-scale));font-size:calc(18px * var(--overlay-ui-scale))}
+ .overlay-slider-heading output{font-size:calc(30px * var(--overlay-ui-scale))}
+ .overlay-slider-heading>span{font-size:calc(14px * var(--overlay-ui-scale))}
+ #notchSlider{height:calc(58px * var(--overlay-ui-scale))}
+ #notchSlider::-webkit-slider-thumb{width:calc(54px * var(--overlay-ui-scale));height:calc(54px * var(--overlay-ui-scale));margin-top:calc(5px - 27px * var(--overlay-ui-scale))}
+ #notchSlider::-moz-range-thumb{width:calc(50px * var(--overlay-ui-scale));height:calc(50px * var(--overlay-ui-scale))}
+ .overlay-notch-labels{font-size:calc(15px * min(var(--overlay-ui-scale),1.6))}
+ .overlay-guidance>small{font-size:calc(15px * var(--overlay-ui-scale))}
+ #eventText.overlay-instruction,.overlay-instruction{font-size:calc(22px * min(var(--overlay-ui-scale),2.1))}
+ .overlay-actions button{min-height:calc(54px * var(--overlay-ui-scale));font-size:calc(18px * var(--overlay-ui-scale));min-width:calc(100px * var(--overlay-ui-scale))}
+}
+
+/* The vertical controller sits directly above the current notch and door lamp. */
+.overlay-controller{left:auto;right:45px;bottom:180px;width:210px}
+.overlay-guidance{width:330px;margin-left:-120px;min-height:80px;padding:10px 14px}
+.overlay-slider-panel{padding:12px 18px 14px}
+.overlay-slider-heading{justify-content:center;height:28px;font-size:18px}
+.overlay-slider-heading output,.overlay-slider-heading>span{display:none}
+.overlay-slider-body{position:relative;height:300px;width:100%}
+#notchSlider{position:absolute;left:42px;top:50%;width:280px;height:54px;margin:0;transform:translate(-50%,-50%) rotate(90deg);cursor:ns-resize}
+.overlay-notch-labels{position:absolute;left:93px;right:0;top:10px;bottom:10px;padding:0;flex-direction:column;justify-content:space-between;font-size:16px}
+.overlay-notch-labels span{width:auto;height:0;line-height:0;text-align:left}
+.overlay-actions{left:600px;right:350px;top:32px;flex-direction:row;justify-content:center}
+.overlay-actions button{min-width:130px}
+@media(any-pointer:coarse){
+ .overlay-slider-heading{height:calc(28px * min(var(--overlay-ui-scale),1.6));font-size:calc(18px * min(var(--overlay-ui-scale),1.8))}
+ .overlay-slider-body{height:330px}
+ #notchSlider{width:310px;height:calc(58px * var(--overlay-ui-scale));left:60px}
+ .overlay-notch-labels{left:130px;font-size:calc(16px * min(var(--overlay-ui-scale),1.6))}
+ .overlay-notch-labels span:not(:first-child):not(:last-child){visibility:hidden}
+ .overlay-guidance>small{font-size:calc(15px * min(var(--overlay-ui-scale),1.6))}
+ #eventText.overlay-instruction,.overlay-instruction{font-size:calc(22px * min(var(--overlay-ui-scale),1.6))}
+ .overlay-actions{left:450px;right:355px;top:220px}
+ .overlay-actions button{min-width:0;flex:1;padding:8px;font-size:calc(18px * min(var(--overlay-ui-scale),1.8))}
+}
+
+#stopGauge{z-index:12}
