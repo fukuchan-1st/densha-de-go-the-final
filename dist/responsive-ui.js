@@ -1,4 +1,4 @@
-import {mountDrivingOverlay} from './driving-overlay.js?v=41';
+import {mountDrivingOverlay} from './driving-overlay.js?v=49';
 import {NOTCH_LABELS,NOTCH_MIN} from './physics.js?v=23';
 import {bindHornButton} from './assets/audio/held-horn.js';
 import {responsiveLayout} from './responsive-layout.js?v=41';

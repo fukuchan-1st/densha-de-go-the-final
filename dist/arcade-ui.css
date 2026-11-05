@@ -1,0 +1,446 @@
+/* ==========================================================================
+   ARCADE UI — 業務用運転ゲーム風の見た目 (メニュー / HUD)
+   運転台 (#cab canvas) には手を加えず、その上に乗る表示だけを差し替えます。
+   final-ui.css / driving-overlay.css の後に読み込んでください。
+   ========================================================================== */
+:root{
+ --ax-ink:#05070c;
+ --ax-plate:linear-gradient(180deg,#1b2230f2 0%,#0a0e16f5 48%,#03050af7 52%,#0b111bf2 100%);
+ --ax-plate-flat:#05080ee8;
+ --ax-line:#d9e2f0;
+ --ax-dim:#8d9ab0;
+ --ax-yellow:#ffd21f;
+ --ax-orange:#ff8a12;
+ --ax-red:#ff3b30;
+ --ax-blue1:#0b3fa8;
+ --ax-blue2:#1d7cf2;
+ --ax-blue3:#7cc6ff;
+ --ax-green:#39e07a;
+ --ax-font:'Arial Black','Yu Gothic UI','Yu Gothic','Hiragino Kaku Gothic ProN',Meiryo,sans-serif;
+ --ax-num:'Arial Black',Impact,'Arial Narrow',sans-serif;
+ --ax-cut:18px;
+}
+
+/* ---------- 共通: ボタン / キー表示 ---------- */
+#menuControls button,#extras button,#controlExtras button,.selection-actions button,dialog .dialog-buttons button{
+ font-family:var(--ax-font);font-weight:700;letter-spacing:1px;color:#fff;
+ background:linear-gradient(180deg,#2a3446 0%,#121824 50%,#070a11 51%,#151c2a 100%);
+ border:2px solid #9aa8bd;border-radius:3px;box-shadow:inset 0 1px #ffffff40,0 3px 0 #000a;
+ clip-path:polygon(10px 0,100% 0,calc(100% - 10px) 100%,0 100%);padding-inline:26px;
+}
+#menuControls button:hover,#extras button:hover,.selection-actions button:hover{filter:none;background:linear-gradient(180deg,#3d8cff 0%,#1655c9 50%,#0b3a99 51%,#1d63d8 100%);border-color:#d6ecff}
+#menuControls .start-button,.start-button{
+ color:#111;background:linear-gradient(180deg,#fff27a 0%,#ffd21f 50%,#f2b600 51%,#ffdc3d 100%);border-color:#fff7c2;text-shadow:0 1px #fff8;
+}
+#menuControls .start-button:hover,.start-button:hover{background:linear-gradient(180deg,#fff9b8,#ffe04d 50%,#ffc61a 51%,#ffe566)}
+kbd{background:linear-gradient(#f4f6fa,#b9c1cf);color:#0a0e16;border-radius:3px;box-shadow:0 2px 0 #000b;font-family:var(--ax-num);font-weight:900}
+
+/* ======================= メニュー画面 ======================= */
+#menuScreen{background:#04070c}
+#menuArtwork{filter:saturate(.85) contrast(1.08) brightness(.82)}
+.menu-vignette{
+ background:
+  repeating-linear-gradient(0deg,#0000 0 3px,#00000024 3px 4px),
+  linear-gradient(90deg,#000a 0%,#0004 30%,#0000 46%,#000b 64%,#000d 100%),
+  linear-gradient(0deg,#000e 0%,#0000 32%,#0000 78%,#000c 100%);
+}
+/* 上部の帯 */
+#menuScreen:before{
+ content:'';position:absolute;left:0;right:0;top:0;height:46px;z-index:1;
+ background:linear-gradient(180deg,#1d2636,#05070c);border-bottom:2px solid var(--ax-yellow);box-shadow:0 4px 18px #000a;
+}
+#menuScreen:after{
+ content:'SELECT LINE  ／  路線選択';position:absolute;left:0;top:0;height:46px;z-index:2;
+ padding:0 64px 0 28px;display:flex;align-items:center;
+ font:900 20px/1 var(--ax-font);letter-spacing:4px;color:#05070c;
+ background:var(--ax-yellow);clip-path:polygon(0 0,100% 0,calc(100% - 26px) 100%,0 100%);
+}
+.menu-title{left:70px;top:92px;z-index:2}
+.menu-title:before{display:none}
+.menu-title>span{display:inline-block;font:900 15px/1 var(--ax-font);letter-spacing:8px;color:var(--ax-yellow);border-left:6px solid var(--ax-yellow);padding-left:12px}
+.menu-title h1{
+ font:900 98px/1 var(--ax-font);letter-spacing:6px;margin:16px 0 6px;color:#fff;font-style:italic;
+ text-shadow:0 0 0 #fff,4px 4px 0 #0b3fa8,8px 8px 0 #000c;
+ -webkit-text-stroke:1px #ffffff55;
+}
+.menu-title p{font:italic 900 26px/1.2 var(--ax-num);color:#dfe8f6;letter-spacing:2px;margin:0 0 0 6px}
+.menu-title i{font:700 12px/1 var(--ax-font);letter-spacing:7px;color:var(--ax-dim);margin-top:12px}
+.menu-guide{z-index:3;top:9px;right:28px;margin:0;color:#fff;font:700 16px/28px var(--ax-font);letter-spacing:1px}
+.menu-guide kbd{font-size:14px;padding:2px 9px;margin:0 2px}
+
+/* 列車キャプション */
+.train-caption{left:70px;bottom:110px;z-index:2;text-shadow:none}
+.train-caption>span:first-child{
+ display:inline-block;font:900 16px/1 var(--ax-font);letter-spacing:6px;color:#05070c;background:var(--accent);
+ padding:7px 30px 7px 12px;clip-path:polygon(0 0,100% 0,calc(100% - 14px) 100%,0 100%);
+}
+.train-caption strong{font:italic 900 104px/1.05 var(--ax-num);letter-spacing:-2px;color:#fff;margin-top:6px;text-shadow:5px 5px 0 #000b}
+.train-caption strong span{font:900 34px var(--ax-font);color:var(--ax-yellow);font-style:normal;margin-left:8px}
+.train-caption p{font:700 22px/1 var(--ax-font);color:#e8eef8;margin:6px 0 16px;text-shadow:2px 2px #000}
+.local-badge{font:700 13px/1 var(--ax-font);background:#000b;border:1px solid #fff5;border-radius:0;padding:7px 12px;color:var(--ax-dim)}
+.local-badge.imported{color:var(--ax-green);border-color:var(--ax-green)}
+.local-badge.imported:before{content:'●  ';font-size:10px}
+
+/* 路線カード */
+#routeCards{left:740px;right:20px;top:120px;gap:10px;z-index:2;counter-reset:card}
+.route-card{
+ counter-increment:card;height:96px;padding:0 70px 0 0;
+ grid-template-columns:calc(24% + 8px) 1fr 60px;
+ border:0;border-radius:0;
+ background:linear-gradient(90deg,#0000 0 24%,#030509 24%),var(--card-image) center / 100% 186% no-repeat,#000;
+ clip-path:polygon(26px 0,100% 0,100% 100%,0 100%);
+ box-shadow:none;transform:translateX(calc(var(--i)*-16px + 20px));
+ transition:transform .18s cubic-bezier(.2,.9,.3,1.2),filter .18s;
+ filter:brightness(.62) saturate(.7);
+}
+.route-card.yagan-card{background:linear-gradient(90deg,#0000 0 24%,#030509 24%),var(--card-image) center / 100% 100% no-repeat,#000}
+/* 白い縁取り + 光沢 (擬似要素は既存の矢印を置き換える) */
+.route-card:before{
+ content:'';opacity:1;position:absolute;inset:0;left:0;top:0;font-size:0;text-shadow:none;
+ background:
+  linear-gradient(180deg,#ffffff22 0,#ffffff08 48%,#0000 52%),
+  linear-gradient(90deg,#0000 0 24%,var(--route-color) 24% calc(24% + 8px),#0000 calc(24% + 8px));
+ border-top:2px solid #ffffff40;border-bottom:2px solid #0008;pointer-events:none;
+}
+.route-card:after{
+ content:counter(card,decimal-leading-zero);opacity:1;left:auto;right:16px;top:50%;transform:translateY(-50%);
+ font:italic 900 30px/1 var(--ax-num);color:#ffffff30;text-shadow:none;
+}
+.route-copy{padding-left:24px;text-shadow:2px 2px 0 #000}
+.route-copy strong{font:900 34px/1.1 var(--ax-font);color:#fff;letter-spacing:2px}
+.route-copy small{font:900 12px/1 var(--ax-font);letter-spacing:4px;margin-top:6px}
+.route-copy em{font:700 14px/1 var(--ax-font);color:#c6cfdc;margin-top:8px}
+.route-card .sun{font-size:30px;color:#ffe9a3}
+.route-card:hover{filter:brightness(.85) saturate(.9)}
+.route-card.active{
+ filter:none;transform:translateX(calc(var(--i)*-16px - 10px));
+ background:linear-gradient(90deg,#0000 0 24%,#0b47b8 24%,#1560dc 70%,#0b47b8),var(--card-image) center / 100% 186% no-repeat,#000;
+}
+.route-card.active.yagan-card{background:linear-gradient(90deg,#0000 0 24%,#0b47b8 24%,#1560dc 70%,#0b47b8),var(--card-image) center / 100% 100% no-repeat,#000}
+.route-card.active:before{
+ background:
+  linear-gradient(180deg,#ffffff55 0,#ffffff14 48%,#00000030 52%,#0000),
+  linear-gradient(90deg,#0000 0 24%,var(--route-color) 24% calc(24% + 8px),#0000 calc(24% + 8px)),
+  linear-gradient(105deg,#0000 30%,#ffffff40 45%,#0000 60%) -400px 0 / 400px 100% no-repeat;
+ border-top-color:#fff;border-bottom-color:#fff8;
+ animation:axSweep 2.4s ease-in-out infinite;
+}
+.route-card.active:after{content:'◀';color:var(--ax-yellow);font-style:normal;font-size:30px;right:20px;animation:axBlink .8s steps(2,start) infinite}
+.route-card.active .route-copy strong{color:var(--ax-yellow)}
+.route-card.active .route-copy small{color:#fff}
+.route-card.active .route-copy em{color:#dbe8ff}
+@keyframes axSweep{0%,35%{background-position:0 0,0 0,-400px 0}100%{background-position:0 0,0 0,1300px 0}}
+@keyframes axBlink{to{visibility:hidden}}
+
+/* 下部情報帯 */
+.menu-bottom{
+ z-index:2;left:0;right:0;bottom:0;height:62px;padding:0 40px 0 70px;border:0;
+ background:linear-gradient(180deg,#141b28f2,#020409f7);border-top:2px solid #ffffff30;
+ font:700 19px/1 var(--ax-font);color:#fff;
+}
+.menu-bottom small{font:700 15px var(--ax-font);color:var(--ax-dim)}
+.menu-bottom .sun{color:var(--ax-yellow)}
+
+/* 下部コントロール */
+#menuControls{background:linear-gradient(180deg,#0f1520,#03050a);border-top:2px solid var(--ax-yellow);border-radius:0}
+#menuControls label{font:700 11px var(--ax-font);letter-spacing:2px;color:var(--ax-dim)}
+#menuControls select,.selection-card select,dialog select{
+ font-family:var(--ax-font);font-weight:700;color:#fff;background:#05080e;border:2px solid #7d8aa0;border-radius:0;
+}
+
+/* 列車選択 */
+#trainSelection{background:#000000e0}
+.selection-card{
+ background:linear-gradient(180deg,#141b28,#05070c);border:0;border-top:4px solid var(--ax-yellow);border-radius:0;
+ clip-path:polygon(0 0,calc(100% - 40px) 0,100% 40px,100% 100%,40px 100%,0 calc(100% - 40px));
+ box-shadow:none;
+}
+.selection-card>p{font:900 15px var(--ax-font);letter-spacing:8px;color:var(--ax-yellow)}
+.selection-card h2{font:italic 900 42px var(--ax-font);color:#fff}
+.selection-card>p#selectionNotes{font:500 14px/1.6 var(--ax-font);letter-spacing:0;color:#aab4c4}
+#departureOptions .start-button,#trainSelection .start-button{color:#111}
+.selection-card label{font:700 21px var(--ax-font);color:#dfe6f2}
+
+/* ダイアログ */
+dialog{background:linear-gradient(180deg,#141b28,#05070c);border:0;border-top:4px solid var(--ax-yellow);border-radius:0;color:#e6ecf5}
+dialog h2{font:italic 900 30px var(--ax-font);color:#fff}
+.eyebrow{color:var(--ax-yellow)!important}
+.pack-status b{color:var(--ax-yellow)}
+
+/* ======================= 運転画面 HUD ======================= */
+/* 路線名プレート */
+.hud-route{
+ left:0;top:26px;padding:10px 40px 10px 42px;gap:16px;border:0;border-radius:0;box-shadow:none;
+ background:var(--ax-plate);clip-path:polygon(0 0,100% 0,calc(100% - 24px) 100%,0 100%);
+ border-left:10px solid var(--accent);
+}
+.hud-route b{font:900 30px/1 var(--ax-font);color:#fff;letter-spacing:2px;text-shadow:2px 2px 0 #000}
+.hud-route span{font:900 18px/1 var(--ax-font);color:#05070c;background:var(--ax-yellow);padding:6px 14px;letter-spacing:3px}
+
+/* 時刻 */
+.hud-time{left:0;top:94px;padding:8px 34px 10px 42px;text-shadow:none;color:#fff;background:#000c;clip-path:polygon(0 0,100% 0,calc(100% - 20px) 100%,0 100%)}
+.hud-time span{font:700 13px/1 var(--ax-font);letter-spacing:4px;color:var(--ax-yellow)}
+.hud-time strong{font:italic 900 40px/1.1 var(--ax-num);letter-spacing:1px}
+.hud-time small{font:700 16px/1 var(--ax-font);color:#c4cddb;margin-top:4px}
+
+/* 次の停車駅 */
+.hud-next{
+ right:0;top:26px;min-width:380px;padding:10px 46px 14px 54px;border:0;border-radius:0;box-shadow:none;
+ background:var(--ax-plate);clip-path:polygon(24px 0,100% 0,100% 100%,0 100%);
+ border-bottom:4px solid var(--ax-yellow);
+}
+.hud-next small{display:inline-block;font:900 17px/1 var(--ax-font);letter-spacing:3px;color:#05070c;background:var(--ax-yellow);padding:5px 12px}
+.hud-next strong{font:900 64px/1.15 var(--ax-font);letter-spacing:8px;color:#fff;text-shadow:3px 3px 0 #000;margin-top:4px}
+.hud-next div{font:italic 900 36px/1 var(--ax-num);color:var(--ax-yellow);text-shadow:2px 2px 0 #000;letter-spacing:1px}
+
+/* 速度計 */
+.hud-speed{
+ left:0;bottom:70px;width:300px;min-height:0;padding:12px 30px 14px 42px;color:#fff;border:0;border-radius:0;box-shadow:none;
+ background:var(--ax-plate);clip-path:polygon(0 0,calc(100% - 26px) 0,100% 100%,0 100%);border-left:10px solid var(--ax-blue2);
+}
+.hud-speed>span{font:900 13px/1 var(--ax-font);letter-spacing:5px;color:var(--ax-blue3)}
+.hud-speed strong{display:inline-block;min-width:150px;text-align:right;font:italic 900 92px/1 var(--ax-num);letter-spacing:-2px;color:#fff;text-shadow:3px 3px 0 #000,0 0 18px #3fa0ff66}
+.hud-speed>small{font:italic 900 22px var(--ax-num);color:var(--ax-yellow);margin-left:8px}
+#speedBar{
+ height:12px;margin-top:8px;
+ background:
+  repeating-linear-gradient(90deg,#0000 0 9px,#000 9px 12px),
+  linear-gradient(90deg,var(--ax-green) 0,var(--ax-yellow) 70%,var(--ax-red) 100%) 0 0 / calc(var(--speed,0)*1%) 100% no-repeat,
+  #1d2430;
+}
+.hud-speed p{font:700 14px/1 var(--ax-font);color:#c4cddb;margin:10px 0 0}
+#vehicleLimit.overspeed{color:#fff;background:var(--ax-red);display:inline-block;padding:4px 8px;animation:axBlink .5s steps(2,start) infinite}
+
+/* ノッチ / 戸閉灯 */
+.hud-notch{
+ right:0;bottom:70px;gap:14px;padding:10px 40px 10px 46px;border:0;border-radius:0;
+ background:var(--ax-plate);clip-path:polygon(22px 0,100% 0,100% 100%,0 100%);border-right:10px solid var(--ax-yellow);
+}
+.hud-notch b{font:italic 900 58px/1 var(--ax-num);color:#fff;min-width:110px;text-shadow:3px 3px 0 #000}
+.hud-notch[data-kind=brake]{border-right-color:var(--ax-orange)}.hud-notch[data-kind=brake] b{color:var(--ax-orange)}
+.hud-notch[data-kind=power]{border-right-color:var(--ax-blue2)}.hud-notch[data-kind=power] b{color:var(--ax-blue3)}
+.hud-notch[data-kind=eb]{border-right-color:var(--ax-red)}.hud-notch[data-kind=eb] b{color:var(--ax-red);animation:axBlink .5s steps(2,start) infinite}
+.hud-notch span{font:900 19px/1 var(--ax-font);color:#dfe6f2;letter-spacing:2px}
+.hud-notch i{width:22px;height:22px;background:#2a2410;border:2px solid #6c6440}
+.hud-notch i.lit{background:var(--ax-yellow);border-color:#fff3b0;box-shadow:0 0 18px var(--ax-yellow)}
+
+/* 停止位置ゲージ */
+#stopGauge{width:40px;background:#000d;border-left:2px solid #fff4;color:#fff;font:700 10px var(--ax-font)}
+#stopGauge .stop-track{left:8px;right:6px;background:linear-gradient(#273042 0 35%,#1d7cf2 35% 65%,#273042 65%);border:1px solid #fff8}
+#stopGauge .target-line{background:var(--ax-yellow);box-shadow:0 0 8px var(--ax-yellow)}
+#stopDiamond{color:var(--ax-yellow);-webkit-text-stroke:1.5px #000}
+.stop-target{background:#000d;color:var(--ax-yellow);font:900 15px/1.1 var(--ax-num);border-radius:0;border-left:3px solid var(--ax-yellow)}
+
+/* 運転指示 */
+.overlay-guidance{
+ background:#000d;border:0;border-radius:0;box-shadow:none;border-left:6px solid var(--ax-yellow);
+ clip-path:polygon(0 0,100% 0,calc(100% - 16px) 100%,0 100%);text-align:left;padding:10px 26px 12px 18px;
+}
+.overlay-guidance>small{font:900 13px/1 var(--ax-font);letter-spacing:5px;color:var(--ax-yellow)}
+#eventText.overlay-instruction,.overlay-instruction{font:900 21px/1.4 var(--ax-font);color:#fff;text-align:left;text-shadow:2px 2px 0 #000}
+
+/* マスコン (縦型スライダー) */
+.overlay-slider-panel{background:#000c;border:0;border-radius:0;border-top:3px solid #ffffff55;box-shadow:none;clip-path:polygon(0 0,100% 0,100% calc(100% - 16px),calc(100% - 16px) 100%,0 100%)}
+.overlay-slider-heading{font:900 15px/1 var(--ax-font);letter-spacing:5px;color:var(--ax-yellow)}
+#notchSlider::-webkit-slider-runnable-track{height:12px;border-radius:0;border:1px solid #fff9;background:linear-gradient(90deg,var(--ax-red) 0%,var(--ax-orange) var(--neutral-position),#fff var(--neutral-position),var(--ax-blue2) calc(var(--neutral-position) + 1%),var(--ax-blue3) 100%)}
+#notchSlider::-webkit-slider-thumb{border-radius:3px;border:2px solid #fff;background:linear-gradient(90deg,#3a4152,#c9d1de 46%,#fff 50%,#c9d1de 54%,#3a4152)}
+#notchSlider::-moz-range-track{border-radius:0;background:linear-gradient(90deg,var(--ax-red),var(--ax-orange) var(--neutral-position),var(--ax-blue2) var(--neutral-position),var(--ax-blue3))}
+#notchSlider::-moz-range-thumb{border-radius:3px;background:#c9d1de;border:2px solid #fff}
+.overlay-notch-labels{font:700 16px var(--ax-font);color:#c4cddb}
+
+/* 警笛 / 一時停止 / その他 */
+.overlay-actions{gap:0}
+.overlay-actions button{
+ font:900 18px/1 var(--ax-font);letter-spacing:2px;color:#fff;border:0;border-radius:0;box-shadow:none;margin-left:-8px;
+ background:linear-gradient(180deg,#2a3446 0%,#121824 50%,#070a11 51%,#151c2a 100%);
+ clip-path:polygon(12px 0,100% 0,calc(100% - 12px) 100%,0 100%);border-bottom:3px solid #ffffff40;
+}
+.overlay-actions button:hover{filter:none;background:linear-gradient(180deg,#3d8cff,#1655c9 50%,#0b3a99 51%,#1d63d8)}
+#hornButton:active,#hornButton.active{background:linear-gradient(180deg,#fff27a,#ffd21f 50%,#f2b600 51%,#ffdc3d);color:#111}
+
+/* その他メニュー */
+#extras,#controlExtras{background:#05080ef5;border:0;border-top:4px solid var(--ax-yellow);border-radius:0}
+
+/* 出典 */
+.map-credit{left:42px;bottom:24px;font:700 11px var(--ax-font);color:#c4cddb;text-shadow:1px 1px #000}
+
+/* 狭い画面: 上帯の文字を縮める */
+@media(max-width:650px){#menuScreen:after{font-size:30px}}
+@media(prefers-reduced-motion:reduce){.route-card.active:before,.route-card.active:after,#vehicleLimit.overspeed,.hud-notch[data-kind=eb] b{animation:none}}
+
+/* ==========================================================================
+   tohoku.html (東北本線 701系) — 同じ見た目をこの画面の部品にも適用
+   運転台 (.cab / #cabCanvas) はそのまま。
+   ========================================================================== */
+/* ---- メニュー ---- */
+#menu .menu-shade{
+ background:
+  repeating-linear-gradient(0deg,#0000 0 3px,#00000022 3px 4px),
+  linear-gradient(90deg,#000e 0%,#000b 30%,#0000 62%),
+  linear-gradient(0deg,#000e,#0000 30%);
+}
+#menu:before{content:'';position:absolute;left:0;right:0;top:0;height:46px;z-index:1;background:linear-gradient(180deg,#1d2636,#05070c);border-bottom:2px solid var(--ax-yellow);box-shadow:0 4px 18px #000a}
+#menu:after{content:'DRIVE MENU  ／  運転メニュー';position:absolute;left:0;top:0;height:46px;z-index:2;padding:0 64px 0 28px;display:flex;align-items:center;font:900 20px/1 var(--ax-font);letter-spacing:4px;color:#05070c;background:var(--ax-yellow);clip-path:polygon(0 0,100% 0,calc(100% - 26px) 100%,0 100%)}
+#menu .menu-main{top:88px;left:70px}
+#menu .menu-main>.eyebrow{display:inline-block;font:900 13px/1 var(--ax-font);letter-spacing:6px;border-left:6px solid var(--ax-yellow);padding-left:12px}
+#menu h1{font:italic 900 100px/1 var(--ax-font);letter-spacing:6px;margin:16px 0 8px;color:#fff;text-shadow:4px 4px 0 #0b3fa8,8px 8px 0 #000c}
+#menu h2{font:900 40px/1.1 var(--ax-font);color:var(--ax-yellow);letter-spacing:6px;text-shadow:3px 3px 0 #000}
+#menu h2 span{color:#fff;font-weight:900}
+#menu .subtitle{font:700 14px var(--ax-font);color:#dfe6f2;letter-spacing:3px;margin:16px 0 22px}
+#menu nav{gap:6px;max-width:470px}
+#menu nav button{
+ position:relative;gap:18px;padding:15px 30px 15px 26px;font:900 18px/1 var(--ax-font);letter-spacing:2px;color:#fff;border:0;border-radius:0;box-shadow:none;
+ background:linear-gradient(180deg,#232c3cf0 0%,#0e131ef2 50%,#05080df5 51%,#121927f0 100%);
+ clip-path:polygon(0 0,100% 0,calc(100% - 18px) 100%,0 100%);border-top:1px solid #ffffff35;
+}
+#menu nav button b{font:900 18px var(--ax-num);color:#ffffff40}
+#menu nav button:hover,#menu nav button:focus-visible,#menu nav button.primary{
+ background:linear-gradient(180deg,var(--ax-blue2),var(--ax-blue1) 50%,#062a75 51%,#0d4fc4);border-top-color:#fff;outline:0;
+}
+#menu nav button:hover span,#menu nav button:focus-visible span,#menu nav button.primary span{color:var(--ax-yellow)}
+#menu nav button:hover b,#menu nav button:focus-visible b,#menu nav button.primary b{color:var(--ax-yellow);animation:axBlink .8s steps(2,start) infinite}
+#menu .scenario{
+ right:0;bottom:120px;min-width:420px;padding:22px 48px 22px 40px;border:0;border-radius:0;box-shadow:none;
+ background:var(--ax-plate);clip-path:polygon(26px 0,100% 0,100% 100%,0 100%);border-top:4px solid var(--ax-yellow);
+}
+#menu .scenario .eyebrow{font:900 12px var(--ax-font);letter-spacing:5px;margin:0}
+#menu .scenario h3{font:italic 900 40px/1.1 var(--ax-num);color:#fff;letter-spacing:0;margin:8px 0 10px;text-shadow:3px 3px 0 #000}
+#menu .scenario p{font:700 17px var(--ax-font);color:#fff}
+#menu .scenario span{color:var(--ax-dim);font:700 13px var(--ax-font)}
+#menu .scenario small{font:700 13px var(--ax-font);color:var(--ax-dim)}
+.start-selector{font:700 13px var(--ax-font);color:var(--ax-dim);letter-spacing:2px}
+.start-selector select,#mobileMenuPanel select{font-family:var(--ax-font);font-weight:700;color:#fff;background:#05080e;border:2px solid #7d8aa0;border-radius:0}
+#menu .menu-route{left:0;right:0;bottom:0;height:62px;padding:0 70px;background:linear-gradient(180deg,#141b28f2,#020409f7);border-top:2px solid #ffffff30;font:900 17px var(--ax-font);color:#fff}
+#menu .menu-route i{height:4px;background:repeating-linear-gradient(90deg,var(--ax-yellow) 0 14px,#0000 14px 20px)}
+#menu .menu-route span:before{width:12px;height:12px;border-radius:0;transform:rotate(45deg);background:#fff}
+#menu .menu-route .active{color:var(--ax-yellow)}
+#menu .menu-route .active:before{background:var(--ax-yellow);box-shadow:0 0 14px var(--ax-yellow)}
+#menu .menu-foot{bottom:66px;left:70px;font:700 11px var(--ax-font);color:var(--ax-dim)}
+#directLoading{font-family:var(--ax-font);font-weight:900;letter-spacing:3px}
+
+/* ---- 運転画面 HUD ---- */
+#drive .hud{left:0;right:0;top:0;height:0}
+#drive .hud-line,#drive .clock,#drive .next-stop{position:absolute;backdrop-filter:none;border:0;border-radius:0;box-shadow:none}
+#drive .hud-line{
+ left:0;top:26px;padding:10px 40px 10px 32px;gap:14px;align-items:center;
+ background:var(--ax-plate);clip-path:polygon(0 0,100% 0,calc(100% - 24px) 100%,0 100%);
+}
+#drive .green-line{width:10px;align-self:stretch;background:#3fbf6a;margin:-10px 0}
+#drive .hud-line b{font:900 30px/1 var(--ax-font);color:#fff;letter-spacing:2px;text-shadow:2px 2px 0 #000}
+#drive .hud-line small{display:inline-block;font:900 15px/1 var(--ax-font);color:#05070c;background:var(--ax-yellow);padding:5px 12px;margin-top:8px;letter-spacing:2px}
+#drive .clock{left:0;top:116px;padding:8px 34px 10px 42px;text-align:left;letter-spacing:0;background:#000c;clip-path:polygon(0 0,100% 0,calc(100% - 20px) 100%,0 100%)}
+#drive .clock:before{content:'現在時刻';display:block;font:700 13px/1 var(--ax-font);letter-spacing:4px;color:var(--ax-yellow);margin-bottom:2px}
+#drive #clock{font:italic 900 40px/1.1 var(--ax-num);color:#fff;letter-spacing:1px}
+#drive .clock small{font:700 12px/1 var(--ax-font);color:#c4cddb;letter-spacing:3px;margin-top:4px}
+#drive .next-stop{
+ right:0;top:26px;min-width:380px;gap:4px;padding:10px 46px 14px 54px;text-align:right;justify-items:end;
+ background:var(--ax-plate);clip-path:polygon(24px 0,100% 0,100% 100%,0 100%);border-bottom:4px solid var(--ax-yellow);
+}
+#drive .next-stop small{display:inline-block;font:900 15px/1 var(--ax-font);letter-spacing:3px;color:#05070c;background:var(--ax-yellow);padding:5px 12px}
+#drive .next-stop b{font:900 64px/1.15 var(--ax-font);letter-spacing:8px;color:#fff;text-shadow:3px 3px 0 #000}
+#drive .next-stop span{font:italic 900 32px/1 var(--ax-num);color:var(--ax-yellow);text-shadow:2px 2px 0 #000}
+#drive .line-status{
+ position:absolute;left:0;right:auto;top:212px;min-width:0;width:auto;display:grid;gap:4px;padding:10px 34px 12px 32px;border:0;border-radius:0;
+ background:#000c;clip-path:polygon(0 0,100% 0,calc(100% - 20px) 100%,0 100%);border-left:10px solid var(--ax-orange);
+}
+#drive #speedWarning{font:900 20px/1.1 var(--ax-font);color:#fff}
+#drive #upcomingLimit{font:900 16px/1.1 var(--ax-font);color:var(--ax-orange)}
+#drive #coverageLabel{font:700 11px var(--ax-font);color:var(--ax-dim)}
+#drive .top-tools button{font:900 12px var(--ax-font);border-radius:0;background:#000c;border:1px solid #fff5}
+
+/* 速度 / ノッチ (driving-overlay の readouts) */
+.overlay-speed{
+ left:0;width:300px;min-height:0;padding:12px 30px 14px 42px;color:#fff;border:0;border-radius:0;
+ background:var(--ax-plate);clip-path:polygon(0 0,calc(100% - 26px) 0,100% 100%,0 100%);border-left:10px solid var(--ax-blue2);
+}
+.overlay-speed>small{font:900 13px/1 var(--ax-font);letter-spacing:5px;color:var(--ax-blue3)}
+.overlay-speed strong{display:inline-block;min-width:150px;text-align:right;font:italic 900 92px/1 var(--ax-num);letter-spacing:-2px;color:#fff;text-shadow:3px 3px 0 #000,0 0 18px #3fa0ff66}
+.overlay-speed>span{font:italic 900 22px var(--ax-num);color:var(--ax-yellow);margin-left:8px}
+.overlay-speed p{font:700 14px/1 var(--ax-font);color:#c4cddb;margin:10px 0 0;border-top:6px solid #1d2430;padding-top:8px}
+.overlay-state{right:0;gap:14px;padding:10px 40px 10px 46px;border:0;border-radius:0;background:var(--ax-plate);clip-path:polygon(22px 0,100% 0,100% 100%,0 100%);border-right:10px solid var(--ax-yellow)}
+.overlay-state b{font:italic 900 58px/1 var(--ax-num);color:#fff;min-width:110px;text-shadow:3px 3px 0 #000}
+.overlay-state[data-kind=brake]{border-right-color:var(--ax-orange)}.overlay-state[data-kind=brake] b{color:var(--ax-orange)}
+.overlay-state[data-kind=power]{border-right-color:var(--ax-blue2)}.overlay-state[data-kind=power] b{color:var(--ax-blue3)}
+.overlay-state[data-kind=eb]{border-right-color:var(--ax-red)}.overlay-state[data-kind=eb] b{color:var(--ax-red);animation:axBlink .5s steps(2,start) infinite}
+.overlay-state span{font:900 19px/1 var(--ax-font);color:#dfe6f2;letter-spacing:2px}
+.overlay-state i{width:22px;height:22px;background:#2a2410;border:2px solid #6c6440}
+.overlay-state i.lit{background:var(--ax-yellow);border-color:#fff3b0;box-shadow:0 0 18px var(--ax-yellow)}
+
+/* 停止位置マーカー */
+#stopMarker{width:40px;background:#000d;border-left:2px solid #fff4}
+#stopMarker .stop-track{inset:0 6px 0 8px;background:#273042;border:1px solid #fff8}
+#stopMarker .stop-window{background:#1d7cf2}
+#stopMarker .stop-zero{height:4px;background:var(--ax-yellow);border:0;box-shadow:0 0 8px var(--ax-yellow)}
+#stopPointer{background:var(--ax-yellow);border-color:#000}
+
+/* 下部バー / 路線図 */
+.drive-footer{background:linear-gradient(180deg,#141b28,#020409);border-top:2px solid var(--ax-yellow);font:700 12px var(--ax-font);color:#dfe6f2}
+.drive-footer button{font:900 12px var(--ax-font);color:#fff;border:0;border-radius:0;background:linear-gradient(180deg,#2a3446,#121824 50%,#070a11 51%,#151c2a);clip-path:polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%);padding:7px 16px}
+.drive-footer button:hover{background:linear-gradient(180deg,var(--ax-blue2),var(--ax-blue1) 50%,#062a75 51%,#0d4fc4)}
+#operationStatus{color:var(--ax-yellow);font:900 12px var(--ax-font)}
+.journey{left:0;right:0;padding:0 4%;background:#020409}
+#journeyTrack{border-top:3px solid #3a4456}
+#journeyTrack span{font:700 9px var(--ax-font);color:var(--ax-dim)}
+#journeyTrack .done{color:var(--ax-yellow)}
+#trainDot{width:10px;height:10px;top:-6px;border-radius:0;transform:rotate(45deg);background:var(--ax-yellow);box-shadow:0 0 10px var(--ax-yellow)}
+.attribution{font:700 9px var(--ax-font);background:#000a;color:#c4cddb}
+
+/* ダイアログ (一時停止・情報・音声) */
+#pauseDialog h2,#info h2,#audioUnlock h2{font:italic 900 34px var(--ax-font);color:#fff}
+#pauseDialog button,#info button:not(.close),#audioUnlock button{
+ font:900 16px var(--ax-font);letter-spacing:1px;color:#fff;border:2px solid #9aa8bd;border-radius:3px;
+ background:linear-gradient(180deg,#2a3446,#121824 50%,#070a11 51%,#151c2a);clip-path:polygon(10px 0,100% 0,calc(100% - 10px) 100%,0 100%);padding:12px 28px;box-shadow:none;
+}
+#pauseDialog button.primary,#audioUnlock button.primary{color:#111;background:linear-gradient(180deg,#fff27a,#ffd21f 50%,#f2b600 51%,#ffdc3d);border-color:#fff7c2}
+
+/* スマホ・タブレット用の操作パネル */
+#controlDeck,#mobileMenuPanel{background:#05080ef2;border:0;border-top:3px solid var(--ax-yellow);border-radius:0}
+#controlDeck button,#mobileMenuPanel nav button{font-family:var(--ax-font);font-weight:900;border-radius:0;background:linear-gradient(180deg,#2a3446,#121824 50%,#070a11 51%,#151c2a);border:1px solid #7d8aa0}
+#deckNotch{color:var(--ax-yellow)}
+.deck-speed b{font:italic 900 26px var(--ax-num)}
+
+/* ==========================================================================
+   前方300mインジケーター (lookahead.js) — 運転画面の左側
+   ========================================================================== */
+.lookahead{
+ position:absolute;left:0;top:306px;width:200px;height:340px;z-index:7;pointer-events:none;
+ background:linear-gradient(90deg,#000c,#0008 70%,#0000);border-left:4px solid #5fe3ff;
+ font-family:var(--ax-font);color:#e8fbff;
+}
+.la-track{position:absolute;left:0;right:0;top:22px;bottom:34px}
+.la-rail{
+ position:absolute;left:52px;top:0;bottom:0;width:8px;transform:translateX(-50%);
+ background:repeating-linear-gradient(180deg,#e8fbff 0 12px,#0000 12px 20px);
+ border-left:2px solid #5fe3ffaa;border-right:2px solid #5fe3ffaa;box-shadow:0 0 8px #5fe3ff55;
+}
+.la-num{position:absolute;left:2px;width:40px;text-align:right;transform:translateY(-50%);font:900 18px/1 var(--ax-num);color:#fff;text-shadow:2px 2px 0 #000}
+.la-grid{position:absolute;left:44px;right:30px;height:1px;background:#5fe3ff40}
+.la-zero{position:absolute;left:0;right:0;top:100%;height:4px;transform:translateY(-50%);background:#5fe3ff;box-shadow:0 0 10px #5fe3ff}
+.la-items{position:absolute;inset:0}
+.la-limit,.la-signal{position:absolute;left:52px;transform:translateY(-50%);transition:top .12s linear}
+/* 速度制限: レールから伸びる線 + 数字の札 */
+.la-limit{display:flex;align-items:center;z-index:2}
+.la-limit:before{content:'';width:calc(16px + var(--lane,0) * 60px);height:3px;background:currentColor}
+.la-limit b{
+ min-width:50px;padding:3px 6px;text-align:center;font:italic 900 22px/1 var(--ax-num);color:#fff;
+ background:#05080e;border:2px solid currentColor;box-shadow:2px 2px 0 #000;
+}
+.la-limit.down{color:var(--ax-orange)}
+.la-limit.up{color:var(--ax-blue3)}
+.la-limit.release{color:#c4cddb}.la-limit.release b{font:900 15px/1.2 var(--ax-font)}
+/* 信号: 細い横線 + 文字 (信号機の絵は表示しない) */
+.la-signal{right:8px;height:0;border-top:2px dashed var(--ax-green);z-index:1}
+.la-signal span{position:absolute;right:0;bottom:2px;font:900 12px/1 var(--ax-font);color:var(--ax-green);letter-spacing:1px;text-shadow:1px 1px 0 #000}
+.la-signal.relay{border-top-color:#c4cddb}.la-signal.relay span{color:#c4cddb}
+.la-dir{position:absolute;left:10px;bottom:6px;font:900 12px/1 var(--ax-font);letter-spacing:3px;color:var(--ax-yellow)}
+.la-limit.nearest b{font-size:26px;min-width:58px;box-shadow:0 0 12px currentColor,2px 2px 0 #000}
+
+/* 停止位置・通過位置 */
+.la-station{position:absolute;left:52px;right:8px;height:0;transform:translateY(-50%);transition:top .12s linear;z-index:3}
+.la-station span{position:absolute;right:0;bottom:3px;display:flex;align-items:center;gap:5px;white-space:nowrap;font:900 13px/1 var(--ax-font);text-shadow:1px 1px 0 #000}
+.la-station span b{padding:3px 5px;font:900 11px/1 var(--ax-font);letter-spacing:1px;text-shadow:none}
+.la-station.stop{border-top:4px solid var(--ax-yellow);box-shadow:0 0 10px var(--ax-yellow)}
+.la-station.stop span{color:var(--ax-yellow)}.la-station.stop span b{background:var(--ax-yellow);color:#05070c}
+.la-station.pass{border-top:3px dashed #fff}
+.la-station.pass span{color:#fff}.la-station.pass span b{background:#fff;color:#05070c}
+.la-signal span{bottom:auto;top:3px}
