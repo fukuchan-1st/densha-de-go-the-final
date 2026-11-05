@@ -1,15 +1,15 @@
 import {GeneratedCab,generatedCab} from './generated-cab.js';
-import {mountResponsiveUI} from './responsive-ui.js?v=33';
+import {mountResponsiveUI} from './responsive-ui.js?v=41';
 import {CabPanel} from './cab-panel.js?v=23';
 import {correctStoppedOverrun,nextSignalCall,advanceDoorSequence,beginStartingBoarding,completeDoorSequence,OPEN_DELAY_SECONDS,BOARDING_WAIT_SECONDS} from './train-operations.js?v=33';
 import {ROUTE_LENGTH,LAST_STATION_INDEX,BVE_END} from './route-data.js?v=23';
-import {mountDisplay,stoppingMarker,formatStopDistance} from './display.js?v=23';
+import {mountDisplay,stoppingMarker,formatStopDistance} from './display.js?v=41';
 import {STATIONS,SPECS,step,newRun,stoppingDistance,assistBrake,notchDeltaForKey,NOTCH_MIN,NOTCH_LABELS,clampNotch} from './physics.js?v=23';
 import {RouteProfile} from './route-profile.js?v=23';
-import {RailWorld} from './scene.js?v=39';
+import {RailWorld} from './scene.js?v=41';
 import {SoundEngine} from './assets/audio/sound-engine.js?v=33';
 const $=id=>document.getElementById(id), sound=new SoundEngine();
-const ui=mountResponsiveUI();const refit=mountDisplay($('simulator'),{layout:()=>ui.layout()});ui.setRefit(refit);ui.onHorn=(pressed,name)=>sound.setHorn(pressed&&!paused&&!run.finished,name);
+const ui=mountResponsiveUI();const refit=mountDisplay($('simulator'),{layout:()=>ui.layout()});ui.setRefit(refit);ui.onNotch=setNotch;ui.onHorn=(pressed,name)=>sound.setHorn(pressed&&!paused&&!run.finished,name);
 document.querySelector('.handle-panel').hidden=true;
 let lastStatus='';
 let panel,profile,world,run=newRun(),mode='menu',paused=false,assist=false,rate=1,panorama=false,toastUntil=6,wall=0,rendered=false,bootError='';
@@ -32,7 +32,7 @@ if(directStart){
  $('menuButton').textContent='路線選択へ';
  $('pauseMenu').textContent='路線選択へ';
 }
-function returnToRoutes(){location.href='./?v=39&route=tohoku'+(generatedCab?'&cab=generated':'');}
+function returnToRoutes(){location.href='./?v=41&route=tohoku'+(generatedCab?'&cab=generated':'');}
 $('allRoutes').onclick=returnToRoutes;
 $('audioBack').onclick=returnToRoutes;
 $('audioUnlock').addEventListener('cancel',event=>event.preventDefault());
@@ -117,7 +117,7 @@ $('assist').onclick=()=>{assist=!assist;run.assistBraking=false;$('assist').text
 $('rate').onclick=()=>{rate=rate===1?3:rate===3?10:1;$('rate').textContent='速度 ×'+rate;$('simRate').textContent=rate===1?'REAL TIME':`TIME ×${rate}`;};
 $('viewButton').onclick=()=>{panorama=!panorama;$('drive').classList.toggle('panorama',panorama);$('viewButton').textContent=panorama?'運転台を表示':'前面展望';};
 $('retry').onclick=()=>{if(run.finished)return;sound.stop();world.resetMotion();run.acceleration=0;run.stopWait=0;run.doorPhase=null;run.announcementDone=false;run.assistBraking=false;run.s=STATIONS[Math.max(0,run.next-1)].s;run.v=0;run.notch=0;run.doors=false;run.stopReady=false;run.dwell=0;run.departureStationIndex=null;run.startingDeparture=false;beginStartingBoarding(run,Math.max(0,run.next-1),STATIONS);toast('前駅から再開します。');};
-document.addEventListener('keydown',e=>{if(e.target.matches('input,select,textarea'))return;if(mode!=='drive'||$('info').open)return;if(e.code==='Escape'){e.preventDefault();if(!paused)pause();return;}if(e.code==='Enter'){e.preventDefault();if(!paused&&!e.repeat&&!run.finished)sound.setHorn(true);return;}if(paused||e.repeat)return;switch(e.code){case'KeyW':case'ArrowUp':case'KeyS':case'ArrowDown':e.preventDefault();setNotch(run.notch+notchDeltaForKey(e.code));break;case'KeyX':setNotch(0);break;case'Space':e.preventDefault();setNotch(NOTCH_MIN);break;case'KeyO':doors();break;case'KeyJ':sound.playEffect('hornSecondary');break;}});
+document.addEventListener('keydown',e=>{if(e.target.matches('input,select,textarea')&&e.target.id!=='notchSlider')return;if(mode!=='drive'||$('info').open)return;if(e.code==='Escape'){e.preventDefault();if(!paused)pause();return;}if(e.code==='Enter'){e.preventDefault();if(!paused&&!e.repeat&&!run.finished)sound.setHorn(true);return;}if(paused||e.repeat)return;switch(e.code){case'KeyW':case'ArrowUp':case'KeyS':case'ArrowDown':e.preventDefault();setNotch(run.notch+notchDeltaForKey(e.code));break;case'KeyX':setNotch(0);break;case'Space':e.preventDefault();setNotch(NOTCH_MIN);break;case'KeyO':doors();break;case'KeyJ':sound.playEffect('hornSecondary');break;}});
 document.addEventListener('keyup',e=>{if(e.code==='Enter')sound.setHorn(false);});
 window.addEventListener('blur',()=>sound.setHorn(false));
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&mode==='drive'&&!paused)pause();});
@@ -142,7 +142,7 @@ function updateDriverCalls(){
  if(block!==null)sound.callRouteCue('701-signal',block);
 }
 function hud(){const kmh=run.v*3.6,next=STATIONS[Math.min(LAST_STATION_INDEX,run.next)],d=next.s-run.s;$('speed').textContent=Math.round(kmh);$('needle').style.transform=`rotate(${-130+kmh/120*260}deg)`;$('distance').innerHTML=(run.s/1000).toFixed(3)+' <small>km</small>';$('notch').textContent=strip[run.notch-NOTCH_MIN];$('lever').style.left=((run.notch-NOTCH_MIN)/(strip.length-1)*100)+'%';$('notchStrip').querySelectorAll('[data-notch]').forEach(el=>el.classList.toggle('selected',Number(el.dataset.notch)===run.notch));$('nextName').textContent=next.name;$('remaining').textContent=run.finished?'終点に到着':(d>=0?'停車まで ':'行き過ぎ ')+formatStopDistance(d);$('served').textContent=run.served+' / '+run.targetStops;const sec=8*3600+Math.floor(run.elapsed);$('clock').textContent=[Math.floor(sec/3600)%24,Math.floor(sec/60)%60,sec%60].map(x=>String(x).padStart(2,'0')).join(':');$('doorLamp').classList.toggle('lit',!run.doors);$('doorLabel').textContent=run.doors?'戸開':'戸閉';$('brakeLamp').classList.toggle('lit',run.notch<0);$('audioStatus').textContent=sound.error?'音源エラー：'+sound.error:sound.ready?'RTM SOUND · '+(sound.activeTracks?.length??0)+' LAYERS':'走行音を読み込んでいます…';$('trainDot').style.left=Math.min(100,run.s/ROUTE_LENGTH*100)+'%';$('journeyTrack').querySelectorAll('span').forEach((el,i)=>el.classList.toggle('done',i<run.next));
- ui.update({speed:Math.round(kmh),notch:strip[run.notch-NOTCH_MIN],next:next.name,distance:(d<0?'超過 ':'')+formatStopDistance(d),door:run.doorPhase==='closing'?'戸閉中':run.doors?'戸開':'戸閉',limit:(kmh>profile.limitAt(run.s)+1?'速度超過 ':'制限 ')+profile.limitAt(run.s)});
+ ui.update({value:run.notch,disabled:paused||run.finished,speed:Math.round(kmh),notch:strip[run.notch-NOTCH_MIN],next:next.name,distance:(d<0?'超過 ':'')+formatStopDistance(d),door:run.doorPhase==='closing'?'戸閉中':run.doors?'戸開':'戸閉',limit:(kmh>profile.limitAt(run.s)+1?'速度超過 ':'制限 ')+profile.limitAt(run.s)});
  const marker=stoppingMarker(run.s,next.s);$('stopPointer').style.top=marker.top+'%';$('stopPointer').hidden=!marker.visible;$('stopMarker').classList.toggle('in-range',marker.within);$('stopMarker').classList.toggle('outside',!marker.within);$('stopMarker').classList.toggle('overrun',marker.error>10);$('stopOffset').textContent=marker.label;$('stopHint').textContent=run.finished?'終点に到着':run.doors?'戸開中 · 自動戸閉待ち':run.stopReady?'停車確認中':marker.within?'自動戸開は±3m以内の停車時':marker.error>10?'停止位置を過ぎています':'接近中';
  const limit=profile.limitAt(run.s),grade=profile.gradeAt(run.s),upcoming=profile.nextLimit(run.s),over=kmh>limit+1;$('limitValue').textContent=limit;$('limitLabel').textContent=profile.coverageAt(run.s)==='prototype'?'仮の上限':'制限速度';$('gradient').innerHTML=(profile.coverageAt(run.s)==='prototype'?'仮設定 ':grade>0?'上り ':grade<0?'下り ':'平坦 ')+Math.abs(grade).toFixed(1)+' <small>‰</small>';$('speedWarning').textContent=(over?'速度超過　':profile.coverageAt(run.s)==='prototype'?'仮上限　':'制限　')+limit+' km/h';$('speedWarning').classList.toggle('over',over);$('speed').classList.toggle('over',over);$('coverageLabel').textContent=profile.coverageAt(run.s)==='prototype'?'試作区間':'BVEデータ参考区間';$('upcomingLimit').hidden=profile.coverageAt(run.s)==='prototype';$('upcomingLimit').textContent=upcoming?`${Math.round(upcoming.s-run.s).toLocaleString()}m先　${upcoming.kmh} km/h`:'この先、制限変更なし';$('brakeNeedle').style.transform=`rotate(${-130+(run.notch<0?Math.max(0,Math.min(7,-run.notch-1))/7*350:0)/800*260}deg)`;$('tractionLever').style.transform=`rotateX(${Math.max(0,run.notch)*-5}deg)`;$('brakeHandle').style.transform=`rotate(${Math.max(0,-run.notch)*-6}deg)`;$('doors').hidden=!['audio-error','close-audio-error'].includes(run.doorPhase);$('doors').disabled=!['audio-error','close-audio-error'].includes(run.doorPhase);$('powerUp').hidden=run.doors||run.notch===5||run.finished;$('brakeDown').hidden=run.notch===NOTCH_MIN||run.finished;$('neutral').hidden=run.notch===0||run.finished;$('emergency').hidden=run.notch===NOTCH_MIN||run.finished;$('doors').textContent=['audio-error','close-audio-error'].includes(run.doorPhase)?'音声を再試行':'ドア自動';$('operationStatus').textContent=run.correctedStopError!=null&&run.doorPhase==='waiting-open'?`行き過ぎ ${formatStopDistance(run.correctedStopError)} → 停止位置 0 cm に補正`:run.doorPhase==='waiting-open'?`停車確認 ${Math.min(3,Math.floor(run.stopWait))} / 3秒 · まもなく自動戸開`:run.doorPhase==='boarding'?`乗降中 · 自動戸閉の音声まで ${Math.max(0,Math.ceil(BOARDING_WAIT_SECONDS-run.dwell))}秒`:run.doorPhase==='closing'?'戸閉中 · 戸閉音の終了後に戸閉灯が点灯':run.doorPhase==='announcement'?(run.departureStage==='station'?'駅音声を再生中 · 続いてホイッスル':'ホイッスルを再生中 · 終了後に自動戸閉'):wall<toastUntil?lastStatus:'';
 }
