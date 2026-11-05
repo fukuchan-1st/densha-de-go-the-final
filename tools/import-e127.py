@@ -48,6 +48,8 @@ def main():
     for specs in (recipe["sourceSpecs"], recipe["playableSpecs"]):
         specs["holdingNotches"] = 1
         specs["sourceHoldingSpeedNotchCount"] = 0
+    recipe["panel"]["crop"] = {"x": -256, "y": 140, "width": 1536, "height": 864}
+    recipe["panel"]["sideFill"] = {"top": 630, "color": "#20221c"}
     recipe["rollingSoundIndexes"] = {"long": 1, "slab25": 0, "ballast25": 0, "bridge": 2, "tunnel": 4}
     recipe["serviceBrakeKmhPerSecond"] = 3.7
     recipe["notes"].extend([

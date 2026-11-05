@@ -12,8 +12,17 @@ export function panelSpeedDigit(vehicle,subject,speed){
  const whole=clamp(Math.round(speed),0,199),place=10**(2-position);
  return position<2&&whole<place?null:Math.floor(whole/place)%10;
 }
+export function pressureSpriteFrame(banks,subject,value){
+ const bank=banks?.[subject];if(!bank||!Number.isFinite(value))return null;
+ const peers=Object.entries(banks).filter(([,b])=>b.semantic===bank.semantic);
+ value=Math.round(value/bank.stepKpa)*bank.stepKpa;
+ const distance=b=>Math.max(b.minKpa-value,value-b.maxKpa,0);
+ peers.sort((a,b)=>distance(a[1])-distance(b[1]));
+ if(peers[0][0]!==subject)return null;
+ return clamp(Math.round((value-bank.minKpa)/bank.stepKpa),0,Math.round((bank.maxKpa-bank.minKpa)/bank.stepKpa));
+}
 export class LocalCabPanel {
- constructor(canvas,recipe,pack){this.canvas=canvas;this.ctx=canvas.getContext('2d');this.recipe=recipe;this.pack=pack;this.images=new Map();this.bc=0;this.sap=0;this.bp=recipe.playableSpecs.brakeSystem?.brakePipeInitialKpa;this.visible=true;this.crop=recipe.panel.crop??PANEL_CROPS[recipe.id];const o=recipe.panel.this.origin;this.viewOrigin={x:(o[0]-this.crop.x)*1600/this.crop.width,y:(o[1]-this.crop.y)*900/this.crop.height};canvas.width=1600;canvas.height=900;}
+ constructor(canvas,recipe,pack){this.canvas=canvas;this.ctx=canvas.getContext('2d');this.recipe=recipe;this.pack=pack;this.images=new Map();this.bc=0;this.sap=0;this.bp=recipe.playableSpecs.brakeSystem?.brakePipeInitialKpa??490;this.visible=true;this.crop=recipe.panel.crop??PANEL_CROPS[recipe.id];const o=recipe.panel.this.origin;this.viewOrigin={x:(o[0]-this.crop.x)*1600/this.crop.width,y:(o[1]-this.crop.y)*900/this.crop.height};canvas.width=1600;canvas.height=900;}
  static async load(canvas,recipe,pack){
   const panel=new LocalCabPanel(canvas,recipe,pack);
   const scale=Math.min(1,1600/panel.crop.width);
@@ -49,24 +58,26 @@ export class LocalCabPanel {
   return panel;
  }
  key(ref){return `${ref.entryIndex}|${ref.transparentColor??''}`;}
- semantic(e){return this.recipe.subjectMappings.vehicle[e.subject]??this.recipe.subjectMappings.common[e.subject];}
+ semantic(e){return this.recipe.panel.pressureSprites?.[e.subject]?.semantic??this.recipe.subjectMappings.vehicle[e.subject]??this.recipe.subjectMappings.common[e.subject];}
  isSpeedDigit(e){return e.type==='digitalnumber'&&(!!this.recipe.panel.speedDigits?.[e.subject]||speedDigits[this.recipe.id]?.includes(e.subject));}
- supported(e){return ['mrHundreds','mrTens','bcHundreds','bcTens','speedHundreds','speedTens','speedOnes','speedGaugeAngleEncodedShadow'].includes(this.semantic(e))||!!this.recipe.panel.calibratedNeedles?.[e.subject]||this.isSpeedDigit(e)||e.type==='background'||e.subject==='true'||['always','doorClosed','speedKmh','mainReservoirKpa','brakeCylinderKpa','brakeStraightAirPipeKpa','brakePipeKpa','absoluteMotorCurrent','motorCurrent','speedGaugeAngleEncoded','brakeIndex','powerIndex','hour','minute','second','controlVoltage','lineVoltage'].includes(this.semantic(e));}
+ supported(e){return !!this.recipe.panel.pressureSprites?.[e.subject]||['mrHundreds','mrTens','bcHundreds','bcTens','speedHundreds','speedTens','speedOnes','speedGaugeAngleEncodedShadow'].includes(this.semantic(e))||!!this.recipe.panel.calibratedNeedles?.[e.subject]||this.isSpeedDigit(e)||e.type==='background'||e.subject==='true'||['always','doorClosed','speedKmh','mainReservoirKpa','brakeCylinderKpa','brakeStraightAirPipeKpa','brakePipeKpa','absoluteMotorCurrent','motorCurrent','speedGaugeAngleEncoded','brakeIndex','powerIndex','hour','minute','second','controlVoltage','lineVoltage'].includes(this.semantic(e));}
  setVisible(visible){this.visible=visible;this.canvas.hidden=!visible;}
  render(state,dt=1/60,inTunnel=false){const ctx=this.ctx;ctx.clearRect(0,0,1600,900);if(!this.visible)return;const r=this.recipe.playableSpecs,bIndex=state.notch<0?Math.min(r.brakeNotches+1,-state.notch):0;
   const brake=r.brakeSystem;
   const response=Math.min(1,dt*4);
-  const sapTarget=brake?brake.pressureRates[bIndex]*brake.maxServiceKpa:0;
-  const btarget=brake?Math.max(0,(sapTarget-brake.straightPipeOffsetKpa)*brake.straightPipeToCylinderRatio):bIndex/(r.brakeNotches+1)*380;
+  const pressureRate=brake?.pressureRates?.[Math.min(bIndex,(brake.pressureRates?.length??1)-1)]??bIndex/(r.brakeNotches+1);
+  const sapTarget=pressureRate*(brake?.maxServiceKpa??380);
+  const btarget=brake?Math.max(0,(sapTarget-(brake.straightPipeOffsetKpa??0))*(brake.straightPipeToCylinderRatio??1)):bIndex/(r.brakeNotches+1)*380;
   this.bc+=(btarget-this.bc)*response;
   this.sap+=(sapTarget-this.sap)*response;
-  if(brake)this.bp+=((bIndex>r.brakeNotches?0:brake.brakePipeInitialKpa)-this.bp)*response;
-  const reservoir=brake?(brake.reservoirLowerKpa+brake.reservoirUpperKpa)/2:820;
+  if(brake)this.bp+=((bIndex>r.brakeNotches?0:(brake.brakePipeInitialKpa??490))-this.bp)*response;
+  const reservoir=brake?((brake.reservoirLowerKpa??780)+(brake.reservoirUpperKpa??880))/2:820;
   const seconds=(state.clockStart??8*3600)+(state.elapsed??0),speed=state.speedKmh??(state.v??0)*3.6,values={always:1,doorClosed:!state.doors,speedKmh:speed,mainReservoirKpa:reservoir-this.bc*.08,brakeCylinderKpa:this.bc,brakeStraightAirPipeKpa:this.sap,brakePipeKpa:this.bp,absoluteMotorCurrent:state.notch>0?state.notch*40:0,motorCurrent:state.notch*35,brakeIndex:bIndex,powerIndex:Math.max(0,state.notch),hour:seconds/3600%12,minute:seconds/60%60,second:seconds%60,controlVoltage:100,lineVoltage:1500};ctx.save();ctx.scale(1600/this.crop.width,900/this.crop.height);ctx.translate(-this.crop.x,-this.crop.y);
+  const sideFill=this.recipe.panel.sideFill;if(sideFill){ctx.fillStyle=sideFill.color;ctx.fillRect(this.crop.x,sideFill.top,this.crop.width,Math.max(0,this.crop.y+this.crop.height-sideFill.top));}
   for(const e of this.recipe.panel.elements){if(!this.supported(e))continue;const ref=inTunnel&&e.nightImage?e.nightImage:e.image,image=ref&&this.images.get(this.key(ref));const semantic=this.semantic(e),value=values[semantic],loc=e.location??[0,0];if(e.type==='digitalgauge'){if(!Number.isFinite(value))continue;const a=(e.initialangle-90)*Math.PI/180,b=(localNeedleAngle(e,value)-90)*Math.PI/180;ctx.beginPath();ctx.strokeStyle='#'+(e.color??'dce8db').replace('#','');ctx.lineWidth=6;ctx.arc(loc[0],loc[1],e.radius,a,b);ctx.stroke();continue;}if(!image)continue;if(e.type==='needle'){
     let angle;const calibration=this.recipe.panel.calibratedNeedles?.[e.subject];if(calibration)angle=calibratedSpeedAngle(calibration.angleKnots,speed);else if(['speedGaugeAngleEncoded','speedGaugeAngleEncodedShadow'].includes(semantic))angle=calibratedSpeedAngle(this.recipe.panel.speedGaugeCalibration.angleKnots,speed);else if(Number.isFinite(value))angle=localNeedleAngle(e,value);else continue;
     ctx.save();ctx.translate(...loc);ctx.rotate(angle*Math.PI/180);const factor=e.radius/(e.origin?.[1]||1);ctx.scale(factor,factor);ctx.drawImage(image.surface,-e.origin[0],-e.origin[1],image.width,image.height);ctx.restore();
-   }else if(e.type==='digitalnumber'){const digit=this.isSpeedDigit(e)?(this.recipe.panel.speedDigits?.[e.subject]?Math.floor(Math.round(speed)/this.recipe.panel.speedDigits[e.subject].place)%10:panelSpeedDigit(this.recipe.id,e.subject,speed)):({mrHundreds:Math.floor(values.mainReservoirKpa/100)%10,mrTens:Math.floor(values.mainReservoirKpa/10)%10,bcHundreds:Math.floor(this.bc/100)%10,bcTens:Math.floor(this.bc/10)%10}[semantic]??value);if(!Number.isFinite(digit)||!e.interval)continue;const frame=clamp(Math.floor(digit),0,Math.floor(image.height/e.interval)-1);ctx.drawImage(image.surface,0,frame*e.interval*image.scaleY,image.surface.width,e.interval*image.scaleY,...loc,image.width,e.interval);
+   }else if(e.type==='digitalnumber'){const digit=this.recipe.panel.pressureSprites?.[e.subject]?pressureSpriteFrame(this.recipe.panel.pressureSprites,e.subject,values[semantic]):this.isSpeedDigit(e)?(this.recipe.panel.speedDigits?.[e.subject]?Math.floor(Math.round(speed)/this.recipe.panel.speedDigits[e.subject].place)%10:panelSpeedDigit(this.recipe.id,e.subject,speed)):({mrHundreds:Math.floor(values.mainReservoirKpa/100)%10,mrTens:Math.floor(values.mainReservoirKpa/10)%10,bcHundreds:Math.floor(this.bc/100)%10,bcTens:Math.floor(this.bc/10)%10}[semantic]??value);if(digit===null||!Number.isFinite(digit)||!e.interval)continue;const frame=clamp(Math.floor(digit),0,Math.floor(image.height/e.interval)-1);ctx.drawImage(image.surface,0,frame*e.interval*image.scaleY,image.surface.width,e.interval*image.scaleY,...loc,image.width,e.interval);
    }else if(e.type==='background'||value||e.subject==='true')ctx.drawImage(image.surface,...loc,image.width,image.height);
   }
   if(this.recipe.id==='323'){

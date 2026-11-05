@@ -114,6 +114,12 @@ def panel_for(bundle, path):
     if "transparentcolor" in layout:
         this["transparentcolor"] = layout["transparentcolor"]
     mapping = {**COMMON, **bundle.config["mapping"]}
+    pressure_sprites = {}
+    if bundle.config["id"] == "e353":
+        pressure_sprites = {**{f"ats{235+i}": {"semantic": "brakeCylinderKpa", "minKpa": i*200, "maxKpa": i*200+180, "stepKpa": 20} for i in range(3)},
+                            **{f"ats{240+i}": {"semantic": "mainReservoirKpa", "minKpa": 700+i*100, "maxKpa": 790+i*100, "stepKpa": 10} for i in range(2)}}
+        bundle.config["mapping"].update({subject: bank["semantic"] for subject, bank in pressure_sprites.items()})
+        mapping.update(bundle.config["mapping"])
     elements = []
     for kind, data in sections:
         subject = data.get("subject", "true").lower()
@@ -147,6 +153,8 @@ def panel_for(bundle, path):
         result["speedGaugeCalibration"] = next(iter(calibration.values()))
     speed_digits = {subject: {"place": {"speedHundreds": 100, "speedTens": 10, "speedOnes": 1}[semantic]} for subject, semantic in mapping.items() if semantic in ("speedHundreds", "speedTens", "speedOnes")}
     result["speedDigits"] = speed_digits
+    if pressure_sprites:
+        result["pressureSprites"] = pressure_sprites
     return result
 
 
@@ -216,6 +224,17 @@ def compress_stages(performance, notches):
     power["force"] = {"source": force["source"], "labels": [f"P{i}" for i in range(1, notches + 1)], "rows": rows, "method": "Steady-state estimate from source step thresholds and empty current limits."}
 
 
+def normalize_motor_labels(vehicle_id, motor_noise):
+    # These sources put tuning frequencies on '#' comment rows, not explicit
+    # sample IDs. Numeric columns still refer to motor slots in positional order.
+    if vehicle_id in ("223", "e127"):
+        for phase in motor_noise.values():
+            for table in phase.values():
+                if table.get("labels"):
+                    table["sourceCommentLabels"] = table["labels"]
+                    table["labels"] = []
+
+
 def import_one(base, config):
     bundle = Bundle(base, config)
     vehicle_path = bundle.source / config["vehicle"]
@@ -238,6 +257,7 @@ def import_one(base, config):
                     path = bundle.resolve(motor, reference)
                     if path:
                         motor_noise.setdefault(phase, {})[key] = read_table(path, bundle.source)
+    normalize_motor_labels(config["id"], motor_noise)
     performance = curve_for(bundle, bundle.resolve(vehicle_path, vehicle["performancecurve"]))
     notches, brakes = int(cab["powernotchcount"]), int(cab["brakenotchcount"])
     compress_stages(performance, notches)

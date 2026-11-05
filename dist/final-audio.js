@@ -6,6 +6,34 @@ const whistle={entryIndex:'departure-whistle'};
 const voiceBanks={e235:['kanko0','uta'],e233:['kanko1','utb'],323:['kanko2','utd'],207:['kanko3','ute']};
 const driverCallNumbers={doorsClosed:'001',departure:'003',stationStop:'065'};
 const surfaces=['long','bridge','tunnel'];
+const frequencyEndpoints=new WeakMap();
+
+export function motorPitch(table,column,speed){
+ const pitch=interpolateColumn(table,column,speed,1);
+ if(!table?.rows)return pitch;
+ if(!frequencyEndpoints.has(table))frequencyEndpoints.set(table,new Map());
+ const channels=frequencyEndpoints.get(table),channel=String(column);
+ if(!channels.has(channel)){
+  const labels=table.labels??[];
+  const hasChannelIds=labels.some(label=>/^\d+$/.test(String(label).trim()));
+  const index=hasChannelIds?labels.findIndex(label=>String(label).trim()===channel):Number(column);
+  const points=new Map();
+  if(index>=0){
+   for(const row of table.rows){
+    const value=row[index+1];
+    if(Number.isFinite(row[0])&&Number.isFinite(value))points.set(row[0],value);
+   }
+  }
+  channels.set(channel,[...points].sort(([a],[b])=>a-b).slice(-2));
+ }
+ const endpoints=channels.get(channel);
+ if(endpoints.length<2||speed<=endpoints[1][0])return pitch;
+ const [[a,x],[b,y]]=endpoints;
+ // Frequency tables often end at the sample's 1x reference speed. Continue
+ // that slope above the reference, while volume keeps its endpoint behavior.
+ return y+(y-x)*(speed-b)/(b-a);
+}
+
 export class LocalTrainAudio {
  constructor(recipe,pack,{context,volume=.65}={}){const AC=globalThis.AudioContext??globalThis.webkitAudioContext;this.context=context??new AC();this.ownsContext=!context;this.recipe=recipe;this.pack=pack;this.buffers=new Map();this.loops=new Map();this.sources=new Set();this.master=this.context.createGain();this.master.gain.value=volume;this.master.connect(this.context.destination);this.volume=volume;this.paused=false;this.stopped=false;this.generation=0;}
  static async create(recipe,pack,options){const audio=new LocalTrainAudio(recipe,pack,options);await audio.context.resume();return audio;}
@@ -166,7 +194,9 @@ export class LocalTrainAudio {
   if(this.lastNotch!==undefined&&this.lastNotch!==notch)this.playNotch(this.lastNotch,notch).catch(()=>{});
   this.lastNotch=notch;
   const s=this.recipe.sounds,run=this.runRef(surface,rollingIndex),runKey='run'+run?.entryIndex;
-  const rollingRate=runPitch(speed);
+  const runIndex=Object.keys(s.run??{}).find(index=>s.run[index]===run);
+  const rollingBase=this.recipe.rollingBaseSpeedKmh;
+  const rollingRate=runPitch(speed,typeof rollingBase==='number'?rollingBase:rollingBase?.[runIndex]);
   this.tuneLoop(runKey,run,clamp(speed/65,0,.65),rollingRate);
   this.tuneLoop('noise',s.others?.noise,.15,1);
   for(const key of this.loops.keys()){
@@ -177,7 +207,7 @@ export class LocalTrainAudio {
   for(const [index,ref] of Object.entries(s.motor??{})){
    const key='motor'+index;
    const volume=interpolateColumn(tables?.volume,index,speed);
-   const pitch=interpolateColumn(tables?.frequency,index,speed,1);
+   const pitch=motorPitch(tables?.frequency,index,speed);
    if(volume>0&&pitch>0)this.tuneLoop(key,ref,volume*.55,pitch);
    else this.releaseLoop(key);
   }

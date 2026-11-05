@@ -377,7 +377,7 @@ def make_route(master, route_id, name):
         a, b = span["sStart"], span["sEnd"]
         middle = (a + b) / 2
         offset = track_value(xs, track, middle) + span["x"]
-        if re.search(r"/rail/|/rails/", path) and track != "0":
+        if re.search(r"/(?:rail|rails|x_rail)/", path) and track != "0":
             rails[track].append((a, b))
         bounds = mesh_bounds(model) if "/tunnel/" in path or "tunnel" in Path(path).stem else None
         if ("tunnel" in Path(path).stem or "/tunnel/" in path and bounds and bounds[1][1] > 3) and abs(offset) < 12:
@@ -454,7 +454,8 @@ def make_route(master, route_id, name):
             if max(abs(x) for _, x, _ in samples) > 100 or max(abs(y) for _, _, y in samples) > 30:
                 continue
             neighbors.append(dict(key=track, knots=[[s, x] for s, x, _ in samples],
-                                  heightKnots=[[s, y] for s, _, y in samples]))
+                                  heightKnots=[[s, y] for s, _, y in samples],
+                                  source=f"BVE {master.name} rail repeater and X/Y controls"))
 
     limits, sounds, rolling, signals = [], [], [], []
     aspect_table = bve.table("signal")
