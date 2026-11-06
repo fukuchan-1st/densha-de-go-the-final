@@ -1,4 +1,6 @@
-import {mountDrivingOverlay} from './driving-overlay.js?v=49';import {mountLookahead,changesFromSections,stationMarks} from './lookahead.js?v=49';
+import {mountWheelPicker} from './wheel-picker.js?v=wheel3';
+import {mountScoring,checkpointMarks,scoringStations,buildScoreTimetable,resolveScoreSchedule,scoreHazards,signalRestriction} from './scoring.js?v=score9';
+import {mountDrivingOverlay} from './driving-overlay.js?v=43';import {mountLookahead,changesFromSections,stationMarks} from './lookahead.js?v=score6';
 import {serviceChoices,makeServiceRoute} from './train-selection.js?v=41';
 import {GeneratedCab,generatedCab} from './generated-cab.js';
 import {FinalWorld} from './final-world.js?v=41';
@@ -27,6 +29,7 @@ const settings={volume:.65,shake:1,quality:matchMedia('(pointer:coarse)').matche
 try{const saved=JSON.parse(localStorage.getItem('railway-drive-settings')??'{}');if(Number.isFinite(saved.volume))settings.volume=clamp(saved.volume,0,1);if([0,.6,1].includes(saved.shake))settings.shake=saved.shake;if(['light','standard'].includes(saved.quality))settings.quality=saved.quality;}catch{}
 const saveSettings=()=>{try{localStorage.setItem('railway-drive-settings',JSON.stringify(settings));}catch{}};
 const overlayControls=mountDrivingOverlay($('driveScreen'),{onChange:n=>setNotch(n),actions:[$('hornButton'),$('pauseButton'),$('moreButton')],instructionElement:$('eventText')});$('driveScreen').append($('extras'));const lookahead=mountLookahead($('driveScreen'));
+const score=mountScoring($('driveScreen'),{badge:document.querySelector('.hud-route'),volume:()=>settings.volume});
 function playMenuSound(name,{waitForEnd=false}={}){
  if(settings.volume===0)return;
  const clip=$('menuSound-'+name);
@@ -84,7 +87,7 @@ function choose(i){
  displayMenu();
 }
 function setMode(value){mode=value;$('menuScreen').inert=false;$('menuControls').inert=false;if(value==='drive'){$('trainSelection').hidden=true;trainSelectionOpen=false;}document.body.dataset.mode=value;$('menuScreen').hidden=value!=='menu';$('menuControls').hidden=value!=='menu';$('driveScreen').hidden=value!=='drive';$('driveControls').hidden=value!=='drive';fit();}
-async function pauseAudio(value){await sound?.setPaused(value).catch(()=>{});}
+async function pauseAudio(value){score.pause(value);await sound?.setPaused(value).catch(()=>{});}
 function showModal(content,{pause=true}={}){if(mode==='drive'&&pause&&!paused){paused=true;modalPaused=true;pauseAudio(true);}$('modalContent').innerHTML=content;if(!$('modal').open)$('modal').showModal();}
 function closeModal(){if(mode==='menu')playMenuSound('cancel');$('modal').close();if(modalPaused&&!run?.finished){paused=false;pauseAudio(false);}modalPaused=false;}
 $('closeModal').onclick=closeModal;$('modal').addEventListener('cancel',e=>{e.preventDefault();closeModal();});
@@ -100,7 +103,7 @@ $('moreButton').onclick=()=>toggleExtras($('extras').hidden);$('closeExtras').on
 $('viewButton').onclick=()=>{panorama=!panorama;$('cab').hidden=panorama;$('viewButton').textContent=panorama?'運転台を表示':'前面展望';toggleExtras(false);};
 $('assistButton').onclick=()=>{assist=!assist;$('assistButton').textContent='停車アシスト '+(assist?'ON':'OFF');if(run)run.assistBraking=false;toast(assist?'停車アシストを有効にしました。':'停車アシストを解除しました。');toggleExtras(false);};
 $('pauseButton').onclick=()=>{if(paused)return;showModal('<p class="eyebrow">PAUSED</p><h2>ひと休み。</h2><p>運転と音声を一時停止しています。</p><div class="dialog-buttons"><button id="resumeButton" class="start-button">運転を再開</button><button id="pauseMenuButton">路線選択へ</button></div>');$('resumeButton').onclick=closeModal;$('pauseMenuButton').onclick=returnMenu;};
-async function cleanup(){
+async function cleanup(){score.dispose();
  token++;
  sound?.stop();
  panel?.dispose();
@@ -183,7 +186,7 @@ async function start(startIndex){
  try{
   if(meta.legacy){
    await playMenuSound('confirm',{waitForEnd:true});
-   location.href=`./tohoku.html?v=41&drive=1&station=${startIndex??freeStart}${generatedCab?'&cab=generated':''}`;
+   location.href=`./tohoku.html?v=51&drive=1&station=${startIndex??freeStart}${generatedCab?'&cab=generated':''}`;
    return;
   }
   if(mode==='menu')playMenuSound('confirm');
@@ -199,13 +202,14 @@ async function start(startIndex){
   sound=nextSound;
   const [loadedPanel]=await Promise.all([generatedCab&&['e235','e233','323','207','6050'].includes(train.id)?GeneratedCab.load($('cab'),train.id):LocalCabPanel.load($('cab'),train,pack),sound.prepare(),audioEnabled]);
   panel=loadedPanel;
-  run=createJourney(r,train,startIndex,trip.endIndex);
+  run=createJourney(r,train,startIndex,trip.endIndex);score.reset(run);score.bindHorn(sound,()=>run,()=>scoreHazards(route()));
   if(r.soundEvents){
    const first=r.soundEvents.findIndex(event=>event.s>=run.s);
    run.soundCursor=first<0?r.soundEvents.length:first;
   }
-  const startTime=r.stations[startIndex].startTime;
-  run.clockStart=startTime?startTime.split(':').reduce((seconds,part)=>seconds*60+Number(part),0):8*3600;
+  const schedule=resolveScoreSchedule(r,run.s,train.playableSpecs);
+  run.clockStart=schedule.clockStart;
+  run.scoreTimetable=schedule.timetable.filter(st=>st.s<=r.stations[run.endIndex].s+.5);
   r.color=meta.color;
   r.carCount=train.playableSpecs.carCount;
   r.eyeHeight=Number(train.playableSpecs.viewpoint?.y??2.7);
@@ -243,8 +247,8 @@ async function start(startIndex){
  }
 }
 $('startDrive').onclick=()=>start();$('retryButton').onclick=()=>{const index=Math.max(run.startIndex,run.next-1);toggleExtras(false);start(index);};
-function showResults(){const errors=run.errors.map(x=>Math.abs(x)),mean=errors.length?errors.reduce((a,b)=>a+b,0)/errors.length:0;showModal(`<p class="eyebrow">DRIVER'S WORK COMPLETE</p><h2>乗務、おつかれさま。</h2><p>${META[selected].name} · ${recipe().name}<br>停車 ${run.served}駅 / 通過 ${run.missed}駅<br>平均停止誤差 ${distanceLabel(mean)}</p><div class="dialog-buttons"><button id="resultMenu" class="start-button">路線選択へ</button></div>`,{pause:false});$('resultMenu').onclick=returnMenu;}
-function hud(){{const lr=route(),end=lr.stations[run.endIndex]?.s??Infinity;lookahead.update(run.s,changesFromSections(lr.limits),lr.signals??[],stationMarks(lr.stations,lr.sceneryStations).filter(x=>x.s<=end+1&&(!x.stop||x.s>=(lr.stations[Math.min(run.next,run.endIndex)]?.s??0)-2)));}const r=route(),next=r.stations[Math.min(run.next,run.endIndex)],d=next.s-run.s,notch=notchLabel(recipe(),run.notch),speed=Math.round(run.v*3.6),door=run.doorPhase==='closing'?'戸閉中':run.doors?'戸開':'戸閉';$('hudNext').textContent=next.name;$('hudDistance').textContent=run.finished?'運転完了':`${d<0?'超過 ':'あと '}${distanceLabel(d)}`;$('hudSpeed').textContent=speed;$('nativeSpeed').textContent=speed;$('hudNotch').textContent=notch;$('hudNotch').parentElement.dataset.kind=notch==='EB'?'eb':run.notch<0?'brake':run.notch>0?'power':'neutral';$('nativeNotch').textContent=notch;$('hudDoors').textContent=door;$('nativeDoor').textContent=door;$('nativeNext').textContent=next.name;$('nativeDistance').textContent=(d<0?'超過 ':'')+distanceLabel(d);$('closedLamp').classList.toggle('lit',!run.doors);const t=run.clockStart+Math.floor(run.elapsed);$('hudTime').textContent=[Math.floor(t/3600)%24,Math.floor(t/60)%60,t%60].map(x=>String(x).padStart(2,'0')).join(':');$('hudScore').textContent=`停車 ${run.served} / ${run.endIndex-run.startIndex}`;$('speedBar').style.setProperty('--speed',speed/recipe().playableSpecs.maxSpeedKmh*100);const marker=stopPosition(d);$('stopDiamond').hidden=!marker.visible;$('stopDiamond').style.top=marker.percent+'%';$('stopGauge').setAttribute('aria-label',`停止位置±10メートルマーカー ${marker.text}`);$('notchStrip').querySelectorAll('button').forEach(b=>b.classList.toggle('active',Number(b.dataset.notch)===run.notch));
+function showResults(){const errors=run.errors.map(x=>Math.abs(x)),mean=errors.length?errors.reduce((a,b)=>a+b,0)/errors.length:0;showModal(`<p class="eyebrow">DRIVER'S WORK COMPLETE</p><h2>乗務、おつかれさま。</h2><p>${score.engine.points} points · ${score.engine.chain} chain<br>${META[selected].name} · ${recipe().name}<br>停車 ${run.served}駅 / 通過 ${run.missed}駅<br>平均停止誤差 ${distanceLabel(mean)}</p><div class="dialog-buttons"><button id="resultMenu" class="start-button">路線選択へ</button></div>`,{pause:false});$('resultMenu').onclick=returnMenu;}
+function hud(){{const lr=route(),end=lr.stations[run.endIndex]?.s??Infinity;lookahead.update(run.s,changesFromSections(lr.limits),lr.signals??[],[...stationMarks(lr.stations,lr.sceneryStations),...checkpointMarks(run.scoreCheckpoints,run)].filter(x=>x.s<=end+1&&(!x.stop||x.s>=(lr.stations[Math.min(run.next,run.endIndex)]?.s??0)-2)));}const r=route(),next=r.stations[Math.min(run.next,run.endIndex)],d=next.s-run.s,notch=notchLabel(recipe(),run.notch),speed=Math.round(run.v*3.6),door=run.doorPhase==='closing'?'戸閉中':run.doors?'戸開':'戸閉';$('hudNext').textContent=next.name;$('hudDistance').textContent=run.finished?'運転完了':`${d<0?'超過 ':'あと '}${distanceLabel(d)}`;$('hudSpeed').textContent=speed;$('nativeSpeed').textContent=speed;$('hudNotch').textContent=notch;$('hudNotch').parentElement.dataset.kind=notch==='EB'?'eb':run.notch<0?'brake':run.notch>0?'power':'neutral';$('nativeNotch').textContent=notch;$('hudDoors').textContent=door;$('nativeDoor').textContent=door;$('nativeNext').textContent=next.name;$('nativeDistance').textContent=(d<0?'超過 ':'')+distanceLabel(d);$('closedLamp').classList.toggle('lit',!run.doors);const t=run.clockStart+Math.floor(run.elapsed);$('hudTime').textContent=[Math.floor(t/3600)%24,Math.floor(t/60)%60,t%60].map(x=>String(x).padStart(2,'0')).join(':');$('hudScore').textContent=`停車 ${run.served} / ${run.endIndex-run.startIndex}`;$('speedBar').style.setProperty('--speed',speed/recipe().playableSpecs.maxSpeedKmh*100);const marker=stopPosition(d);$('stopDiamond').hidden=!marker.visible;$('stopDiamond').style.top=marker.percent+'%';$('stopGauge').setAttribute('aria-label',`停止位置±10メートルマーカー ${marker.text}`);$('notchStrip').querySelectorAll('button').forEach(b=>b.classList.toggle('active',Number(b.dataset.notch)===run.notch));
  const upcoming=Math.abs(d)<=3?next:(r.sceneryStations??r.stations).find(station=>station.s>run.s+2);
  if(upcoming&&!run.finished){
   const stops=r.stations.some(station=>Math.abs(station.s-upcoming.s)<.5);
@@ -265,6 +269,7 @@ function advance(dt){
  const r=route(),train=recipe(),station=r.stations[run.next];
  if(assist&&!run.doors)brakeAssist(run,r,train);
  driveStep(run,train,dt,world.grade(run.s));
+ const sr=signalRestriction(r.signals,run.s),trackLimit=routeLimitAt(r,run.s),limits=(r.limits??[]).filter(x=>run.s>=x.sStart&&run.s<x.sEnd);score.update(run,{eb:controlsFor(train).min,limit:sr?Math.min(trackLimit??Infinity,sr.limit):trackLimit,limitKey:limits.map(x=>x.sStart+':'+x.sEnd).join('|')+(sr?.key??''),vehicleSpec:train.playableSpecs,routeLimits:r.limits,stations:run.scoreTimetable??scoringStations(r)},dt);
  if(correctStoppedOverrun(run,station.s)!==null)return;
  if(run.next<run.endIndex&&run.s>=r.stations[run.next+1].s-150){
   toast(`${station.name}を通過しました。`);
@@ -332,11 +337,14 @@ try {
 
 function setupTrainSelection(){
  const overlay=document.createElement('section');
- overlay.id='trainSelection';overlay.setAttribute('role','dialog');overlay.setAttribute('aria-modal','true');overlay.hidden=true;overlay.setAttribute('aria-label','列車選択');
- overlay.innerHTML='<div class="selection-card"><p>TRAIN SELECT</p><h2 id="selectionTitle">列車選択</h2><label>車両・運転区間<select id="trainChoice"></select></label><p id="selectionNotes"></p><div id="departureOptions"></div><div class="selection-actions"><button id="selectionBack">路線選択に戻る</button></div></div>';
+ overlay.id='trainSelection';overlay.setAttribute('role','region');overlay.hidden=true;overlay.setAttribute('aria-label','列車選択');
+ overlay.innerHTML='<div class="selection-page-heading"><p>TRAIN SELECT</p><h2 id="selectionTitle">列車選択</h2><p>上下のボタン・スクロールで選択</p></div><div class="selection-wheel-column"><h3>乗務する列車</h3><select id="trainChoice" data-wheel="true" aria-label="乗務する列車"></select></div><div class="selection-settings-column"><div id="departureOptions"></div><p id="selectionNotes"></p></div><div class="selection-actions"><button id="selectionBack">◀ 路線選択に戻る</button></div>';
+
  $('stage').append(overlay);
  for(const id of ['scenarioControl','startStationControl'])$('departureOptions').append($(id));
  overlay.querySelector('.selection-actions').append($('startDrive'));
+ $('trainChoice').wheel=mountWheelPicker($('trainChoice'));
+ for(const id of ['startStation','scenarioSelect']){$(id).dataset.wheel='true';const previous=$(id).nextElementSibling;if(previous?.classList.contains('game-select'))previous.remove();$(id).wheel=mountWheelPicker($(id));}
  overlay.addEventListener('keydown',event=>{if(event.code==='Escape'){event.preventDefault();event.stopPropagation();closeTrainSelection();}});
  const next=document.createElement('button');next.id='routeContinue';next.className='start-button';next.textContent='列車を選ぶ';
  $('menuControls').append(next);next.onclick=openTrainSelection;
@@ -365,11 +373,11 @@ function openTrainSelection(){
   const r=makeServiceRoute(extraRoutes.get(routeId)??routes[selected],vehicle,service);
   return new Option((train?.name??vehicle)+' · '+service+' · '+r.name+' · '+r.stations[0].name+' → '+r.stations.at(-1).name,String(index));
  }));
- trainSelectionOpen=true;$('menuScreen').inert=true;$('menuControls').inert=true;applyTrainChoice();$('trainSelection').hidden=false;$('trainChoice').focus();
+ trainSelectionOpen=true;$('menuScreen').hidden=true;$('menuControls').hidden=true;$('menuScreen').inert=true;$('menuControls').inert=true;document.body.dataset.mode='selection';applyTrainChoice();$('trainSelection').hidden=false;fit();$('trainChoice').wheel.sync();$('trainChoice').wheel.focus();
 }
 function closeTrainSelection(){
  if(loading)return;
- playMenuSound('cancel');trainSelectionOpen=false;$('menuScreen').inert=false;$('menuControls').inert=false;$('trainSelection').hidden=true;chosenVehicle=null;chosenRoute=null;displayMenu();
+ playMenuSound('cancel');document.body.dataset.mode='menu';$('menuScreen').hidden=false;$('menuControls').hidden=false;trainSelectionOpen=false;$('menuScreen').inert=false;$('menuControls').inert=false;$('trainSelection').hidden=true;chosenVehicle=null;chosenRoute=null;displayMenu();fit();
 }
 
 function rNote(r){return r.geometrySections?'BVE収録区間を地図の線路で接続した運転コースです。':r.id.startsWith('shinonoi')?'この運転コースでは姨捨の通過線を走ります。':'';}

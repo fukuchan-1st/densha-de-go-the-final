@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "format": "RIFF/WAVE PCM signed 16-bit little-endian",
+  "sourceDirectory": "dengo_thef/cddata/se/train/trcom",
+  "sounds": {
+    "D19": {
+      "file": "assets/scoring/D19.wav",
+      "source": "D19GAIDO.wag",
+      "durationSeconds": 0.523385,
+      "sampleRate": 13000,
+      "channels": 1,
+      "sha256": "75477ca00d59b9c0fa1ab36b3912e26ce40ff3f774633865ac04b923d8fa3a73"
+    },
+    "D20": {
+      "file": "assets/scoring/D20.wav",
+      "source": "D20GAIDO.wag",
+      "durationSeconds": 0.939077,
+      "sampleRate": 13000,
+      "channels": 1,
+      "sha256": "42b62c034550336c606efe5fac4ea115b673c68040c991ff7325d7123452f576"
+    },
+    "combo1": {
+      "file": "assets/scoring/combo1.wav",
+      "source": "D30_combo1.wag",
+      "durationSeconds": 0.814154,
+      "sampleRate": 13000,
+      "channels": 1,
+      "sha256": "605c2bfe13a4725420939c22a0e08e1e35b0072bca3fb3b6c94baa116ea7bece"
+    },
+    "combo2": {
+      "file": "assets/scoring/combo2.wav",
+      "source": "D31_combo2.wag",
+      "durationSeconds": 1.268615,
+      "sampleRate": 13000,
+      "channels": 1,
+      "sha256": "b3c5e7c9739a2e02268425269a7873cb512589c575b5e842f75913726542d8a2"
+    },
+    "combo3": {
+      "file": "assets/scoring/combo3.wav",
+      "source": "D32_combo3.wag",
+      "durationSeconds": 1.443077,
+      "sampleRate": 13000,
+      "channels": 1,
+      "sha256": "072bfc685d83c8922ccf6915e3658513c0571fa8df5533084d70fa659225094a"
+    },
+    "dobblescore": {
+      "file": "assets/scoring/dobblescore.wav",
+      "source": "D24_dobblescore.wag",
+      "durationSeconds": 1.964308,
+      "sampleRate": 13000,
+      "channels": 1,
+      "sha256": "6cdc21818e4a68ed3ceca650f5e4294dedca25e11442397b8dc30d09e9016739"
+    },
+    "speed_just": {
+      "file": "assets/scoring/speed_just.wav",
+      "source": "D25_speed_just.wag",
+      "durationSeconds": 2.403692,
+      "sampleRate": 13000,
+      "channels": 1,
+      "sha256": "192cd995e5ac4ceaa7c9843f1ec6382e5eb3d65103ac6180de80a3443256198a"
+    },
+    "repair": {
+      "file": "assets/scoring/repair.wav",
+      "source": "D26_repair.wag",
+      "durationSeconds": 2.020308,
+      "sampleRate": 13000,
+      "channels": 1,
+      "sha256": "0a11dc5aa63dcdcdc848406fb994ad67bddd57f7feff98d4a9eee6d8e0cc84a9"
+    }
+  }
+}
