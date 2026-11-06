@@ -46,7 +46,8 @@ export function mountLookahead(parent){
   let lastStationY=-1e9;
   const nearStations=stations.map(x=>({x,d:x.s-position})).filter(o=>o.d>=(o.x.stop?-2:0.01)&&o.d<=LOOKAHEAD_M).sort((a,b)=>a.d-b.d);
   for(const {x,d} of nearStations){const key='t'+x.s;seen.add(key);
-   const el=element(key,()=>{const e=document.createElement('div');e.className='la-station '+(x.stop?'stop':'pass');e.innerHTML=`<span><b>${x.stop?'停止':'通過'}</b>${x.name??''}</span>`;e.title=`${x.stop?'停止位置':'通過位置'} ${x.name??''}`;return e;});
+   const el=element(key,()=>{const e=document.createElement('div');e.className='la-station '+(x.stop?'stop':'pass')+(x.checkpoint?' checkpoint':'');e.innerHTML=`<span><b>${x.checkpoint?(x.checkpoint==='speed'?'定速':'定通'):x.stop?'停止':'通過'}</b>${x.name??''}</span>`;e.title=`${x.stop?'停止位置':'通過位置'} ${x.name??''}`;return e;});
+   if(x.checkpoint){const span=el.querySelector('span');if(span.lastChild?.nodeType===3)span.lastChild.textContent=x.name??'';}
    el.style.top=Math.min(100,(1-d/LOOKAHEAD_M)*100)+'%';
    const y=(1-d/LOOKAHEAD_M)*h,label=el.querySelector('span');label.hidden=Math.abs(y-lastStationY)<20;if(!label.hidden)lastStationY=y;}
   for(const [key,el] of els)if(!seen.has(key)){el.remove();els.delete(key);}

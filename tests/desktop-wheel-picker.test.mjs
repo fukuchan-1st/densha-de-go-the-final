@@ -1,0 +1,3 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {wheelVisibleIndices} from '../dist/wheel-picker.js';
+test('どの位置でも選択項目が中央スロットに固定される',()=>{for(const count of [2,3,16,50])for(let selected=0;selected<count;selected++){const slots=wheelVisibleIndices(selected,count);assert.equal(slots.length,3);assert.equal(slots[1],selected);assert.equal(slots[0],(selected-1+count)%count);assert.equal(slots[2],(selected+1)%count);}});
+test('候補が1つ・空の場合は架空の項目を表示しない',()=>{assert.deepEqual(wheelVisibleIndices(0,1),[null,0,null]);assert.deepEqual(wheelVisibleIndices(0,0),[null,null,null]);});

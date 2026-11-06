@@ -444,3 +444,14 @@ dialog h2{font:italic 900 30px var(--ax-font);color:#fff}
 .la-station.pass{border-top:3px dashed #fff}
 .la-station.pass span{color:#fff}.la-station.pass span b{background:#fff;color:#05070c}
 .la-signal span{bottom:auto;top:3px}
+
+/* タッチ端末 (iPadなど): 警笛・一時停止・その他を前方の視界から外し、上部の空いた帯にまとめる */
+@media(any-pointer:coarse){
+ .overlay-actions{left:50%;right:auto;top:22px;bottom:auto;gap:0;transform:translateX(-50%);max-width:700px}
+ .overlay-actions button{
+  flex:none;width:calc(150px * min(var(--overlay-ui-scale),1.5));min-width:0;padding:6px 10px;opacity:.88;white-space:nowrap;
+  min-height:calc(44px * min(var(--overlay-ui-scale),1.5));
+  font-size:calc(16px * min(var(--overlay-ui-scale),1.5));
+ }
+ #extras,#controlExtras{top:calc(22px + 52px * min(var(--overlay-ui-scale),1.5));right:auto;left:50%;transform:translateX(-50%)}
+}
