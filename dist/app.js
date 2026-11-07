@@ -1,15 +1,18 @@
-import {mountScoring,checkpointMarks,buildScoreTimetable,resolveScoreSchedule,scoreHazards,signalRestriction} from './scoring.js?v=score9';
+import {mountScoring,checkpointMarks,buildScoreTimetable,resolveScoreSchedule,scoreHazards,signalRestriction} from './scoring.js?v=score10';
 import {mountLookahead,changesFromSteps,stationMarks} from './lookahead.js?v=score6';const lookahead=mountLookahead(document.getElementById('drive'));
 import {GeneratedCab,generatedCab} from './generated-cab.js';
-import {mountResponsiveUI} from './responsive-ui.js?v=43';
+import {mountResponsiveUI} from './responsive-ui.js?v=44';
 import {CabPanel} from './cab-panel.js?v=23';
 import {correctStoppedOverrun,nextSignalCall,advanceDoorSequence,beginStartingBoarding,completeDoorSequence,OPEN_DELAY_SECONDS,BOARDING_WAIT_SECONDS} from './train-operations.js?v=33';
-import {ROUTE_LENGTH,LAST_STATION_INDEX,BVE_END} from './route-data.js?v=23';
+import {LAST_STATION_INDEX as FULL_LAST_STATION_INDEX,BVE_END} from './route-data.js?v=23';
 import {mountDisplay,stoppingMarker,formatStopDistance} from './display.js?v=41';
-import {STATIONS,SPECS,step,newRun,stoppingDistance,assistBrake,notchDeltaForKey,NOTCH_MIN,NOTCH_LABELS,clampNotch} from './physics.js?v=23';
+import {STATIONS as ALL_STATIONS,SPECS,step,newRun,stoppingDistance,assistBrake,notchDeltaForKey,NOTCH_MIN,NOTCH_LABELS,clampNotch} from './physics.js?v=23';
 import {RouteProfile} from './route-profile.js?v=23';
 import {RailWorld} from './scene.js?v=41';
 import {SoundEngine} from './assets/audio/sound-engine.js?v=33';
+const rangeQuery=new URLSearchParams(location.search),requestedEnd=Number(rangeQuery.get('end')),requestedStart=Number(rangeQuery.get('station')??0);
+const LAST_STATION_INDEX=rangeQuery.has('end')&&Number.isInteger(requestedEnd)&&requestedEnd>requestedStart?Math.min(FULL_LAST_STATION_INDEX,requestedEnd):FULL_LAST_STATION_INDEX;
+const STATIONS=ALL_STATIONS.slice(0,LAST_STATION_INDEX+1),ROUTE_LENGTH=STATIONS.at(-1).s;
 const $=id=>document.getElementById(id), sound=new SoundEngine();
 const ui=mountResponsiveUI();const refit=mountDisplay($('simulator'),{layout:()=>ui.layout()});ui.setRefit(refit);ui.onNotch=setNotch;ui.onHorn=(pressed,name)=>sound.setHorn(pressed&&!paused&&!run.finished,name);
 const score=mountScoring($('drive'),{badge:document.querySelector('.hud-line'),volume:()=>settings.volume,blueTolerance:10});score.bindHorn(sound,()=>mode==='drive'?run:null,()=>scoreHazards({structures:world?.routeStructures?.structures??[]}));
@@ -23,7 +26,7 @@ function toast(t,seconds=5){lastStatus=t;$('operationStatus').textContent=t;toas
 const strip=NOTCH_LABELS;
 $('notchStrip').innerHTML=strip.map((n,i)=>`<button type="button" data-notch="${i+NOTCH_MIN}" aria-label="ノッチ ${n}">${n}</button>`).join('');
 $('startStation').innerHTML=STATIONS.slice(0,-1).map((s,i)=>`<option value="${i}">${s.name}${s.s>=BVE_END?'（以北は試作）':''}</option>`).join('');
-$('startStation').onchange=()=>{$('scenarioRoute').textContent=STATIONS[Number($('startStation').value)].name+' → 福島　'+((ROUTE_LENGTH-STATIONS[Number($('startStation').value)].s)/1000).toFixed(1)+' km';};
+$('startStation').onchange=()=>{$('scenarioRoute').textContent=STATIONS[Number($('startStation').value)].name+' → '+STATIONS.at(-1).name+'　'+((ROUTE_LENGTH-STATIONS[Number($('startStation').value)].s)/1000).toFixed(1)+' km';};
 const requestedStation=new URLSearchParams(location.search).get('station');
 if(requestedStation!==null&&$('startStation').querySelector(`option[value="${CSS.escape(requestedStation)}"]`)){
  $('startStation').value=requestedStation;
@@ -35,7 +38,7 @@ if(directStart){
  $('menuButton').textContent='路線選択へ';
  $('pauseMenu').textContent='路線選択へ';
 }
-function returnToRoutes(){location.href='./?v=51&route=tohoku'+(generatedCab?'&cab=generated':'');}
+function returnToRoutes(){location.href='./?v=41&route=tohoku'+(generatedCab?'&cab=generated':'');}
 $('allRoutes').onclick=returnToRoutes;
 $('audioBack').onclick=returnToRoutes;
 $('audioUnlock').addEventListener('cancel',event=>event.preventDefault());
@@ -113,7 +116,7 @@ function requestDoorClosing(){const activeRun=run;run.doorCloseDone=false;toast(
 function closeDoors(){if(!completeDoorSequence(run,STATIONS))return;sound.playEffect('pilotOn');if(run.finished)showResult();else toast(`戸閉よし。次は${STATIONS[run.next].name}。S／↓で出発。`);}
 function updateDoors(dt){const action=advanceDoorSequence(run,STATIONS[run.next].s,dt);if(action==='open'){run.departureStationIndex=run.next;run.startingDeparture=false;sound.playEffect('open');sound.playEffect('pilotOff');toast('ドアが自動で開きました。15秒後に発車音声を流します。');}else if(action==='announcement'){toast('発車音声を再生中。再生後に自動で閉まります。');requestDeparture();}else if(action==='close')requestDoorClosing();else if(action==='closed')closeDoors();}
 
-function showResult(){paused=true;sound.setPaused(true);const avg=run.errors.length?run.errors.reduce((a,b)=>a+Math.abs(b),0)/run.errors.length:0;info(`<p class="eyebrow">JOURNEY COMPLETE</p><h2>福島に到着。</h2><p>乗務おつかれさま！</p><table><tr><td>運転距離</td><td>${((ROUTE_LENGTH-(run.startS??0))/1000).toFixed(1)} km</td></tr><tr><td>停車できた駅</td><td>${run.served} / ${run.targetStops}</td></tr><tr><td>通過した駅</td><td>${run.missed}</td></tr><tr><td>平均停止位置誤差</td><td>${avg.toFixed(1)} m</td></tr><tr><td>速度制限を超過した時間</td><td>${Math.round(run.overspeedSeconds??0)}秒</td></tr><tr><td>運転時間</td><td>${Math.floor(run.elapsed/60)}分${Math.floor(run.elapsed%60)}秒</td></tr></table><button id="resultMenu" class="primary">メニューへ</button>`);$('resultMenu').onclick=()=>{$('info').close();toMenu();};}
+function showResult(){paused=true;sound.setPaused(true);const avg=run.errors.length?run.errors.reduce((a,b)=>a+Math.abs(b),0)/run.errors.length:0;info(`<p class="eyebrow">JOURNEY COMPLETE</p><h2>${STATIONS.at(-1).name}に到着。</h2><p>乗務おつかれさま！</p><table><tr><td>運転距離</td><td>${((ROUTE_LENGTH-(run.startS??0))/1000).toFixed(1)} km</td></tr><tr><td>停車できた駅</td><td>${run.served} / ${run.targetStops}</td></tr><tr><td>通過した駅</td><td>${run.missed}</td></tr><tr><td>平均停止位置誤差</td><td>${avg.toFixed(1)} m</td></tr><tr><td>速度制限を超過した時間</td><td>${Math.round(run.overspeedSeconds??0)}秒</td></tr><tr><td>運転時間</td><td>${Math.floor(run.elapsed/60)}分${Math.floor(run.elapsed%60)}秒</td></tr></table><button id="resultMenu" class="primary">メニューへ</button>`);$('resultMenu').onclick=()=>{$('info').close();toMenu();};}
 $('doors').onclick=doors;$('powerUp').onclick=()=>setNotch(run.notch+1);$('brakeDown').onclick=()=>setNotch(run.notch-1);$('neutral').onclick=()=>setNotch(0);$('emergency').onclick=()=>setNotch(NOTCH_MIN);
 $('notchStrip').onclick=e=>{if(e.target.dataset.notch)setNotch(Number(e.target.dataset.notch));};
 $('assist').onclick=()=>{assist=!assist;run.assistBraking=false;$('assist').textContent='停車アシスト '+(assist?'ON':'OFF');toast(assist?'駅手前の減速・停止を補助します。':'停車アシストを解除しました。');};

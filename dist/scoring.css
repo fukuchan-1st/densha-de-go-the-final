@@ -13,3 +13,26 @@
 .score-objectives{font-size:16px;max-width:880px}.la-station:has(span b){overflow:visible}.la-station span{white-space:nowrap}
 
 .la-station.checkpoint span{left:0;right:auto;background:#05101eeb;padding:3px 5px}
+
+
+/* ==========================================================================
+   運転画面の整理: 左上はスコア1行+時刻だけ、定速/定通は近づいたときだけ、
+   運転指示は変わってから数秒で消える
+   ========================================================================== */
+.scoring-badge{top:24px!important;width:330px!important;min-height:0!important;padding:6px 16px!important}
+.score-hud{flex-direction:row;align-items:baseline;gap:14px;min-height:0}
+.score-hud strong{order:-1;font-size:28px;line-height:34px}
+.score-hud>small{font-size:15px;line-height:20px;opacity:.85}
+.score-clock{top:82px;width:330px;padding:6px 14px}
+.score-clock>div{grid-template-columns:72px 1fr 104px;min-height:30px}
+.score-clock>div+div{padding-top:4px;margin-top:4px}
+.score-clock small{font-size:14px}
+.score-clock-now b{font-size:26px}
+.score-clock span+b{font-size:20px}
+.score-objectives{top:184px;padding:4px 10px;font-size:14px;line-height:1.55;white-space:nowrap;background:#031326cc}
+.score-objectives>[hidden]{display:none}
+.score-objectives:not(:has(>div:not([hidden]))){display:none}
+.score-feedback{left:50%;top:96px;transform:translateX(-50%);max-width:620px;white-space:nowrap}
+.overlay-guidance{transition:opacity .6s ease}
+.overlay-guidance.quiet{opacity:0}
+#stopGauge{transition:opacity .5s ease}#stopGauge.far{opacity:0;pointer-events:none}

@@ -1,3 +1,4 @@
+import {prepareCorridorScenery,corridorSceneryType} from './corridor-scenery.js?v=corridor1';
 import {sampleRouteCurve} from './route-curve.js?v=39';
 import {prepareTurnoutLayout} from './turnout-layout.js?v=39';
 import {addTurnouts} from './turnout-scene.js?v=39';
@@ -12,13 +13,14 @@ const clamp=T.MathUtils.clamp;
 // Original streamed scenery. Track coordinates come from the route JSON; buildings and platforms are approximate.
 export class FinalWorld {
  constructor(container,route,{quality='standard'}={}){
+  route=prepareCorridorScenery(route);
   this.route=route;this.sceneryStations=route.sceneryStations??route.stations;this.points=route.points;this.length=route.stations.at(-1).s;this.chunks=new Map();this.suspension=new CabSuspension();this.materials=new Map();this.rural=['yagan','shinonoi','oito','chuo-shinshu','chuo-kofu','chuo-system','chuo-extended','shinonoi-extended','chuo'].includes(route.id);
   this.chuoCorridor=['chuo','chuo-extended'].includes(route.id);
   this.mountainStart=this.chuoCorridor?(this.sceneryStations.find(st=>st.name==='高尾')?.s??Infinity):-Infinity;
   this.cityEnd=this.chuoCorridor?(this.sceneryStations.find(st=>st.name==='中野')?.s??0):0;
   this.scene=new T.Scene();this.scene.background=new T.Color('#a4c5db');this.scene.fog=new T.Fog('#b3c9d3',350,1600);
   this.renderer=new T.WebGLRenderer({antialias:quality!=='light',powerPreference:'high-performance'});this.renderer.setPixelRatio(Math.min(devicePixelRatio,quality==='light'?1:1.5));this.renderer.setSize(1600,900);this.renderer.outputColorSpace=T.SRGBColorSpace;container.replaceChildren(this.renderer.domElement);
-  this.camera=new T.PerspectiveCamera(58,16/9,.15,1900);this.sky=new T.HemisphereLight('#e3f4ff','#79766b',2.1);this.scene.add(this.sky);this.sun=new T.DirectionalLight('#fff1d8',2.1);this.sun.position.set(-150,300,90);this.scene.add(this.sun);this.box=new T.BoxGeometry(1,1,1);this.traffic=new OpposingTrains(this);this.quality=quality;this.panorama=false;this.viewOrigin=null;
+  this.camera=new T.PerspectiveCamera(58,16/9,.15,1900);this.sky=new T.HemisphereLight('#e3f4ff','#79766b',2.1);this.scene.add(this.sky);this.sun=new T.DirectionalLight('#fff1d8',2.1);this.sun.position.set(-150,300,90);this.scene.add(this.sun);this.box=new T.BoxGeometry(1,1,1);this.houseRoof=new T.ConeGeometry(Math.SQRT1_2,1,4);this.houseRoof.rotateY(Math.PI/4);this.traffic=new OpposingTrains(this);this.quality=quality;this.panorama=false;this.viewOrigin=null;
   const normalize=(rail,index)=>({...rail,id:'neighbor-'+index,knots:rail.knots.map(([s,x])=>[s,x,rail.heightKnots?.length?interpolateKnots(rail.heightKnots,s):rail.height??0])});
   const neighbors=(route.neighborTracks??[{knots:Array.from({length:Math.ceil(this.length/30)+1},(_,i)=>{const s=Math.min(this.length,i*30);return [s,this.oppositeOffset(s)];})}]).map(normalize);
   const playerKnots=route.drivingTrack?.map(([s,x])=>[s,x,0])??[[-300,0,0],[this.length+300,0,0]];
@@ -53,7 +55,7 @@ export class FinalWorld {
  curvature(s){const a=this.driveFrame(s-20).dir.setY(0).normalize(),b=this.driveFrame(s+20).dir.setY(0).normalize();return Math.atan2(a.x*b.z-a.z*b.x,a.dot(b))/40;}
  grade(s){return clamp((this.point(s+10).y-this.point(s-10).y)/20*1000,-40,40);}
  structureAt(s,kind){return this.route.structures?.find(item=>(!kind||item.kind===kind)&&s>=item.sStart&&s<=item.sEnd);}
- sceneryTypeAt(s){if(this.chuoCorridor)return s<this.cityEnd?'city':s<this.mountainStart?'suburban':'mountain';return this.rural?'mountain':(['yamanote','osaka'].includes(this.route.id)||this.stationNear(s).d<900?'city':'suburban');}
+ sceneryTypeAt(s){const corridor=corridorSceneryType(this.route,s);if(corridor)return corridor;if(this.chuoCorridor)return s<this.cityEnd?'city':s<this.mountainStart?'suburban':'mountain';return this.rural?'mountain':(['yamanote','osaka'].includes(this.route.id)||this.stationNear(s).d<900?'city':'suburban');}
  stationNear(s){let nearest=null,d=Infinity;for(const st of this.sceneryStations??this.route.stations){const dd=Math.abs(st.s-s);if(dd<d){nearest=st;d=dd;}}return {st:nearest,d};}
  platformLength(){return clamp((this.route.carCount??10)*20+20,180,280);}
  oppositeOffset(s){
@@ -205,13 +207,13 @@ export class FinalWorld {
    if(this.structureAt(s,'tunnel')||(kind==='mountain'&&(near.d>260||random()>.38)))continue;
    const urban=kind==='city',[min,max]=trackEnvelope(s),edge=side<0?min:max;
    const x=edge+side*(urban?18+random()*43:13+random()*30);
-   const h=urban?14+random()*42:3.5+random()*5,w=urban?8+random()*15:6+random()*5,d=urban?10+random()*12:7+random()*5;
+   const h=urban?14+random()*42:3.2+random()*2.8,w=urban?8+random()*15:5.5+random()*3,d=urban?10+random()*12:6+random()*3;
    buildings.push({s,x,y:0,w,h,d});
-   if(!urban)roofs.push({s,x,y:h,w:w+.5,h:.3,d:d+.5});
+   if(!urban){roofs.push({s,x,y:h,w:w+.5,h:this.route.id==='tokaido'?1.7:.3,d:d+.5});if(this.route.id==='tokaido'){const x2=x+side*18;buildings.push({s:s+8,x:x2,y:0,w:w*.9,h:h*.9,d});roofs.push({s:s+8,x:x2,y:h*.9,w:w*.9+.5,h:1.7,d:d+.5});}}
    if(this.quality!=='light')for(let y=2.5;y<h-1;y+=3)windows.push({s:s-d/2-.03,x,y,w:w*.65,h:1.1,d:.05});
    if(kind==='suburban'&&random()>.5)trees.push({s:s+10,x:edge+side*(9+random()*5),y:1,w:2,h:3,d:2});
   }
-  this.instances(group,roofs,'#616b71');
+  this.instances(group,roofs,'#616b71',this.route.id==='tokaido'?this.houseRoof:this.box);
   this.instances(group,buildings,index%2?'#b7b5aa':'#b1b7b5');this.instances(group,windows,'#405d68');this.instances(group,trees,'#4d7150');
   for(const st of nearby){
    const drive=this.driveOffset(st.s),opposite=this.oppositeOffset(st.s);
@@ -267,11 +269,11 @@ export class FinalWorld {
   addTurnouts(this,group,this.turnouts,this.railTracks,start,end);
   this.scene.add(group);return group;
  }
- disposeChunk(group){this.scene.remove(group);group.traverse(o=>{if(o.isInstancedMesh)o.dispose();if(o.geometry&&o.geometry!==this.box&&o.geometry!==this.pine&&o.geometry!==this.canopy)o.geometry.dispose();if(o.material?.map){o.material.map.dispose();o.material.dispose();}else if(o.userData.disposeWithChunk)o.material.dispose();});}
+ disposeChunk(group){this.scene.remove(group);group.traverse(o=>{if(o.isInstancedMesh)o.dispose();if(o.geometry&&o.geometry!==this.box&&o.geometry!==this.pine&&o.geometry!==this.canopy&&o.geometry!==this.houseRoof)o.geometry.dispose();if(o.material?.map){o.material.map.dispose();o.material.dispose();}else if(o.userData.disposeWithChunk)o.material.dispose();});}
  setCabView(origin){this.viewOrigin=origin;this.currentView=undefined;}
  render(s,v,dt,{acceleration=0,shake=1,panorama=false}={}){const chunk=Math.floor(s/500);for(let i=chunk-2;i<=chunk+3;i++)if(!this.chunks.has(i))this.chunks.set(i,this.buildChunk(i));for(const [i,g]of this.chunks)if(i<chunk-2||i>chunk+3){this.disposeChunk(g);this.chunks.delete(i);}
   if(this.currentView!==panorama){if(!panorama&&this.viewOrigin)this.camera.setViewOffset(1600,900,800-this.viewOrigin.x,450-this.viewOrigin.y,1600,900);else this.camera.clearViewOffset();this.currentView=panorama;}
   const f=this.driveFrame(s),head=this.drivePoint(s+45),motion=this.suspension.update({s,speed:v,curvature:this.curvature(s),acceleration},dt,shake),eye=Number(this.route.eyeHeight??2.7),offset=(this.route.eyeOffset??0)+motion.lateral;this.camera.position.copy(f.p).addScaledVector(f.right,offset);this.camera.position.y+=eye+motion.vertical;head.addScaledVector(f.right,offset);head.y+=eye+motion.vertical;this.camera.lookAt(head);this.camera.rotateX(motion.pitch);this.camera.rotateY(motion.yaw);this.camera.rotateZ(motion.roll);const tunnel=(this.route.structures??[]).some(t=>t.kind==='tunnel'&&s>=t.sStart&&s<=t.sEnd);this.sky.intensity=tunnel?.6:2.1;this.sun.intensity=tunnel?.3:2.1;if(this.headlight)this.headlight.intensity=tunnel?550:0;this.traffic.update(s,dt);this.renderer.render(this.scene,this.camera);
  }
- dispose(){this.traffic.dispose();for(const g of this.chunks.values())this.disposeChunk(g);this.chunks.clear();for(const m of this.materials.values()){m.map?.dispose();m.dispose();}this.box.dispose();this.pine?.dispose();this.canopy?.dispose();this.renderer.dispose();this.renderer.forceContextLoss();this.renderer.domElement.remove();}
+ dispose(){this.traffic.dispose();for(const g of this.chunks.values())this.disposeChunk(g);this.chunks.clear();for(const m of this.materials.values()){m.map?.dispose();m.dispose();}this.box.dispose();this.houseRoof.dispose();this.pine?.dispose();this.canopy?.dispose();this.renderer.dispose();this.renderer.forceContextLoss();this.renderer.domElement.remove();}
 }
