@@ -21,7 +21,7 @@ class BundledTrainPack {
 }
 
 export async function loadBundledTrainPacks(){
- const response=await fetch(new URL('./assets/final/vehicles/manifest.json?v=vehicles221',import.meta.url));
+ const response=await fetch(new URL('./assets/final/vehicles/manifest.json?v=panel-repair1',import.meta.url));
  if(!response.ok)throw Error('アプリ内の車両一覧を読み込めません');
  const {trains}=await response.json();
  return new Map(Object.entries(trains).map(([id,assets])=>[id,new BundledTrainPack(id,assets)]));
@@ -95,5 +95,5 @@ export function interpolateColumn(table,column,speed,defaultValue=0){
  }
  return points.at(-1)[1];
 }
-export {LocalCabPanel} from './final-panel.js?v=39';
+export {LocalCabPanel} from './final-panel.js?v=panel-repair1';
 export {LocalTrainAudio} from './final-audio.js?v=39';

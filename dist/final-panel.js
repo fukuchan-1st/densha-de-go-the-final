@@ -1,3 +1,4 @@
+import {loadPanelImage} from './panel-image.js?v=panel-repair1';
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 // PNG alpha/tRNS already carries transparency. Black is also real dashboard ink.
 export function panelTransparentColor(element,panel){return element.transparentcolor??panel.this.transparentcolor??null;}
@@ -32,9 +33,7 @@ export class LocalCabPanel {
     if(!ref)continue;
     const key=panel.key(ref);
     if(panel.images.has(key))continue;
-    const image=new Image();
-    image.src=await pack.objectURL(ref);
-    await image.decode();
+    const image=await loadPanelImage(await pack.objectURL(ref),recipe.name+' / '+ref.entryName);
     const dimensions=pack.dimensions?.(ref);
     const width=dimensions?.width??image.naturalWidth;
     const height=dimensions?.height??image.naturalHeight;

@@ -7,7 +7,7 @@ import {serviceChoices,makeServiceRoute} from './train-selection.js?v=vehicles22
 import {GeneratedCab,generatedCab} from './generated-cab.js';
 import {FinalWorld} from './final-world.js?v=corridor1';
 import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=photo1';
-import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=corridor1';
+import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=panel-repair1';
 import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,routeLimitAt,stopPosition,finishStop,takeDepartureCall} from './final-model.js?v=41';
 import {STATIONS as TOHOKU_STATIONS} from './route-data.js?v=41';
 import {FINAL_SCENARIOS,scenarioJourney} from './final-scenarios.js?v=41';
