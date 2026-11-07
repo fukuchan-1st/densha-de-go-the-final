@@ -1,7 +1,7 @@
 import {vehiclePhoto} from './vehicle-photos.js?v=corridor1';
 import {mountTrainDetails} from './train-details.js?v=corridor1';
 import {mountWheelPicker} from './wheel-picker.js?v=vehicles221';
-import {mountScoring,checkpointMarks,scoringStations,buildScoreTimetable,resolveScoreSchedule,scoreHazards,signalRestriction} from './scoring.js?v=score10';
+import {mountScoring,checkpointMarks,scoringStations,buildScoreTimetable,resolveScoreSchedule,scoreHazards,signalRestriction} from './scoring.js?v=score12';
 import {mountDrivingOverlay} from './driving-overlay.js?v=44';import {mountLookahead,changesFromSections,stationMarks} from './lookahead.js?v=score6';
 import {serviceChoices,makeServiceRoute} from './train-selection.js?v=vehicles221';
 import {GeneratedCab,generatedCab} from './generated-cab.js';
@@ -211,7 +211,8 @@ async function start(startIndex){
    const first=r.soundEvents.findIndex(event=>event.s>=run.s);
    run.soundCursor=first<0?r.soundEvents.length:first;
   }
-  const schedule=resolveScoreSchedule(r,run.s,train.playableSpecs);
+  run.scoreVehicleSpec={...train.playableSpecs,powerForceRows:train.performance?.power?.force?.rows};
+  const schedule=resolveScoreSchedule(r,run.s,run.scoreVehicleSpec);
   run.clockStart=schedule.clockStart;
   run.scoreTimetable=schedule.timetable.filter(st=>st.s<=r.stations[run.endIndex].s+.5);
   r.color=meta.color;
@@ -273,7 +274,7 @@ function advance(dt){
  const r=route(),train=recipe(),station=r.stations[run.next];
  if(assist&&!run.doors)brakeAssist(run,r,train);
  driveStep(run,train,dt,world.grade(run.s));
- const sr=signalRestriction(r.signals,run.s),trackLimit=routeLimitAt(r,run.s),limits=(r.limits??[]).filter(x=>run.s>=x.sStart&&run.s<x.sEnd);score.update(run,{eb:controlsFor(train).min,limit:sr?Math.min(trackLimit??Infinity,sr.limit):trackLimit,limitKey:limits.map(x=>x.sStart+':'+x.sEnd).join('|')+(sr?.key??''),vehicleSpec:train.playableSpecs,routeLimits:r.limits,stations:run.scoreTimetable??scoringStations(r)},dt);
+ const sr=signalRestriction(r.signals,run.s),trackLimit=routeLimitAt(r,run.s),limits=(r.limits??[]).filter(x=>run.s>=x.sStart&&run.s<x.sEnd);score.update(run,{eb:controlsFor(train).min,limit:sr?Math.min(trackLimit??Infinity,sr.limit):trackLimit,limitKey:limits.map(x=>x.sStart+':'+x.sEnd).join('|')+(sr?.key??''),vehicleSpec:run.scoreVehicleSpec??train.playableSpecs,routeLimits:r.limits,stations:run.scoreTimetable??scoringStations(r)},dt);
  if(correctStoppedOverrun(run,station.s)!==null)return;
  if(run.next<run.endIndex&&run.s>=r.stations[run.next+1].s-150){
   toast(`${station.name}を通過しました。`);
