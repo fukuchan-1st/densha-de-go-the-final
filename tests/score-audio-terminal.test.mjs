@@ -7,6 +7,14 @@ test('採点SEを待ち行列にせず重ねて鳴らし、一時停止で全音
  mixer.play('combo1');mixer.play('combo2');mixer.play('D20');assert.equal(mixer.active.size,3);assert.ok(clips.every(a=>a.played));
  clips[0].onended();assert.equal(mixer.active.size,2);mixer.stop();assert.equal(mixer.active.size,0);assert.ok(clips.slice(1).every(a=>a.paused));
 });
+test('2音の順番を保ち、鳴っている途中の次の採点は1音目から重なる',()=>{
+ const clips=[],mixer=new ScoreAudio({createAudio:url=>{const audio={url,play:()=>Promise.resolve(),pause:()=>{}};clips.push(audio);return audio;}});
+ mixer.playSequence(['combo1','chain1']);mixer.playSequence(['combo2','chain2']);
+ assert.deepEqual(clips.map(a=>a.url),['combo1','combo2']);assert.equal(mixer.active.size,2);
+ clips[0].onended();assert.deepEqual(clips.map(a=>a.url),['combo1','combo2','chain1']);
+ clips[1].onended();assert.equal(clips[3].url,'chain2');
+ mixer.stop();clips[2].onended();assert.equal(mixer.active.size,0);assert.equal(clips.length,4);
+});
 test('終点では戸開音が終わってから乗務終了し、戸開とノッチを保つ',async()=>{
  const state={s:1002,v:0,notch:-4,doors:true,next:3,served:2,errors:[]};let finish;
  beginTerminalOpening(state,new Promise(resolve=>finish=resolve));assert.equal(advanceTerminalOpening(state,1000,10),false);assert.equal(state.finished,undefined);
