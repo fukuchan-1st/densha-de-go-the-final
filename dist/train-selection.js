@@ -1,4 +1,4 @@
-import {selectTokaidoServiceTrack} from './tokaido-service-track.js?v=controls55';
+import {selectTokaidoServiceTrack} from './tokaido-service-track.js?v=topology56';
 export const serviceChoices={
  yamanote:[['yamanote','e235','普通']],
  chuo:[['chuo-extended','e353','特急'],['chuo-extended','211','普通'],['shinonoi-extended','383','特急'],['shinonoi-extended','e353','特急'],['shinonoi-extended','211','普通'],['chuo','e233','快速'],['chuo','e353','特急'],['chuo-kofu','e353','特急'],['chuo-kofu','211','普通'],['chuo-shinshu','e353','特急'],['chuo-shinshu','211','普通'],['shinonoi','383','特急'],['shinonoi','e353','特急'],['shinonoi','211','普通'],['oito','e127','普通'],['oito','211','普通']],

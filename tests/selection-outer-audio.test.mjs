@@ -16,10 +16,23 @@ test('東海道線の新快速と特急は外側へ移り、内側の線路も�
  const original=JSON.parse(await readFile(new URL('../dist/assets/final/tokaido-route.json',import.meta.url),'utf8'));
  for(const service of ['新快速','特急']){
   const r=makeServiceRoute(original,service==='新快速'?'223-1000':'681',service);assert.equal(r.serviceTrack,'outer');
-  for(let s=0;s<75900;s+=100)assert.ok(interpolateKnots(r.drivingTrack,s)<interpolateKnots(original.drivingTrack,s)-3);
-  assert.ok(r.neighborTracks.some(t=>t.basis==='Inner track retained for local and rapid services'));
+  for(let s=0;s<75900;s+=100)assert.equal(interpolateKnots(r.drivingTrack,s),-8);
+  assert.ok(r.neighborTracks.some(t=>t.mainCorridor&&interpolateKnots(t.knots,1000)===0));
  }
- assert.deepEqual(makeServiceRoute(original,'221','快速').drivingTrack,original.drivingTrack);
+ assert.equal(interpolateKnots(makeServiceRoute(original,'221','快速').drivingTrack,1000),0);
+});
+test('全停車駅でホームが走行線に接し、ホームを線路が貫通しない',async()=>{
+ const original=JSON.parse(await readFile(new URL('../dist/assets/final/tokaido-route.json',import.meta.url),'utf8'));
+ for(const [vehicle,service] of [['207','普通'],['221','快速'],['223-1000','新快速'],['681','特急']]){
+  const r=makeServiceRoute(original,vehicle,service);
+  for(const t of r.neighborTracks)for(let i=1;i<t.knots.length;i++)assert.ok(t.knots[i][0]>t.knots[i-1][0]);
+  for(const st of r.stations){
+   const x=interpolateKnots(r.drivingTrack,st.s),platforms=r.stationLayouts[st.name].platforms;
+   assert.ok(platforms.some(p=>Math.min(Math.abs(interpolateKnots(p.edges,0,1)-x),Math.abs(interpolateKnots(p.edges,0,2)-x))<1.7),`${service} ${st.name} ホームなし`);
+   for(const p of platforms){const left=interpolateKnots(p.edges,0,1),right=interpolateKnots(p.edges,0,2);assert.ok(!(x>left&&x<right),`${st.name} ホームを貫通`);}
+  }
+  for(let s=1000;s<75900;s+=100){const xs=[interpolateKnots(r.drivingTrack,s),...r.neighborTracks.filter(t=>t.mainCorridor).map(t=>interpolateKnots(t.knots,s))];assert.equal(new Set(xs).size,4);}
+ }
 });
 test('SEは先読みを使い回し、2音の途中でも次のセットを即座に重ねる',async()=>{
  let fetches=0,decodes=0;const sources=[];

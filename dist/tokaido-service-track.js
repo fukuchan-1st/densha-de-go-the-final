@@ -1,19 +1,29 @@
-import {prepareCorridorScenery} from './corridor-scenery.js?v=controls55';
 import {interpolateKnots} from './track-layout.js';
+const outerStops=new Set(['京都','高槻','新大阪','大阪','尼崎','芦屋','三ノ宮','神戸']);
+const major=new Set(['京都','新大阪','大阪','神戸']);
+const tracks=[-8,0,8,16];
+// One shared topology owns both the driving rail and platform edges. The route
+// centerline stays mapped; cross-sections are a consistent prototype layout.
 export function selectTokaidoServiceTrack(source,service){
- if(source.id!=='tokaido'||!['新快速','特急'].includes(service))return source;
- if(source.serviceTrack==='outer')return source;
- const route=prepareCorridorScenery(source),end=(route.sceneryStations??route.stations).at(-1).s;
- const original=source.drivingTrack??[[-300,0],[end+300,0]],points=[];
- const clearPlatform=(s,x)=>{for(let pass=0;pass<4;pass++)for(const st of route.sceneryStations??route.stations){if(Math.abs(st.s-s)>450)continue;for(const p of route.stationLayouts?.[st.name]?.platforms??[]){const relative=s-st.s;if(relative<p.edges[0][0]||relative>p.edges.at(-1)[0]||Math.abs(p.height??0)>.3)continue;const left=interpolateKnots(p.edges,relative,1),right=interpolateKnots(p.edges,relative,2);if(x>left-1.5&&x<right+1.5)x=left-1.55;}}return x;};
- for(let s=-300;s<=end+300;s+=20){
-  const inner=interpolateKnots(original,s),ideal=clearPlatform(s,inner-9);
-  const candidates=route.neighborTracks.filter(t=>t.knots[0][0]<=s&&t.knots.at(-1)[0]>=s&&Math.abs(t.height??0)<.3).map(t=>interpolateKnots(t.knots,s)).filter(x=>x<inner-3&&Math.abs(x-ideal)<3);
-  const x=candidates.sort((a,b)=>Math.abs(a-ideal)-Math.abs(b-ideal))[0]??ideal;points.push([s,clearPlatform(s,x)]);
+ if(source.id!=='tokaido')return source;
+ const outer=['新快速','特急'].includes(service),player=outer?-8:0;
+ if(source.tokaidoTopologyVersion===2&&source.serviceTrack===(outer?'outer':'inner'))return source;
+ const stations=source.sceneryStations??source.stations,end=stations.at(-1).s;
+ const full=x=>[[-300,x],[end+300,x]],layouts={},neighbors=tracks.filter(x=>x!==player).map(x=>({knots:full(x),basis:'Continuous four-track main line',mainCorridor:true}));
+ const platform=(left,right,boarding)=>({edges:[[-260,left,right],[20,left,right]],roof:[-210,5],boarding,height:0,basis:'Consistent platform clearance from main-line rails'});
+ for(const st of stations){
+  const platforms=outerStops.has(st.name)?[platform(-6.45,-1.55,true),platform(9.55,14.45,false)]:[platform(1.55,6.45,!outer)];
+  if(major.has(st.name)){
+   const oldCount=source.stationLayouts?.[st.name]?.platforms?.length??2;
+   for(let i=0;i<Math.max(1,oldCount-2);i++){
+    const x=-20-i*12;
+    const raw=[[st.s-650,-8],[st.s-500,x],[st.s-330,x],[st.s+100,x],[st.s+430,-8]],from=Math.max(-300,raw[0][0]),to=Math.min(end+300,raw.at(-1)[0]);
+    const knots=[[from,interpolateKnots(raw,from)],...raw.filter(([s])=>s>from&&s<to),[to,interpolateKnots(raw,to)]];
+    neighbors.push({knots,basis:'Station siding',station:st.name});
+    platforms.push(platform(x+1.55,x+6.5,false));
+   }
+  }
+  layouts[st.name]={platforms,opposite:[[-600,8],[600,8]],basis:'Prototype four-track station layout; mapped centerline retained'};
  }
- if(points.at(-1)[0]<end+300)points.push([end+300,points.at(-1)[1]]);
- // Blend short map fragments to avoid sudden lateral jumps between outer rails.
- let drivingTrack=points;for(let pass=0;pass<3;pass++)drivingTrack=drivingTrack.map(([s,x],i,a)=>[s,i===0||i===a.length-1?x:(a[i-1][1]+2*x+a[i+1][1])/4]);
- drivingTrack=drivingTrack.map(([s,x])=>[s,clearPlatform(s,x)]);
- return {...route,drivingTrack,neighborTracks:[...route.neighborTracks,{knots:original,basis:'Inner track retained for local and rapid services'}],serviceTrack:'outer',serviceTrackBasis:'Mapped outer rail fragments with approximate continuations'};
+ return {...source,drivingTrack:full(player),neighborTracks:neighbors,stationLayouts:layouts,defaultOppositeOffset:outer?0:8,serviceTrack:outer?'outer':'inner',corridorSceneryPrepared:true,tokaidoTopologyVersion:2,serviceTrackBasis:'Shared four-track and platform topology; approximate station cross-sections'};
 }

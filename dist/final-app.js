@@ -6,7 +6,7 @@ import {mountTrainDetails} from './train-details.js?v=corridor1';
 import {mountWheelPicker} from './wheel-picker.js?v=controls55';
 import {mountScoring,checkpointMarks,scoringStations,buildScoreTimetable,resolveScoreSchedule,scoreHazards,signalRestriction} from './scoring.js?v=controls55';
 import {mountDrivingOverlay} from './driving-overlay.js?v=44';import {mountLookahead,changesFromSections,stationMarks} from './lookahead.js?v=score6';
-import {serviceChoices,makeServiceRoute} from './train-selection.js?v=controls55';
+import {serviceChoices,makeServiceRoute} from './train-selection.js?v=topology56';
 import {GeneratedCab,generatedCab} from './generated-cab.js';
 import {FinalWorld} from './final-world.js?v=controls55';
 import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=photo1';
