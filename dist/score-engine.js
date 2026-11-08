@@ -7,14 +7,22 @@ export class ScoreEngine{
  reset(s=0){this.points=0;this.chain=0;this.events=[];this.done=new Set();this.start=s;this.previous=null;this.zone=null;this.horn=false;this.presses=[];this.hornStart=0;this.hornBad=false;this.eb=false;this.last=null;this.lastCheckpoint=null;this.burstBad=false;}
  award(grade,reason,penalty=100){let delta;if(grade==='×'){this.chain=0;delta=-penalty;}else{this.chain++;delta=({'△':10,'〇':50,'◎':100}[grade]??0)*this.chain;}this.points+=delta;const event={grade,reason,delta,points:this.points,chain:this.chain};this.events.push(event);if(this.events.length>200)this.events.shift();this.last=event;this.emit(event);return event;}
  once(key,grade,reason,penalty){if(this.done.has(key))return;this.done.add(key);return this.award(grade,reason,penalty);}
- hornChange(on,t,s,hazards=[]){if(on===this.horn)return;this.horn=on;if(!on){this.hornBad=false;return;}this.hornStart=t;this.presses=this.presses.filter(x=>t-x<=this.cfg.hornBurstSeconds);this.presses.push(t);if(this.presses.length>=10&&!this.burstBad){this.award('×','警笛の連打',50);this.burstBad=true;}for(const h of hazards){const d=h.s-s;if(d>=this.cfg.hornNear&&d<=this.cfg.hornFar)this.once('horn:'+h.id,'〇','警笛合図');}}
+ hornChange(on,t,s,hazards=[]){if(on===this.horn)return;this.horn=on;if(!on){this.hornBad=false;return;}this.hornStart=t;this.presses=this.presses.filter(x=>t-x<=this.cfg.hornBurstSeconds);this.presses.push(t);if(this.presses.length>=10&&!this.burstBad){this.award('×','警笛の連打',50);this.burstBad=true;}this.checkHorn(s,hazards);}
+ checkHorn(s,hazards=[]){if(!this.horn)return;for(const h of hazards){const d=h.s-s;if(d>=this.cfg.hornNear&&d<=this.cfg.hornFar)this.once('horn:'+(h.id??h.s),'〇','警笛合図'+(h.name?' '+h.name:''));}}
  tick(state,context,dt){
   const {s,v,elapsed:t,notch}=state,prev=this.previous;
   if(this.horn&&t-this.hornStart>=10&&!this.hornBad){this.hornBad=true;this.award('×','警笛が10秒以上',50);}
   this.presses=this.presses.filter(x=>t-x<=this.cfg.hornBurstSeconds);if(this.presses.length===0)this.burstBad=false;
   const eb=context.eb===notch;if(eb&&!this.eb&&(v>.01||(prev?.v??0)>.01))this.award('×','走行中の非常ブレーキ',50);this.eb=eb;
-  const limit=Number.isFinite(context.limit)?context.limit:null;
-  if(!this.zone||!Object.is(this.zone.limit,limit))this.zone={limit,bad:false};
+  this.checkHorn(s,context.hazards);
+  const limit=Number.isFinite(context.limit)?context.limit:null,key=context.limitKey??limit;
+  if(!this.zone||!Object.is(this.zone.limit,limit)||!Object.is(this.zone.key,key)){
+   // Complete only the restriction actually observed in the previous interval.
+   // The current speed is checked against the new limit below, never the old one.
+   if(this.zone&&Number.isFinite(this.zone.limit)&&this.zone.clean&&!this.zone.bad&&prev&&s>this.zone.startS)this.award('〇','制限速度厳守 '+this.zone.limit+' km/h');
+   this.zone={limit,key,bad:false,clean:true,startS:s};
+  }
+  if(Number.isFinite(limit)&&v*3.6>limit+1e-6)this.zone.clean=false;
   if(Number.isFinite(limit)&&v*3.6>=limit+3&&!this.zone.bad){this.zone.bad=true;this.award('×','速度超過',this.cfg.overspeedPenalty);}
   const clock=(state.clockStart??28800)+t;
   for(const st of context.stations??[]){if(st.s<=this.start+1)continue;const key='time:'+st.id,target=timeSeconds(st.time);let actual=null;

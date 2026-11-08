@@ -1,5 +1,5 @@
 import {ScoreAudio} from './score-audio.js?v=phone58fix';
-import {ScoreEngine,timeSeconds} from './score-engine.js?v=score9';
+import {ScoreEngine,timeSeconds} from './score-engine.js?v=evaluation59';
 export function mountScoring(parent,{badge,volume=()=>.65,blueTolerance=3}={}){
  const hud=document.createElement('div');hud.className='score-hud';hud.innerHTML='<small><b class="chain-number">0</b> chain</small><strong><b class="points-number">0</b> points</strong>';
  if(badge){[...badge.children].forEach(c=>c.hidden=true);badge.append(hud);badge.classList.add('scoring-badge');}else parent.append(hud);
@@ -14,7 +14,21 @@ export function mountScoring(parent,{badge,volume=()=>.65,blueTolerance=3}={}){
  return {engine,reset,bindHorn(sound,getState,getHazards){const original=sound.setHorn.bind(sound);sound.setHorn=(on,...args)=>{const state=getState();if(state)engine.hornChange(Boolean(on),state.elapsed,state.s,getHazards?.()??[]);return original(on,...args);};},update(state,context,dt){if(run!==state)reset(state);if(observeScoreDeparture(state,context.stations??[]))state.scoreCheckpoints=null;context={...context,checkpoints:state.scoreCheckpoints??=makeCheckpoints(context.stations??[],context.routeLimits??[],engine.start,state.clockStart??28800,{...(context.vehicleSpec??{}),departureTimes:state.scoreDepartureTimes??{}})};engine.tick(state,context,dt);clockPanel.querySelector('.score-clock-now b').textContent=formatScoreTime((state.clockStart??28800)+state.elapsed,true);const pending=(context.stations??[]).filter(st=>st.s>engine.start+1&&st.s>=state.s-(st.stop?engine.cfg.blueTolerance:0)&&!engine.done.has('position:'+st.id));const station=pending[0],row=clockPanel.querySelector('.score-clock-next');row.querySelector('small').textContent=station?(station.stop?'停車予定':'通過予定'):'予定時刻';row.querySelector('span').textContent=station?station.name+(station.estimated?'（推定）':''):'';row.querySelector('b').textContent=station?formatScoreTime(station.time):'—';const now=(state.clockStart??28800)+state.elapsed,target=timeSeconds(station?.time);clockPanel.querySelector('.score-clock-now b').classList.toggle('in-score-window',target!==null&&Math.abs(now-target)<=(station.stop?10:5));const upcoming=context.checkpoints.filter(p=>p.s>state.s);objectives.replaceChildren(...['speed','time'].map(kind=>{const recent=engine.lastCheckpoint,line=document.createElement('div');if(recent?.kind===kind&&state.elapsed-recent.time<=5){line.textContent=`${kind==='speed'?'定速':'定通'} 通過　${kind==='speed'?'現在 '+Math.round(recent.actual)+' / 指定 '+recent.target+' km/h':'予定 '+formatScoreTime(recent.target)}　誤差 ${signedError(recent.error,kind)}`;}else{const point=upcoming.find(p=>p.kind===kind);line.textContent=point?checkpointCaption(point,state)+`　あと ${Math.round(point.s-state.s).toLocaleString()} m`:`${kind==='speed'?'定速':'定通'}　この先の目標なし`;line.hidden=!point||point.s-state.s>600;}return line;}));if(state.elapsed-lastEventAt>5)feedback.textContent='';},pause(paused){if(paused)scoreAudio.stop();},dispose(){scoreAudio.stop();}};
 }
 export function scoringStations(route){const end=route.stations?.at(-1)?.s??Infinity,stops=route.stations??[];return (route.sceneryStations??stops).filter(s=>s.s<=end+.5).map((st,index)=>({id:st.name+':'+st.s,name:st.name,s:st.s,stop:stops.some(x=>Math.abs(x.s-st.s)<.5),time:st.arrival??st.passTime??st.time??null}));}
-export function scoreHazards(route){return [...(route.structures??[]).filter(x=>x.kind==='tunnel'||x.kind==='workers'||x.kind==='maintenance').map(x=>({id:'tunnel:'+x.sStart,s:x.sStart??x.s})),...(route.workers??route.maintenanceWorkers??[]).map((x,i)=>({id:'worker:'+i,s:x.s??x.position}))].filter(x=>Number.isFinite(x.s));}
+export function scoreHazards(route){
+ const hazards=[],tunnels=(route.structures??[]).filter(x=>x.kind==='tunnel').map(x=>({s:x.sStart??x.s,end:x.sEnd??x.sStart??x.s})).filter(x=>Number.isFinite(x.s)).sort((a,b)=>a.s-b.s);
+ for(const t of tunnels){const previous=hazards.at(-1);if(previous&&t.s<=previous.end+1)previous.end=Math.max(previous.end,t.end);else hazards.push({id:'tunnel:'+t.s,s:t.s,end:t.end,name:'トンネル'});}
+ for(const x of [...(route.structures??[]).filter(x=>['workers','maintenance'].includes(x.kind)),...(route.workers??[]),...(route.maintenanceWorkers??[])]){
+  const s=x.sStart??x.s??x.position;if(Number.isFinite(s)&&!hazards.some(h=>h.id==='worker:'+s))hazards.push({id:'worker:'+s,s,name:'保線作業員'});
+ }
+ return hazards.sort((a,b)=>a.s-b.s);
+}
+export function hornMarks(hazards=[],done=new Set()){return hazards.filter(h=>!done.has('horn:'+h.id)).map(h=>({s:h.s-150,name:h.name+'・150m手前',checkpoint:'horn',stop:false}));}
+// Only the currently binding track/signal restriction identifies an interval.
+export function currentScoreRestriction(route,s){
+ const active=(route.limits??[]).map((x,i)=>({...x,index:i})).filter(x=>s>=x.sStart&&s<x.sEnd&&Number.isFinite(x.kmh));
+ const signal=signalRestriction(route.signals,s),limit=Math.min(...active.map(x=>x.kmh),signal?.limit??Infinity);
+ return Number.isFinite(limit)?{limit,limitKey:[...active.filter(x=>x.kmh===limit).map(x=>'track:'+x.index),...(signal?.limit===limit?[signal.key]:[])].join('|')}:{limit:null,limitKey:null};
+}
 export function signalRestriction(signals,s){const index=(signals??[]).findLastIndex(x=>x.s<=s);const signal=signals?.[index];if(!signal||['green','proceed','G',0].includes(signal.aspect))return null;const limit=signal.speedLimitKmh??signal.speedLimit??signal.limitKmh;return Number.isFinite(limit)?{limit,key:'signal:'+index}:null;}
 
 export function buildScoreTimetable(route,startS,clockStart,spec={},ignoreKnown=false){
