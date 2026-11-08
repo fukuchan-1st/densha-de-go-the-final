@@ -2,7 +2,7 @@ import {prepareCorridorScenery,corridorSceneryType} from './corridor-scenery.js?
 import {sampleRouteCurve} from './route-curve.js?v=39';
 import {prepareTurnoutLayout} from './turnout-layout.js?v=39';
 import {addTurnouts} from './turnout-scene.js?v=39';
-import {OpposingTrains} from './opposing-trains.js?v=39';
+import {OpposingTrains} from './opposing-trains.js?v=traffic57';
 import * as T from './assets/vendor/three.module.js';
 import {CabSuspension} from './cab-motion.js?v=24';
 import {addTrackSignal} from './track-signal.js?v=32';

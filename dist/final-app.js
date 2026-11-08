@@ -8,7 +8,7 @@ import {mountScoring,checkpointMarks,scoringStations,buildScoreTimetable,resolve
 import {mountDrivingOverlay} from './driving-overlay.js?v=44';import {mountLookahead,changesFromSections,stationMarks} from './lookahead.js?v=score6';
 import {serviceChoices,makeServiceRoute} from './train-selection.js?v=topology56';
 import {GeneratedCab,generatedCab} from './generated-cab.js';
-import {FinalWorld} from './final-world.js?v=controls55';
+import {FinalWorld} from './final-world.js?v=traffic57';
 import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=photo1';
 import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=panel-repair1';
 import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,routeLimitAt,stopPosition,finishStop,takeDepartureCall} from './final-model.js?v=41';
