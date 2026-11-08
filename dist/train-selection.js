@@ -9,6 +9,8 @@ export const serviceChoices={
 export function makeServiceRoute(route,vehicle,service){
  route=selectTokaidoServiceTrack(route,service);
  route={...route,sceneryStations:route.sceneryStations??route.stations,limits:route.limitsByVehicle?.[vehicle]??route.limits};
+ // Yagan service: 70 km/h across ordinary sections; keep lower station/point limits.
+ if(route.id==='yagan'){const end=route.length??route.stations.at(-1)?.s??0;route={...route,serviceSpeedKmh:70,limits:[{sStart:0,sEnd:end+1,kmh:70},...(route.limits??[]).filter(x=>x.kmh<70).map(x=>({...x}))]};}
  if(route.id==='oito'){
   const boundary=route.stations.find(st=>st.name==='信濃大町')?.s;
   if(Number.isFinite(boundary))route.stations=route.stations.map((st,index)=>({...st,layoutIndex:st.layoutIndex??index})).filter(st=>vehicle==='e127'?st.s<=boundary:st.s>=boundary);

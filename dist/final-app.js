@@ -6,7 +6,7 @@ import {mountTrainDetails} from './train-details.js?v=corridor1';
 import {mountWheelPicker} from './wheel-picker.js?v=controls55';
 import {mountScoring,checkpointMarks,scoringStations,buildScoreTimetable,resolveScoreSchedule,scoreHazards,hornMarks,currentScoreRestriction,signalRestriction} from './scoring.js?v=evaluation59';
 import {mountDrivingOverlay} from './driving-overlay.js?v=phone58fix';import {mountLookahead,changesFromSections,stationMarks} from './lookahead.js?v=evaluation59';
-import {serviceChoices,makeServiceRoute} from './train-selection.js?v=topology56';
+import {serviceChoices,makeServiceRoute} from './train-selection.js?v=yagan70';
 import {GeneratedCab,generatedCab} from './generated-cab.js';
 import {FinalWorld} from './final-world.js?v=traffic57';
 import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=photo1';
@@ -204,7 +204,7 @@ async function start(startIndex){
    const first=r.soundEvents.findIndex(event=>event.s>=run.s);
    run.soundCursor=first<0?r.soundEvents.length:first;
   }
-  run.scoreVehicleSpec={...train.playableSpecs,powerForceRows:train.performance?.power?.force?.rows};
+  run.scoreVehicleSpec={...train.playableSpecs,maxSpeedKmh:Math.min(train.playableSpecs.maxSpeedKmh,r.serviceSpeedKmh??Infinity),powerForceRows:train.performance?.power?.force?.rows};
   const schedule=resolveScoreSchedule(r,run.s,run.scoreVehicleSpec);
   run.clockStart=schedule.clockStart;
   run.scoreTimetable=schedule.timetable.filter(st=>st.s<=r.stations[run.endIndex].s+.5);
