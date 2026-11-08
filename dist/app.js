@@ -1,3 +1,5 @@
+import {loadAudioMix,audioMixMarkup,bindAudioMix} from './audio-mix.js?v=keys61fix';
+import {bindScreenKeys} from './screen-keys.js?v=keys61fix';
 import {beginTerminalOpening,advanceTerminalOpening} from './terminal-arrival.js?v=score13';
 import {mountScoring,checkpointMarks,buildScoreTimetable,resolveScoreSchedule,scoreHazards,hornMarks,currentScoreRestriction,signalRestriction} from './scoring.js?v=evaluation59';
 import {mountLookahead,changesFromSteps,stationMarks} from './lookahead.js?v=evaluation59';const lookahead=mountLookahead(document.getElementById('drive'));
@@ -10,19 +12,20 @@ import {mountDisplay,stoppingMarker,formatStopDistance} from './display.js?v=41'
 import {STATIONS as ALL_STATIONS,SPECS,step,newRun,stoppingDistance,assistBrake,notchDeltaForKey,NOTCH_MIN,NOTCH_LABELS,clampNotch} from './physics.js?v=23';
 import {RouteProfile} from './route-profile.js?v=23';
 import {RailWorld} from './scene.js?v=traffic57';
-import {SoundEngine} from './assets/audio/sound-engine.js?v=phone58fix';
+import {SoundEngine} from './assets/audio/sound-engine.js?v=keys61fix';
 const rangeQuery=new URLSearchParams(location.search),requestedEnd=Number(rangeQuery.get('end')),requestedStart=Number(rangeQuery.get('station')??0);
 const LAST_STATION_INDEX=rangeQuery.has('end')&&Number.isInteger(requestedEnd)&&requestedEnd>requestedStart?Math.min(FULL_LAST_STATION_INDEX,requestedEnd):FULL_LAST_STATION_INDEX;
 const STATIONS=ALL_STATIONS.slice(0,LAST_STATION_INDEX+1),ROUTE_LENGTH=STATIONS.at(-1).s;
 const $=id=>document.getElementById(id), sound=new SoundEngine();
 const ui=mountResponsiveUI();const refit=mountDisplay($('simulator'),{layout:()=>ui.layout()});ui.setRefit(refit);ui.onNotch=setNotch;ui.onHorn=(pressed,name)=>sound.setHorn(pressed&&!paused&&!run.finished,name);
-const score=mountScoring($('drive'),{badge:document.querySelector('.hud-line'),volume:()=>settings.volume,blueTolerance:10});score.bindHorn(sound,()=>mode==='drive'?run:null,()=>scoreHazards({structures:world?.routeStructures?.structures??[]}));
+const score=mountScoring($('drive'),{badge:document.querySelector('.hud-line'),volume:()=>audioMix.se,blueTolerance:10});score.bindHorn(sound,()=>mode==='drive'?run:null,()=>scoreHazards({structures:world?.routeStructures?.structures??[]}));
 document.querySelector('.handle-panel').hidden=true;
 let lastStatus='';
 let panel,profile,world,run=newRun(),mode='menu',paused=false,assist=false,rate=1,panorama=false,toastUntil=6,wall=0,rendered=false,bootError='';
 const settings={volume:.65,shake:1};
 try{settings.volume=Number(localStorage.getItem('tohoku-volume')??.65);const savedShake=Number(localStorage.getItem('tohoku-shake')??1);if([0,.6,1].includes(savedShake))settings.shake=savedShake;}catch{}
-sound.setVolume(settings.volume);
+const audioMix=loadAudioMix(localStorage,settings.volume);
+sound.setVolume(1);sound.setMix(audioMix);
 function toast(t,seconds=5){lastStatus=t;$('operationStatus').textContent=t;toastUntil=wall+seconds;}
 const strip=NOTCH_LABELS;
 $('notchStrip').innerHTML=strip.map((n,i)=>`<button type="button" data-notch="${i+NOTCH_MIN}" aria-label="ノッチ ${n}">${n}</button>`).join('');
@@ -47,11 +50,12 @@ $('journeyTrack').innerHTML=STATIONS.map(x=>`<span>${x.name}</span>`).join('');
 for(let n=0;n<=120;n+=10){const a=(-130+n/120*260)*Math.PI/180,x=100+Math.sin(a)*72,y=85-Math.cos(a)*72,tx=100+Math.sin(a)*57,ty=85-Math.cos(a)*57;const ns='http://www.w3.org/2000/svg',line=document.createElementNS(ns,'line');line.setAttribute('x1',x);line.setAttribute('y1',y);line.setAttribute('x2',100+Math.sin(a)*65);line.setAttribute('y2',85-Math.cos(a)*65);line.setAttribute('stroke','#424d42');$('ticks').append(line);if(n%20===0){const t=document.createElementNS(ns,'text');t.setAttribute('x',tx);t.setAttribute('y',ty+3);t.setAttribute('fill','#343d31');t.setAttribute('text-anchor','middle');t.setAttribute('font-size','8');t.textContent=n;$('ticks').append(t);}}
 const geometryPromise=fetch('./assets/route-geometry.json?v=23').then(r=>{if(!r.ok)throw Error('線路座標を取得できません');return r.json();});
 function info(html){$('infoContent').innerHTML=html;$('info').showModal();}
+bindScreenKeys(document,{root:()=>$('info'),active:()=>$('info').open,onBack:()=>$('info').close()});
 $('closeInfo').onclick=()=>$('info').close();
 const help=`<p class="eyebrow">DRIVING GUIDE</p><h2>最初の出発、ここから。</h2><p><kbd>S / ↓</kbd>でP5方向へ、<kbd>W / ↑</kbd>でEB方向へ1段ずつ動かします。<kbd>X</kbd>は惰行、<kbd>Space</kbd>は非常ブレーキです。画面のボタンでも操作できます。iPadは画面下、iPhoneは縦向きで画面下・横向きで左右に操作ボタンを表示します。タップ1回で1段ずつ操作でき、警笛や一時停止もボタンで使えます。「その他」からメニュー・視点・停車アシスト等を開けます。</p><p>開始駅では戸開状態で自動的に発車音声が流れます。黒磯・白河は駅音声→ホイッスル、他の開始駅はホイッスル→自動戸閉を待ち、Sを5回押してP5で出発。駅の手前ではXで惰行にしてから、WでB1〜B7に入れます。右側の停止マーカーを見ながら、停止位置の±3m以内に停車すると3秒後にドアが自動で開きます。戸開から15秒待ち、黒磯・白河は駅音声→ホイッスル、その他はホイッスルが最後まで流れた後、自動で閉まります。停止位置まで5m以下になると距離をcmで表示します。</p><p>「停車アシスト」をONにすると、駅の手前で減速と停車を補助します。加速操作は自分で行います。「速度 ×1」は×3・×10に切替可能。まず操作を試すときに使えます。</p><p>抑速は、入れた時の速度を上限として下り坂で加速を抑えます。Enterを押している間は警笛、Jで空気笛。戸閉灯は戸閉音が最後まで鳴ってから点灯します。Escで一時停止。5m以上行き過ぎて停止すると、停止位置の0cmに補正します。</p>`;
 $('helpButton').onclick=()=>info(help);
 $('routeButton').onclick=()=>info(`<p class="eyebrow">ROUTE & ROLLING STOCK</p><h2>黒磯 → 福島</h2><table>${STATIONS.map((x,i)=>`<tr><td>${x.name}</td><td>${i?((x.s-STATIONS[i-1].s)/1000).toFixed(1)+' km':'出発駅'}</td><td>${(x.s/1000).toFixed(1)} km</td></tr>`).join('')}</table><p>701系1500番台・2両編成。起動加速度2.1 km/h/s、常用・非常減速度3.6 km/h/s、最高速度110 km/h。</p><p>線路の平面形状はOpenStreetMap座標に基づく近似。営業キロに駅間ごと校正。黒磯〜新白河の勾配と常設速度制限は提供BVEデータを参照。新白河以北は動画の沿線傾向と地図の平面線形を参考にした試作で、勾配0‰・上限110km/hの仮設定です。実際の勾配・速度制限を示しません。E531系用の曲線＋10km/hを外し、701系の上限110km/hを適用。駅位置はRailLab距離へ校正。ホームと構内線は駅別に配置し、黒磯〜新白河はBVE、それより北は動画・OSMを参考にしています。上屋・建物・カント・実際の信号は簡略表現です。</p><p>黒磯での701系運転を体験する試作シナリオです。現在の営業運転の再現ではありません。</p><p><a target="_blank" href="https://raillab.jp/transport/39">駅間距離：RailLab</a> · <a target="_blank" href="https://ja.wikipedia.org/wiki/JR東日本701系電車">車両性能：Wikipedia</a> · <a target="_blank" href="https://www.openstreetmap.org/copyright">線路：OSM / ODbL</a></p>`);
-$('settingsButton').onclick=()=>{info(`<p class="eyebrow">CAB SETTINGS</p><h2>音と揺れ。</h2><p>Motor音はRTM 701soundpack、走行音・ドア音・操作音は指定のBVE音源を使用。元スクリプトの速度別ピッチ・音量を区分線形補間して再生します。</p><label>音量 <span id="volValue">${Math.round(settings.volume*100)}</span>%<input id="volume" type="range" min="0" max="100" value="${settings.volume*100}"></label><label class="shake-setting">走行中の揺れ<select id="shakeStrength"><option value="0">なし</option><option value="0.6">弱め</option><option value="1">標準</option></select></label><p>動画との聴感比較は未実施。Motor音はRTM設定を基準にしています。</p>`);$('volume').oninput=e=>{settings.volume=e.target.value/100;sound.setVolume(settings.volume);$('volValue').textContent=e.target.value;try{localStorage.setItem('tohoku-volume',settings.volume);}catch{}};$('shakeStrength').value=String(settings.shake);$('shakeStrength').onchange=e=>{settings.shake=Number(e.target.value);try{localStorage.setItem('tohoku-shake',settings.shake);}catch{}};};
+$('settingsButton').onclick=()=>{info(`<p class="eyebrow">CAB SETTINGS</p><h2>音と揺れ。</h2><p>Motor音はRTM 701soundpack、走行音・ドア音・操作音は指定のBVE音源を使用。元スクリプトの速度別ピッチ・音量を区分線形補間して再生します。</p>${audioMixMarkup(audioMix)}<label class="shake-setting">走行中の揺れ<select id="shakeStrength"><option value="0">なし</option><option value="0.6">弱め</option><option value="1">標準</option></select></label><p>動画との聴感比較は未実施。Motor音はRTM設定を基準にしています。</p>`);bindAudioMix($('infoContent'),audioMix,()=>sound.setMix(audioMix));$('shakeStrength').value=String(settings.shake);$('shakeStrength').onchange=e=>{settings.shake=Number(e.target.value);try{localStorage.setItem('tohoku-shake',settings.shake);}catch{}};};
 async function ensureWorld(){if(world)return;const [g,p,structures,extension,stationLayouts,signals]=await Promise.all([geometryPromise,fetch('./assets/bve-profile.json?v=23').then(r=>{if(!r.ok)throw Error('BVE路線データを取得できません');return r.json();}),fetch('./assets/bve-structures.json?v=23').then(r=>{if(!r.ok)throw Error('BVE構造物データを取得できません');return r.json();}),fetch('./assets/osm-extension-structures.json?v=23').then(r=>{if(!r.ok)throw Error('追加区間の構造物データを取得できません');return r.json();}),fetch('./assets/station-layouts.json?v=23').then(r=>{if(!r.ok)throw Error('駅配線データを取得できません');return r.json();}),fetch('./assets/bve-signals.json?v=33').then(r=>{if(!r.ok)throw Error('BVE信号機データを取得できません');return r.json();})]);profile=new RouteProfile(p);const allStructures={structures:[...structures.structures,...extension.structures.map(x=>({...x,sourceType:'osm'}))]};world=new RailWorld($('world'),g,STATIONS,profile,allStructures,stationLayouts,signals.signals);world.signals=signals.signals;panel=await (generatedCab?GeneratedCab.load($('cabCanvas'),'701'):CabPanel.load($('cabCanvas')));world.setCabView(panel.viewOrigin);}
 async function start(){
  $('start').disabled=true;

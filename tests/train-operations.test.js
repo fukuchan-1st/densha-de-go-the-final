@@ -26,8 +26,8 @@ test('出発駅の戸閉では停車実績・次駅を進めず、白河の到�
  s.doorCloseDone=true;assert.equal(completeDoorSequence(s,stations),true);assert.equal(s.served,1);assert.equal(s.next,2);assert.deepEqual(s.errors,[0]);assert.equal(completeDoorSequence(s,stations),false);
 });
 function mockAudio(){
- const sound=new SoundEngine(),sources=[];sound.ready=true;sound.departureBuffers=new Map(['kuroiso.mp3','shirakawa.mp3','departure-chime.wav'].map(x=>[x,x]));
- sound.ctx={createBufferSource(){const source={connect(){},start(){sources.push(this);},stop(){},disconnect(){}};return source;}};
+ const sound=new SoundEngine(),sources=[];sound.ready=true;sound.mix={gains:{se:{},voice:{},running:{}}};sound.departureBuffers=new Map(['kuroiso.mp3','shirakawa.mp3','departure-chime.wav'].map(x=>[x,x]));
+ sound.ctx={createBufferSource(){const source={connect(node){this.output=node;},start(){sources.push(this);},stop(){},disconnect(){}};return source;}};
  return {sound,sources};
 }
 test('駅音声の終了までホイッスルを開始せず、両方の終了後にだけ完了',async()=>{

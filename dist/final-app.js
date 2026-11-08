@@ -1,8 +1,10 @@
+import {loadAudioMix,audioMixMarkup,bindAudioMix} from './audio-mix.js?v=keys61fix';
+import {bindRouteKeys,bindScreenKeys} from './screen-keys.js?v=keys61fix';
 import {sharedEffects} from './buffered-effects.js?v=phone58fix';
-import {bindTrainSelectionKeys} from './selection-keys.js?v=controls55';
+import {bindTrainSelectionKeys} from './selection-keys.js?v=keys61fix';
 import {beginTerminalOpening,advanceTerminalOpening} from './terminal-arrival.js?v=score13';
 import {vehiclePhoto} from './vehicle-photos.js?v=corridor1';
-import {mountTrainDetails} from './train-details.js?v=corridor1';
+import {mountTrainDetails} from './train-details.js?v=keys61fix';
 import {mountWheelPicker} from './wheel-picker.js?v=controls55';
 import {mountScoring,checkpointMarks,scoringStations,buildScoreTimetable,resolveScoreSchedule,scoreHazards,hornMarks,currentScoreRestriction,signalRestriction} from './scoring.js?v=evaluation59';
 import {mountDrivingOverlay} from './driving-overlay.js?v=phone58fix';import {mountLookahead,changesFromSections,stationMarks} from './lookahead.js?v=evaluation59';
@@ -10,7 +12,7 @@ import {serviceChoices,makeServiceRoute} from './train-selection.js?v=yagan70';
 import {GeneratedCab,generatedCab} from './generated-cab.js';
 import {FinalWorld} from './final-world.js?v=traffic57';
 import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=photo1';
-import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=panel-repair1';
+import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=keys61fix';
 import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,routeLimitAt,stopPosition,finishStop,takeDepartureCall} from './final-model.js?v=41';
 import {STATIONS as TOHOKU_STATIONS} from './route-data.js?v=41';
 import {FINAL_SCENARIOS,scenarioJourney} from './final-scenarios.js?v=41';
@@ -33,19 +35,20 @@ let trainDetails,detailEndIndex=null;
 const extraRoutes=new Map();
 const settings={volume:.65,shake:1,quality:matchMedia('(pointer:coarse)').matches?'light':'standard'};
 try{const saved=JSON.parse(localStorage.getItem('railway-drive-settings')??'{}');if(Number.isFinite(saved.volume))settings.volume=clamp(saved.volume,0,1);if([0,.6,1].includes(saved.shake))settings.shake=saved.shake;if(['light','standard'].includes(saved.quality))settings.quality=saved.quality;}catch{}
+const audioMix=loadAudioMix(localStorage,settings.volume);
 const saveSettings=()=>{try{localStorage.setItem('railway-drive-settings',JSON.stringify(settings));}catch{}};
 const overlayControls=mountDrivingOverlay($('driveScreen'),{onChange:n=>setNotch(n),actions:[$('hornButton'),$('pauseButton'),$('moreButton')],instructionElement:$('eventText')});$('driveScreen').append($('extras'));const lookahead=mountLookahead($('driveScreen'));
-const score=mountScoring($('driveScreen'),{badge:document.querySelector('.hud-route'),volume:()=>settings.volume});
+const score=mountScoring($('driveScreen'),{badge:document.querySelector('.hud-route'),volume:()=>audioMix.se});
 const menuEffects=sharedEffects();
 const menuEffectURLs=Object.fromEntries(['cursor','confirm','cancel'].map(name=>[name,new URL($('menuSound-'+name).getAttribute('src'),location.href).href]));
 menuEffects?.preload(Object.values(menuEffectURLs)).catch(()=>{});
 function playMenuSound(name,{waitForEnd=false}={}){
- if(settings.volume===0)return Promise.resolve();
- if(menuEffects){const group=menuEffects.playSequence([menuEffectURLs[name]],settings.volume);return waitForEnd?group.done:undefined;}
- const clip=$('menuSound-'+name);clip.volume=settings.volume;clip.currentTime=0;const playback=clip.play();if(!waitForEnd){playback.catch(()=>{});return;}
+ if(audioMix.se===0)return Promise.resolve();
+ if(menuEffects){const group=menuEffects.playSequence([menuEffectURLs[name]],audioMix.se);return waitForEnd?group.done:undefined;}
+ const clip=$('menuSound-'+name);clip.volume=audioMix.se;clip.currentTime=0;const playback=clip.play();if(!waitForEnd){playback.catch(()=>{});return;}
  return new Promise(resolve=>{clip.onended=resolve;playback.catch(resolve);});
 }
-const menuMusic=mountMenuMusic(()=>settings.volume);
+const menuMusic=mountMenuMusic(()=>audioMix.bgm);
 function fit(){const r=$('stageArea').getBoundingClientRect(),scale=Math.min(r.width/1600,r.height/900);document.documentElement.style.setProperty('--overlay-ui-scale',Math.max(1,Math.min(3.5,44/(54*scale))));$('stage').style.left='50%';$('stage').style.top='50%';$('stage').style.transform=`translate(-50%,-50%) scale(${scale})`;}
 addEventListener('resize',fit);visualViewport?.addEventListener('resize',fit);new ResizeObserver(fit).observe($('stageArea'));fit();
 function recipe(){return META[selected].legacy?TOHOKU_TRAIN:recipes.trains.find(t=>t.id===(chosenVehicle??META[selected].vehicle));}
@@ -87,7 +90,7 @@ async function pauseAudio(value){score.pause(value);await sound?.setPaused(value
 function showModal(content,{pause=true}={}){if(mode==='drive'&&pause&&!paused){paused=true;modalPaused=true;pauseAudio(true);}$('modalContent').innerHTML=content;if(!$('modal').open)$('modal').showModal();}
 function closeModal(){if(mode==='menu')playMenuSound('cancel');$('modal').close();if(modalPaused&&!run?.finished){paused=false;pauseAudio(false);}modalPaused=false;}
 $('closeModal').onclick=closeModal;$('modal').addEventListener('cancel',e=>{e.preventDefault();closeModal();});
-function settingsDialog(){showModal(`<p class="eyebrow">OPTION</p><h2>音と、乗り心地。</h2><label>音量 <input id="volumeInput" type="range" min="0" max="100" value="${Math.round(settings.volume*100)}"></label><label>走行中の揺れ<select id="shakeInput"><option value="0">なし</option><option value="0.6">弱め</option><option value="1">標準</option></select></label><label>描画<select id="qualityInput"><option value="light">軽量 · iPad / iPhone向け</option><option value="standard">標準 · PC向け</option></select></label><small>描画設定は次の運転開始時に反映します。揺れは停車後に収まり、一時停止中は止まります。</small><p>${META[selected].legacy?'東北本線の音量と揺れは、701系の画面で調整できます。':'アプリ内蔵の運転台と車両別の収録音を使用します。'}</p><div class="dialog-buttons"><button id="helpButton">操作方法</button><button id="dataButton">路線・車両について</button></div>`);$('shakeInput').value=String(settings.shake);$('qualityInput').value=settings.quality;$('volumeInput').oninput=e=>{settings.volume=Number(e.target.value)/100;sound?.setVolume(settings.volume);menuMusic.setVolume();saveSettings();};$('shakeInput').onchange=e=>{settings.shake=Number(e.target.value);saveSettings();};$('qualityInput').onchange=e=>{settings.quality=e.target.value;saveSettings();};$('helpButton').onclick=helpDialog;$('dataButton').onclick=dataDialog;}
+function settingsDialog(){showModal(`<p class="eyebrow">OPTION</p><h2>音と、乗り心地。</h2>${audioMixMarkup(audioMix)}<label>走行中の揺れ<select id="shakeInput"><option value="0">なし</option><option value="0.6">弱め</option><option value="1">標準</option></select></label><label>描画<select id="qualityInput"><option value="light">軽量 · iPad / iPhone向け</option><option value="standard">標準 · PC向け</option></select></label><small>描画設定は次の運転開始時に反映します。揺れは停車後に収まり、一時停止中は止まります。</small><p>${'音量はその場で反映し、次回も同じ設定で始めます。'}</p><div class="dialog-buttons"><button id="helpButton">操作方法</button><button id="dataButton">路線・車両について</button></div>`);$('shakeInput').value=String(settings.shake);$('qualityInput').value=settings.quality;bindAudioMix($('modalContent'),audioMix,()=>{sound?.setMix(audioMix);menuMusic.setVolume();});$('shakeInput').onchange=e=>{settings.shake=Number(e.target.value);saveSettings();};$('qualityInput').onchange=e=>{settings.quality=e.target.value;saveSettings();};$('helpButton').onclick=helpDialog;$('dataButton').onclick=dataDialog;$('modalContent').querySelector('[data-audio-mix]')?.focus();}
 function helpDialog(){showModal(`<p class="eyebrow">DRIVING GUIDE</p><h2>一駅ずつ、確実に。</h2><p><kbd>S / ↓</kbd> P側へ　<kbd>W / ↑</kbd> EB側へ<br><kbd>X</kbd> 惰行　<kbd>Space</kbd> 非常ブレーキ<br><kbd>Enter 長押し</kbd> 警笛　<kbd>Esc</kbd> 一時停止</p><p>扉は自動です。停止位置±3m以内で3秒停止すると戸開、15秒乗降後に合図音→戸閉音の順に再生し、最後まで鳴ってから戸閉灯が点きます。最初の駅は戸開で開始します。</p><p>停止位置±10mで右端のひし形が上から下へ動きます。残り5m以内はcm表示。5m以上行き過ぎて停止すると、停止位置の0cmに補正します。</p><p>運転士音声は駅の手前150mで「駅名、停車。停止位置と両数」、戸閉灯の点灯後に「戸閉、点」「出発進行」が順に鳴り、発車すると「出発駅名、定発」が続きます。出発の喚呼はこの試作での発車扱いに合わせています。</p><small>停車アシストはブレーキを補助します。通常のドア開閉ではノッチは変わりません。207系はP6、323系は抑速を備えます。</small>`);}
 function dataDialog(){showModal(`<p class="eyebrow">ROUTE & VEHICLE</p><h2>6路線、6車両。</h2><p>山手線 / E235系 · 中央線 / E233系0番台<br>大阪環状線 / 323系 · 東海道線 / 207系2000番台<br>東北本線 / 701系1500番台 · 野岩鉄道 / 6050型</p><p>野岩鉄道は提供BVEデータの新藤原〜会津高原尾瀬口を再現。線形、勾配、ホーム、トンネル・橋、明示された速度制限、車内放送を読み込みます。山や林は景観用の近似です。</p><p>線路の曲がり方はOpenStreetMap、駅間距離は公開駅一覧を使用。4路線のホーム・並走線は地図やJRの構内図を参照し、電車でGO！FINALの映像で見え方を照合しました。建物・停止目標は試作上の概略です。シナリオの運転区間はFINALの公開プレイ記録を参照し、現在の車両で各駅に停まります。</p><p>中央線・大阪環状線は位置を確認できた信号機を描画します。FINALを参考にした4路線の速度上限は車両性能の設定です。ゲームの実データとは区別しています。</p><p>E235系は提供データの15両設定を参考に、山手線用の11両・起動加速度3.0km/h/sを試作設定。E233系は提供12両、323系8両、207系7両です。力行は提供の速度別引張力表を補間し、常用制動・抵抗は簡易モデルです。</p><p>E235系は提供データの起動時モーター音、E233系は三菱IGBTの力行・制動モーター音を使用します。発車合図には東北本線と共通のホイッスルを使います。4路線の運転士喚呼にはFINALの路線別音声を使います。</p><small class="credits-note"><a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors / ODbL</a> · <a href="./assets/final/route-data-notes.md" target="_blank">路線の出典・検証</a> · <a href="./assets/final/scenario-notes.md" target="_blank">シナリオの出典</a></small>`);}
 $('settingsButton').onclick=()=>{playMenuSound('confirm');settingsDialog();};
@@ -192,7 +195,7 @@ async function start(startIndex){
   const r=trip.route,train=recipe(),pack=packs.get(train.id);
   startIndex??=scenario?trip.startIndex:freeStart;
   if(!pack)throw Error('車両の運転台と収録音が見つかりません');
-  nextSound=new LocalTrainAudio(train,pack,{volume:settings.volume,context:menuEffects?.context});
+  nextSound=new LocalTrainAudio(train,pack,{volume:1,mix:audioMix,context:menuEffects?.context});
   const audioEnabled=nextSound.resume();
   await cleanup();
   activeRoute=r;
@@ -277,6 +280,9 @@ function advance(dt){
   run.assistBraking=false;
  }
 }
+bindRouteKeys(document,{active:()=>!!recipes&&mode==='menu'&&!trainSelectionOpen&&!$('modal').open&&!loading,choose,current:()=>selected,focusRoute:()=>document.querySelector('#routeCards [data-route="'+selected+'"]').focus({preventScroll:true}),settings:()=>{$('settingsButton').click();},focusSettings:()=>$('settingsButton').focus({preventScroll:true}),open:openTrainSelection});
+bindScreenKeys(document,{root:()=>trainDetails?.root,active:()=>trainSelectionOpen&&$('trainSelection').dataset.view==='details'&&!$('modal').open&&!loading,onBack:showTrainList,onSound:playMenuSound});
+bindScreenKeys(document,{root:()=>$('modal'),active:()=>$('modal').open,onBack:closeModal,onSound:playMenuSound});
 document.addEventListener('keydown',e=>{if((e.target.matches('input,select,textarea')&&e.target.id!=='notchSlider')||$('modal').open)return;if(mode==='menu'){if(trainSelectionOpen&&['ArrowUp','ArrowDown'].includes(e.code))return;if(e.code==='Escape'&&trainSelectionOpen){e.preventDefault();closeTrainSelection();return;}if(e.code==='ArrowUp'||e.code==='ArrowDown'){e.preventDefault();if(recipes)choose(selected+(e.code==='ArrowDown'?1:-1));}else if(e.code==='Enter'){if(e.target.closest('button,a')&&!e.target.closest('.route-card'))return;e.preventDefault();if(trainSelectionOpen){if($('trainSelection').dataset.view==='details')start();else showTrainDetails();}else openTrainSelection();}return;}if(e.code==='Escape'){e.preventDefault();$('pauseButton').click();return;}if(e.code==='Enter'){e.preventDefault();if(!paused&&!e.repeat&&!run.finished)sound.setHorn(true);return;}if(paused||e.repeat)return;if(['KeyW','ArrowUp','KeyS','ArrowDown','Space'].includes(e.code))e.preventDefault();if(['KeyW','ArrowUp'].includes(e.code))setNotch(run.notch-1);else if(['KeyS','ArrowDown'].includes(e.code))setNotch(run.notch+1);else if(e.code==='KeyX')setNotch(0);else if(e.code==='Space')setNotch(controlsFor(recipe()).min);else if(e.code==='KeyJ')effect('hornSecondary').catch(()=>{});});
 document.addEventListener('keyup',e=>{if(e.code==='Enter'&&mode==='drive')sound?.setHorn(false);});
 window.addEventListener('blur',()=>sound?.setHorn(false));
@@ -345,8 +351,7 @@ function setupTrainSelection(){
  bindTrainSelectionKeys(document,{active:()=>trainSelectionOpen&&!loading&&$('trainSelection').dataset.view==='list'&&!$('modal').open,previous:()=>$('trainChoice').wheel.step(-1),next:()=>$('trainChoice').wheel.step(1),previousLine:()=>switchSelectionLine(-1),nextLine:()=>switchSelectionLine(1),details:showTrainDetails,back:closeTrainSelection});
  for(const id of ['startStation','scenarioSelect']){$(id).dataset.wheel='true';const previous=$(id).nextElementSibling;if(previous?.classList.contains('game-select'))previous.remove();$(id).wheel=mountWheelPicker($(id));}
  overlay.addEventListener('keydown',event=>{if(event.code==='Escape'){event.preventDefault();event.stopPropagation();if(!trainDetails.root.hidden)showTrainList();else closeTrainSelection();}else if(trainDetails.root.hidden&&['ArrowLeft','ArrowRight'].includes(event.code)){event.preventDefault();event.stopPropagation();switchSelectionLine(event.code==='ArrowLeft'?-1:1);}});
- const next=document.createElement('button');next.id='routeContinue';next.className='start-button';next.textContent='列車を選ぶ';
- $('menuControls').append(next);next.onclick=openTrainSelection;
+ $('menuScreen').append($('settingsButton'));$('settingsButton').textContent='O　音量・設定';
  $('selectionBack').onclick=closeTrainSelection;
  $('trainChoice').onchange=()=>{playMenuSound('cursor');applyTrainChoice();};
 }
@@ -383,7 +388,7 @@ function closeTrainSelection(){
 function rNote(r){return r.geometrySections?'BVE収録区間を地図の線路で接続した運転コースです。':r.id.startsWith('shinonoi')?'この運転コースでは姨捨の通過線を走ります。':'';}
 
 function switchSelectionLine(delta){choose((selected+delta+META.length)%META.length);openTrainSelection();}
-function showTrainList(){if(!trainDetails)return;trainDetails.hide();$('trainSelection').dataset.view='list';detailEndIndex=null;}
+function showTrainList(){if(!trainDetails)return;trainDetails.hide();$('trainSelection').dataset.view='list';detailEndIndex=null;$('trainChoice')?.wheel?.focus();}
 function showTrainDetails(){
  if(loading||!recipes)return;playMenuSound('confirm');const base=makeServiceRoute(selectedRoute(),recipe().id,chosenService),ranges=[{label:'全区間　'+base.stations[0].name+' → '+base.stations.at(-1).name,start:0,end:base.stations.length-1}];
  for(const scenario of FINAL_SCENARIOS[META[selected].id]??[]){const a=base.stations.findIndex(st=>st.name===scenario[1]),b=base.stations.findIndex(st=>st.name===scenario[2]);if(a>=0&&b>a)ranges.push({label:scenario[1]+' → '+scenario[2],start:a,end:b});}

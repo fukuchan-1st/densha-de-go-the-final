@@ -1,0 +1,7 @@
+/* All menu content belongs to the 1600×900 game frame. */
+:root{--dock-height:0px}#menuControls{display:none!important}
+body[data-mode=menu] #stageArea,body[data-mode=selection] #stageArea{position:absolute!important;inset:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)!important;width:auto!important;height:auto!important;margin:0!important}
+#menuScreen #settingsButton{position:absolute;right:65px;bottom:68px;height:46px;min-height:46px;padding:8px 20px;font-size:20px;z-index:8;background:linear-gradient(#34465c,#101621);color:#fff;border:1px solid #b5c5da;clip-path:polygon(8% 0,100% 0,92% 100%,0 100%);min-width:200px}
+#menuScreen button:focus-visible,#trainDetails button:focus-visible,.game-select button:focus-visible{outline:4px solid #ffe85b!important;outline-offset:4px;filter:brightness(1.25)}
+.detail-key-guide{position:absolute;right:65px;top:40px;font-size:18px;color:#d5eacc;z-index:6}
+.audio-mix{display:grid;grid-template-columns:1fr 1fr;gap:12px 28px}.audio-mix label{display:grid!important;grid-template-columns:1fr auto;gap:4px 12px!important;margin:0!important;font-size:21px!important}.audio-mix output{color:#ffe65c;font-variant-numeric:tabular-nums}.audio-mix input{grid-column:1/-1;width:100%;min-height:30px}.audio-mix input:focus-visible{outline:3px solid #ffe65c;outline-offset:2px}

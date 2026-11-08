@@ -1,3 +1,4 @@
+import {createMixGains,voiceCategory} from './audio-mix.js?v=keys61fix';
 import {interpolateColumn} from './final-vehicle.js?v=33';
 import {runPitch} from './assets/audio/run-pitch.js';
 import {HeldHorn} from './assets/audio/held-horn.js';
@@ -35,7 +36,7 @@ export function motorPitch(table,column,speed){
 }
 
 export class LocalTrainAudio {
- constructor(recipe,pack,{context,volume=.65}={}){const AC=globalThis.AudioContext??globalThis.webkitAudioContext;this.context=context??new AC();this.ownsContext=!context;this.recipe=recipe;this.pack=pack;this.buffers=new Map();this.loops=new Map();this.sources=new Set();this.master=this.context.createGain();this.master.gain.value=volume;this.master.connect(this.context.destination);this.volume=volume;this.paused=false;this.stopped=false;this.generation=0;}
+ constructor(recipe,pack,{context,volume=.65,mix={}}={}){const AC=globalThis.AudioContext??globalThis.webkitAudioContext;this.context=context??new AC();this.ownsContext=!context;this.recipe=recipe;this.pack=pack;this.buffers=new Map();this.loops=new Map();this.sources=new Set();this.master=this.context.createGain();this.master.gain.value=volume;this.master.connect(this.context.destination);this.mix=createMixGains(this.context,this.master,mix);this.volume=volume;this.paused=false;this.stopped=false;this.generation=0;}
  static async create(recipe,pack,options){const audio=new LocalTrainAudio(recipe,pack,options);await audio.context.resume();return audio;}
  async buffer(ref){
   if(!ref)return null;
@@ -126,7 +127,7 @@ export class LocalTrainAudio {
   }[name];
  }
  setHorn(pressed){
-  this.horn??=new HeldHorn(this.context,this.master);
+  this.horn??=new HeldHorn(this.context,this.mix.gains.se);
   if(!pressed){this.horn.release();return;}
   if(this.paused||this.stopped||this.horn.active)return;
   const name=['323','207'].includes(this.recipe.id)?'hornSecondary':'hornPrimary';
@@ -142,7 +143,7 @@ export class LocalTrainAudio {
   return this.playEffect(next>previous?'powerUp':'powerDown');
  }
  playEffect(name){this.stopped=false;return this.playRef(this.effectRef(name));}
- async playRef(ref){if(!ref)return false;const generation=this.generation,buffer=await this.buffer(ref);if(this.stopped||generation!==this.generation)return false;const source=this.context.createBufferSource();source.buffer=buffer;source.connect(this.master);this.sources.add(source);return new Promise(resolve=>{source.onended=()=>{this.sources.delete(source);source.disconnect();resolve(generation===this.generation);};source.start();});}
+ async playRef(ref){if(!ref)return false;const generation=this.generation,buffer=await this.buffer(ref);if(this.stopped||generation!==this.generation)return false;const source=this.context.createBufferSource();source.buffer=buffer;source.connect(this.mix.gains[voiceCategory(ref)]);this.sources.add(source);return new Promise(resolve=>{source.onended=()=>{this.sources.delete(source);source.disconnect();resolve(generation===this.generation);};source.start();});}
  async loop(key,ref){
   if(!ref||this.loops.has(key))return;
   const loop={volume:0,pitch:1};
@@ -158,7 +159,7 @@ export class LocalTrainAudio {
    source.playbackRate.value=loop.pitch;
    gain.gain.value=loop.volume;
    source.connect(gain);
-   gain.connect(this.master);
+   gain.connect(this.mix.gains.running);
    source.onended=()=>{
     this.sources.delete(source);
     if(this.loops.get(key)===loop)this.loops.delete(key);
@@ -212,10 +213,11 @@ export class LocalTrainAudio {
    else this.releaseLoop(key);
   }
  }
+ setMix(values){this.mix.update(values);}
  setVolume(n){this.volume=clamp(n,0,1);this.master.gain.value=this.volume;}
- async setPaused(paused){this.paused=paused;if(paused){this.horn?.end(true);await this.context.suspend();}else await this.context.resume();}
+ async setPaused(paused){this.paused=paused;this.master.gain.value=paused?0:this.volume;if(paused){this.horn?.end(true);await this.context.suspend();}else await this.context.resume();}
  pause(){return this.setPaused(true);}
  resume(){return this.setPaused(false);}
  stop(){this.horn?.end(true);this.stopped=true;this.lastNotch=undefined;this.generation++;this.driverQueue=null;for(const source of this.sources){try{source.stop();}catch{}}this.sources.clear();this.loops.clear();}
- async dispose(){this.stop();this.buffers.clear();this.master.disconnect();if(this.ownsContext)await this.context.close();}
+ async dispose(){this.stop();this.buffers.clear();this.master.disconnect();for(const node of Object.values(this.mix.gains))node.disconnect();if(this.ownsContext)await this.context.close();}
 }
