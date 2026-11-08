@@ -38,8 +38,15 @@ export function routeLimitAt(route,position){
  },null);
 }
 export function stopPosition(d){return {visible:Math.abs(d)<=10,percent:clamp((10-d)/20*100,0,100),text:Math.abs(d)<.005?'停止位置':`${d>=0?'手前':'超過'} ${distanceLabel(d)}`};}
-export function finishStop(state,route){
- const stoppedAt=state.startingDeparture?state.startIndex:state.next;
+export function beginDoorClosing(state,stationIndex){
+ if(!state.doors||state.finished||!['boarding','audio-error'].includes(state.doorPhase))return null;
+ const attempt={stationIndex};state.closeAttempt=attempt;state.doorPhase='announcement';return attempt;
+}
+export function isDoorClosing(state,attempt){return !!attempt&&state.closeAttempt===attempt&&state.doors&&!state.finished;}
+export function finishStop(state,route,expectedIndex=state.startingDeparture?state.startIndex:state.next){
+ const stoppedAt=state.startingDeparture?state.startIndex:state.next,target=route.stations[stoppedAt]?.s;
+ if(!state.doors||state.finished||expectedIndex!==stoppedAt||!Number.isFinite(state.s)||!Number.isFinite(target)||!Number.isFinite(state.v)||state.v>.01||Math.abs(state.s-target)>3)return false;
+ state.closeAttempt=null;
  state.doors=false;
  state.doorPhase=null;
  state.assistBraking=false;
@@ -54,6 +61,7 @@ export function finishStop(state,route){
  }
  state.finished=state.next>state.endIndex;
  state.departureCall=state.finished?null:stoppedAt;
+ return true;
 }
 export function takeDepartureCall(state){
  if(state.doors||state.v<1/3.6||state.departureCall==null)return null;

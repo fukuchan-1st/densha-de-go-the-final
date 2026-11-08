@@ -6,7 +6,7 @@ import {mountLookahead,changesFromSteps,stationMarks} from './lookahead.js?v=eva
 import {GeneratedCab,generatedCab} from './generated-cab.js';
 import {mountResponsiveUI} from './responsive-ui.js?v=phone58fix';
 import {CabPanel} from './cab-panel.js?v=23';
-import {correctStoppedOverrun,nextSignalCall,advanceDoorSequence,beginStartingBoarding,completeDoorSequence,OPEN_DELAY_SECONDS,BOARDING_WAIT_SECONDS} from './train-operations.js?v=33';
+import {correctStoppedOverrun,nextSignalCall,advanceDoorSequence,beginStartingBoarding,completeDoorSequence,OPEN_DELAY_SECONDS,BOARDING_WAIT_SECONDS} from './train-operations.js?v=doors62';
 import {LAST_STATION_INDEX as FULL_LAST_STATION_INDEX,BVE_END} from './route-data.js?v=23';
 import {mountDisplay,stoppingMarker,formatStopDistance} from './display.js?v=41';
 import {STATIONS as ALL_STATIONS,SPECS,step,newRun,stoppingDistance,assistBrake,notchDeltaForKey,NOTCH_MIN,NOTCH_LABELS,clampNotch} from './physics.js?v=23';

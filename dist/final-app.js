@@ -13,10 +13,10 @@ import {GeneratedCab,generatedCab} from './generated-cab.js';
 import {FinalWorld} from './final-world.js?v=traffic57';
 import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=photo1';
 import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=keys61fix';
-import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,routeLimitAt,stopPosition,finishStop,takeDepartureCall} from './final-model.js?v=41';
+import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,routeLimitAt,stopPosition,finishStop,beginDoorClosing,isDoorClosing,takeDepartureCall} from './final-model.js?v=doors62';
 import {STATIONS as TOHOKU_STATIONS} from './route-data.js?v=41';
 import {FINAL_SCENARIOS,scenarioJourney} from './final-scenarios.js?v=41';
-import {correctStoppedOverrun,nextSignalCall} from './train-operations.js?v=41';
+import {correctStoppedOverrun,nextSignalCall} from './train-operations.js?v=doors62';
 import {bindHornButton} from './assets/audio/held-horn.js';
 
 const TOHOKU_TRAIN={id:'701',name:'701系1500番台',playableSpecs:{carCount:2}};
@@ -118,34 +118,20 @@ $('menuButton').onclick=returnMenu;
 async function effect(name){return sound?.playEffect(name)??false;}
 async function closeSequence(generation){
  if(!run||generation!==token)return;
+ const activeRun=run,r=route(),stationIndex=activeRun.startingDeparture?activeRun.startIndex:activeRun.next,attempt=beginDoorClosing(activeRun,stationIndex);
+ if(!attempt)return;
+ const current=()=>run===activeRun&&generation===token&&isDoorClosing(activeRun,attempt);
  try{
-  run.doorPhase='announcement';
-  const r=route(),departureKey=run.startingDeparture&&r.stations[run.startIndex].departureSound;
-  if(departureKey){
-   await sound.playRouteAnnouncement(r.stations[run.startIndex].announcementRouteId??r.id,departureKey);
-   if(generation!==token)return;
-  }
-  await effect('whistle');
-  if(generation!==token)return;
-  run.doorPhase='closing';
-  const completed=await effect('close');
-  if(generation!==token||!completed)return;
-  finishStop(run,route());
+  const departureKey=activeRun.startingDeparture&&r.stations[activeRun.startIndex].departureSound;
+  if(departureKey){await sound.playRouteAnnouncement(r.stations[activeRun.startIndex].announcementRouteId??r.id,departureKey);if(!current())return;}
+  await effect('whistle');if(!current())return;
+  activeRun.doorPhase='closing';const completed=await effect('close');
+  if(!current()||!completed)return;
+  if(!finishStop(activeRun,r,attempt.stationIndex)){activeRun.doorPhase='audio-error';toast('停車位置を確認できません。戸開状態を維持します。',10);return;}
   sound.playEffect('relayOn').catch(()=>{});
-  toast(run.finished?'全区間の運転を完了しました。':`戸閉よし。次は${route().stations[run.next].name}。`,5);
-  if(run.finished){
-   paused=true;
-   pauseAudio(true);
-   showResults();
-  }else{
-   sound.callDriver('doorsClosed','departure');
-  }
- }catch(error){
-  if(generation!==token)return;
-  run.doorPhase='audio-error';
-  $('audioRetry').hidden=false;
-  toast('戸閉音を再生できませんでした。「その他」から再試行できます。',9999);
- }
+  toast(activeRun.finished?'全区間の運転を完了しました。':`戸閉よし。次は${r.stations[activeRun.next].name}。`,5);
+  if(activeRun.finished){paused=true;pauseAudio(true);showResults();}else sound.callDriver('doorsClosed','departure');
+ }catch(error){if(!current())return;activeRun.doorPhase='audio-error';$('audioRetry').hidden=false;toast('戸閉音を再生できませんでした。「その他」から再試行できます。',9999);}
 }
 function updateDriverCalls(){
  if(run.finished||run.doors)return;

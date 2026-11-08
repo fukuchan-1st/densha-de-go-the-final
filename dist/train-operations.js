@@ -16,9 +16,10 @@ export const AUTO_DOOR_TOLERANCE=3;
 export const STOPPED_SPEED=.01; // m/s: numerical standstill, not a moving approach.
 export const OPEN_DELAY_SECONDS=3;
 export const BOARDING_WAIT_SECONDS=15;
+export const MAX_STOP_CORRECTION_M=150;
 export function correctStoppedOverrun(state,target){
  const error=state.s-target;
- if(state.doors||state.finished||state.v>STOPPED_SPEED||error<5)return null;
+ if(!Number.isFinite(state.s)||!Number.isFinite(target)||!Number.isFinite(state.v)||state.doors||state.finished||state.v>STOPPED_SPEED||error<5||error>MAX_STOP_CORRECTION_M)return null;
  Object.assign(state,{s:target,v:0,acceleration:0,stopWait:0,assistBraking:false,correctedStopError:error});
  return error;
 }

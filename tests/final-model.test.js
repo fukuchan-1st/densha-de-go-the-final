@@ -30,7 +30,7 @@ test('発車喚呼は戸閉後の発進時に出発駅の番号を一度だけ�
  state.v=1;
  assert.equal(state.next,7);
  assert.equal(takeDepartureCall(state),6);
- state.next=route.stations.length-1;
+ state.next=route.stations.length-1;state.s=route.stations.at(-1).s;state.v=0;state.doors=true;
  finishStop(state,route);
  assert.equal(takeDepartureCall(state),null);
 });
@@ -62,7 +62,7 @@ test('FINALの区間は指定した駅で終了し、環状線の継ぎ目も駅
     assert.equal(state.finished,false);
     assert.ok(stations[station].s>stations[station-1].s);
     if(station>=stationCount&&route.loop)assert.equal(stations[station].layoutIndex,station%stationCount);
-    state.s=stations[station].s;
+    state.s=stations[station].s;state.doors=true;
     finishStop(state,trip.route);
    }
    assert.equal(state.finished,true);
