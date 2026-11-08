@@ -1,4 +1,5 @@
-import {mountDrivingOverlay} from './driving-overlay.js?v=44';
+import {phoneGeometry} from './phone-layout.js?v=phone58fix';
+import {mountDrivingOverlay} from './driving-overlay.js?v=phone58fix';
 import {NOTCH_LABELS,NOTCH_MIN} from './physics.js?v=23';
 import {bindHornButton} from './assets/audio/held-horn.js';
 import {responsiveLayout} from './responsive-layout.js?v=41';
@@ -34,7 +35,7 @@ export function mountResponsiveUI(){
   for(const rect of [layout.game,layout.controls,layout.menu])if(rect){rect.left+=dx;rect.top+=dy;}
   document.body.dataset.deviceLayout=layout.kind;document.body.classList.toggle('phone-columns',layout.columns);document.body.classList.toggle('phone-portrait',layout.kind==='phone'&&!layout.landscape);document.body.classList.toggle('adaptive-menu',mode==='menu'&&layout.kind!=='desktop');document.body.dataset.simMode=mode;
   const adaptive=layout.kind!=='desktop';if(adaptive){menuPanel.querySelector('.menu-station-mount').append(selector);menuPanel.querySelector('.menu-nav-mount').append(nav);}else{selectorHome.append(selector);navHome.append(nav);}
-  deck.hidden=mode!=='drive';menuPanel.hidden=mode!=='menu'||!adaptive;position(deck,layout.controls);position(menuPanel,layout.menu);return layout.game;
+  deck.hidden=mode!=='drive';menuPanel.hidden=mode!=='menu'||!adaptive;position(deck,layout.controls);position(menuPanel,layout.menu);const phone=phoneGeometry(vv?.width??innerWidth,vv?.height??innerHeight,media.matches||Math.max(vv?.width??innerWidth,vv?.height??innerHeight)<=1000,mode==='drive');return phone.phone?phone.game:layout.game;
  },update(state){$('deckSpeed').textContent=state.speed;$('deckNotch').textContent=state.notch;$('deckNext').textContent=state.next;$('deckDistance').textContent=state.distance;$('deckDoor').textContent=state.door;$('deckLimit').textContent=state.limit;overlay.update({value:state.value,min:NOTCH_MIN,max:5,labels:NOTCH_LABELS,disabled:state.disabled,speed:state.speed,limit:state.limit,door:state.door,instruction:$('operationStatus').textContent||`次の停車駅は ${state.next} です。`});}};
  for(const button of [horn,extraHorn])bindHornButton(button,pressed=>api.onHorn?.(pressed,'hornPrimary'));
  bindHornButton(airHorn,pressed=>api.onHorn?.(pressed,'hornSecondary'));

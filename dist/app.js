@@ -1,8 +1,8 @@
 import {beginTerminalOpening,advanceTerminalOpening} from './terminal-arrival.js?v=score13';
-import {mountScoring,checkpointMarks,buildScoreTimetable,resolveScoreSchedule,scoreHazards,signalRestriction} from './scoring.js?v=controls55';
+import {mountScoring,checkpointMarks,buildScoreTimetable,resolveScoreSchedule,scoreHazards,signalRestriction} from './scoring.js?v=phone58fix';
 import {mountLookahead,changesFromSteps,stationMarks} from './lookahead.js?v=score6';const lookahead=mountLookahead(document.getElementById('drive'));
 import {GeneratedCab,generatedCab} from './generated-cab.js';
-import {mountResponsiveUI} from './responsive-ui.js?v=44';
+import {mountResponsiveUI} from './responsive-ui.js?v=phone58fix';
 import {CabPanel} from './cab-panel.js?v=23';
 import {correctStoppedOverrun,nextSignalCall,advanceDoorSequence,beginStartingBoarding,completeDoorSequence,OPEN_DELAY_SECONDS,BOARDING_WAIT_SECONDS} from './train-operations.js?v=33';
 import {LAST_STATION_INDEX as FULL_LAST_STATION_INDEX,BVE_END} from './route-data.js?v=23';
@@ -10,7 +10,7 @@ import {mountDisplay,stoppingMarker,formatStopDistance} from './display.js?v=41'
 import {STATIONS as ALL_STATIONS,SPECS,step,newRun,stoppingDistance,assistBrake,notchDeltaForKey,NOTCH_MIN,NOTCH_LABELS,clampNotch} from './physics.js?v=23';
 import {RouteProfile} from './route-profile.js?v=23';
 import {RailWorld} from './scene.js?v=traffic57';
-import {SoundEngine} from './assets/audio/sound-engine.js?v=33';
+import {SoundEngine} from './assets/audio/sound-engine.js?v=phone58fix';
 const rangeQuery=new URLSearchParams(location.search),requestedEnd=Number(rangeQuery.get('end')),requestedStart=Number(rangeQuery.get('station')??0);
 const LAST_STATION_INDEX=rangeQuery.has('end')&&Number.isInteger(requestedEnd)&&requestedEnd>requestedStart?Math.min(FULL_LAST_STATION_INDEX,requestedEnd):FULL_LAST_STATION_INDEX;
 const STATIONS=ALL_STATIONS.slice(0,LAST_STATION_INDEX+1),ROUTE_LENGTH=STATIONS.at(-1).s;

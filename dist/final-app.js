@@ -1,11 +1,11 @@
-import {sharedEffects} from './buffered-effects.js?v=controls55';
+import {sharedEffects} from './buffered-effects.js?v=phone58fix';
 import {bindTrainSelectionKeys} from './selection-keys.js?v=controls55';
 import {beginTerminalOpening,advanceTerminalOpening} from './terminal-arrival.js?v=score13';
 import {vehiclePhoto} from './vehicle-photos.js?v=corridor1';
 import {mountTrainDetails} from './train-details.js?v=corridor1';
 import {mountWheelPicker} from './wheel-picker.js?v=controls55';
-import {mountScoring,checkpointMarks,scoringStations,buildScoreTimetable,resolveScoreSchedule,scoreHazards,signalRestriction} from './scoring.js?v=controls55';
-import {mountDrivingOverlay} from './driving-overlay.js?v=44';import {mountLookahead,changesFromSections,stationMarks} from './lookahead.js?v=score6';
+import {mountScoring,checkpointMarks,scoringStations,buildScoreTimetable,resolveScoreSchedule,scoreHazards,signalRestriction} from './scoring.js?v=phone58fix';
+import {mountDrivingOverlay} from './driving-overlay.js?v=phone58fix';import {mountLookahead,changesFromSections,stationMarks} from './lookahead.js?v=score6';
 import {serviceChoices,makeServiceRoute} from './train-selection.js?v=topology56';
 import {GeneratedCab,generatedCab} from './generated-cab.js';
 import {FinalWorld} from './final-world.js?v=traffic57';
@@ -192,7 +192,7 @@ async function start(startIndex){
   const r=trip.route,train=recipe(),pack=packs.get(train.id);
   startIndex??=scenario?trip.startIndex:freeStart;
   if(!pack)throw Error('車両の運転台と収録音が見つかりません');
-  nextSound=new LocalTrainAudio(train,pack,{volume:settings.volume});
+  nextSound=new LocalTrainAudio(train,pack,{volume:settings.volume,context:menuEffects?.context});
   const audioEnabled=nextSound.resume();
   await cleanup();
   activeRoute=r;

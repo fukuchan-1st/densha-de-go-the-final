@@ -73,3 +73,5 @@ body[data-mode=drive]{--dock-height:0px}
 }
 
 #stopGauge{z-index:12}
+
+.scene-guidance{position:absolute;right:45px;bottom:530px;pointer-events:none}.scene-guidance.quiet{opacity:0}

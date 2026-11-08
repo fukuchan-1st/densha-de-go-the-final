@@ -38,7 +38,7 @@ test('SEは先読みを使い回し、2音の途中でも次のセットを即�
  let fetches=0,decodes=0;const sources=[];
  const context={currentTime:10,destination:{},resume:async()=>{},decodeAudioData:async()=>{decodes++;return {duration:.4};},createGain:()=>({gain:{},connect(){},disconnect(){}}),createBufferSource:()=>{const source={connect(){},disconnect(){},start(t){source.at=t;},stop(){source.onended?.();}};sources.push(source);return source;}};
  const bus=new BufferedEffects(context,{fetchAudio:async()=>{fetches++;return {ok:true,arrayBuffer:async()=>new ArrayBuffer(4)};}});
- await bus.preload(['a','b']);const first=bus.playSequence(['a','b']),second=bus.playSequence(['a','b']);await Promise.resolve();await Promise.resolve();
+ await bus.preload(['a','b']);const first=bus.playSequence(['a','b']),second=bus.playSequence(['a','b']);await new Promise(resolve=>setImmediate(resolve));
  assert.equal(fetches,2);assert.equal(decodes,2);assert.equal(sources.length,4);assert.equal(sources[0].at,sources[2].at);assert.ok(sources[1].at>sources[0].at);
  first.stop();second.stop();
 });

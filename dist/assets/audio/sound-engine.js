@@ -1,3 +1,4 @@
+import {sharedEffects} from '../../buffered-effects.js?v=phone58fix';
 import {departureFilesFor,STATION_DEPARTURE_AUDIO} from '../../train-operations.js?v=32';
 import {runPitch} from './run-pitch.js';
 import {HeldHorn} from './held-horn.js';
@@ -31,7 +32,7 @@ export class SoundEngine {
     if (this.ready) { await this.ctx.resume(); return; }
     if (this.loading) return this.loading;
     // Call directly from a user gesture to satisfy browser sound permissions.
-    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+    this.ctx = sharedEffects()?.context ?? new (window.AudioContext || window.webkitAudioContext)();
     await this.ctx.resume();
     this.master = this.ctx.createGain();
     this.master.gain.value=this.level;
