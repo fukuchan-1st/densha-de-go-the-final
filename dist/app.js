@@ -1,5 +1,5 @@
 import {beginTerminalOpening,advanceTerminalOpening} from './terminal-arrival.js?v=score13';
-import {mountScoring,checkpointMarks,buildScoreTimetable,resolveScoreSchedule,scoreHazards,signalRestriction} from './scoring.js?v=score13';
+import {mountScoring,checkpointMarks,buildScoreTimetable,resolveScoreSchedule,scoreHazards,signalRestriction} from './scoring.js?v=controls55';
 import {mountLookahead,changesFromSteps,stationMarks} from './lookahead.js?v=score6';const lookahead=mountLookahead(document.getElementById('drive'));
 import {GeneratedCab,generatedCab} from './generated-cab.js';
 import {mountResponsiveUI} from './responsive-ui.js?v=44';

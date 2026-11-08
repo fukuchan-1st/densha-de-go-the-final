@@ -1,4 +1,4 @@
-import {ScoreAudio} from './score-audio.js?v=score13';
+import {ScoreAudio} from './score-audio.js?v=controls55';
 import {ScoreEngine,timeSeconds} from './score-engine.js?v=score9';
 export function mountScoring(parent,{badge,volume=()=>.65,blueTolerance=3}={}){
  const hud=document.createElement('div');hud.className='score-hud';hud.innerHTML='<small><b class="chain-number">0</b> chain</small><strong><b class="points-number">0</b> points</strong>';
@@ -7,7 +7,7 @@ export function mountScoring(parent,{badge,volume=()=>.65,blueTolerance=3}={}){
  const objectives=document.createElement('div');objectives.className='score-objectives';objectives.setAttribute('aria-label','定速・定通ポイントの目標');parent.append(objectives);
  const feedback=document.createElement('div');feedback.className='score-feedback';feedback.setAttribute('role','status');parent.append(feedback);
  let manifest={},run=null,lastEventAt=0;const scoreAudio=new ScoreAudio({volume});
- fetch(new URL('./score-sounds.json',import.meta.url)).then(r=>r.json()).then(x=>manifest=x.sounds).catch(()=>{});
+ fetch(new URL('./score-sounds.json',import.meta.url)).then(r=>r.json()).then(x=>{manifest=x.sounds;return scoreAudio.preload(Object.values(manifest).map(sound=>new URL(sound.file,import.meta.url)));}).catch(()=>{});
  function playSounds(...names){scoreAudio.playSequence(names.map(name=>manifest[name]?.file).filter(Boolean).map(path=>new URL(path,import.meta.url)));}
  const engine=new ScoreEngine(event=>{hud.querySelector('.chain-number').textContent=event.chain;hud.querySelector('.points-number').textContent=event.points;feedback.textContent=event.grade+' '+(event.delta>=0?'+':'')+event.delta+'　'+event.reason;feedback.dataset.grade=event.grade;lastEventAt=run?.elapsed??0;const clip=event.grade==='×'?(event.delta<=-100?'D20':'D19'):({'△':'combo1','〇':'combo2','◎':'combo3'}[event.grade]);playSounds(clip,...(event.grade==='×'?[]:[event.chain<=5?'dobblescore':event.chain<=10?'speed_just':'repair']));},{blueTolerance});
  function reset(state){run=state;engine.reset(state.s);scoreAudio.stop();hud.querySelector('.chain-number').textContent='0';hud.querySelector('.points-number').textContent='0';feedback.textContent='';}

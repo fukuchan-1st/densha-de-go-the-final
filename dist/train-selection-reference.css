@@ -4,3 +4,5 @@
 
 /* Keep the station controls above the bottom action row in the 1600×900 stage. */
 .detail-ranges{top:685px;max-height:70px}.detail-manual{top:765px}.detail-manual b{min-width:180px}.detail-actions{bottom:16px}
+
+.selection-key-guide{position:absolute;right:75px;top:60px;z-index:3;color:#d5eacc;font-size:20px}#trainSelection[data-view=details]>.selection-key-guide{display:none}

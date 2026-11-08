@@ -6,6 +6,7 @@ export function corridorSceneryType(route,s){
 }
 // Fill gaps in the mapped rail fragments; retain their positions where present.
 export function prepareCorridorScenery(source){
+ if(source.corridorSceneryPrepared)return source;
  const chuo=['chuo','chuo-extended'].includes(source.id),tokaido=source.id==='tokaido';
  if(!chuo&&!tokaido)return source;
  const stations=source.sceneryStations??source.stations,length=stations.at(-1).s;
@@ -48,5 +49,5 @@ export function prepareCorridorScenery(source){
   if((layout.platforms??[]).some(p=>{const a=interpolateKnots(p.edges,-60,1),b=interpolateKnots(p.edges,-60,2);return mid>=a&&mid<=b;}))continue;
   (layout.platforms??=[]).push({boarding:false,edges:[[-210,l,r],[15,l,r]],roof:[-180,-10],basis:'Approximate local-line island platform between mapped or continued rails'});
  }
- return {...source,neighborTracks:rails,stationLayouts:layouts};
+ return {...source,neighborTracks:rails,stationLayouts:layouts,corridorSceneryPrepared:true};
 }

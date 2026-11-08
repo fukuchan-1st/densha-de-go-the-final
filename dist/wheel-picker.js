@@ -15,5 +15,5 @@ export function mountWheelPicker(select){
  list.addEventListener('pointerdown',event=>{if(event.pointerType==='touch')touchY=event.clientY;});
  list.addEventListener('pointerup',event=>{if(touchY===null)return;const delta=touchY-event.clientY;touchY=null;if(Math.abs(delta)>24){event.preventDefault();choose(select.selectedIndex+(delta>0?1:-1));}});
  list.addEventListener('pointercancel',()=>touchY=null);
- select.addEventListener('change',sync);new MutationObserver(sync).observe(select,{childList:true,subtree:true,attributes:true,attributeFilter:['disabled']});sync();return {root,sync,focus(){list.children[1]?.focus({preventScroll:true});}};
+ select.addEventListener('change',sync);new MutationObserver(sync).observe(select,{childList:true,subtree:true,attributes:true,attributeFilter:['disabled']});sync();return {root,sync,step(delta){choose(select.selectedIndex+delta,true);},focus(){list.children[1]?.focus({preventScroll:true});}};
 }

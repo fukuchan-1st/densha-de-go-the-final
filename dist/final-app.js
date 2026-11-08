@@ -1,12 +1,14 @@
+import {sharedEffects} from './buffered-effects.js?v=controls55';
+import {bindTrainSelectionKeys} from './selection-keys.js?v=controls55';
 import {beginTerminalOpening,advanceTerminalOpening} from './terminal-arrival.js?v=score13';
 import {vehiclePhoto} from './vehicle-photos.js?v=corridor1';
 import {mountTrainDetails} from './train-details.js?v=corridor1';
-import {mountWheelPicker} from './wheel-picker.js?v=vehicles221';
-import {mountScoring,checkpointMarks,scoringStations,buildScoreTimetable,resolveScoreSchedule,scoreHazards,signalRestriction} from './scoring.js?v=score13';
+import {mountWheelPicker} from './wheel-picker.js?v=controls55';
+import {mountScoring,checkpointMarks,scoringStations,buildScoreTimetable,resolveScoreSchedule,scoreHazards,signalRestriction} from './scoring.js?v=controls55';
 import {mountDrivingOverlay} from './driving-overlay.js?v=44';import {mountLookahead,changesFromSections,stationMarks} from './lookahead.js?v=score6';
-import {serviceChoices,makeServiceRoute} from './train-selection.js?v=vehicles221';
+import {serviceChoices,makeServiceRoute} from './train-selection.js?v=controls55';
 import {GeneratedCab,generatedCab} from './generated-cab.js';
-import {FinalWorld} from './final-world.js?v=corridor1';
+import {FinalWorld} from './final-world.js?v=controls55';
 import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=photo1';
 import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=panel-repair1';
 import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,routeLimitAt,stopPosition,finishStop,takeDepartureCall} from './final-model.js?v=41';
@@ -34,24 +36,14 @@ try{const saved=JSON.parse(localStorage.getItem('railway-drive-settings')??'{}')
 const saveSettings=()=>{try{localStorage.setItem('railway-drive-settings',JSON.stringify(settings));}catch{}};
 const overlayControls=mountDrivingOverlay($('driveScreen'),{onChange:n=>setNotch(n),actions:[$('hornButton'),$('pauseButton'),$('moreButton')],instructionElement:$('eventText')});$('driveScreen').append($('extras'));const lookahead=mountLookahead($('driveScreen'));
 const score=mountScoring($('driveScreen'),{badge:document.querySelector('.hud-route'),volume:()=>settings.volume});
+const menuEffects=sharedEffects();
+const menuEffectURLs=Object.fromEntries(['cursor','confirm','cancel'].map(name=>[name,new URL($('menuSound-'+name).getAttribute('src'),location.href).href]));
+menuEffects?.preload(Object.values(menuEffectURLs)).catch(()=>{});
 function playMenuSound(name,{waitForEnd=false}={}){
- if(settings.volume===0)return;
- const clip=$('menuSound-'+name);
- clip.volume=settings.volume;
- clip.currentTime=0;
- const playback=clip.play();
- if(!waitForEnd){playback.catch(()=>{});return;}
- // The 701 screen loads a new page, so let the decision sound finish before navigating.
- return new Promise(resolve=>{
-  const finish=()=>{
-   clearTimeout(timeout);
-   clip.removeEventListener('ended',finish);
-   resolve();
-  };
-  const timeout=setTimeout(finish,1700);
-  clip.addEventListener('ended',finish);
-  playback.catch(finish);
- });
+ if(settings.volume===0)return Promise.resolve();
+ if(menuEffects){const group=menuEffects.playSequence([menuEffectURLs[name]],settings.volume);return waitForEnd?group.done:undefined;}
+ const clip=$('menuSound-'+name);clip.volume=settings.volume;clip.currentTime=0;const playback=clip.play();if(!waitForEnd){playback.catch(()=>{});return;}
+ return new Promise(resolve=>{clip.onended=resolve;playback.catch(resolve);});
 }
 const menuMusic=mountMenuMusic(()=>settings.volume);
 function fit(){const r=$('stageArea').getBoundingClientRect(),scale=Math.min(r.width/1600,r.height/900);document.documentElement.style.setProperty('--overlay-ui-scale',Math.max(1,Math.min(3.5,44/(54*scale))));$('stage').style.left='50%';$('stage').style.top='50%';$('stage').style.transform=`translate(-50%,-50%) scale(${scale})`;}
@@ -344,12 +336,13 @@ try {
 function setupTrainSelection(){
  const overlay=document.createElement('section');
  overlay.id='trainSelection';overlay.setAttribute('role','region');overlay.hidden=true;overlay.setAttribute('aria-label','列車選択');
- overlay.innerHTML='<div class="selection-page-heading"><p>TRAIN SELECT</p><h2 id="selectionTitle">列車選択</h2><p>上下のボタン・スクロールで選択</p></div><div class="selection-wheel-column"><h3>乗務する列車</h3><select id="trainChoice" data-wheel="true" aria-label="乗務する列車"></select></div><div class="selection-settings-column"><div id="departureOptions"></div><p id="selectionNotes"></p></div><div class="selection-actions"><button id="selectionBack">◀ 路線選択に戻る</button><button id="trainDetailsNext">列車詳細・運転区間 ▶</button></div><div class="selection-line-controls"><button id="previousLine">◀ 前の路線</button><button id="nextLine">次の路線 ▶</button></div>';
+ overlay.innerHTML='<div class="selection-key-guide">↑↓ 列車　←→ 路線　Enter 決定　Esc 戻る</div><div class="selection-page-heading"><p>TRAIN SELECT</p><h2 id="selectionTitle">列車選択</h2><p>上下のボタン・スクロールで選択</p></div><div class="selection-wheel-column"><h3>乗務する列車</h3><select id="trainChoice" data-wheel="true" aria-label="乗務する列車"></select></div><div class="selection-settings-column"><div id="departureOptions"></div><p id="selectionNotes"></p></div><div class="selection-actions"><button id="selectionBack">◀ 路線選択に戻る</button><button id="trainDetailsNext">列車詳細・運転区間 ▶</button></div><div class="selection-line-controls"><button id="previousLine">◀ 前の路線</button><button id="nextLine">次の路線 ▶</button></div>';
 
  const photo=document.createElement('img');photo.className='menu-route-photo selection-photo';photo.alt='';photo.setAttribute('aria-hidden','true');overlay.prepend(photo);$('stage').append(overlay);
  for(const id of ['scenarioControl','startStationControl'])$('departureOptions').append($(id));
  trainDetails=mountTrainDetails(overlay,{onSound:playMenuSound,onBack:()=>showTrainList(),onRange:(from,to)=>{$('startStation').value=String(from);$('scenarioSelect').value='';detailEndIndex=to;}});trainDetails.root.querySelector('.detail-start-mount').append($('startDrive'));$('trainDetailsNext').onclick=showTrainDetails;$('previousLine').onclick=()=>switchSelectionLine(-1);$('nextLine').onclick=()=>switchSelectionLine(1);
  $('trainChoice').wheel=mountWheelPicker($('trainChoice'));
+ bindTrainSelectionKeys(document,{active:()=>trainSelectionOpen&&!loading&&$('trainSelection').dataset.view==='list'&&!$('modal').open,previous:()=>$('trainChoice').wheel.step(-1),next:()=>$('trainChoice').wheel.step(1),previousLine:()=>switchSelectionLine(-1),nextLine:()=>switchSelectionLine(1),details:showTrainDetails,back:closeTrainSelection});
  for(const id of ['startStation','scenarioSelect']){$(id).dataset.wheel='true';const previous=$(id).nextElementSibling;if(previous?.classList.contains('game-select'))previous.remove();$(id).wheel=mountWheelPicker($(id));}
  overlay.addEventListener('keydown',event=>{if(event.code==='Escape'){event.preventDefault();event.stopPropagation();if(!trainDetails.root.hidden)showTrainList();else closeTrainSelection();}else if(trainDetails.root.hidden&&['ArrowLeft','ArrowRight'].includes(event.code)){event.preventDefault();event.stopPropagation();switchSelectionLine(event.code==='ArrowLeft'?-1:1);}});
  const next=document.createElement('button');next.id='routeContinue';next.className='start-button';next.textContent='列車を選ぶ';

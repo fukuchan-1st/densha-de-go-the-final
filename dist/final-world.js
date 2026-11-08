@@ -1,4 +1,4 @@
-import {prepareCorridorScenery,corridorSceneryType} from './corridor-scenery.js?v=corridor1';
+import {prepareCorridorScenery,corridorSceneryType} from './corridor-scenery.js?v=controls55';
 import {sampleRouteCurve} from './route-curve.js?v=39';
 import {prepareTurnoutLayout} from './turnout-layout.js?v=39';
 import {addTurnouts} from './turnout-scene.js?v=39';
