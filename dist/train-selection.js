@@ -1,12 +1,8 @@
-import {selectTokaidoServiceTrack} from './tokaido-service-track.js?v=topology56';
-export const serviceChoices={
- yamanote:[['yamanote','e235','普通']],
- chuo:[['chuo-extended','e353','特急'],['chuo-extended','211','普通'],['shinonoi-extended','383','特急'],['shinonoi-extended','e353','特急'],['shinonoi-extended','211','普通'],['chuo','e233','快速'],['chuo','e353','特急'],['chuo-kofu','e353','特急'],['chuo-kofu','211','普通'],['chuo-shinshu','e353','特急'],['chuo-shinshu','211','普通'],['shinonoi','383','特急'],['shinonoi','e353','特急'],['shinonoi','211','普通'],['oito','e127','普通'],['oito','211','普通']],
- osaka:[['osaka','323','普通'],['osaka','223','関空・紀州路快速'],['osaka','221','大和路快速']],
- tokaido:[['tokaido','207','普通'],['tokaido','223-1000','新快速'],['tokaido','681','特急'],['tokaido','221','快速'],['tokaido','221','普通']],
- tohoku:[['tohoku','701','普通']],yagan:[['yagan','6050','普通']]
-};
-export function makeServiceRoute(route,vehicle,service){
+import {selectTokaidoServiceTrack} from './tokaido-service-track.js?v=services63';
+import {serviceChoices,STOP_PATTERNS} from './service-catalog.js?v=services63';
+import {sliceRoute,reverseRoute} from './service-routes.js?v=services63';
+export {serviceChoices};
+function makeDefaultServiceRoute(route,vehicle,service){
  route=selectTokaidoServiceTrack(route,service);
  route={...route,sceneryStations:route.sceneryStations??route.stations,limits:route.limitsByVehicle?.[vehicle]??route.limits};
  // Yagan service: 70 km/h across ordinary sections; keep lower station/point limits.
@@ -20,4 +16,20 @@ export function makeServiceRoute(route,vehicle,service){
  const stops=service==='快速'?['京都','長岡京','高槻','茨木','新大阪','大阪','尼崎','西宮','芦屋','住吉','六甲道','三ノ宮','元町','神戸']:service==='新快速'?['京都','高槻','新大阪','大阪','尼崎','芦屋','三ノ宮','神戸']:['関空・紀州路快速','大和路快速'].includes(service)?['大阪','福島','西九条','弁天町','大正','新今宮','天王寺','鶴橋','京橋']:route.id==='tokaido'?['京都','新大阪','大阪','神戸']:route.id.startsWith('shinonoi')?['長野','篠ノ井','聖高原','明科','松本','塩尻']:route.id==='oito'?['南小谷','白馬','信濃大町','穂高','豊科','松本']:['東京','新宿','立川','八王子','大月','塩山','山梨市','石和温泉','甲府','韮崎','小淵沢','富士見','茅野','上諏訪','下諏訪','岡谷','塩尻','松本'];
  const stations=route.stations.map((station,index)=>({...station,layoutIndex:station.layoutIndex??index})).filter((station,index)=>index===0||index===route.stations.length-1||(!station.passOnly&&(stops?stops.includes(station.name):!station.sourcePass)));
  return {...route,stations,service,vehicle};
+}
+
+export function makeServiceRoute(route,vehicle,service,option){
+ if(!option)return makeDefaultServiceRoute(route,vehicle,service);
+ let r=selectTokaidoServiceTrack(route,service.includes('しなの')?'特急':service);r={...r,sceneryStations:r.sceneryStations??r.stations,limits:r.limitsByVehicle?.[vehicle]??r.limits};
+ if(r.id==='yagan')r=makeDefaultServiceRoute(r,vehicle,'普通');
+ if(option.from||option.to)r=sliceRoute(r,option.from,option.to);
+ const all=r.sceneryStations??r.stations,pattern=option.pattern,boundary=option.beyond?r.stations.find(x=>x.name===option.beyond)?.s:null;
+ let stops;
+ if(pattern==='all')stops=r.stations.filter(x=>!x.passOnly);
+ else if(pattern==='holiday')stops=r.stations.filter(x=>!x.passOnly&&!['高円寺','阿佐ケ谷','西荻窪'].includes(x.name));
+ else if(STOP_PATTERNS[pattern])stops=r.stations.filter((x,i)=>i===0||i===r.stations.length-1||(!x.passOnly&&(STOP_PATTERNS[pattern].includes(x.name)||(boundary!=null&&x.s>=boundary))));
+ else stops=makeDefaultServiceRoute(r,vehicle,service).stations;
+ r={...r,sceneryStations:all,stations:stops,service,vehicle,serviceOption:option};if(option.reverse)r=reverseRoute(r);
+ if(option.startTime){r={...r,night:!!option.night,stations:r.stations.map(x=>{const st={...x};for(const k of ['arrival','departure','time','passTime','startTime'])delete st[k];return st;}),sceneryStations:r.sceneryStations.map(x=>{const st={...x};for(const k of ['arrival','departure','time','passTime','startTime'])delete st[k];return st;})};r.stations[0].startTime=option.startTime??'20:00:00';}
+ return r;
 }

@@ -1,3 +1,4 @@
+import {loadServiceRoutes} from './service-fixture.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {makeCheckpoints,resolveScoreSchedule,observeScoreDeparture,checkpointSectionPlan,sectionSpeedPlan} from '../dist/scoring.js';
@@ -22,10 +23,10 @@ test('定速から定通まで同じ指定速度を維持でき、次駅にも3�
 });
 test('全列車コースを実車両の力行表で監査し、加減速が必要な定通を作らない',async()=>{
  const load=async id=>JSON.parse(await readFile(new URL('../dist/assets/final/'+id,import.meta.url),'utf8'));
- const recipes=(await load('vehicle-recipes.json')).trains;let checked=0;
- for(const choices of Object.values(serviceChoices))for(const [id,vehicle,service] of choices){
+ const recipes=(await load('vehicle-recipes.json')).trains,routes=await loadServiceRoutes();let checked=0;
+ for(const choices of Object.values(serviceChoices))for(const [id,vehicle,service,option] of choices){
   if(vehicle==='701')continue;
-  const train=recipes.find(t=>t.id===vehicle),route=makeServiceRoute(await load(id+'-route.json'),vehicle,service);
+  const train=recipes.find(t=>t.id===vehicle),route=makeServiceRoute(routes.get(id),vehicle,service,option);
   const spec={...train.playableSpecs,powerForceRows:train.performance?.power?.force?.rows};
   const schedule=resolveScoreSchedule(route,route.stations[0].s,spec);
   const points=makeCheckpoints(schedule.timetable,route.limits??[],route.stations[0].s,schedule.clockStart,spec);

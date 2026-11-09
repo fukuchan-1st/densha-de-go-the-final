@@ -1,3 +1,4 @@
+import {buildConnectingRoutes} from './service-catalog.js?v=services63';
 import {loadAudioMix,audioMixMarkup,bindAudioMix} from './audio-mix.js?v=keys61fix';
 import {bindRouteKeys,bindScreenKeys} from './screen-keys.js?v=keys61fix';
 import {sharedEffects} from './buffered-effects.js?v=phone58fix';
@@ -8,9 +9,9 @@ import {mountTrainDetails} from './train-details.js?v=keys61fix';
 import {mountWheelPicker} from './wheel-picker.js?v=controls55';
 import {mountScoring,checkpointMarks,scoringStations,buildScoreTimetable,resolveScoreSchedule,scoreHazards,hornMarks,currentScoreRestriction,signalRestriction} from './scoring.js?v=evaluation59';
 import {mountDrivingOverlay} from './driving-overlay.js?v=phone58fix';import {mountLookahead,changesFromSections,stationMarks} from './lookahead.js?v=evaluation59';
-import {serviceChoices,makeServiceRoute} from './train-selection.js?v=yagan70';
+import {serviceChoices,makeServiceRoute} from './train-selection.js?v=services63';
 import {GeneratedCab,generatedCab} from './generated-cab.js';
-import {FinalWorld} from './final-world.js?v=traffic57';
+import {FinalWorld} from './final-world.js?v=services63';
 import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=photo1';
 import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=keys61fix';
 import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,routeLimitAt,stopPosition,finishStop,beginDoorClosing,isDoorClosing,takeDepartureCall} from './final-model.js?v=doors62';
@@ -30,6 +31,7 @@ const $=id=>document.getElementById(id),META=[
 ];
 const preferredRoute=new URLSearchParams(location.search).get('route');
 let selected=Math.max(0,META.findIndex(meta=>meta.id===preferredRoute)),recipes,routes=[],world,panel,sound,run,mode='menu',paused=false,assist=false,panorama=false,token=0,loading=false,toastText='',toastUntil=0,modalPaused=false;
+let chosenOption;
 let packs=new Map(),activeRoute,chosenVehicle=null,chosenRoute=null,chosenService='普通',trainSelectionOpen=false;
 let trainDetails,detailEndIndex=null;
 const extraRoutes=new Map();
@@ -172,11 +174,11 @@ async function start(startIndex){
   if(meta.legacy){
    menuMusic.setMenu(false);
    await playMenuSound('confirm',{waitForEnd:true});
-   location.href=`./tohoku.html?v=41&drive=1&station=${startIndex??freeStart}&end=${detailEndIndex??TOHOKU_STATIONS.length-1}${generatedCab?'&cab=generated':''}`;
+   location.href=`./tohoku.html?v=41&drive=1&direction=${chosenOption?.reverse?'reverse':'forward'}&station=${startIndex??freeStart}&end=${detailEndIndex??TOHOKU_STATIONS.length-1}${generatedCab?'&cab=generated':''}`;
    return;
   }
   if(mode==='menu')playMenuSound('confirm');
-  const trip=scenarioJourney(makeServiceRoute(selectedRoute(),recipe().id,chosenService),scenario);
+  const trip=scenarioJourney(makeServiceRoute(selectedRoute(),recipe().id,chosenService,chosenOption),scenario);
   if(!trip)throw Error('運転できるシナリオ区間を確認できません');if(!scenario&&detailEndIndex!==null)trip.endIndex=detailEndIndex;
   const r=trip.route,train=recipe(),pack=packs.get(train.id);
   startIndex??=scenario?trip.startIndex:freeStart;
@@ -214,8 +216,8 @@ async function start(startIndex){
   $('driveScreen').querySelector('.hud-route span').textContent=chosenService;
   $('hudRoute').textContent=scenario?`${meta.name} · ${r.stations[trip.endIndex].name}行`:meta.name;
   $('vehicleLimit').textContent=`車両上限 ${train.playableSpecs.maxSpeedKmh} km/h`;
-  $('mapQuality').textContent=r.soundEvents?'提供BVE路線データ':'地図を参考にした試作';
-  $('mapAttribution').hidden=!!r.soundEvents&&!r.osmSections;
+  $('mapQuality').textContent=r.geometryQuality??(r.soundEvents?.length?'提供BVE路線データ':'地図を参考にした試作');
+  $('mapAttribution').hidden=!!r.soundEvents?.length&&!r.osmSections;
   $('viewButton').textContent='前面展望';
   $('audioRetry').hidden=true;
   $('hornButton').hidden=!sound.effectRef('hornPrimary');
@@ -296,14 +298,14 @@ function frame(now){
   }
   hud();
   world.render(run.s,run.v,paused?0:dt,{acceleration:run.acceleration,shake:settings.shake,panorama});
-  if(!panorama)panel?.render(run,paused?0:dt,Boolean(world.structureAt(run.s,'tunnel')));
+  if(!panorama)panel?.render(run,paused?0:dt,Boolean(world.structureAt(run.s,'tunnel'))||Boolean(r.night));
  }
  requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
 try {
  const routeLoads=META.map(async meta=>{
-  if(meta.legacy)return {id:meta.id,stations:TOHOKU_STATIONS};
+  if(meta.legacy)return {id:meta.id,name:meta.name,length:TOHOKU_STATIONS.at(-1).s,stations:TOHOKU_STATIONS};
   const response=await fetch(`./assets/final/${meta.id}-route.json?v=41`);
   if(!response.ok)throw Error('路線データを読み込めません');
   return response.json();
@@ -313,10 +315,11 @@ try {
  $('routeCards').querySelectorAll('button').forEach(button=>button.onclick=()=>{choose(Number(button.dataset.route));openTrainSelection();});
  $('compactRoute').innerHTML=META.map((m,i)=>`<option value="${i}">${m.name} · ${m.train}</option>`).join('');
  $('compactRoute').onchange=event=>{choose(Number(event.target.value));openTrainSelection();};
- const additions=await Promise.all(['chuo-extended','shinonoi-extended','chuo-kofu','chuo-shinshu','shinonoi','oito'].map(async id=>{
+ const additions=await Promise.all(['chuo-extended','shinonoi-extended','chuo-kofu','chuo-shinshu','shinonoi','oito','ome','ome-okutama'].map(async id=>{
  const response=await fetch('./assets/final/'+id+'-route.json?v=41');
  if(response.ok)extraRoutes.set(id,await response.json());
 }));
+ for(const [id,r] of buildConnectingRoutes(extraRoutes))extraRoutes.set(id,r);
  setupTrainSelection();
  displayMenu();
 } catch(error){
@@ -343,10 +346,10 @@ function setupTrainSelection(){
 }
 function applyTrainChoice(){
  const choices=serviceChoices[META[selected].id];
- const [routeId,vehicle,service]=choices[Number($('trainChoice').value)];
- chosenVehicle=vehicle;chosenService=service;detailEndIndex=null;
+ const [routeId,vehicle,service,option]=choices[Number($('trainChoice').value)];
+ chosenOption=option;chosenVehicle=vehicle;chosenService=service;detailEndIndex=null;
  chosenRoute=extraRoutes.get(routeId)??routes[selected];
- const playable=makeServiceRoute(chosenRoute,vehicle,service);
+ const playable=makeServiceRoute(chosenRoute,vehicle,service,option);
  $('startStation').replaceChildren(...playable.stations.slice(0,-1).map((station,index)=>new Option(station.name,String(index))));
  $('scenarioSelect').value='';
  $('scenarioControl').hidden=routeId!==META[selected].id||service!=='普通';
@@ -359,10 +362,10 @@ function openTrainSelection(){
  playMenuSound('confirm');
  const choices=serviceChoices[META[selected].id];
  setMenuPhoto(META[selected].id);
- $('trainChoice').replaceChildren(...choices.map(([routeId,vehicle,service],index)=>{
+ $('trainChoice').replaceChildren(...choices.map(([routeId,vehicle,service,option],index)=>{
   const train=vehicle==='701'?TOHOKU_TRAIN:recipes.trains.find(t=>t.id===vehicle);
-  const r=makeServiceRoute(extraRoutes.get(routeId)??routes[selected],vehicle,service);
-  const option=new Option((train?.name??vehicle)+' · '+service+' · '+r.name+' · '+r.stations[0].name+' → '+r.stations.at(-1).name,String(index));Object.assign(option.dataset,{train:train?.name??vehicle,service,range:r.stations[0].name+' → '+r.stations.at(-1).name,photo:vehiclePhoto(vehicle,META[selected].id),index:String(index+1)});return option;
+  const r=makeServiceRoute(extraRoutes.get(routeId)??routes[selected],vehicle,service,option);
+  const element=new Option((train?.name??vehicle)+' · '+service+' · '+r.name+' · '+r.stations[0].name+' → '+r.stations.at(-1).name,String(index));Object.assign(element.dataset,{train:train?.name??vehicle,service:service+(option.reverse?' / 逆方向':' / 順方向')+(option.night?'・夜':''),range:r.stations[0].name+' → '+r.stations.at(-1).name,photo:vehiclePhoto(vehicle,META[selected].id),index:String(index+1)});return element;
  }));
  showTrainList();trainSelectionOpen=true;$('menuScreen').hidden=true;$('menuControls').hidden=true;$('menuScreen').inert=true;$('menuControls').inert=true;document.body.dataset.mode='selection';applyTrainChoice();$('trainSelection').hidden=false;fit();$('trainChoice').wheel.sync();$('trainChoice').wheel.focus();
 }
@@ -376,8 +379,8 @@ function rNote(r){return r.geometrySections?'BVE収録区間を地図の線路�
 function switchSelectionLine(delta){choose((selected+delta+META.length)%META.length);openTrainSelection();}
 function showTrainList(){if(!trainDetails)return;trainDetails.hide();$('trainSelection').dataset.view='list';detailEndIndex=null;$('trainChoice')?.wheel?.focus();}
 function showTrainDetails(){
- if(loading||!recipes)return;playMenuSound('confirm');const base=makeServiceRoute(selectedRoute(),recipe().id,chosenService),ranges=[{label:'全区間　'+base.stations[0].name+' → '+base.stations.at(-1).name,start:0,end:base.stations.length-1}];
- for(const scenario of FINAL_SCENARIOS[META[selected].id]??[]){const a=base.stations.findIndex(st=>st.name===scenario[1]),b=base.stations.findIndex(st=>st.name===scenario[2]);if(a>=0&&b>a)ranges.push({label:scenario[1]+' → '+scenario[2],start:a,end:b});}
+ if(loading||!recipes)return;playMenuSound('confirm');const base=makeServiceRoute(selectedRoute(),recipe().id,chosenService,chosenOption),ranges=[{label:'全区間　'+base.stations[0].name+' → '+base.stations.at(-1).name,start:0,end:base.stations.length-1}];
+ for(const entry of FINAL_SCENARIOS[META[selected].id]??[]){const scenario=chosenOption?.reverse?[entry[0],entry[2],entry[1]]:entry;const a=base.stations.findIndex(st=>st.name===scenario[1]),b=base.stations.findIndex(st=>st.name===scenario[2]);if(a>=0&&b>a)ranges.push({label:scenario[1]+' → '+scenario[2],start:a,end:b});}
  const count=base.stations.length-1;if(ranges.length===1&&count>3){const middle=Math.floor(count/2);ranges.push({label:base.stations[0].name+' → '+base.stations[middle].name,start:0,end:middle},{label:base.stations[middle].name+' → '+base.stations[count].name,start:middle,end:count});}
  $('trainSelection').dataset.view='details';trainDetails.show({route:base,train:recipe(),service:chosenService,line:META[selected].id,ranges,start:Number($('startStation').value),end:detailEndIndex??base.stations.length-1});
 }

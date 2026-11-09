@@ -6,7 +6,7 @@ const tracks=[-8,0,8,16];
 // centerline stays mapped; cross-sections are a consistent prototype layout.
 export function selectTokaidoServiceTrack(source,service){
  if(source.id!=='tokaido')return source;
- const outer=['新快速','特急'].includes(service),player=outer?-8:0;
+ const outer=(['新快速','特急'].includes(service)||service.includes('しなの')),player=outer?-8:0;
  if(source.tokaidoTopologyVersion===2&&source.serviceTrack===(outer?'outer':'inner'))return source;
  const stations=source.sceneryStations??source.stations,end=stations.at(-1).s;
  const full=x=>[[-300,x],[end+300,x]],layouts={},neighbors=tracks.filter(x=>x!==player).map(x=>({knots:full(x),basis:'Continuous four-track main line',mainCorridor:true}));

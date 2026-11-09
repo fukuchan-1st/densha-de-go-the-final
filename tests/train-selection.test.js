@@ -1,3 +1,4 @@
+import {loadServiceRoutes} from './service-fixture.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
@@ -13,17 +14,17 @@ test('大糸線は信濃大町でE127系と211系の運転区間を分ける',as
  assert.ok(north.stations.every(s=>s.s<=south.stations[0].s));
  assert.ok(south.stations.every(s=>s.s>=north.stations.at(-1).s));
  assert.equal(south.stations[0].layoutIndex,r.stations.findIndex(s=>s.name==='信濃大町'));
- assert.deepEqual(serviceChoices.chuo.filter(([id])=>id==='oito').map(([,vehicle])=>vehicle),['e127','211']);
+ assert.ok(serviceChoices.chuo.some(([id,v,service])=>id==='oito'&&v==='e127'&&service==='快速'));
 });
 test('全路線に列車選択があり、新車両と運転コースを参照できる',async()=>{
- for(const choices of Object.values(serviceChoices)){
+ const routes=await loadServiceRoutes();for(const choices of Object.values(serviceChoices)){
   assert.ok(choices.length);
-  for(const [id,vehicle,service] of choices){
+  for(const [id,vehicle,service,option] of choices){
    if(id==='tohoku'){assert.equal(vehicle,'701');continue;}
    const train=trains.find(t=>t.id===vehicle);
    assert.ok(train,vehicle);
-   const route=JSON.parse(await readFile(new URL(id+'-route.json',assets),'utf8'));
-   const trip=makeServiceRoute(route,vehicle,service);
+   const route=routes.get(id);
+   const trip=makeServiceRoute(route,vehicle,service,option);
    assert.ok(trip.stations.length>=2);
    for(let i=1;i<trip.stations.length;i++)assert.ok(trip.stations[i].s>trip.stations[i-1].s,id);
    for(const key of ['points','structures'])assert.ok(trip[key].length||key==='structures');
