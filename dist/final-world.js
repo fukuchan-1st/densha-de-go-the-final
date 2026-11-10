@@ -1,8 +1,9 @@
+import {prepareLeftTraffic} from './route-traffic.js?v=traffic64';
 import {prepareCorridorScenery,corridorSceneryType} from './corridor-scenery.js?v=controls55';
 import {sampleRouteCurve} from './route-curve.js?v=39';
 import {prepareTurnoutLayout} from './turnout-layout.js?v=39';
 import {addTurnouts} from './turnout-scene.js?v=39';
-import {OpposingTrains} from './opposing-trains.js?v=traffic57';
+import {OpposingTrains} from './opposing-trains.js?v=traffic64';
 import * as T from './assets/vendor/three.module.js';
 import {CabSuspension} from './cab-motion.js?v=24';
 import {addTrackSignal} from './track-signal.js?v=32';
@@ -13,8 +14,8 @@ const clamp=T.MathUtils.clamp;
 // Original streamed scenery. Track coordinates come from the route JSON; buildings and platforms are approximate.
 export class FinalWorld {
  constructor(container,route,{quality='standard'}={}){
-  route=prepareCorridorScenery(route);
-  this.route=route;this.sceneryStations=route.sceneryStations??route.stations;this.points=route.points;this.length=route.stations.at(-1).s;this.chunks=new Map();this.suspension=new CabSuspension();this.materials=new Map();this.rural=['yagan','shinonoi','oito','chuo-shinshu','chuo-kofu','chuo-system','ome','ome-okutama','chuo-ome','chuo-oito','suwa-nagano','chuo-extended','shinonoi-extended','chuo'].includes(route.id);
+  route=prepareLeftTraffic(prepareCorridorScenery(route));
+  this.route=route;this.sceneryStations=route.sceneryStations??route.stations;this.points=route.points;this.length=route.stations.at(-1).s;this.chunks=new Map();this.suspension=new CabSuspension();this.materials=new Map();this.rural=['yagan','shinonoi','oito','chuo-shinshu','chuo-kofu','chuo-system','ome','itsukaichi','chuo-itsukaichi','ome-okutama','chuo-ome','chuo-oito','suwa-nagano','chuo-extended','shinonoi-extended','chuo'].includes(route.id);
   this.chuoCorridor=['chuo','chuo-extended','chuo-ome','chuo-oito'].includes(route.id);
   this.mountainStart=this.chuoCorridor?(this.sceneryStations.find(st=>st.name==='高尾')?.s??Infinity):-Infinity;
   this.cityEnd=this.chuoCorridor?(this.sceneryStations.find(st=>st.name==='中野')?.s??0):0;
@@ -55,7 +56,7 @@ export class FinalWorld {
  curvature(s){const a=this.driveFrame(s-20).dir.setY(0).normalize(),b=this.driveFrame(s+20).dir.setY(0).normalize();return Math.atan2(a.x*b.z-a.z*b.x,a.dot(b))/40;}
  grade(s){return clamp((this.point(s+10).y-this.point(s-10).y)/20*1000,-40,40);}
  structureAt(s,kind){return this.route.structures?.find(item=>(!kind||item.kind===kind)&&s>=item.sStart&&s<=item.sEnd);}
- sceneryTypeAt(s){const corridor=corridorSceneryType(this.route,s);if(corridor)return corridor;if(this.chuoCorridor)return s<this.cityEnd?'city':s<this.mountainStart?'suburban':'mountain';return this.rural?'mountain':(['yamanote','osaka'].includes(this.route.id)||this.stationNear(s).d<900?'city':'suburban');}
+ sceneryTypeAt(s){if(['itsukaichi','chuo-itsukaichi'].includes(this.route.id)){const end=this.sceneryStations.find(st=>st.name==='武蔵増戸')?.s??this.length;return this.route.reverseDirection?(s>end?'suburban':'mountain'):(s<end?'suburban':'mountain');}const corridor=corridorSceneryType(this.route,s);if(corridor)return corridor;if(this.chuoCorridor)return s<this.cityEnd?'city':s<this.mountainStart?'suburban':'mountain';return this.rural?'mountain':(['yamanote','osaka'].includes(this.route.id)||this.stationNear(s).d<900?'city':'suburban');}
  stationNear(s){let nearest=null,d=Infinity;for(const st of this.sceneryStations??this.route.stations){const dd=Math.abs(st.s-s);if(dd<d){nearest=st;d=dd;}}return {st:nearest,d};}
  platformLength(){return clamp((this.route.carCount??10)*20+20,180,280);}
  oppositeOffset(s){

@@ -1,6 +1,7 @@
+import {prepareLeftTraffic} from './route-traffic.js?v=traffic64';
 import {selectTokaidoServiceTrack} from './tokaido-service-track.js?v=services63';
-import {serviceChoices,STOP_PATTERNS} from './service-catalog.js?v=services63';
-import {sliceRoute,reverseRoute} from './service-routes.js?v=services63';
+import {serviceChoices,STOP_PATTERNS} from './service-catalog.js?v=traffic64';
+import {sliceRoute,reverseRoute} from './service-routes.js?v=traffic64';
 export {serviceChoices};
 function makeDefaultServiceRoute(route,vehicle,service){
  route=selectTokaidoServiceTrack(route,service);
@@ -22,6 +23,7 @@ export function makeServiceRoute(route,vehicle,service,option){
  if(!option)return makeDefaultServiceRoute(route,vehicle,service);
  let r=selectTokaidoServiceTrack(route,service.includes('しなの')?'特急':service);r={...r,sceneryStations:r.sceneryStations??r.stations,limits:r.limitsByVehicle?.[vehicle]??r.limits};
  if(r.id==='yagan')r=makeDefaultServiceRoute(r,vehicle,'普通');
+ r=prepareLeftTraffic(r);
  if(option.from||option.to)r=sliceRoute(r,option.from,option.to);
  const all=r.sceneryStations??r.stations,pattern=option.pattern,boundary=option.beyond?r.stations.find(x=>x.name===option.beyond)?.s:null;
  let stops;

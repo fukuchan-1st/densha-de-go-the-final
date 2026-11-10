@@ -1,4 +1,4 @@
-import {buildConnectingRoutes} from './service-catalog.js?v=services63';
+import {buildConnectingRoutes} from './service-catalog.js?v=traffic64';
 import {loadAudioMix,audioMixMarkup,bindAudioMix} from './audio-mix.js?v=keys61fix';
 import {bindRouteKeys,bindScreenKeys} from './screen-keys.js?v=keys61fix';
 import {sharedEffects} from './buffered-effects.js?v=phone58fix';
@@ -9,9 +9,9 @@ import {mountTrainDetails} from './train-details.js?v=keys61fix';
 import {mountWheelPicker} from './wheel-picker.js?v=controls55';
 import {mountScoring,checkpointMarks,scoringStations,buildScoreTimetable,resolveScoreSchedule,scoreHazards,hornMarks,currentScoreRestriction,signalRestriction} from './scoring.js?v=evaluation59';
 import {mountDrivingOverlay} from './driving-overlay.js?v=phone58fix';import {mountLookahead,changesFromSections,stationMarks} from './lookahead.js?v=evaluation59';
-import {serviceChoices,makeServiceRoute} from './train-selection.js?v=services63';
+import {serviceChoices,makeServiceRoute} from './train-selection.js?v=traffic64';
 import {GeneratedCab,generatedCab} from './generated-cab.js';
-import {FinalWorld} from './final-world.js?v=services63';
+import {FinalWorld} from './final-world.js?v=traffic64';
 import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=photo1';
 import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=keys61fix';
 import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,routeLimitAt,stopPosition,finishStop,beginDoorClosing,isDoorClosing,takeDepartureCall} from './final-model.js?v=doors62';
@@ -53,7 +53,7 @@ function playMenuSound(name,{waitForEnd=false}={}){
 const menuMusic=mountMenuMusic(()=>audioMix.bgm);
 function fit(){const r=$('stageArea').getBoundingClientRect(),scale=Math.min(r.width/1600,r.height/900);document.documentElement.style.setProperty('--overlay-ui-scale',Math.max(1,Math.min(3.5,44/(54*scale))));$('stage').style.left='50%';$('stage').style.top='50%';$('stage').style.transform=`translate(-50%,-50%) scale(${scale})`;}
 addEventListener('resize',fit);visualViewport?.addEventListener('resize',fit);new ResizeObserver(fit).observe($('stageArea'));fit();
-function recipe(){return META[selected].legacy?TOHOKU_TRAIN:recipes.trains.find(t=>t.id===(chosenVehicle??META[selected].vehicle));}
+function recipe(){const train=META[selected].legacy?TOHOKU_TRAIN:recipes.trains.find(t=>t.id===(chosenVehicle??META[selected].vehicle));return chosenVehicle&&chosenOption?.carCount?{...train,playableSpecs:{...train.playableSpecs,carCount:chosenOption.carCount}}:train;}
 function selectedRoute(){return chosenRoute??routes[selected];}
 function route(){return activeRoute??selectedRoute();}
 function selectedScenario(){
@@ -315,7 +315,7 @@ try {
  $('routeCards').querySelectorAll('button').forEach(button=>button.onclick=()=>{choose(Number(button.dataset.route));openTrainSelection();});
  $('compactRoute').innerHTML=META.map((m,i)=>`<option value="${i}">${m.name} · ${m.train}</option>`).join('');
  $('compactRoute').onchange=event=>{choose(Number(event.target.value));openTrainSelection();};
- const additions=await Promise.all(['chuo-extended','shinonoi-extended','chuo-kofu','chuo-shinshu','shinonoi','oito','ome','ome-okutama'].map(async id=>{
+ const additions=await Promise.all(['chuo-extended','shinonoi-extended','chuo-kofu','chuo-shinshu','shinonoi','oito','ome','ome-okutama','itsukaichi'].map(async id=>{
  const response=await fetch('./assets/final/'+id+'-route.json?v=41');
  if(response.ok)extraRoutes.set(id,await response.json());
 }));

@@ -6,10 +6,10 @@ export function trafficInterval(type){return type==='city'?60:300;}
 export function adjacentTracks(world,s){
  if(s<0||s>world.length)return [];
  const own=world.driveOffset?.(s)??0;
- if(world.trackLayout)return world.trackLayout.activeAt(s).filter(t=>Math.abs(t.x-own)>2.8).map(t=>({x:t.x,y:t.y}));
+ if(world.trackLayout)return world.trackLayout.activeAt(s).filter(t=>t.track.direction==='opposing'&&t.x>own+2.8).map(t=>({x:t.x,y:t.y}));
  const rails=world.route.neighborTracks;
- if(!rails)return [{x:world.oppositeOffset(s),y:0}];
- return rails.filter(t=>!t.terminating&&s>=t.knots[0][0]&&s<=t.knots.at(-1)[0]).map(t=>({x:interpolateKnots(t.knots,s),y:t.heightKnots?.length?interpolateKnots(t.heightKnots,s):t.height??0})).filter(t=>Math.abs(t.x-own)>2.8);
+ if(!rails){const x=world.oppositeOffset(s);return x>own+2.8?[{x,y:0}]:[];}
+ return rails.filter(t=>(!t.direction||t.direction==='opposing')&&!t.terminating&&s>=t.knots[0][0]&&s<=t.knots.at(-1)[0]).map(t=>({x:interpolateKnots(t.knots,s),y:t.heightKnots?.length?interpolateKnots(t.heightKnots,s):t.height??0})).filter(t=>t.x>own+2.8);
 }
 export class TrafficClock {
  constructor({initialDelay=true}={}){this.elapsed=0;this.first=initialDelay;this.retry=0;}
