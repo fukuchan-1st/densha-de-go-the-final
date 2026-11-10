@@ -63,3 +63,8 @@ export function restrictionVoiceRefs(line,kmh){
  const file=kmh===null?clips?.release:clips?.limits?.[kmh];
  return file?[ref(file)]:[];
 }
+// The result screen may open as soon as the doors finish opening. Keep the
+// last arrival sentence audible, but never pause a newly started journey.
+export function pauseWhenSpeechEnds(audio,isCurrent,pause){
+ return Promise.resolve(audio?.driverQueue??audio?.routeCueQueue).catch(()=>{}).then(()=>{if(isCurrent())return pause();});
+}

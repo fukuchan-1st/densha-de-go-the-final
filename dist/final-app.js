@@ -1,4 +1,4 @@
-import {collectStationReports,collectRestrictionReports} from './station-timing.js?v=timing67';
+import {collectStationReports,collectRestrictionReports,pauseWhenSpeechEnds} from './station-timing.js?v=timing67';
 import {buildConnectingRoutes} from './service-catalog.js?v=traffic64';
 import {loadAudioMix,audioMixMarkup,bindAudioMix} from './audio-mix.js?v=keys61fix';
 import {bindRouteKeys,bindScreenKeys} from './screen-keys.js?v=keys61fix';
@@ -89,6 +89,7 @@ function choose(i){
  displayMenu();
 }
 function setMode(value){menuMusic.setMenu(value!=='drive');mode=value;$('menuScreen').inert=false;$('menuControls').inert=false;if(value==='drive'){$('trainSelection').hidden=true;trainSelectionOpen=false;}document.body.dataset.mode=value;$('menuScreen').hidden=value!=='menu';$('menuControls').hidden=value!=='menu';$('driveScreen').hidden=value!=='drive';$('driveControls').hidden=value!=='drive';fit();}
+function pauseAfterArrivalVoice(){const endedRun=run,endedSound=sound;score.pause(true);pauseWhenSpeechEnds(endedSound,()=>mode==='drive'&&run===endedRun&&sound===endedSound,()=>pauseAudio(true));}
 async function pauseAudio(value){score.pause(value);await sound?.setPaused(value).catch(()=>{});}
 function showModal(content,{pause=true}={}){if(mode==='drive'&&pause&&!paused){paused=true;modalPaused=true;pauseAudio(true);}$('modalContent').innerHTML=content;if(!$('modal').open)$('modal').showModal();}
 function closeModal(){if(mode==='menu')playMenuSound('cancel');$('modal').close();if(modalPaused&&!run?.finished){paused=false;pauseAudio(false);}modalPaused=false;}
@@ -133,7 +134,7 @@ async function closeSequence(generation){
   if(!finishStop(activeRun,r,attempt.stationIndex)){activeRun.doorPhase='audio-error';toast('停車位置を確認できません。戸開状態を維持します。',10);return;}
   sound.playEffect('relayOn').catch(()=>{});
   toast(activeRun.finished?'全区間の運転を完了しました。':`戸閉よし。次は${r.stations[activeRun.next].name}。`,5);
-  if(activeRun.finished){paused=true;pauseAudio(true);showResults();}else sound.callDriver('doorsClosed','departure');
+  if(activeRun.finished){paused=true;pauseAfterArrivalVoice();showResults();}else sound.callDriver('doorsClosed','departure');
  }catch(error){if(!current())return;activeRun.doorPhase='audio-error';$('audioRetry').hidden=false;toast('戸閉音を再生できませんでした。「その他」から再試行できます。',9999);}
 }
 function updateDriverCalls(){
@@ -160,7 +161,7 @@ function updateDriverCalls(){
  if(block!==null)sound.callRouteCue('signal',block);
 }
 $('audioRetry').onclick=()=>{$('audioRetry').hidden=true;closeSequence(token);};
-function updateDoors(dt){if(advanceTerminalOpening(run,route().stations[run.endIndex].s,dt)){paused=true;pauseAudio(true);showResults();return;}if(run.doorPhase==='opening-terminal')return;if(run.finished||run.doorPhase==='audio-error')return;const st=route().stations[run.next];if(!run.doors){if(run.v<=.01&&Math.abs(st.s-run.s)<=3){run.stopWait+=dt;run.doorPhase='waiting-open';if(run.stopWait>=3){run.v=0;run.doors=true;run.doorPhase='boarding';run.dwell=0;const opening=effect('open');if(run.next===run.endIndex)beginTerminalOpening(run,opening);else opening.catch(()=>{});effect('relayOff').catch(()=>{});}}else{run.stopWait=0;run.doorPhase=null;}}else if(run.doorPhase==='boarding'){run.dwell+=dt;if(run.dwell>=15)closeSequence(token);}}
+function updateDoors(dt){if(advanceTerminalOpening(run,route().stations[run.endIndex].s,dt)){paused=true;pauseAfterArrivalVoice();showResults();return;}if(run.doorPhase==='opening-terminal')return;if(run.finished||run.doorPhase==='audio-error')return;const st=route().stations[run.next];if(!run.doors){if(run.v<=.01&&Math.abs(st.s-run.s)<=3){run.stopWait+=dt;run.doorPhase='waiting-open';if(run.stopWait>=3){run.v=0;run.doors=true;run.doorPhase='boarding';run.dwell=0;const opening=effect('open');if(run.next===run.endIndex)beginTerminalOpening(run,opening);else opening.catch(()=>{});effect('relayOff').catch(()=>{});}}else{run.stopWait=0;run.doorPhase=null;}}else if(run.doorPhase==='boarding'){run.dwell+=dt;if(run.dwell>=15)closeSequence(token);}}
 async function start(startIndex){
  if(loading||!recipes)return;
  const meta=META[selected];
