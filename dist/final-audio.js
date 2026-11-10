@@ -1,6 +1,7 @@
-import {stationCueRefs,stationVoiceBank} from './station-voice.js?v=station66';
+import {timingVoiceRefs,timingPreloadRefs,restrictionVoiceRefs} from './station-timing.js?v=timing67';
+import {stationCueRefs,stationVoiceBank} from './station-voice.js?v=timing67';
 import {createMixGains,voiceCategory} from './audio-mix.js?v=keys61fix';
-import {interpolateColumn} from './final-vehicle.js?v=station66';
+import {interpolateColumn} from './final-vehicle.js?v=timing67';
 import {runPitch} from './assets/audio/run-pitch.js';
 import {HeldHorn} from './assets/audio/held-horn.js';
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -72,9 +73,11 @@ export class LocalTrainAudio {
  configureDriverRoute(route,line){this.driverRoute=route;this.driverRouteLine=stationVoiceBank(line)?line:null;}
  stationRefs(kind,station){return stationCueRefs(this.driverRouteLine,station,kind,this.recipe.playableSpecs?.carCount);}
  callStation(kind,station){return this.queueDriverCalls(this.stationRefs(kind,station));}
+ callRestriction(kmh){return this.queueDriverCalls(restrictionVoiceRefs(this.driverRouteLine,kmh));}
+ callStationTiming(kind,station,error){return this.queueDriverCalls(timingVoiceRefs(this.driverRouteLine,station,kind,error));}
  async prepare(){
   await Promise.all([...this.assetRefs(),whistle].map(ref=>this.buffer(ref)));
-  const stationRefs=[...(this.driverRoute?.stations??[]).flatMap(st=>['approach','departure'].flatMap(kind=>this.stationRefs(kind,st))),...Object.keys(driverCallNumbers).map(name=>this.driverCallRef(name)).filter(Boolean)];
+  const stationRefs=[...timingPreloadRefs(this.driverRouteLine,this.driverRoute?.stations),...(this.driverRoute?.stations??[]).flatMap(st=>['approach','departure'].flatMap(kind=>this.stationRefs(kind,st))),...Object.keys(driverCallNumbers).map(name=>this.driverCallRef(name)).filter(Boolean)];
   await Promise.all([...new Map(stationRefs.map(ref=>[ref.entryIndex,ref])).values()].map(ref=>this.buffer(ref)));
  }
  driverCallRef(name){

@@ -1,3 +1,4 @@
+import {collectStationReports,collectRestrictionReports} from './station-timing.js?v=timing67';
 import {reverseLegacyProfile,reverseLegacyLayout,normalizeLegacyLayout} from './tohoku-direction.js?v=traffic64';
 import {loadAudioMix,audioMixMarkup,bindAudioMix} from './audio-mix.js?v=keys61fix';
 import {bindScreenKeys} from './screen-keys.js?v=keys61fix';
@@ -13,7 +14,7 @@ import {mountDisplay,stoppingMarker,formatStopDistance} from './display.js?v=41'
 import {STATIONS as ALL_STATIONS,SPECS,step,newRun,stoppingDistance,assistBrake,notchDeltaForKey,NOTCH_MIN,NOTCH_LABELS,clampNotch} from './physics.js?v=23';
 import {RouteProfile} from './route-profile.js?v=23';
 import {RailWorld} from './scene.js?v=traffic64';
-import {SoundEngine} from './assets/audio/sound-engine.js?v=keys61fix';
+import {SoundEngine} from './assets/audio/sound-engine.js?v=timing67';
 const rangeQuery=new URLSearchParams(location.search),requestedEnd=Number(rangeQuery.get('end')),requestedStart=Number(rangeQuery.get('station')??0);
 const reverseDirection=rangeQuery.get('direction')==='reverse',fullLength=ALL_STATIONS.at(-1).s,DIRECTION_STATIONS=reverseDirection?ALL_STATIONS.map(x=>({...x,s:fullLength-x.s})).reverse():ALL_STATIONS;
 const LAST_STATION_INDEX=rangeQuery.has('end')&&Number.isInteger(requestedEnd)&&requestedEnd>requestedStart?Math.min(FULL_LAST_STATION_INDEX,requestedEnd):FULL_LAST_STATION_INDEX;
@@ -135,11 +136,14 @@ document.addEventListener('keydown',e=>{if(e.target.matches('input,select,textar
 document.addEventListener('keyup',e=>{if(e.code==='Enter')sound.setHorn(false);});
 window.addEventListener('blur',()=>sound.setHorn(false));
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&mode==='drive'&&!paused)pause();});
-function advance(dt){if(run.finished)return;const next=STATIONS[run.next],d=next.s-run.s;
+function advance(dt){if(run.finished)return;const next=STATIONS[run.next],d=next.s-run.s,voicePrevious={s:run.s,v:run.v,elapsed:run.elapsed};
  if(assist&&!run.doors&&!run.stopReady)assistBrake(run,d,profile.gradeAt(run.s));
  if(!run.scoreTimetable){const schedule=resolveScoreSchedule({stations:STATIONS,limits:profile.limits.map((x,i)=>({sStart:x.s,sEnd:profile.limits[i+1]?.s??Infinity,kmh:x.kmh}))},run.s,{maxSpeedKmh:110,startingAccelerationKmhPerSecondApprox:2.1});run.clockStart=schedule.clockStart-run.elapsed;run.scoreTimetable=schedule.timetable;}const previousV=run.v;step(run,dt,profile.gradeAt(run.s));run.acceleration=dt>0?(run.v-previousV)/dt:0;score.update(run,{eb:NOTCH_MIN,...currentScoreRestriction({limits:profile.limits.map((x,i)=>({sStart:x.s,sEnd:profile.limits[i+1]?.s??Infinity,kmh:x.kmh})),signals:world?.signals??[]},run.s),hazards:scoreHazards({structures:world?.routeStructures?.structures??[]}),vehicleSpec:{maxSpeedKmh:110,startingAccelerationKmhPerSecondApprox:2.1},routeLimits:profile.limits.map((x,i)=>({sStart:x.s,sEnd:profile.limits[i+1]?.s??Infinity,kmh:x.kmh})),stations:(run.scoreTimetable??=buildScoreTimetable({stations:STATIONS,limits:profile.limits.map((x,i)=>({sStart:x.s,sEnd:profile.limits[i+1]?.s??Infinity,kmh:x.kmh}))},run.s,28800+run.elapsed,{maxSpeedKmh:110,startingAccelerationKmhPerSecondApprox:2.1}))},dt);
  if(run.v*3.6>profile.limitAt(run.s)+1)run.overspeedSeconds=(run.overspeedSeconds??0)+dt;
- if(correctStoppedOverrun(run,next.s)!==null)return;
+ const corrected=correctStoppedOverrun(run,next.s);
+ for(const change of collectRestrictionReports(run,changesFromSteps(profile.limits),voicePrevious))sound.callRestriction(change.kmh);
+ for(const report of collectStationReports(run,run.scoreTimetable,voicePrevious,next.s)){sound.callStationTiming(report.kind,report.station,report.error);run.lastTimingReport=report;}
+ if(corrected!==null)return;
  if(run.next<LAST_STATION_INDEX&&run.s>=STATIONS[run.next+1].s-150){
   toast(`${next.name}を通過しました。次は${STATIONS[run.next+1].name}です。`,8);
   run.missed++;run.next++;run.stopReady=false;run.assistBraking=false;

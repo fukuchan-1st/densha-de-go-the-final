@@ -1,3 +1,4 @@
+import {collectStationReports,collectRestrictionReports} from './station-timing.js?v=timing67';
 import {buildConnectingRoutes} from './service-catalog.js?v=traffic64';
 import {loadAudioMix,audioMixMarkup,bindAudioMix} from './audio-mix.js?v=keys61fix';
 import {bindRouteKeys,bindScreenKeys} from './screen-keys.js?v=keys61fix';
@@ -13,7 +14,7 @@ import {serviceChoices,makeServiceRoute} from './train-selection.js?v=traffic64'
 import {GeneratedCab,generatedCab} from './generated-cab.js';
 import {FinalWorld} from './final-world.js?v=traffic64';
 import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=photo1';
-import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=station66';
+import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=timing67';
 import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,routeLimitAt,stopPosition,finishStop,beginDoorClosing,isDoorClosing,takeDepartureCall} from './final-model.js?v=doors62';
 import {STATIONS as TOHOKU_STATIONS} from './route-data.js?v=41';
 import {FINAL_SCENARIOS,scenarioJourney} from './final-scenarios.js?v=41';
@@ -256,11 +257,14 @@ function hud(){{const lr=route(),end=lr.stations[run.endIndex]?.s??Infinity;look
 }
 function advance(dt){
  if(run.finished)return;
- const r=route(),train=recipe(),station=r.stations[run.next];
+ const r=route(),train=recipe(),station=r.stations[run.next],previous={s:run.s,v:run.v,elapsed:run.elapsed};
  if(assist&&!run.doors)brakeAssist(run,r,train);
  driveStep(run,train,dt,world.grade(run.s));
  score.update(run,{eb:controlsFor(train).min,...currentScoreRestriction(r,run.s),hazards:scoreHazards(r),vehicleSpec:run.scoreVehicleSpec??train.playableSpecs,routeLimits:r.limits,stations:run.scoreTimetable??scoringStations(r)},dt);
- if(correctStoppedOverrun(run,station.s)!==null)return;
+ const corrected=correctStoppedOverrun(run,station.s);
+ for(const change of collectRestrictionReports(run,changesFromSections(r.limits),previous))sound.callRestriction(change.kmh);
+ for(const report of collectStationReports(run,run.scoreTimetable,previous,station.s)){sound.callStationTiming(report.kind,report.station,report.error);run.lastTimingReport=report;}
+ if(corrected!==null)return;
  if(run.next<run.endIndex&&run.s>=r.stations[run.next+1].s-150){
   toast(`${station.name}を通過しました。`);
   run.missed++;
