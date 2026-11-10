@@ -1,5 +1,6 @@
+import {stationCueRefs,stationVoiceBank} from './station-voice.js?v=station66';
 import {createMixGains,voiceCategory} from './audio-mix.js?v=keys61fix';
-import {interpolateColumn} from './final-vehicle.js?v=33';
+import {interpolateColumn} from './final-vehicle.js?v=station66';
 import {runPitch} from './assets/audio/run-pitch.js';
 import {HeldHorn} from './assets/audio/held-horn.js';
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -68,15 +69,16 @@ export class LocalTrainAudio {
   return [...effects.map(name=>this.effectRef(name)),sounds.others?.noise,
    ...rolling,...Object.values(sounds.motor??{})].filter(Boolean);
  }
+ configureDriverRoute(route,line){this.driverRoute=route;this.driverRouteLine=stationVoiceBank(line)?line:null;}
+ stationRefs(kind,station){return stationCueRefs(this.driverRouteLine,station,kind,this.recipe.playableSpecs?.carCount);}
+ callStation(kind,station){return this.queueDriverCalls(this.stationRefs(kind,station));}
  async prepare(){
   await Promise.all([...this.assetRefs(),whistle].map(ref=>this.buffer(ref)));
-  for(const name of Object.keys(driverCallNumbers)){
-   const ref=this.driverCallRef(name);
-   if(ref)this.buffer(ref).catch(()=>{});
-  }
+  const stationRefs=[...(this.driverRoute?.stations??[]).flatMap(st=>['approach','departure'].flatMap(kind=>this.stationRefs(kind,st))),...Object.keys(driverCallNumbers).map(name=>this.driverCallRef(name)).filter(Boolean)];
+  await Promise.all([...new Map(stationRefs.map(ref=>[ref.entryIndex,ref])).values()].map(ref=>this.buffer(ref)));
  }
  driverCallRef(name){
-  const bank=voiceBanks[this.recipe.id],number=driverCallNumbers[name];
+  const bank=stationVoiceBank(this.driverRouteLine)??voiceBanks[this.recipe.id],number=driverCallNumbers[name];
   if(!bank||!number)return null;
   const [directory,prefix]=bank;
   const entryIndex=prefix+number;
@@ -89,8 +91,9 @@ export class LocalTrainAudio {
   return this.callRouteCue('departure',stationIndex);
  }
  callRouteCue(kind,index){
-  const bank=voiceBanks[this.recipe.id]?.[0];
+  const bank=(stationVoiceBank(this.driverRouteLine)??voiceBanks[this.recipe.id])?.[0];
   if(!bank)return Promise.resolve();
+  if(kind==='signal'&&(bank!=='kanko2'||index<1||index>4))return Promise.resolve();
   const entryIndex=kind+'-'+index;
   const driverVoiceFile=`./assets/final/driver-voice/${bank}/${kind}/${index}.wav`;
   return this.queueDriverCalls([{entryIndex,driverVoiceFile}]);

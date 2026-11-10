@@ -145,12 +145,12 @@ function advance(dt){if(run.finished)return;const next=STATIONS[run.next],d=next
   run.missed++;run.next++;run.stopReady=false;run.assistBraking=false;
  }
 }
-function updateDriverCalls(){if(reverseDirection)return;
+function updateDriverCalls(){
  if(run.doors||run.finished||run.v<=.01)return;
  const distance=STATIONS[run.next].s-run.s;
  if(run.lastCalledStop!==run.next&&distance>=0&&distance<=150){
   run.lastCalledStop=run.next;
-  sound.callRouteCue('701-approach',run.next);
+  sound.callRouteCue('701-approach',ALL_STATIONS.findIndex(st=>st.name===STATIONS[run.next].name));
  }
  const block=nextSignalCall(world.signals,run.s,run.calledSignals??=new Set());
  if(block!==null)sound.callRouteCue('701-signal',block);

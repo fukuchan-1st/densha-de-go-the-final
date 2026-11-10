@@ -13,7 +13,7 @@ import {serviceChoices,makeServiceRoute} from './train-selection.js?v=traffic64'
 import {GeneratedCab,generatedCab} from './generated-cab.js';
 import {FinalWorld} from './final-world.js?v=traffic64';
 import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=photo1';
-import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=keys61fix';
+import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=station66';
 import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,routeLimitAt,stopPosition,finishStop,beginDoorClosing,isDoorClosing,takeDepartureCall} from './final-model.js?v=doors62';
 import {STATIONS as TOHOKU_STATIONS} from './route-data.js?v=41';
 import {FINAL_SCENARIOS,scenarioJourney} from './final-scenarios.js?v=41';
@@ -138,22 +138,22 @@ async function closeSequence(generation){
 function updateDriverCalls(){
  if(run.finished||run.doors)return;
  const r=route();
- if(r.soundEvents){
+ if(r.soundEvents?.length){
   for(let event=r.soundEvents[run.soundCursor];event&&event.s<=run.s;event=r.soundEvents[++run.soundCursor]){
    if(event.action==='play')sound.callRouteAnnouncement(event.routeId??r.id,event.key);
   }
-  return;
+  if(!sound.driverRouteLine)return;
  }
  const departedFrom=takeDepartureCall(run);
  if(departedFrom!==null){
   const station=r.stations[departedFrom];
-  sound.callDepartureFrom(station.layoutIndex??departedFrom);
+  sound.callStation('departure',station);
  }
  if(run.v<=.01)return;
  const station=r.stations[run.next],distance=station.s-run.s;
  if(run.lastCalledStop!==run.next&&distance>=0&&distance<=150){
   run.lastCalledStop=run.next;
-  sound.callRouteCue('approach',station.layoutIndex??run.next);
+  sound.callStation('approach',station);
  }
  const block=nextSignalCall(r.signals??[],run.s,run.calledSignals??=new Set());
  if(block!==null)sound.callRouteCue('signal',block);
@@ -184,6 +184,7 @@ async function start(startIndex){
   startIndex??=scenario?trip.startIndex:freeStart;
   if(!pack)throw Error('車両の運転台と収録音が見つかりません');
   nextSound=new LocalTrainAudio(train,pack,{volume:1,mix:audioMix,context:menuEffects?.context});
+  nextSound.configureDriverRoute(r,meta.id);
   const audioEnabled=nextSound.resume();
   await cleanup();
   activeRoute=r;
@@ -191,7 +192,7 @@ async function start(startIndex){
   const [loadedPanel]=await Promise.all([generatedCab&&['e235','e233','323','207','6050'].includes(train.id)?GeneratedCab.load($('cab'),train.id):LocalCabPanel.load($('cab'),train,pack),sound.prepare(),audioEnabled]);
   panel=loadedPanel;
   run=createJourney(r,train,startIndex,trip.endIndex);score.reset(run);score.bindHorn(sound,()=>run,()=>scoreHazards(route()));
-  if(r.soundEvents){
+  if(r.soundEvents?.length){
    const first=r.soundEvents.findIndex(event=>event.s>=run.s);
    run.soundCursor=first<0?r.soundEvents.length:first;
   }
