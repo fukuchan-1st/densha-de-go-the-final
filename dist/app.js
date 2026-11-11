@@ -49,7 +49,7 @@ if(directStart){
  $('menuButton').textContent='路線選択へ';
  $('pauseMenu').textContent='路線選択へ';
 }
-function returnToRoutes(){recorder?.flush();location.href='./?v=41&route=tohoku'+(generatedCab?'&cab=generated':'');}
+function returnToRoutes(){recorder?.flush();location.href='./?v=70&route=tohoku&menu=main'+(generatedCab?'&cab=generated':'');}
 $('allRoutes').onclick=returnToRoutes;
 $('audioBack').onclick=returnToRoutes;
 $('audioUnlock').addEventListener('cancel',event=>event.preventDefault());
