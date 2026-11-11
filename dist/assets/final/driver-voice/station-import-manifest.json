@@ -1001,6 +1001,14 @@
       "sourceFile": "東海道線運転士-2026-11-11-19-33-JR総じじ.mp3",
       "sourceGroup": "Downloads",
       "sha256": "55da73136faf9be745784658a9a96cdc2dcc50ac6eb5715a56bfbbac9803fbe7"
+    },
+    {
+      "line": "tokaido",
+      "station": "摩耶",
+      "file": "stations/tokaido-custom-maya.mp3",
+      "sourceFile": "東海道線運転士-2026-11-11-19-53-摩耶.mp3",
+      "sourceGroup": "Downloads",
+      "sha256": "c7ac85c46dd75dc1d263e35f4df8a337e66578abea1fdb354fe90b6455cb9b5d"
     }
   ],
   "futureRouteStations": [
