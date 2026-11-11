@@ -1,23 +1,23 @@
-import {mountGameShell} from './game-shell.js?v=70';
-import {DutyRecorder,replayStateAt,recordReplayAudio} from './replay-store.js?v=70';
-import {osakaPlanningSpec} from './osaka-timetable.js?v=70';
-import {collectStationReports,collectRestrictionReports,pauseWhenSpeechEnds} from './station-timing.js?v=70';
+import {mountGameShell} from './game-shell.js?v=71';
+import {DutyRecorder,replayStateAt,recordReplayAudio} from './replay-store.js?v=71';
+import {osakaPlanningSpec} from './osaka-timetable.js?v=71';
+import {collectStationReports,collectRestrictionReports,pauseWhenSpeechEnds} from './station-timing.js?v=71';
 import {buildConnectingRoutes} from './service-catalog.js?v=traffic64';
 import {loadAudioMix,audioMixMarkup,bindAudioMix} from './audio-mix.js?v=keys61fix';
-import {bindRouteKeys,bindScreenKeys} from './screen-keys.js?v=70';
+import {bindRouteKeys,bindScreenKeys} from './screen-keys.js?v=71';
 import {sharedEffects} from './buffered-effects.js?v=phone58fix';
 import {bindTrainSelectionKeys} from './selection-keys.js?v=keys61fix';
 import {beginTerminalOpening,advanceTerminalOpening} from './terminal-arrival.js?v=score13';
 import {vehiclePhoto} from './vehicle-photos.js?v=corridor1';
 import {mountTrainDetails} from './train-details.js?v=keys61fix';
 import {mountWheelPicker} from './wheel-picker.js?v=controls55';
-import {mountScoring,checkpointMarks,scoringStations,buildScoreTimetable,resolveScoreSchedule,scoreHazards,hornMarks,currentScoreRestriction,signalRestriction} from './scoring.js?v=70';
+import {mountScoring,checkpointMarks,scoringStations,buildScoreTimetable,resolveScoreSchedule,scoreHazards,hornMarks,currentScoreRestriction,signalRestriction} from './scoring.js?v=71';
 import {mountDrivingOverlay} from './driving-overlay.js?v=phone58fix';import {mountLookahead,changesFromSections,stationMarks} from './lookahead.js?v=evaluation59';
 import {serviceChoices,makeServiceRoute} from './train-selection.js?v=traffic64';
 import {GeneratedCab,generatedCab} from './generated-cab.js';
-import {FinalWorld} from './final-world.js?v=70';
-import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=70';
-import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=70';
+import {FinalWorld} from './final-world.js?v=71';
+import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=71';
+import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=71';
 import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,routeLimitAt,stopPosition,finishStop,beginDoorClosing,isDoorClosing,takeDepartureCall} from './final-model.js?v=doors62';
 import {STATIONS as TOHOKU_STATIONS} from './route-data.js?v=41';
 import {FINAL_SCENARIOS,scenarioJourney} from './final-scenarios.js?v=41';
@@ -48,7 +48,7 @@ const overlayControls=mountDrivingOverlay($('driveScreen'),{onChange:n=>setNotch
 const score=mountScoring($('driveScreen'),{badge:document.querySelector('.hud-route'),volume:()=>audioMix.se});
 const menuEffects=sharedEffects();
 const menuEffectURLs=Object.fromEntries(['cursor','confirm','cancel'].map(name=>[name,new URL($('menuSound-'+name).getAttribute('src'),location.href).href]));
-menuEffects?.preload([...Object.values(menuEffectURLs),new URL('./assets/title-call.mp3',location.href).href,new URL('./assets/title-start.wav',location.href).href]).catch(()=>{});
+menuEffects?.preload([...Object.values(menuEffectURLs),new URL('./assets/title-start.wav',location.href).href]).catch(()=>{});
 function playMenuSound(name,{waitForEnd=false}={}){
  if(audioMix.se===0)return Promise.resolve();
  if(menuEffects){const group=menuEffects.playSequence([menuEffectURLs[name]],audioMix.se);return waitForEnd?group.done:undefined;}
@@ -56,11 +56,8 @@ function playMenuSound(name,{waitForEnd=false}={}){
  return new Promise(resolve=>{clip.onended=resolve;playback.catch(resolve);});
 }
 const menuMusic=mountMenuMusic(()=>audioMix.bgm,{active:false});
-const titleCall=new Audio(new URL('./assets/title-call.mp3',location.href));titleCall.preload='auto';
-function playTitleCall(){if(audioMix.se===0)return Promise.resolve(true);titleCall.volume=audioMix.se;titleCall.currentTime=0;return new Promise(resolve=>{titleCall.onended=()=>resolve(true);titleCall.onerror=()=>resolve(false);titleCall.play().catch(()=>resolve(false));});}
-
 let shellActive=true;
-const gameShell=mountGameShell({stage:$('stage'),settings,mix:audioMix,onSound:playMenuSound,onPage:page=>menuMusic.setMenu(page!=='title'),onTitleCall:playTitleCall,onTitleStart:()=>{menuEffects?.playSequence([new URL('./assets/title-start.wav',location.href).href],audioMix.se);},onActive:active=>{shellActive=active;if(!active&&mode==='drive')menuMusic.setMenu(false);$('menuScreen').inert=active;$('menuControls').inert=active;},onDrive:()=>{setMode('menu');document.querySelector('#routeCards button')?.focus();},onReplay:playSavedReplay,onSettings:kind=>{saveSettings();sound?.setMix(audioMix);menuMusic.setVolume();world?.setDrawDistance?.(settings.drawDistance);if(kind==='close'&&mode==='drive'){paused=false;pauseAudio(false);}}});
+const gameShell=mountGameShell({stage:$('stage'),settings,mix:audioMix,onSound:playMenuSound,onPage:page=>menuMusic.setMenu(page!=='title'),onTitleStart:()=>{menuEffects?.playSequence([new URL('./assets/title-start.wav',location.href).href],audioMix.se);},onActive:active=>{shellActive=active;if(!active&&mode==='drive')menuMusic.setMenu(false);$('menuScreen').inert=active;$('menuControls').inert=active;},onDrive:()=>{setMode('menu');document.querySelector('#routeCards button')?.focus();},onReplay:playSavedReplay,onSettings:kind=>{saveSettings();sound?.setMix(audioMix);menuMusic.setVolume();world?.setDrawDistance?.(settings.drawDistance);if(kind==='close'&&mode==='drive'){paused=false;pauseAudio(false);}}});
 if(new URLSearchParams(location.search).get('menu')==='main')gameShell.showMain();
 const routeMain=document.createElement('button');routeMain.id='routeMainMenu';routeMain.textContent='Esc　メインメニューへ';$('menuScreen').append(routeMain);routeMain.onclick=()=>gameShell.showMain();
 
@@ -411,7 +408,7 @@ function showTrainDetails(){
 addEventListener('pagehide',()=>recorder?.flush());
 async function playSavedReplay(data){
  if(!data?.samples?.length)return;
- if(data.legacy){location.href='./tohoku.html?v=70&drive=1&replay=1&direction='+data.direction+'&station='+data.startIndex+'&end='+data.endIndex;return;}
+ if(data.legacy){location.href='./tohoku.html?v=71&drive=1&replay=1&direction='+data.direction+'&station='+data.startIndex+'&end='+data.endIndex;return;}
  try{
   await cleanup();selected=Math.max(0,META.findIndex(x=>x.id===data.lineId));chosenVehicle=data.trainId;chosenOption=null;
   activeRoute=structuredClone(data.route);const train=data.train,pack=packs.get(train.id);if(!pack)throw Error('リプレイの車両素材がありません');

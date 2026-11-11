@@ -1,6 +1,6 @@
 import {timeSeconds} from './score-engine.js';
-import {stationVoiceData} from './station-voice-data.js?v=70';
-import {timingVoiceData} from './timing-voice-data.js?v=70';
+import {stationVoiceData} from './station-voice-data.js?v=71';
+import {timingVoiceData} from './timing-voice-data.js?v=71';
 export const TIMING_VOICE_WINDOW=5;
 export function timingReport(kind,error){
  if(!['pass','arrival'].includes(kind)||!Number.isFinite(error))return null;

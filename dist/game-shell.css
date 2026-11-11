@@ -7,3 +7,15 @@ body.replaying .score-objectives,body.replaying .score-feedback{display:none!imp
 
 /* Common route caption and navigation never share a row. */
 .local-badge,#assetBadge{display:none!important}#menuScreen .train-caption{bottom:165px!important}#routeMainMenu{left:70px;bottom:78px;height:50px;min-height:50px;max-width:520px;padding:8px 24px;white-space:nowrap;line-height:30px}
+
+/* Trackfinity Railways identity. The brown wordmark is drawn as paired rails and sleepers. */
+#gameShell{background:radial-gradient(ellipse at 24% 30%,#293b41,#0a1721 58%,#04090e)}
+#gameShell[data-page=title]{background:radial-gradient(ellipse at 50% 36%,#263d44,#07121c 65%,#03080e)}
+#gameShell .shell-logo{left:65px;top:260px;width:690px;height:260px;object-fit:contain;filter:drop-shadow(0 8px 14px #0008)}
+#gameShell[data-page=title] .shell-logo{left:180px;top:130px;width:1240px;height:402px}
+#gameShell .title-start{bottom:105px;border-color:#b97a42;color:#ffb768;font-size:25px;letter-spacing:3px}
+.title-caption{bottom:40px;color:#9ba9ad;font-size:16px;letter-spacing:5px}
+.title-train-band{position:absolute;left:100px;right:100px;top:568px;height:120px;overflow:hidden;pointer-events:none;mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+.title-train{position:absolute;left:0;top:4px;width:1070px;height:100px;object-fit:contain;animation:trackfinity-train-pass 16s linear infinite;will-change:transform}
+.title-train-track{position:absolute;left:0;right:0;top:93px;height:11px;border-top:2px solid #aa784e;border-bottom:2px solid #aa784e;background:repeating-linear-gradient(90deg,transparent 0 18px,#644c39 18px 22px,transparent 22px 34px)}
+@keyframes trackfinity-train-pass{from{transform:translateX(-1070px)}to{transform:translateX(1400px)}}
