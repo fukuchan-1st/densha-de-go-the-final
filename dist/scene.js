@@ -1,10 +1,11 @@
+import {PlayerTrain} from './player-train.js?v=72';
 import {prepareTurnoutLayout} from './turnout-layout.js?v=39';
-import {addTurnouts} from './turnout-scene.js?v=39';
+import {addTurnouts} from './turnout-scene.js?v=72';
 import {OpposingTrains} from './opposing-trains.js?v=traffic64';
 import {CabSuspension} from './cab-motion.js?v=23';
 import {interpolateKnots} from './track-layout.js';
 import {TrackLayout} from './track-layout.js?v=23';
-import {buildRailways,addStations} from './station-scene.js?v=traffic64';
+import {buildRailways,addStations} from './station-scene.js?v=72';
 import * as T from './assets/vendor/three.module.js?v=23';
 import {settlementAt} from './route-data.js?v=23';
 import {DISPLAY_WIDTH,DISPLAY_HEIGHT} from './display.js?v=23';
@@ -71,7 +72,8 @@ export class RailWorld {
  }
  shortRail(start,end,offset){for(const rail of[-.5335,.5335]){const pos=[],idx=[];let i=0;for(let s=start;s<=end;s+=5,i++){const f=this.frame(s,offset+rail);for(const x of[-.04,.04])pos.push(f.p.x+f.right.x*x,f.p.y+.19,f.p.z+f.right.z*x);if(i){const k=i*2;idx.push(k-2,k-1,k,k-1,k+1,k);}}const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.setIndex(idx);g.computeVertexNormals();this.scene.add(new T.Mesh(g,new T.MeshStandardMaterial({color:'#afb7b8',side:T.DoubleSide})));}}
  sign(text,s,offset,y,w=2.9,h=.65){const c=document.createElement('canvas');c.width=512;c.height=128;const cx=c.getContext('2d');cx.fillStyle='#edf0e7';cx.fillRect(0,0,512,128);cx.fillStyle='#34825e';cx.fillRect(0,104,512,24);cx.fillStyle='#173a32';cx.font='bold 66px sans-serif';cx.textAlign='center';cx.fillText(text,256,80);const tx=new T.CanvasTexture(c);tx.colorSpace=T.SRGBColorSpace;const m=new T.Mesh(new T.PlaneGeometry(w,h),new T.MeshBasicMaterial({map:tx,side:T.DoubleSide})),f=this.frame(s,offset);m.position.copy(f.p);m.position.y=f.p.y+y;m.rotation.y=f.angle;this.scene.add(m);}
+ setPlayerTrain(id,count){this.playerTrain?.dispose();this.playerTrain=new PlayerTrain(this,id,count);}
  setCabView(origin){this.cabViewOrigin=origin;this.cameraMode=null;}
  resetMotion(){this.suspension=new CabSuspension();this.traffic.dispose();this.traffic=new OpposingTrains(this);}
- render(s,v,time,panorama,acceleration=0,shakeAmount=1,motionDt=1/60){if(this.cameraMode!==panorama){if(panorama||!this.cabViewOrigin)this.camera.clearViewOffset();else this.camera.setViewOffset(DISPLAY_WIDTH,DISPLAY_HEIGHT,DISPLAY_WIDTH/2-this.cabViewOrigin.x,DISPLAY_HEIGHT/2-this.cabViewOrigin.y,DISPLAY_WIDTH,DISPLAY_HEIGHT);this.cameraMode=panorama;}const tunnel=this.routeStructures.tunnelAt(s),depth=tunnel?Math.min(s-tunnel.sStart,tunnel.sEnd-s):0,inside=Math.min(1,Math.max(0,depth/18));this.renderer.toneMappingExposure=1.18-inside*.52;this.skyLight.intensity=1.4-inside*.9;this.sun.intensity=2.2-inside*1.7;const f=this.frame(s,this.driveOffset(s)),head=this.frame(s+60,this.driveOffset(s+60)).p,motion=this.suspension.update({s,speed:v,curvature:this.curvature(s),acceleration},motionDt,shakeAmount);this.camera.position.copy(f.p).addScaledVector(f.right,motion.lateral);this.camera.position.y+= (panorama?3.0:3.1)+motion.vertical;head.addScaledVector(f.right,motion.lateral);head.y+=(panorama?2.9:3.1)+motion.vertical;this.camera.lookAt(head);this.camera.rotateX(motion.pitch);this.camera.rotateY(motion.yaw);this.camera.rotateZ(motion.roll);this.traffic.update(s,motionDt);this.renderer.render(this.scene,this.camera);}
+ render(s,v,time,panorama,acceleration=0,shakeAmount=1,motionDt=1/60,outer=false){if(this.cameraMode!==panorama){if(panorama||!this.cabViewOrigin)this.camera.clearViewOffset();else this.camera.setViewOffset(DISPLAY_WIDTH,DISPLAY_HEIGHT,DISPLAY_WIDTH/2-this.cabViewOrigin.x,DISPLAY_HEIGHT/2-this.cabViewOrigin.y,DISPLAY_WIDTH,DISPLAY_HEIGHT);this.cameraMode=panorama;}const tunnel=this.routeStructures.tunnelAt(s),depth=tunnel?Math.min(s-tunnel.sStart,tunnel.sEnd-s):0,inside=Math.min(1,Math.max(0,depth/18));this.renderer.toneMappingExposure=1.18-inside*.52;this.skyLight.intensity=1.4-inside*.9;this.sun.intensity=2.2-inside*1.7;const f=this.frame(s,this.driveOffset(s)),head=this.frame(s+60,this.driveOffset(s+60)).p,motion=this.suspension.update({s,speed:v,curvature:this.curvature(s),acceleration},motionDt,shakeAmount);this.camera.position.copy(f.p).addScaledVector(f.right,motion.lateral);this.camera.position.y+= (panorama?3.0:3.1)+motion.vertical;head.addScaledVector(f.right,motion.lateral);head.y+=(panorama?2.9:3.1)+motion.vertical;this.camera.lookAt(head);this.camera.rotateX(motion.pitch);this.camera.rotateY(motion.yaw);this.camera.rotateZ(motion.roll);this.traffic.update(s,motionDt);this.playerTrain?.update(s,outer);if(outer)this.playerTrain?.camera(s);this.renderer.render(this.scene,this.camera);}
 }

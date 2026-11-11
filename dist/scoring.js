@@ -1,4 +1,4 @@
-import {osakaPlanningSpec,rebuildOsakaTimetable} from './osaka-timetable.js?v=71';
+import {osakaPlanningSpec,rebuildOsakaTimetable} from './osaka-timetable.js?v=72';
 import {ScoreAudio} from './score-audio.js?v=phone58fix';
 import {ScoreEngine,timeSeconds} from './score-engine.js?v=evaluation59';
 export function mountScoring(parent,{badge,volume=()=>.65,blueTolerance=3}={}){

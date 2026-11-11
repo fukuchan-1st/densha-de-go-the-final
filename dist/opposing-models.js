@@ -1,3 +1,5 @@
+import {decodeVertices} from './model-format.js?v=72';
+import {repair701Body} from './701-body-repair.js?v=72';
 import * as T from './assets/vendor/three.module.js';
 export function opposingVehicle(route={},s=0){
  const id=route.id??'tohoku';if(id==='yagan')return null;
@@ -12,24 +14,26 @@ export class ImportedTrafficModels{
   const promise=this.loadModel(id);this.loading.set(id,promise);return promise;
  }
  async loadModel(id){
-  this.manifest??=fetch(new URL('./assets/opposing/manifest.json',import.meta.url)).then(response=>{if(!response.ok)throw Error('対向列車データを取得できません');return response.json();});
+  this.manifest??=fetch(new URL('./assets/opposing/manifest.json?v=72',import.meta.url)).then(response=>{if(!response.ok)throw Error('対向列車データを取得できません');return response.json();});
   const definition=(await this.manifest).models[id];if(!definition)throw Error('対向列車 '+id+' がありません');
   const variants={};
   for(const [role,part]of Object.entries(definition.variants)){
    const response=await fetch(new URL('./assets/opposing/'+part.file,import.meta.url));if(!response.ok)throw Error('対向列車の車体を取得できません');
-   const array=new Float32Array(await response.arrayBuffer()),interleaved=new T.InterleavedBuffer(array,8),group=new T.Group();
+   const index=part.indexFile?new Uint32Array(await (await fetch(new URL('./assets/opposing/'+part.indexFile,import.meta.url))).arrayBuffer()):null;
+   const array=decodeVertices(await response.arrayBuffer(),part.componentType),interleaved=new T.InterleavedBuffer(array,8),group=new T.Group();
    for(const item of part.groups){
     const key=JSON.stringify(item.material);if(!this.materials.has(key)){
      const data=item.material;let texture;
      if(data.texture){if(!this.textures.has(data.texture)){const pending=new T.TextureLoader().loadAsync(new URL('./assets/opposing/'+data.texture,import.meta.url).href).then(value=>{value.colorSpace=T.SRGBColorSpace;return value;});this.textures.set(data.texture,pending);}texture=await this.textures.get(data.texture);}
      this.materials.set(key,new T.MeshBasicMaterial({color:new T.Color().setRGB(...data.color),map:texture,side:T.DoubleSide,opacity:data.alpha,transparent:data.alpha<.99,alphaTest:.4}));
     }
-    const geometry=new T.BufferGeometry();geometry.setAttribute('position',new T.InterleavedBufferAttribute(interleaved,3,0));geometry.setAttribute('normal',new T.InterleavedBufferAttribute(interleaved,3,3));geometry.setAttribute('uv',new T.InterleavedBufferAttribute(interleaved,2,6));geometry.setDrawRange(item.start,item.count);geometry.computeBoundingSphere();this.geometries.add(geometry);
+    const geometry=new T.BufferGeometry();geometry.setAttribute('position',new T.InterleavedBufferAttribute(interleaved,3,0));geometry.setAttribute('normal',new T.InterleavedBufferAttribute(interleaved,3,3));geometry.setAttribute('uv',new T.InterleavedBufferAttribute(interleaved,2,6));if(index)geometry.setIndex(new T.BufferAttribute(index,1));geometry.setDrawRange(item.start,item.count);geometry.computeBoundingSphere();this.geometries.add(geometry);
     group.add(new T.Mesh(geometry,this.materials.get(key)));
    }variants[role]=group;
   }
+  if(id==='701'&&definition.frontRepair){const loader=new T.TextureLoader(),load=async file=>{const texture=await loader.loadAsync(new URL('./assets/opposing/'+file,import.meta.url).href);texture.colorSpace=T.SRGBColorSpace;this.textures.set('701-repair-'+file,Promise.resolve(texture));return texture;};const [front,under]=await Promise.all([load(definition.frontRepair.front),load(definition.frontRepair.under)]);for(const group of Object.values(variants))repair701Body(group,front,under,this);}
   const model={...definition,variants};if(!this.disposed)this.models.set(id,model);else this.dispose();return model;
  }
- car(id,index,count){const model=this.models.get(id);if(!model)return null;const car=new T.Group(),body=model.variants[index===0?'head':index===count-1?'tail':'middle'].clone(true);if(['e233','211','221'].includes(id))body.rotation.y=Math.PI;car.add(body);return car;}
+ car(id,index,count){const model=this.models.get(id);if(!model)return null;const car=new T.Group(),body=model.variants[index===0?'head':index===count-1?'tail':'middle'].clone(true);body.rotation.y=index===count-1&&count>1?(model.tailRotation??model.frontRotation??(['e233','211','221'].includes(id)?Math.PI:0)):(model.frontRotation??(['e233','211','221'].includes(id)?Math.PI:0));if(id==='701'&&index===count-1&&count>1)body.rotation.y+=Math.PI;car.add(body);return car;}
  dispose(){this.disposed=true;for(const geometry of this.geometries)geometry.dispose();for(const material of this.materials.values())material.dispose();for(const texture of this.textures.values())texture.then(value=>value.dispose()).catch(()=>{});this.geometries.clear();this.materials.clear();this.models.clear();}
 }

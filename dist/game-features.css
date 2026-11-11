@@ -1,0 +1,8 @@
+#adminModeBadge{position:fixed;z-index:15000;right:max(12px,env(safe-area-inset-right));bottom:max(8px,env(safe-area-inset-bottom));padding:5px 12px;color:#ffe694;background:#172131e8;border:1px solid #d2a643;font:700 14px Arial,'Yu Gothic',sans-serif;letter-spacing:1px;pointer-events:none}#adminModeBadge[hidden]{display:none}
+.wheel-list button.scenario-cleared strong,.wheel-list button.scenario-cleared small,.detail-summary.scenario-cleared strong{color:#ffda57!important;text-shadow:0 1px 3px #281b00}
+.detail-ranges button.scenario-cleared{background:linear-gradient(130deg,#795826,#3a301c)!important;border-color:#ffe077!important;color:#ffe993!important}
+.route-card.scenario-cleared{border:2px solid #ffda5c!important;box-shadow:0 0 20px #d9a73866!important}.route-card.scenario-cleared strong{color:#ffe586!important}
+.station-jump-list{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-height:52dvh;overflow:auto;margin:18px 0}.station-jump-list button{min-height:44px;font-size:17px;background:#17344b;color:#f7e6b2;border:1px solid #849ba8;padding:9px}.station-jump-list button:focus-visible{outline:3px solid #ffe367}
+#legacyCheats{margin-top:20px;border-top:1px solid #7c8b8c;padding-top:12px}#legacyCheats p{font-size:15px;line-height:1.8}#legacyCheats small{display:block;margin-top:10px;color:#b8c7c8}
+
+.museum-selector{max-height:510px;overflow-y:auto;overscroll-behavior:contain;padding:5px;scrollbar-color:#d4a85e #102537}.museum-selector button[data-model^="223"],.museum-selector button[data-model="6050"]{font-size:18px;line-height:1.5}

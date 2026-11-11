@@ -1,6 +1,6 @@
 import {phoneGeometry} from './phone-layout.js?v=phone58fix';
-import {mountDrivingOverlay} from './driving-overlay.js?v=phone58fix';
-import {NOTCH_LABELS,NOTCH_MIN} from './physics.js?v=23';
+import {mountDrivingOverlay} from './driving-overlay.js?v=72';
+import {NOTCH_LABELS,NOTCH_MIN} from './physics.js?v=72';
 import {bindHornButton} from './assets/audio/held-horn.js';
 import {responsiveLayout} from './responsive-layout.js?v=41';
 export function mountResponsiveUI(){

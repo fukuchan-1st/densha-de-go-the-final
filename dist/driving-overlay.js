@@ -1,8 +1,8 @@
 import {mountPhoneLayout} from './phone-layout.js?v=phone58fix';
 export function notchKeyValue(code,value,min,max){
- const delta=['ArrowUp','ArrowLeft','KeyW'].includes(code)?-1:['ArrowDown','ArrowRight','KeyS'].includes(code)?1:0;
+ const delta=['ArrowUp','KeyW'].includes(code)?-1:['ArrowDown','ArrowRight','KeyS'].includes(code)?1:0;
  if(delta)return Math.max(min,Math.min(max,value+delta));
- if(code==='KeyX')return 0;
+ if(code==='ArrowLeft')return 0;
  if(['Space','Home'].includes(code))return min;
  if(code==='End')return max;
  return null;

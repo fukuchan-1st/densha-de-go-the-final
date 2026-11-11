@@ -23,7 +23,7 @@ export function step(state,dt,gradePerMille=0) {
     if(dt>0){const regenerative=Math.min(SPECS.serviceBrake/3.6,Math.max(0,a-(state.holdSpeed-old)/dt));a-=regenerative;state.holdBraking=regenerative>.001;}
   }else state.holdSpeed=null;
   state.previousNotch=state.notch;
-  state.v=Math.max(0,Math.min(110/3.6,old+a*dt));
+  state.v=Math.max(0,Math.min((state.cheatSpeedOverride?160:110)/3.6,old+a*dt));
   state.s+=(old+state.v)*.5*dt; state.elapsed+=dt;
   return a;
 }

@@ -20,7 +20,7 @@ export function driveStep(state,recipe,dt,grade=0){
   if(old>0)a-=.004+.0018*old+.000018*old*old;
   if(label==='抑速'){if(state.previousNotch!==state.notch)state.holdSpeed=old;a=Math.min(a,Math.max(-1,(state.holdSpeed-old)/Math.max(dt,.001)));}
  }
- state.previousNotch=state.notch;state.v=clamp(old+a*dt,0,spec.maxSpeedKmh/3.6);state.s+=(old+state.v)*dt/2;state.elapsed+=dt;state.acceleration=dt?(state.v-old)/dt:0;return state.acceleration;
+ state.previousNotch=state.notch;state.v=clamp(old+a*dt,0,(state.cheatSpeedOverride?160:spec.maxSpeedKmh)/3.6);state.s+=(old+state.v)*dt/2;state.elapsed+=dt;state.acceleration=dt?(state.v-old)/dt:0;return state.acceleration;
 }
 export function brakeAssist(state,route,recipe){
  const distance=route.stations[state.next].s-state.s,c=controlsFor(recipe);

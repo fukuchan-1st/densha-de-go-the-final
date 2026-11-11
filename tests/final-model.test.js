@@ -44,7 +44,7 @@ test('運転開始できる全駅に出発駅名と定発の音声がある',asy
    assert.equal(entry.file,`kanko${bank}/departure/${index}.wav`);
    const wave=await readFile(new URL(entry.file,root));
    assert.equal(wave.toString('ascii',0,4),'RIFF');
-   assert.ok(wave.length>22050);
+   let duration=0,byteRate=0;for(let offset=12;offset+8<=wave.length;){const kind=wave.toString('ascii',offset,offset+4),length=wave.readUInt32LE(offset+4);if(kind==='fmt ')byteRate=wave.readUInt32LE(offset+16);if(kind==='data'&&byteRate)duration=length/byteRate;offset+=8+length+(length%2);}assert.ok(duration>1,'互換音声はサンプルレートによらず1秒以上');
   }
  }
 });

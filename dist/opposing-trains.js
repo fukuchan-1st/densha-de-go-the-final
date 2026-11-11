@@ -1,4 +1,4 @@
-import {ImportedTrafficModels,opposingVehicle} from './opposing-models.js?v=traffic57';
+import {ImportedTrafficModels,opposingVehicle} from './opposing-models.js?v=72';
 import * as T from './assets/vendor/three.module.js';
 import {interpolateKnots} from './track-layout.js';
 

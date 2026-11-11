@@ -8,6 +8,6 @@ test('スライドバーにフォーカスしても上がEB側、下が力行側
  for(const recipe of trains){const c=controlsFor(recipe);let value=0;
   for(let i=0;i<30;i++)value=notchKeyValue('ArrowUp',value,c.min,c.max);assert.equal(value,c.min);
   for(let i=0;i<30;i++)value=notchKeyValue('ArrowDown',value,c.min,c.max);assert.equal(value,c.max);
-  assert.equal(notchKeyValue('KeyX',value,c.min,c.max),0);assert.equal(notchKeyValue('Space',value,c.min,c.max),c.min);assert.equal(notchKeyValue('Enter',value,c.min,c.max),null);
+  assert.equal(notchKeyValue('ArrowLeft',value,c.min,c.max),0);assert.equal(notchKeyValue('Space',value,c.min,c.max),c.min);assert.equal(notchKeyValue('KeyX',value,c.min,c.max),null);assert.equal(notchKeyValue('Enter',value,c.min,c.max),null);
  }
 });
