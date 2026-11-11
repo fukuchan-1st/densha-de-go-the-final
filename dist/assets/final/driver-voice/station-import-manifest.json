@@ -993,6 +993,14 @@
       "sourceFile": "中央線歓呼-2026-11-10-20-46-南おたり.mp3",
       "sourceGroup": "ooito_station",
       "sha256": "c638f4f42dca642fb7d875115fcdf5bc215c98d63e34efec64d8b525b2353332"
+    },
+    {
+      "line": "tokaido",
+      "station": "JR総持寺",
+      "file": "stations/tokaido-custom-jr-sojiji.mp3",
+      "sourceFile": "東海道線運転士-2026-11-11-19-33-JR総じじ.mp3",
+      "sourceGroup": "Downloads",
+      "sha256": "55da73136faf9be745784658a9a96cdc2dcc50ac6eb5715a56bfbbac9803fbe7"
     }
   ],
   "futureRouteStations": [
