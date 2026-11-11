@@ -1,3 +1,4 @@
+import {osakaPlanningSpec,rebuildOsakaTimetable} from './osaka-timetable.js?v=70';
 import {ScoreAudio} from './score-audio.js?v=phone58fix';
 import {ScoreEngine,timeSeconds} from './score-engine.js?v=evaluation59';
 export function mountScoring(parent,{badge,volume=()=>.65,blueTolerance=3}={}){
@@ -47,6 +48,7 @@ export function buildScoreTimetable(route,startS,clockStart,spec={},ignoreKnown=
 export function formatScoreTime(value,current=false){const seconds=timeSeconds(value);if(seconds===null)return '—';const n=((current?Math.floor(seconds):Math.round(seconds))%86400+86400)%86400;return [Math.floor(n/3600),Math.floor(n/60)%60,n%60].map(x=>String(x).padStart(2,'0')).join(':');}
 
 export function resolveScoreSchedule(route,startS,spec={}){
+ spec=osakaPlanningSpec(route,spec);
  const raw=scoringStations(route).map(st=>({...st}));let elapsed=0,carry=0;for(let i=0;i<raw.length;i++){if(i===0){raw[i].time=0;continue;}const plan=sectionSpeedPlan({...raw[i-1],time:elapsed},{...raw[i],time:null},route.limits??[],spec,carry);elapsed=plan.departure+plan.duration;carry=plan.speeds.at(-1);raw[i].time=elapsed;}const sources=[...(route.sceneryStations??[]),...route.stations];
  const sourceAt=s=>sources.filter(st=>Math.abs(st.s-s)<.5).reduce((a,b)=>({...a,...b}),{});
  const anchors=[];let last=-Infinity;
@@ -55,6 +57,7 @@ export function resolveScoreSchedule(route,startS,spec={}){
  const timetable=raw.map((st,i)=>{const source=sourceAt(st.s),known=timeSeconds(source.arrival??source.passTime??source.time);return {...st,time:map(i===0?0:st.time),estimated:known===null};});
  let runningSpeed=0;
  for(let i=1;i<timetable.length;i++){const previous=timetable[i-1],station=timetable[i],plan=sectionSpeedPlan(previous,station,route.limits??[],spec,runningSpeed);if(!plan.feasible){station.sourceTime=station.time;station.time=plan.departure+plan.fastest+2;station.estimated=true;station.adjusted=true;}runningSpeed=plan.speeds.at(-1);}
+ if(route.id==='osaka')rebuildOsakaTimetable(timetable,route.limits??[],spec,sectionSpeedPlan);
  const source=sourceAt(startS),selected=timetable.find(st=>Math.abs(st.s-startS)<.5),explicit=timeSeconds(source.startTime)??((timeSeconds(source.departure)??NaN)-30);
  const clockStart=selected?.adjusted?selected.time:Number.isFinite(explicit)?explicit:selected?.time??map(0);
  return {clockStart,timetable,anchored:anchors.length>0};
@@ -64,7 +67,7 @@ export function sectionSpeedPlan(a,b,limits,spec={},initialSpeed=0){
  const length=b.s-a.s,max=spec.maxSpeedKmh??110,accel=Math.max(.2,(spec.startingAccelerationKmhPerSecondApprox??2.8)/3.6),brake=.8;
  const nodes=[a.s,b.s,...limits.flatMap(x=>[x.sStart,x.sEnd]).filter(s=>s>a.s&&s<b.s)];for(let s=a.s+20;s<b.s;s+=20)nodes.push(s);nodes.sort((a,b)=>a-b);const positions=[...new Set(nodes)];
  const caps=positions.map((s,i)=>{const at=i===positions.length-1?s-.001:s;return limits.filter(x=>at>=x.sStart&&at<x.sEnd).reduce((n,x)=>Math.min(n,x.kmh),max)/3.6;});
- const departure=spec.departureTimes?.[a.s]??((timeSeconds(a.time)??0)+(a.stop?25:0)),available=(timeSeconds(b.time)??Infinity)-departure;
+ const departure=spec.departureTimes?.[a.s]??((timeSeconds(a.time)??0)+(a.stop?(spec.stationDwellSeconds??25):0)),available=(timeSeconds(b.time)??Infinity)-departure;
  const calculate=factor=>{const speeds=caps.map(v=>Math.min(v,(spec.cruiseSpeedKmh??max*factor)/3.6));speeds[0]=a.stop?0:Math.min(speeds[0],initialSpeed);
   for(let i=1;i<speeds.length;i++){const v=speeds[i-1],power=Math.max(.05,plannedAcceleration(spec,v,accel));speeds[i]=Math.min(speeds[i],Math.sqrt(v*v+2*power*(positions[i]-positions[i-1])));}
   if(b.stop)speeds[speeds.length-1]=0;

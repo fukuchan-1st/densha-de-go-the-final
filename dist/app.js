@@ -1,9 +1,10 @@
-import {collectStationReports,collectRestrictionReports,pauseWhenSpeechEnds} from './station-timing.js?v=timing69';
+import {DutyRecorder,loadReplay,replayStateAt,recordReplayAudio} from './replay-store.js?v=70';
+import {collectStationReports,collectRestrictionReports,pauseWhenSpeechEnds} from './station-timing.js?v=70';
 import {reverseLegacyProfile,reverseLegacyLayout,normalizeLegacyLayout} from './tohoku-direction.js?v=traffic64';
 import {loadAudioMix,audioMixMarkup,bindAudioMix} from './audio-mix.js?v=keys61fix';
-import {bindScreenKeys} from './screen-keys.js?v=keys61fix';
+import {bindScreenKeys} from './screen-keys.js?v=70';
 import {beginTerminalOpening,advanceTerminalOpening} from './terminal-arrival.js?v=score13';
-import {mountScoring,checkpointMarks,buildScoreTimetable,resolveScoreSchedule,scoreHazards,hornMarks,currentScoreRestriction,signalRestriction} from './scoring.js?v=evaluation59';
+import {mountScoring,checkpointMarks,buildScoreTimetable,resolveScoreSchedule,scoreHazards,hornMarks,currentScoreRestriction,signalRestriction} from './scoring.js?v=70';
 import {mountLookahead,changesFromSteps,stationMarks} from './lookahead.js?v=evaluation59';const lookahead=mountLookahead(document.getElementById('drive'));
 import {GeneratedCab,generatedCab} from './generated-cab.js';
 import {mountResponsiveUI} from './responsive-ui.js?v=phone58fix';
@@ -14,7 +15,7 @@ import {mountDisplay,stoppingMarker,formatStopDistance} from './display.js?v=41'
 import {STATIONS as ALL_STATIONS,SPECS,step,newRun,stoppingDistance,assistBrake,notchDeltaForKey,NOTCH_MIN,NOTCH_LABELS,clampNotch} from './physics.js?v=23';
 import {RouteProfile} from './route-profile.js?v=23';
 import {RailWorld} from './scene.js?v=traffic64';
-import {SoundEngine} from './assets/audio/sound-engine.js?v=timing69';
+import {SoundEngine} from './assets/audio/sound-engine.js?v=70';
 const rangeQuery=new URLSearchParams(location.search),requestedEnd=Number(rangeQuery.get('end')),requestedStart=Number(rangeQuery.get('station')??0);
 const reverseDirection=rangeQuery.get('direction')==='reverse',fullLength=ALL_STATIONS.at(-1).s,DIRECTION_STATIONS=reverseDirection?ALL_STATIONS.map(x=>({...x,s:fullLength-x.s})).reverse():ALL_STATIONS;
 const LAST_STATION_INDEX=rangeQuery.has('end')&&Number.isInteger(requestedEnd)&&requestedEnd>requestedStart?Math.min(FULL_LAST_STATION_INDEX,requestedEnd):FULL_LAST_STATION_INDEX;
@@ -25,8 +26,11 @@ const score=mountScoring($('drive'),{badge:document.querySelector('.hud-line'),v
 document.querySelector('.handle-panel').hidden=true;
 let lastStatus='';
 let panel,profile,world,run=newRun(),mode='menu',paused=false,assist=false,rate=1,panorama=false,toastUntil=6,wall=0,rendered=false,bootError='';
-const settings={volume:.65,shake:1};
+let recorder=null,legacyReplay=null;
+recordReplayAudio(sound,()=>recorder,()=>run);
+const settings={volume:.65,shake:1,drawDistance:1500};
 try{settings.volume=Number(localStorage.getItem('tohoku-volume')??.65);const savedShake=Number(localStorage.getItem('tohoku-shake')??1);if([0,.6,1].includes(savedShake))settings.shake=savedShake;}catch{}
+try{const shared=JSON.parse(localStorage.getItem('railway-drive-settings')??'{}');if(Number.isFinite(shared.shake))settings.shake=shared.shake;if(Number.isFinite(shared.drawDistance))settings.drawDistance=shared.drawDistance;}catch{}
 const audioMix=loadAudioMix(localStorage,settings.volume);
 sound.setVolume(1);sound.setMix(audioMix);
 function toast(t,seconds=5){lastStatus=t;$('operationStatus').textContent=t;toastUntil=wall+seconds;}
@@ -45,7 +49,7 @@ if(directStart){
  $('menuButton').textContent='路線選択へ';
  $('pauseMenu').textContent='路線選択へ';
 }
-function returnToRoutes(){location.href='./?v=41&route=tohoku'+(generatedCab?'&cab=generated':'');}
+function returnToRoutes(){recorder?.flush();location.href='./?v=41&route=tohoku'+(generatedCab?'&cab=generated':'');}
 $('allRoutes').onclick=returnToRoutes;
 $('audioBack').onclick=returnToRoutes;
 $('audioUnlock').addEventListener('cancel',event=>event.preventDefault());
@@ -70,6 +74,7 @@ async function start(){
   await ensureWorld();
   const needsAudioGesture=directStart&&['suspended','interrupted'].includes(sound.ctx?.state);
   if(!needsAudioGesture)await audioReady;
+  await recorder?.flush();recorder=null;legacyReplay=null;
   run=newRun();
   world.resetMotion();
   const startIndex=Number($('startStation').value);
@@ -79,7 +84,10 @@ async function start(){
   run.next=startIndex+1;
   run.targetStops=LAST_STATION_INDEX-startIndex;
   beginStartingBoarding(run,startIndex,STATIONS);
+  if(rangeQuery.get('replay')==='1'){const data=await loadReplay();if(!data?.legacy||!data.samples.length)throw Error('東北本線のリプレイがありません');legacyReplay={data,time:data.samples[0].elapsed,speed:1,eventCursor:0};Object.assign(run,replayStateAt(data.samples,legacyReplay.time));run.targetStops=LAST_STATION_INDEX-startIndex;}
+  else recorder=new DutyRecorder({legacy:true,lineId:'tohoku',lineName:'東北本線',trainId:'701',trainName:'701系1500番台',from:STATIONS[startIndex].name,to:STATIONS.at(-1).name,direction:reverseDirection?'reverse':'forward',startIndex,endIndex:LAST_STATION_INDEX});
   mode='drive';
+  if(legacyReplay)mountLegacyReplay();
   paused=needsAudioGesture;
   $('menu').hidden=true;
   $('drive').hidden=false;
@@ -164,8 +172,13 @@ function hud(){lookahead.update(run.s,changesFromSteps(profile.limits),world?.si
  const marker=stoppingMarker(run.s,next.s);$('stopPointer').style.top=marker.top+'%';$('stopPointer').hidden=!marker.visible;$('stopMarker').classList.toggle('in-range',marker.within);$('stopMarker').classList.toggle('outside',!marker.within);$('stopMarker').classList.toggle('overrun',marker.error>10);$('stopOffset').textContent=marker.label;$('stopHint').textContent=run.finished?'終点に到着':run.doors?'戸開中 · 自動戸閉待ち':run.stopReady?'停車確認中':marker.within?'自動戸開は±3m以内の停車時':marker.error>10?'停止位置を過ぎています':'接近中';
  const limit=profile.limitAt(run.s),grade=profile.gradeAt(run.s),upcoming=profile.nextLimit(run.s),over=kmh>limit+1;$('limitValue').textContent=limit;$('limitLabel').textContent=profile.coverageAt(run.s)==='prototype'?'仮の上限':'制限速度';$('gradient').innerHTML=(profile.coverageAt(run.s)==='prototype'?'仮設定 ':grade>0?'上り ':grade<0?'下り ':'平坦 ')+Math.abs(grade).toFixed(1)+' <small>‰</small>';$('speedWarning').textContent=(over?'速度超過　':profile.coverageAt(run.s)==='prototype'?'仮上限　':'制限　')+limit+' km/h';$('speedWarning').classList.toggle('over',over);$('speed').classList.toggle('over',over);$('coverageLabel').textContent=profile.coverageAt(run.s)==='prototype'?'試作区間':'BVEデータ参考区間';$('upcomingLimit').hidden=profile.coverageAt(run.s)==='prototype';$('upcomingLimit').textContent=upcoming?`${Math.round(upcoming.s-run.s).toLocaleString()}m先　${upcoming.kmh} km/h`:'この先、制限変更なし';$('brakeNeedle').style.transform=`rotate(${-130+(run.notch<0?Math.max(0,Math.min(7,-run.notch-1))/7*350:0)/800*260}deg)`;$('tractionLever').style.transform=`rotateX(${Math.max(0,run.notch)*-5}deg)`;$('brakeHandle').style.transform=`rotate(${Math.max(0,-run.notch)*-6}deg)`;$('doors').hidden=!['audio-error','close-audio-error'].includes(run.doorPhase);$('doors').disabled=!['audio-error','close-audio-error'].includes(run.doorPhase);$('powerUp').hidden=run.doors||run.notch===5||run.finished;$('brakeDown').hidden=run.notch===NOTCH_MIN||run.finished;$('neutral').hidden=run.notch===0||run.finished;$('emergency').hidden=run.notch===NOTCH_MIN||run.finished;$('doors').textContent=['audio-error','close-audio-error'].includes(run.doorPhase)?'音声を再試行':'ドア自動';$('operationStatus').textContent=run.correctedStopError!=null&&run.doorPhase==='waiting-open'?`行き過ぎ ${formatStopDistance(run.correctedStopError)} → 停止位置 0 cm に補正`:run.doorPhase==='waiting-open'?`停車確認 ${Math.min(3,Math.floor(run.stopWait))} / 3秒 · まもなく自動戸開`:run.doorPhase==='boarding'?`乗降中 · 自動戸閉の音声まで ${Math.max(0,Math.ceil(BOARDING_WAIT_SECONDS-run.dwell))}秒`:run.doorPhase==='closing'?'戸閉中 · 戸閉音の終了後に戸閉灯が点灯':run.doorPhase==='announcement'?(run.departureStage==='station'?'駅音声を再生中 · 続いてホイッスル':'ホイッスルを再生中 · 終了後に自動戸閉'):wall<toastUntil?lastStatus:'';
 }
-let last=performance.now();function frame(now){const realDt=Math.max(0,(now-last)/1000),dt=Math.min(.1,realDt);last=now;wall+=dt;if(mode==='drive'&&world){if(paused)score.pause(true);if(!paused){let sim=dt*rate;while(sim>0){const chunk=Math.min(.02,sim);advance(chunk);sim-=chunk;if(paused)break;}if(!paused&&!run.finished){updateDoors(realDt);updateDriverCalls();}sound.update(run.v*3.6,run.notch,dt,{doors:run.doors,holdBraking:run.holdBraking,surface:world.routeStructures.tunnelAt(run.s)?'tunnel':world.routeStructures.structures.some(x=>x.kind==='bridge'&&run.s>=x.sStart&&run.s<=x.sEnd)?'bridge':'long',curvature:world.curvature(run.s)});}hud();world.render(run.s,run.v,wall,panorama,run.acceleration??0,settings.shake,paused?0:dt);if(panel)panel.render(run,dt,Boolean(world.routeStructures.tunnelAt(run.s)));$('bveReadout').textContent=`${Math.round(run.v*3.6)} km/h　${strip[run.notch-NOTCH_MIN]}　${run.doorPhase==='closing'?'戸閉中':run.doors?'戸開':'戸閉'}`;rendered=true;}requestAnimationFrame(frame);}requestAnimationFrame(frame);
+let last=performance.now();function frame(now){const realDt=Math.max(0,(now-last)/1000),dt=Math.min(.1,realDt);last=now;wall+=dt;if(mode==='drive'&&world){if(paused)score.pause(true);if(legacyReplay){updateLegacyReplay(dt);}else if(!paused){let sim=dt*rate;while(sim>0){const chunk=Math.min(.02,sim);advance(chunk);sim-=chunk;if(paused)break;}if(!paused&&!run.finished){updateDoors(realDt);updateDriverCalls();}sound.update(run.v*3.6,run.notch,dt,{doors:run.doors,holdBraking:run.holdBraking,surface:world.routeStructures.tunnelAt(run.s)?'tunnel':world.routeStructures.structures.some(x=>x.kind==='bridge'&&run.s>=x.sStart&&run.s<=x.sEnd)?'bridge':'long',curvature:world.curvature(run.s)});}if(!legacyReplay)recorder?.capture(run,score.engine.points,score.engine.chain);hud();if(legacyReplay){document.querySelector('.points-number').textContent=run.points;document.querySelector('.chain-number').textContent=run.chain;document.querySelector('.score-clock-now b').textContent=$('clock').textContent;}world.camera.far=settings.drawDistance+400;world.camera.updateProjectionMatrix();world.scene.fog.far=settings.drawDistance;world.render(run.s,run.v,wall,panorama,run.acceleration??0,settings.shake,paused?0:dt);if(panel)panel.render(run,dt,Boolean(world.routeStructures.tunnelAt(run.s)));$('bveReadout').textContent=`${Math.round(run.v*3.6)} km/h　${strip[run.notch-NOTCH_MIN]}　${run.doorPhase==='closing'?'戸閉中':run.doors?'戸開':'戸閉'}`;rendered=true;}requestAnimationFrame(frame);}requestAnimationFrame(frame);
 // Read-only diagnostics for reproducible local verification; no gameplay shortcuts.
 window.railDiagnostics=()=>({run:{...run},mode,paused,assist,rate,rendered,audioReady:sound.ready,audioError:sound.error,activeTracks:sound.activeTracks,bootError});
 
 if(directStart)start();
+
+addEventListener('pagehide',()=>recorder?.flush());
+function mountLegacyReplay(){document.body.classList.add('replaying');document.querySelector('.replay-controls')?.remove();const bar=document.createElement('div');bar.className='replay-controls';bar.innerHTML='<label>REPLAY</label><button data-play>一時停止</button><button data-speed>×1</button><button data-exit>再生終了</button><input aria-label="再生位置" type="range" min="'+legacyReplay.data.samples[0].elapsed+'" max="'+legacyReplay.data.samples.at(-1).elapsed+'" step="0.1">';$('drive').append(bar);bar.querySelector('[data-play]').onclick=()=>{paused=!paused;sound.setPaused(paused);bar.querySelector('[data-play]').textContent=paused?'再生':'一時停止';};bar.querySelector('[data-speed]').onclick=e=>{legacyReplay.speed=legacyReplay.speed===1?2:legacyReplay.speed===2?.5:1;e.target.textContent='×'+legacyReplay.speed;};bar.querySelector('[data-exit]').onclick=returnToRoutes;bar.querySelector('input').oninput=e=>{legacyReplay.time=Number(e.target.value);legacyReplay.eventCursor=(legacyReplay.data.events??[]).findIndex(event=>event.time>=legacyReplay.time);if(legacyReplay.eventCursor<0)legacyReplay.eventCursor=(legacyReplay.data.events??[]).length;sound.setHorn(false);updateLegacyReplay(0);};}
+function updateLegacyReplay(dt){const r=legacyReplay;if(!paused)r.time=Math.min(r.data.samples.at(-1).elapsed,r.time+dt*r.speed);if(!paused&&dt>0){const events=r.data.events??[];while(r.eventCursor<events.length&&events[r.eventCursor].time<=r.time){const event=events[r.eventCursor++];if(typeof sound[event.method]==='function')Promise.resolve(sound[event.method](...event.args)).catch(()=>{});}}Object.assign(run,replayStateAt(r.data.samples,r.time));sound.update(run.v*3.6,run.notch,paused?0:dt,{doors:run.doors});document.querySelector('.replay-controls input').value=r.time;if(r.time>=r.data.samples.at(-1).elapsed){paused=true;sound.setPaused(true);}}
+document.addEventListener('keydown',e=>{if(!legacyReplay)return;if(['Enter','ArrowUp','ArrowDown','KeyW','KeyS','KeyX','Space'].includes(e.code)&&!e.target.closest('.replay-controls')){e.preventDefault();e.stopImmediatePropagation();}if(e.code==='Escape'){e.preventDefault();e.stopImmediatePropagation();document.querySelector('[data-play]')?.click();}},true);

@@ -1,0 +1,6 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {startTitleIntro} from '../dist/title-intro.js';
+test('title voice waits until the mosaic clears, and blocked autoplay retries on Enter before opening the menu',async()=>{
+ const old={document:globalThis.document,raf:globalThis.requestAnimationFrame,cancel:globalThis.cancelAnimationFrame};let queue=[],calls=0,opened=0,removed=0;
+ const context={clearRect(){},drawImage(){}};globalThis.document={createElement:()=>({getContext:()=>context,setAttribute(){},remove(){removed++;}})};globalThis.requestAnimationFrame=cb=>{queue.push(cb);return queue.length;};globalThis.cancelAnimationFrame=()=>{};
+ try{const image={complete:true,naturalWidth:1600,naturalHeight:1000,style:{},before(){}},button={},intro=startTitleIntro({image,button,duration:100,onCall:async()=>{calls++;return calls>1;},onStart:()=>opened++});assert.equal(calls,0);queue.shift()(0);queue.shift()(50);assert.equal(calls,0);queue.shift()(100);await Promise.resolve();assert.equal(calls,1);assert.equal(opened,0);assert.equal(image.style.opacity,'1');assert.equal(removed,1);assert.match(button.textContent,/タイトルコール/);intro.enter();await Promise.resolve();assert.equal(calls,2);assert.equal(opened,1);}finally{globalThis.document=old.document;globalThis.requestAnimationFrame=old.raf;globalThis.cancelAnimationFrame=old.cancel;}
+});

@@ -21,6 +21,6 @@ export function bindRouteKeys(document,{active,choose,current,focusRoute,setting
  if(code==='KeyO'||code==='F1'){settings();return;}
  if(code==='ArrowLeft'||code==='ArrowRight'){option=event.target.id!=='settingsButton';option?focusSettings():focusRoute();return;}
  if(code==='ArrowUp'||code==='ArrowDown'){option=false;choose(current()+(code==='ArrowDown'?1:-1));focusRoute();return;}
- if(code==='Escape'){option=false;focusRoute();return;}if(code==='Enter'){if(event.repeat)return;if(event.target.id==='settingsButton')settings();else open();}
+ if(code==='Escape'){option=false;document.getElementById('routeMainMenu')?.click();return;}if(code==='Enter'){if(event.repeat)return;if(event.target.id==='settingsButton')settings();else open();}
  },true);
 }
