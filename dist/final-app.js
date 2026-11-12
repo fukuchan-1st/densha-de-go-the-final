@@ -15,7 +15,7 @@ import {beginTerminalOpening,advanceTerminalOpening} from './terminal-arrival.js
 import {vehiclePhoto} from './vehicle-photos.js?v=corridor1';
 import {mountTrainDetails} from './train-details.js?v=72';
 import {mountWheelPicker} from './wheel-picker.js?v=72';
-import {mountScoring,checkpointMarks,scoringStations,buildScoreTimetable,resolveScoreSchedule,scoreHazards,hornMarks,currentScoreRestriction,signalRestriction} from './scoring.js?v=75';
+import {routePlanningSpec,mountScoring,checkpointMarks,scoringStations,buildScoreTimetable,resolveScoreSchedule,scoreHazards,hornMarks,currentScoreRestriction,signalRestriction} from './scoring.js?v=77';
 import {mountDrivingOverlay} from './driving-overlay.js?v=72';import {mountLookahead,changesFromSections,stationMarks} from './lookahead.js?v=evaluation59';
 import {serviceChoices,makeServiceRoute} from './train-selection.js?v=traffic64';
 import {GeneratedCab,generatedCab} from './generated-cab.js';
@@ -214,7 +214,7 @@ async function start(startIndex){
    const first=r.soundEvents.findIndex(event=>event.s>=run.s);
    run.soundCursor=first<0?r.soundEvents.length:first;
   }
-  run.scoreVehicleSpec=yaganPlanningSpec(r,osakaPlanningSpec(r,{...train.playableSpecs,maxSpeedKmh:Math.min(train.playableSpecs.maxSpeedKmh,r.serviceSpeedKmh??Infinity),powerNotches:controlsFor(train).max,powerForceRows:train.performance?.power?.force?.rows}));
+  run.scoreVehicleSpec=routePlanningSpec(r,yaganPlanningSpec(r,osakaPlanningSpec(r,{...train.playableSpecs,maxSpeedKmh:Math.min(train.playableSpecs.maxSpeedKmh,r.serviceSpeedKmh??Infinity),powerNotches:controlsFor(train).max,powerForceRows:train.performance?.power?.force?.rows})));
   const schedule=resolveScoreSchedule(r,run.s,run.scoreVehicleSpec);
   run.clockStart=schedule.clockStart;
   run.scoreTimetable=schedule.timetable.filter(st=>st.s<=r.stations[run.endIndex].s+.5);

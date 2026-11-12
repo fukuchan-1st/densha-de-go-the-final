@@ -1,3 +1,5 @@
+import {routePlanningSpec,operatingBand,operatingCap} from './planning-profile.js?v=77';
+export {routePlanningSpec};
 import {yaganPlanningSpec,rebuildYaganTimetable,planningGrade} from './yagan-timetable.js?v=75';
 import {osakaPlanningSpec,rebuildOsakaTimetable} from './osaka-timetable.js?v=72';
 import {ScoreAudio} from './score-audio.js?v=phone58fix';
@@ -49,7 +51,7 @@ export function buildScoreTimetable(route,startS,clockStart,spec={},ignoreKnown=
 export function formatScoreTime(value,current=false){const seconds=timeSeconds(value);if(seconds===null)return '—';const n=((current?Math.floor(seconds):Math.round(seconds))%86400+86400)%86400;return [Math.floor(n/3600),Math.floor(n/60)%60,n%60].map(x=>String(x).padStart(2,'0')).join(':');}
 
 export function resolveScoreSchedule(route,startS,spec={}){
- spec=yaganPlanningSpec(route,osakaPlanningSpec(route,spec));
+ spec=routePlanningSpec(route,yaganPlanningSpec(route,osakaPlanningSpec(route,spec)));
  const raw=scoringStations(route).map(st=>({...st}));let elapsed=0,carry=0;for(let i=0;i<raw.length;i++){if(i===0){raw[i].time=0;continue;}const plan=sectionSpeedPlan({...raw[i-1],time:elapsed},{...raw[i],time:null},route.limits??[],spec,carry);elapsed=plan.departure+plan.duration;carry=plan.speeds.at(-1);raw[i].time=elapsed;}const sources=[...(route.sceneryStations??[]),...route.stations];
  const sourceAt=s=>sources.filter(st=>Math.abs(st.s-s)<.5).reduce((a,b)=>({...a,...b}),{});
  const anchors=[];let last=-Infinity;
@@ -60,18 +62,19 @@ export function resolveScoreSchedule(route,startS,spec={}){
  for(let i=1;i<timetable.length;i++){const previous=timetable[i-1],station=timetable[i],plan=sectionSpeedPlan(previous,station,route.limits??[],spec,runningSpeed);if(!plan.feasible){station.sourceTime=station.time;station.time=plan.departure+plan.fastest+2;station.estimated=true;station.adjusted=true;}runningSpeed=plan.speeds.at(-1);}
  if(route.id==='yagan')rebuildYaganTimetable(timetable,route,spec,sectionSpeedPlan);
  if(route.id==='osaka')rebuildOsakaTimetable(timetable,route.limits??[],spec,sectionSpeedPlan);
+ if(spec.operatingBands?.length)repairOperatingTimetable(timetable,route.limits??[],spec);
  const source=sourceAt(startS),selected=timetable.find(st=>Math.abs(st.s-startS)<.5),explicit=timeSeconds(source.startTime)??((timeSeconds(source.departure)??NaN)-30);
- const clockStart=selected?.adjusted?selected.time:Number.isFinite(explicit)?explicit:selected?.time??map(0);
- return {clockStart,timetable,anchored:anchors.length>0};
+ const clockStart=selected?.time??(Number.isFinite(explicit)?explicit:map(0));
+ timetable.planningSpec=spec;return {clockStart,timetable,planningSpec:spec,anchored:anchors.length>0};
 }
 
 export function sectionSpeedPlan(a,b,limits,spec={},initialSpeed=0){
  const length=b.s-a.s,max=spec.maxSpeedKmh??110,accel=Math.max(.2,(spec.startingAccelerationKmhPerSecondApprox??2.8)/3.6),brake=.8;
- const nodes=[a.s,b.s,...limits.flatMap(x=>[x.sStart,x.sEnd]).filter(s=>s>a.s&&s<b.s)];for(let s=a.s+20;s<b.s;s+=20)nodes.push(s);nodes.sort((a,b)=>a-b);const positions=[...new Set(nodes)];
- const caps=positions.map((s,i)=>{const at=i===positions.length-1?s-.001:s;return limits.filter(x=>at>=x.sStart&&at<x.sEnd).reduce((n,x)=>Math.min(n,x.kmh),max)/3.6;});
- const departure=spec.departureTimes?.[a.s]??((timeSeconds(a.time)??0)+(a.stop?(spec.stationDwellSeconds??25):0)),available=(timeSeconds(b.time)??Infinity)-departure;
+ const nodes=[a.s,b.s,...(spec.operatingBands??[]).flatMap(x=>[x.sStart,x.sEnd]).filter(s=>s>a.s&&s<b.s),...limits.flatMap(x=>[x.sStart,x.sEnd]).filter(s=>s>a.s&&s<b.s)];for(let s=a.s+20;s<b.s;s+=20)nodes.push(s);nodes.sort((a,b)=>a-b);const positions=[...new Set(nodes)];
+ const caps=positions.map((s,i)=>{const at=i===positions.length-1?s-.001:s;return limits.filter(x=>at>=x.sStart&&at<x.sEnd).reduce((n,x)=>Math.min(n,x.kmh),operatingCap(spec,at))/3.6;});
+ const departure=spec.departureTimes?.[a.s]??((timeSeconds(a.time)??0)+(a.stop?(spec.departureDwells?.[a.s]??spec.stationDwellSeconds??25):0)),available=(timeSeconds(b.time)??Infinity)-departure;
  const calculate=factor=>{const speeds=caps.map(v=>Math.min(v,(spec.cruiseSpeedKmh??max*factor)/3.6));speeds[0]=a.stop?0:Math.min(speeds[0],initialSpeed);
-  for(let i=1;i<speeds.length;i++){const v=speeds[i-1],power=Math.max(.05,plannedAcceleration(spec,v,accel)-9.80665*planningGrade(spec,(positions[i]+positions[i-1])/2)/1000);speeds[i]=Math.min(speeds[i],Math.sqrt(v*v+2*power*(positions[i]-positions[i-1])));}
+  for(let i=1;i<speeds.length;i++){const v=speeds[i-1],power=Math.max(-1,plannedAcceleration(spec,v,accel)*(spec.operatingBands?.length?.9:1)-9.80665*planningGrade(spec,(positions[i]+positions[i-1])/2)/1000);speeds[i]=Math.min(speeds[i],Math.sqrt(Math.max(0,v*v+2*power*(positions[i]-positions[i-1]))));}
   if(b.stop)speeds[speeds.length-1]=0;
   for(let i=speeds.length-2;i>=0;i--)speeds[i]=Math.min(speeds[i],Math.sqrt(speeds[i+1]**2+2*Math.max(.2,brake+9.80665*planningGrade(spec,(positions[i+1]+positions[i])/2)/1000)*(positions[i+1]-positions[i])));
   const times=[0];for(let i=1;i<speeds.length;i++)times.push(times[i-1]+2*(positions[i]-positions[i-1])/Math.max(.1,speeds[i]+speeds[i-1]));return {speeds,times,duration:times.at(-1)};
@@ -80,6 +83,26 @@ export function sectionSpeedPlan(a,b,limits,spec={},initialSpeed=0){
  if(spec.cruiseSpeedKmh==null&&available>fastest.duration&&Number.isFinite(available)){for(let i=0;i<26;i++){const mid=(low+high)/2;if(calculate(mid).duration>available)low=mid;else high=mid;}}
  const chosen=calculate(high),at=s=>{let i=1;while(i<positions.length-1&&positions[i]<s)i++;const f=(s-positions[i-1])/(positions[i]-positions[i-1]);return {speed:(chosen.speeds[i-1]+(chosen.speeds[i]-chosen.speeds[i-1])*f)*3.6,time:departure+chosen.times[i-1]+(chosen.times[i]-chosen.times[i-1])*f};};
  return {...chosen,positions,caps,departure,available,feasible:available>=fastest.duration-.5,fastest:fastest.duration,at};
+}
+export function repairOperatingTimetable(stations,limits,spec){
+ let carry=0;
+ for(let i=1;i<stations.length;i++){
+  const a=stations[i-1],b=stations[i],band=operatingBand(spec,(a.s+b.s)/2);
+  const attainable=sectionSpeedPlan(a,{...b,time:null},limits,spec,carry),reachablePeak=Math.max(...attainable.speeds)*3.6;
+  let pair=checkpointSectionPlan(a,b,limits,spec,carry);
+  const minimum=Math.min(band?.min??0,Math.floor(reachablePeak)-1);
+  let plan;
+  if(pair&&pair.target>=minimum)plan=pair.plan;
+  else{
+   const target=Math.max(1,Math.min(Math.floor(reachablePeak+1e-6),band?.preferred??Math.floor(reachablePeak)));
+   plan=sectionSpeedPlan(a,{...b,time:null},limits,{...spec,cruiseSpeedKmh:target},carry);
+  }
+  if(spec.recoverySeconds){let target=Math.floor(Math.max(...plan.speeds)*3.6);while(target>1&&plan.duration<attainable.duration+spec.recoverySeconds){target--;plan=sectionSpeedPlan(a,{...b,time:null},limits,{...spec,cruiseSpeedKmh:target},carry);}}
+  const arrival=plan.departure+plan.duration;
+  if(Math.abs(arrival-b.time)>.00001){b.sourceTime??=b.time;b.time=arrival;b.adjusted=true;b.estimated=true;}
+  carry=plan.speeds.at(-1);
+ }
+ return stations;
 }
 export function observeScoreDeparture(state,stations){
  if(state.doors&&state.v<.05){const station=stations.find(st=>st.stop&&Math.abs(st.s-state.s)<=3);if(station)state.scoreBoardingStation=station.s;}
@@ -107,7 +130,7 @@ export function checkpointSectionPlan(a,b,limits,spec={},initialSpeed=0){
   // A comfortable run must also meet the station deadline; never add a catch-up target.
   if(Math.abs(arrivalError)>2.5)continue;
   let begin=null;
-  const accept=end=>{if(begin===null)return;const distance=plan.positions[end]-plan.positions[begin];if(distance>=Math.max(120,target/3.6*8)&&(!best||distance>best.distance))best={plan,target,begin,end,distance,arrivalError};};
+  const accept=end=>{if(begin===null)return;const distance=plan.positions[end]-plan.positions[begin];if(distance>=Math.max(2,target/3.6*.25)&&(!best||Math.abs(arrivalError)<Math.abs(best.arrivalError)-.00001||(Math.abs(arrivalError)<=Math.abs(best.arrivalError)+.00001&&distance>best.distance)))best={plan,target,begin,end,distance,arrivalError};};
   for(let n=0;n<plan.speeds.length;n++){
    const flat=Math.abs(plan.speeds[n]*3.6-target)<.001;
    if(flat&&begin===null)begin=n;
@@ -118,15 +141,16 @@ export function checkpointSectionPlan(a,b,limits,spec={},initialSpeed=0){
  return best;
 }
 export function makeCheckpoints(stations,limits,startS,clock,spec={}){
+ spec={...spec,...(stations.planningSpec??{}),departureTimes:spec.departureTimes};
  const rows=stations.filter(s=>s.s>startS+1),all=[{s:startS,time:clock,stop:true},...rows],result=[];let carry=0,carryTime=clock;
  for(let i=1;i<all.length;i++){
-  const a=all[i-1],b=all[i],planningSpec=a.stop?spec:{...spec,departureTimes:{...spec.departureTimes,[a.s]:carryTime}},base=sectionSpeedPlan(a,b,limits,planningSpec,carry),pair=b.s-a.s>=800?checkpointSectionPlan(a,b,limits,planningSpec,carry):null;
-  const chosen=pair?.plan??base;carry=chosen.speeds.at(-1);carryTime=chosen.departure+chosen.duration;if(b.s-a.s<800||!pair)continue;
+  const a=all[i-1],b=all[i],planningSpec=a.stop?spec:{...spec,departureTimes:{...spec.departureTimes,[a.s]:carryTime}},base=sectionSpeedPlan(a,b,limits,planningSpec,carry),pair=checkpointSectionPlan(a,b,limits,planningSpec,carry);
+  const chosen=pair?.plan??base;carry=chosen.speeds.at(-1);carryTime=chosen.departure+chosen.duration;if(!pair){const peakIndex=base.speeds.indexOf(Math.max(...base.speeds)),pointS=Math.min(b.s-.01,Math.max(a.s+.01,base.positions[peakIndex]));result.push({id:'speed:'+pointS,s:pointS,kind:'speed',target:Math.round(base.at(pointS).speed),station:b.name,deadlineFeasible:base.feasible,arrivalError:base.departure+base.duration-timeSeconds(b.time)});continue;}
   const {plan,target,begin,end,arrivalError}=pair,left=plan.positions[begin],right=plan.positions[end],s=left+(right-left)*.3,t=left+(right-left)*.7;
   const metadata={station:b.name,stationTime:timeSeconds(b.time),deadlineFeasible:true,arrivalError,cruiseFrom:left,cruiseTo:right,cruiseSpeedKmh:target,speedPointTime:plan.at(s).time};
   result.push({id:'speed:'+s,s,kind:'speed',target,...metadata},{id:'time:'+t,s:t,kind:'time',target:Math.round(plan.at(s).time+(t-s)/(target/3.6)),...metadata});
  }
- const selected=[],pairCount=result.length/2,spacing=Math.max(1,Math.ceil(pairCount/12));for(let n=0;n<result.length;n+=2)if((n/2)%spacing===0)selected.push(result[n],result[n+1]);return selected.sort((a,b)=>a.s-b.s);
+ return result.sort((a,b)=>a.s-b.s);
 }
 export function signedError(error,kind){return (error>=0?'+':'')+(kind==='speed'?Math.round(error):error.toFixed(1))+(kind==='speed'?' km/h':' 秒');}
 export function checkpointCaption(point,state){const speed=(state?.v??0)*3.6,clock=(state?.clockStart??28800)+(state?.elapsed??0);if(point.kind==='speed')return `定速　現在 ${Math.round(speed)} / 指定 ${point.target} km/h　差 ${signedError(Math.round(speed)-point.target,'speed')}`;const estimate=speed>1?clock+(point.s-state.s)/state.v-point.target:null;return `定通　予定 ${formatScoreTime(point.target)}　予測誤差 ${estimate===null?'—':signedError(estimate,'time')}`;}
