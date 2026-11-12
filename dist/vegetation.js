@@ -1,4 +1,4 @@
-import {RealTrees,treeVariant} from './real-trees.js?v=73';
+import {RealTrees,treeVariant} from './real-trees.js?v=74';
 import {settlementAt} from './route-data.js?v=23';
 import * as T from './assets/vendor/three.module.js?v=23';
 
@@ -55,12 +55,12 @@ export function addVegetation(world){
  const r=random(7011500),broad=[],pine=[],bush=[],grass=[],trunks=[],trees=[];
  const stationClear=(s,offset)=>(world.isStructureCorridor?.(s,offset)??false)||(world.trackLayout?.occupied(s,offset)??false);
  const at=(s,offset)=>world.frame(s,offset).p;
- for(let s=-120;s<world.length+300;s+=27){
-  for(const side of [-1,1]){
+ for(let s=-120;s<world.length+300;s+=14){
+  for(const side of [-1,1])for(const row of [18,42,80]){
    // Denser woodland stretches alternate with open farmland.
    const wooded=settlementAt(s)<.6&&Math.sin(s/700)+Math.sin(s/211)>.1;
-   if(!wooded&&r()>(settlementAt(s)>.65?.1:.4))continue;
-   const ss=s+(r()-.5)*24,offset=side*(15+r()*125),p=at(ss,offset),height=5+r()*8,conifer=r()<.22,shade=.68+r()*.34;
+   if(!wooded&&r()>(settlementAt(s)>.65?.25:.65))continue;
+   const ss=s+(r()-.5)*24,offset=side*(row+r()*16),p=at(ss,offset),height=6+r()*8,conifer=r()<.22,shade=.68+r()*.34;
    if(stationClear(ss,offset))continue;
    trees.push({s:ss,x:offset,y:0,h:height,variant:treeVariant(r()),rotation:r()*Math.PI*2,shade});
   }

@@ -1,17 +1,17 @@
 import {PlayerTrain} from './player-train.js?v=73';
 import {prepareTurnoutLayout} from './turnout-layout.js?v=39';
-import {addTurnouts} from './turnout-scene.js?v=73';
+import {addTurnouts} from './turnout-scene.js?v=74';
 import {OpposingTrains} from './opposing-trains.js?v=traffic64';
 import {CabSuspension} from './cab-motion.js?v=23';
 import {interpolateKnots} from './track-layout.js';
 import {TrackLayout} from './track-layout.js?v=23';
-import {buildRailways,addStations} from './station-scene.js?v=73';
+import {buildRailways,addStations} from './station-scene.js?v=74';
 import * as T from './assets/vendor/three.module.js?v=23';
 import {settlementAt} from './route-data.js?v=23';
 import {DISPLAY_WIDTH,DISPLAY_HEIGHT} from './display.js?v=23';
 import {addStructures} from './structures.js?v=23';
 import {structureRanges,segmentIntersects,corridorOccupied} from './structure-ranges.js?v=23';
-import {addVegetation,createSurfaceMaterial} from './vegetation.js?v=73';
+import {addVegetation,createSurfaceMaterial} from './vegetation.js?v=74';
 import {addTrackSignal} from './track-signal.js?v=32';
 export class RailWorld {
  constructor(container,geometry,stations,profile,structures,stationLayouts,signals=[]){

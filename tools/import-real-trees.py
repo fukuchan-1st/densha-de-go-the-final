@@ -49,7 +49,7 @@ for variant in range(5):
      voxel=height/50
      for _ in range(8):
       grid,first,remap=np.unique(np.round(pos/voxel),axis=0,return_index=True,return_inverse=True);tri=remap[faces];tri=tri[(tri[:,0]!=tri[:,1])&(tri[:,0]!=tri[:,2])&(tri[:,1]!=tri[:,2])];tri=np.unique(tri,axis=0);points=pos[first]
-      if len(tri)<1100:break
+      if len(tri)<350:break
       voxel*=1.5
     nearest=cKDTree(pos).query(points)[1];ns=norm[nearest];tex=uv[nearest]
    else:
@@ -65,7 +65,7 @@ for variant in range(5):
      keep.append(c);total+=sizes[c]
     # Flatten each original curved leaf island into one textured quad. This
     # retains every leaf near the camera instead of thinning out the canopy.
-    selected_ids=np.flatnonzero(sizes) if lod==0 else order[::3]
+    selected_ids=np.flatnonzero(sizes) if lod==0 else order[::9]
     ps=[];ns_list=[];ts=[];triangles=[]
     for c in selected_ids:
      used=np.unique(faces[component==c]);tc=uv[used];pc=pos[used]

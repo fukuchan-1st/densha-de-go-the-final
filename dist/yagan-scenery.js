@@ -1,4 +1,4 @@
-import {treeVariant} from './real-trees.js?v=73';
+import {treeVariant} from './real-trees.js?v=74';
 import {interpolateKnots} from './track-layout.js?v=23';
 
 const hillsides=[-148,-96,-61,-36,-20,-10,10,20,36,61,96,148];
@@ -38,7 +38,7 @@ export function addYaganHillsides(T,world,group,start,end,envelope,bridges,rando
  const tunnelRanges=world.route.structures.filter(structure=>structure.kind==='tunnel');
  const trees=[],pines=[],leaves=[],shade=[];
  const addTree=(position,kind)=>{
-  const h=3.1+random()*6,w=h*(.39+random()*.22);
+  const h=5.5+random()*7.5,w=h*(.39+random()*.22);
   trees.push({...position,h,variant:treeVariant(random()),rotation:random()*Math.PI*2,shade:.85+random()*.15});
  };
  for(const placement of world.route.vegetation??[]){
@@ -54,14 +54,16 @@ export function addYaganHillsides(T,world,group,start,end,envelope,bridges,rando
    addTree({s,x,y:Math.max(groundLevel,height)},model.startsWith('TreesC')?pines:leaves);
   }
  }
- const interval=world.quality==='light'?19:12;
+ const deepForest=world.route.id==='yagan';
+ const interval=world.quality==='light'?(deepForest?9:12):(deepForest?6:8);
  for(let s=Math.ceil(start/interval)*interval;s<end;s+=interval){
   if(tunnelRanges.some(tunnel=>s>=tunnel.sStart-8&&s<=tunnel.sEnd+8))continue;
   const limits=envelope(s),station=world.stationNear(s);
   for(const side of [-1,1]){
-   for(const distance of [station.d<130?30:13,46,88]){
-    const x=side*(distance+random()*15);
-    const position={s,x:x+railEdge(x,limits),y:hillsideHeight(s,x)+deckDrop(s)};
+   for(const distance of (deepForest?[station.d<180?32:16,27,39,52,66,81,97,113,129,140]:[station.d<180?32:16,29,45,65,88,116])){
+    const x=side*(distance+random()*7);
+    const ss=s+(random()-.5)*6;
+    const position={s:ss,x:x+railEdge(x,limits),y:hillsideHeight(ss,x)+deckDrop(ss)};
     const crown=random()<.57?pines:random()<.55?leaves:shade;
     addTree(position,crown);
    }

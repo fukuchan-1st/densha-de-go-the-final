@@ -1,4 +1,4 @@
-import {RealTrees,treeVariant} from './real-trees.js?v=73';
+import {RealTrees,treeVariant} from './real-trees.js?v=74';
 import {PlayerTrain} from './player-train.js?v=73';
 import {prepareLeftTraffic} from './route-traffic.js?v=traffic64';
 import {prepareCorridorScenery,corridorSceneryType} from './corridor-scenery.js?v=controls55';
@@ -11,7 +11,7 @@ import {CabSuspension} from './cab-motion.js?v=24';
 import {addTrackSignal} from './track-signal.js?v=32';
 import {addStoppingMarker} from './stop-scene.js?v=73';
 import {interpolateKnots} from './track-layout.js?v=23';
-import {addYaganHillsides,addYaganTunnel} from './yagan-scenery.js?v=73';
+import {addYaganHillsides,addYaganTunnel} from './yagan-scenery.js?v=74';
 const clamp=T.MathUtils.clamp;
 // Original streamed scenery. Track coordinates come from the route JSON; buildings and platforms are approximate.
 export class FinalWorld {
@@ -214,10 +214,16 @@ export class FinalWorld {
    buildings.push({s,x,y:0,w,h,d});
    if(!urban){roofs.push({s,x,y:h,w:w+.5,h:this.route.id==='tokaido'?1.7:.3,d:d+.5});if(this.route.id==='tokaido'){const x2=x+side*18;buildings.push({s:s+8,x:x2,y:0,w:w*.9,h:h*.9,d});roofs.push({s:s+8,x:x2,y:h*.9,w:w*.9+.5,h:1.7,d:d+.5});}}
    if(this.quality!=='light')for(let y=2.5;y<h-1;y+=3)windows.push({s:s-d/2-.03,x,y,w:w*.65,h:1.1,d:.05});
-   if(kind==='suburban'&&random()>.5)trees.push({s:s+10,x:edge+side*(9+random()*5),y:1,w:2,h:3,d:2});
+
+  }
+  for(let s=Math.ceil(start/14)*14;s<end;s+=14){
+   const kind=this.sceneryTypeAt(s),near=this.stationNear(s);if(kind==='mountain'||this.structureAt(s,'tunnel')||near.d<200)continue;
+   const [min,max]=trackEnvelope(s);for(const side of [-1,1])for(const row of (kind==='city'?[15]:[16,33])){
+    if(kind==='city'&&random()>.3)continue;trees.push({s:s+(random()-.5)*8,x:(side<0?min:max)+side*(row+random()*6),y:0,h:(kind==='city'?4:5)+random()*4});
+   }
   }
   this.instances(group,roofs,'#616b71',this.route.id==='tokaido'?this.houseRoof:this.box);
-  this.instances(group,buildings,index%2?'#b7b5aa':'#b1b7b5');this.instances(group,windows,'#405d68');this.trees.add(group,trees.map(a=>({...a,y:0,h:4+random()*3,variant:treeVariant(random()),rotation:random()*Math.PI*2}))); 
+  this.instances(group,buildings,index%2?'#b7b5aa':'#b1b7b5');this.instances(group,windows,'#405d68');this.trees.add(group,trees.map(a=>({...a,y:0,variant:treeVariant(random()),rotation:random()*Math.PI*2}))); 
   for(const st of nearby){
    const drive=this.driveOffset(st.s),opposite=this.oppositeOffset(st.s);
    const edge=drive+(opposite>=drive?-1.55:1.55);

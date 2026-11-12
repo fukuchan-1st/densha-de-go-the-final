@@ -17,7 +17,7 @@ import {LAST_STATION_INDEX as FULL_LAST_STATION_INDEX,BVE_END} from './route-dat
 import {mountDisplay,stoppingMarker,formatStopDistance} from './display.js?v=41';
 import {STATIONS as ALL_STATIONS,SPECS,step,newRun,stoppingDistance,assistBrake,notchDeltaForKey,NOTCH_MIN,NOTCH_LABELS,clampNotch} from './physics.js?v=72';
 import {RouteProfile} from './route-profile.js?v=23';
-import {RailWorld} from './scene.js?v=73';
+import {RailWorld} from './scene.js?v=74';
 import {SoundEngine} from './assets/audio/sound-engine.js?v=72';
 const rangeQuery=new URLSearchParams(location.search),requestedEnd=Number(rangeQuery.get('end')),requestedStart=Number(rangeQuery.get('station')??0);
 const reverseDirection=rangeQuery.get('direction')==='reverse',fullLength=ALL_STATIONS.at(-1).s,DIRECTION_STATIONS=reverseDirection?ALL_STATIONS.map(x=>({...x,s:fullLength-x.s})).reverse():ALL_STATIONS;
