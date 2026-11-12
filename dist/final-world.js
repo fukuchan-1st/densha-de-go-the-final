@@ -1,16 +1,17 @@
-import {PlayerTrain} from './player-train.js?v=72';
+import {RealTrees,treeVariant} from './real-trees.js?v=73';
+import {PlayerTrain} from './player-train.js?v=73';
 import {prepareLeftTraffic} from './route-traffic.js?v=traffic64';
 import {prepareCorridorScenery,corridorSceneryType} from './corridor-scenery.js?v=controls55';
 import {sampleRouteCurve} from './route-curve.js?v=39';
 import {prepareTurnoutLayout} from './turnout-layout.js?v=39';
-import {addTurnouts} from './turnout-scene.js?v=72';
+import {addTurnouts} from './turnout-scene.js?v=73';
 import {OpposingTrains} from './opposing-trains.js?v=traffic64';
 import * as T from './assets/vendor/three.module.js';
 import {CabSuspension} from './cab-motion.js?v=24';
 import {addTrackSignal} from './track-signal.js?v=32';
-import {addStoppingMarker} from './stop-scene.js';
+import {addStoppingMarker} from './stop-scene.js?v=73';
 import {interpolateKnots} from './track-layout.js?v=23';
-import {addYaganHillsides,addYaganTunnel} from './yagan-scenery.js';
+import {addYaganHillsides,addYaganTunnel} from './yagan-scenery.js?v=73';
 const clamp=T.MathUtils.clamp;
 // Original streamed scenery. Track coordinates come from the route JSON; buildings and platforms are approximate.
 export class FinalWorld {
@@ -22,7 +23,7 @@ export class FinalWorld {
   this.cityEnd=this.chuoCorridor?(this.sceneryStations.find(st=>st.name==='中野')?.s??0):0;
   this.scene=new T.Scene();this.scene.background=new T.Color('#a4c5db');this.scene.fog=new T.Fog('#b3c9d3',350,1600);if(route.night){this.scene.background.set('#050a17');this.scene.fog.color.set('#0b1527');this.scene.fog.near=80;this.scene.fog.far=900;}
   this.renderer=new T.WebGLRenderer({antialias:quality!=='light',powerPreference:'high-performance'});this.renderer.setPixelRatio(Math.min(devicePixelRatio,quality==='light'?1:1.5));this.renderer.setSize(1600,900);this.renderer.outputColorSpace=T.SRGBColorSpace;container.replaceChildren(this.renderer.domElement);
-  this.camera=new T.PerspectiveCamera(58,16/9,.15,1900);this.sky=new T.HemisphereLight('#e3f4ff','#79766b',2.1);this.scene.add(this.sky);this.sun=new T.DirectionalLight('#fff1d8',2.1);this.sun.position.set(-150,300,90);this.scene.add(this.sun);this.box=new T.BoxGeometry(1,1,1);this.houseRoof=new T.ConeGeometry(Math.SQRT1_2,1,4);this.houseRoof.rotateY(Math.PI/4);this.traffic=new OpposingTrains(this);this.quality=quality;this.panorama=false;this.viewOrigin=null;this.setDrawDistance(drawDistance);
+  this.camera=new T.PerspectiveCamera(58,16/9,.15,1900);this.sky=new T.HemisphereLight('#e3f4ff','#79766b',2.1);this.scene.add(this.sky);this.sun=new T.DirectionalLight('#fff1d8',2.1);this.sun.position.set(-150,300,90);this.scene.add(this.sun);this.box=new T.BoxGeometry(1,1,1);this.houseRoof=new T.ConeGeometry(Math.SQRT1_2,1,4);this.houseRoof.rotateY(Math.PI/4);this.traffic=new OpposingTrains(this);this.trees=new RealTrees(this);this.quality=quality;this.panorama=false;this.viewOrigin=null;this.setDrawDistance(drawDistance);
   const normalize=(rail,index)=>({...rail,id:'neighbor-'+index,knots:rail.knots.map(([s,x])=>[s,x,rail.heightKnots?.length?interpolateKnots(rail.heightKnots,s):rail.height??0])});
   const neighbors=(route.neighborTracks??[{knots:Array.from({length:Math.ceil(this.length/30)+1},(_,i)=>{const s=Math.min(this.length,i*30);return [s,this.oppositeOffset(s)];})}]).map(normalize);
   const playerKnots=route.drivingTrack?.map(([s,x])=>[s,x,0])??[[-300,0,0],[this.length+300,0,0]];
@@ -216,7 +217,7 @@ export class FinalWorld {
    if(kind==='suburban'&&random()>.5)trees.push({s:s+10,x:edge+side*(9+random()*5),y:1,w:2,h:3,d:2});
   }
   this.instances(group,roofs,'#616b71',this.route.id==='tokaido'?this.houseRoof:this.box);
-  this.instances(group,buildings,index%2?'#b7b5aa':'#b1b7b5');this.instances(group,windows,'#405d68');this.instances(group,trees,'#4d7150');
+  this.instances(group,buildings,index%2?'#b7b5aa':'#b1b7b5');this.instances(group,windows,'#405d68');this.trees.add(group,trees.map(a=>({...a,y:0,h:4+random()*3,variant:treeVariant(random()),rotation:random()*Math.PI*2}))); 
   for(const st of nearby){
    const drive=this.driveOffset(st.s),opposite=this.oppositeOffset(st.s);
    const edge=drive+(opposite>=drive?-1.55:1.55);
@@ -271,13 +272,13 @@ export class FinalWorld {
   addTurnouts(this,group,this.turnouts,this.railTracks,start,end);
   this.scene.add(group);return group;
  }
- disposeChunk(group){this.scene.remove(group);group.traverse(o=>{if(o.isInstancedMesh)o.dispose();if(o.geometry&&o.geometry!==this.box&&o.geometry!==this.pine&&o.geometry!==this.canopy&&o.geometry!==this.houseRoof)o.geometry.dispose();if(o.material?.map){o.material.map.dispose();o.material.dispose();}else if(o.userData.disposeWithChunk)o.material.dispose();});}
+ disposeChunk(group){this.trees.release(group);this.scene.remove(group);group.traverse(o=>{if(o.isInstancedMesh)o.dispose();if(o.geometry&&o.geometry!==this.box&&o.geometry!==this.pine&&o.geometry!==this.canopy&&o.geometry!==this.houseRoof)o.geometry.dispose();if(o.material?.map){o.material.map.dispose();o.material.dispose();}else if(o.userData.disposeWithChunk)o.material.dispose();});}
  setPlayerTrain(id,count){this.playerTrain?.dispose();this.playerTrain=new PlayerTrain(this,id,count);}
  setCabView(origin){this.viewOrigin=origin;this.currentView=undefined;}
  setDrawDistance(value){this.drawDistance=Math.max(500,Math.min(2000,Number(value)||1500));this.camera.far=this.drawDistance+400;this.camera.updateProjectionMatrix();this.scene.fog.far=this.drawDistance;this.scene.fog.near=Math.min(350,this.drawDistance*.3);}
  render(s,v,dt,{acceleration=0,shake=1,panorama=false,outer=false}={}){const chunk=Math.floor(s/500);for(let i=chunk-1;i<=chunk+Math.ceil(this.drawDistance/500);i++)if(!this.chunks.has(i))this.chunks.set(i,this.buildChunk(i));for(const [i,g]of this.chunks)if(i<chunk-1||i>chunk+Math.ceil(this.drawDistance/500)){this.disposeChunk(g);this.chunks.delete(i);}
   if(this.currentView!==panorama){if(!panorama&&this.viewOrigin)this.camera.setViewOffset(1600,900,800-this.viewOrigin.x,450-this.viewOrigin.y,1600,900);else this.camera.clearViewOffset();this.currentView=panorama;}
-  const f=this.driveFrame(s),head=this.drivePoint(s+45),motion=this.suspension.update({s,speed:v,curvature:this.curvature(s),acceleration},dt,shake),eye=Number(this.route.eyeHeight??2.7),offset=(this.route.eyeOffset??0)+motion.lateral;this.camera.position.copy(f.p).addScaledVector(f.right,offset);this.camera.position.y+=eye+motion.vertical;head.addScaledVector(f.right,offset);head.y+=eye+motion.vertical;this.camera.lookAt(head);this.camera.rotateX(motion.pitch);this.camera.rotateY(motion.yaw);this.camera.rotateZ(motion.roll);const tunnel=(this.route.structures??[]).some(t=>t.kind==='tunnel'&&s>=t.sStart&&s<=t.sEnd);this.sky.intensity=this.route.night?.22:tunnel?.6:2.1;this.sun.intensity=this.route.night?.04:tunnel?.3:2.1;if(this.headlight)this.headlight.intensity=this.route.night?750:tunnel?550:0;this.traffic.update(s,dt);this.playerTrain?.update(s,outer);if(outer)this.playerTrain?.camera(s);this.renderer.render(this.scene,this.camera);
+  const f=this.driveFrame(s),head=this.drivePoint(s+45),motion=this.suspension.update({s,speed:v,curvature:this.curvature(s),acceleration},dt,shake),eye=Number(this.route.eyeHeight??2.7),offset=(this.route.eyeOffset??0)+motion.lateral;this.camera.position.copy(f.p).addScaledVector(f.right,offset);this.camera.position.y+=eye+motion.vertical;head.addScaledVector(f.right,offset);head.y+=eye+motion.vertical;this.camera.lookAt(head);this.camera.rotateX(motion.pitch);this.camera.rotateY(motion.yaw);this.camera.rotateZ(motion.roll);const tunnel=(this.route.structures??[]).some(t=>t.kind==='tunnel'&&s>=t.sStart&&s<=t.sEnd);this.sky.intensity=this.route.night?.22:tunnel?.6:2.1;this.sun.intensity=this.route.night?.04:tunnel?.3:2.1;if(this.headlight)this.headlight.intensity=this.route.night?750:tunnel?550:0;this.trees.update(s);this.traffic.update(s,dt);this.playerTrain?.update(s,outer);if(outer)this.playerTrain?.camera(s);this.renderer.render(this.scene,this.camera);
  }
- dispose(){this.playerTrain?.dispose();this.traffic.dispose();for(const g of this.chunks.values())this.disposeChunk(g);this.chunks.clear();for(const m of this.materials.values()){m.map?.dispose();m.dispose();}this.box.dispose();this.houseRoof.dispose();this.pine?.dispose();this.canopy?.dispose();this.renderer.dispose();this.renderer.forceContextLoss();this.renderer.domElement.remove();}
+ dispose(){this.trees.dispose();this.playerTrain?.dispose();this.traffic.dispose();for(const g of this.chunks.values())this.disposeChunk(g);this.chunks.clear();for(const m of this.materials.values()){m.map?.dispose();m.dispose();}this.box.dispose();this.houseRoof.dispose();this.pine?.dispose();this.canopy?.dispose();this.renderer.dispose();this.renderer.forceContextLoss();this.renderer.domElement.remove();}
 }

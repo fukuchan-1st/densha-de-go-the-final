@@ -1,3 +1,4 @@
+import {treeVariant} from './real-trees.js?v=73';
 import {interpolateKnots} from './track-layout.js?v=23';
 
 const hillsides=[-148,-96,-61,-36,-20,-10,10,20,36,61,96,148];
@@ -35,11 +36,10 @@ export function addYaganHillsides(T,world,group,start,end,envelope,bridges,rando
  group.add(new T.Mesh(ground,material));
 
  const tunnelRanges=world.route.structures.filter(structure=>structure.kind==='tunnel');
- const trunks=[],pines=[],leaves=[],shade=[];
+ const trees=[],pines=[],leaves=[],shade=[];
  const addTree=(position,kind)=>{
   const h=3.1+random()*6,w=h*(.39+random()*.22);
-  trunks.push({...position,w:.14,h:h*.48,d:.14});
-  kind.push({...position,y:position.y+h*.25,w,h:h*.8,d:w});
+  trees.push({...position,h,variant:treeVariant(random()),rotation:random()*Math.PI*2,shade:.85+random()*.15});
  };
  for(const placement of world.route.vegetation??[]){
   if(placement.sEnd<start||placement.sStart>=end)continue;
@@ -67,10 +67,7 @@ export function addYaganHillsides(T,world,group,start,end,envelope,bridges,rando
    }
   }
  }
- world.instances(group,trunks,'#674e39');
- world.instances(group,pines,'#304f3e',world.pine);
- world.instances(group,leaves,'#577242',world.canopy);
- world.instances(group,shade,'#426138',world.canopy);
+ world.trees.add(group,trees);
 }
 
 export function addYaganTunnel(T,world,group,tunnel,start,end,bounds){

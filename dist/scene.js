@@ -1,17 +1,17 @@
-import {PlayerTrain} from './player-train.js?v=72';
+import {PlayerTrain} from './player-train.js?v=73';
 import {prepareTurnoutLayout} from './turnout-layout.js?v=39';
-import {addTurnouts} from './turnout-scene.js?v=72';
+import {addTurnouts} from './turnout-scene.js?v=73';
 import {OpposingTrains} from './opposing-trains.js?v=traffic64';
 import {CabSuspension} from './cab-motion.js?v=23';
 import {interpolateKnots} from './track-layout.js';
 import {TrackLayout} from './track-layout.js?v=23';
-import {buildRailways,addStations} from './station-scene.js?v=72';
+import {buildRailways,addStations} from './station-scene.js?v=73';
 import * as T from './assets/vendor/three.module.js?v=23';
 import {settlementAt} from './route-data.js?v=23';
 import {DISPLAY_WIDTH,DISPLAY_HEIGHT} from './display.js?v=23';
 import {addStructures} from './structures.js?v=23';
 import {structureRanges,segmentIntersects,corridorOccupied} from './structure-ranges.js?v=23';
-import {addVegetation,createSurfaceMaterial} from './vegetation.js?v=23';
+import {addVegetation,createSurfaceMaterial} from './vegetation.js?v=73';
 import {addTrackSignal} from './track-signal.js?v=32';
 export class RailWorld {
  constructor(container,geometry,stations,profile,structures,stationLayouts,signals=[]){
@@ -75,5 +75,5 @@ export class RailWorld {
  setPlayerTrain(id,count){this.playerTrain?.dispose();this.playerTrain=new PlayerTrain(this,id,count);}
  setCabView(origin){this.cabViewOrigin=origin;this.cameraMode=null;}
  resetMotion(){this.suspension=new CabSuspension();this.traffic.dispose();this.traffic=new OpposingTrains(this);}
- render(s,v,time,panorama,acceleration=0,shakeAmount=1,motionDt=1/60,outer=false){if(this.cameraMode!==panorama){if(panorama||!this.cabViewOrigin)this.camera.clearViewOffset();else this.camera.setViewOffset(DISPLAY_WIDTH,DISPLAY_HEIGHT,DISPLAY_WIDTH/2-this.cabViewOrigin.x,DISPLAY_HEIGHT/2-this.cabViewOrigin.y,DISPLAY_WIDTH,DISPLAY_HEIGHT);this.cameraMode=panorama;}const tunnel=this.routeStructures.tunnelAt(s),depth=tunnel?Math.min(s-tunnel.sStart,tunnel.sEnd-s):0,inside=Math.min(1,Math.max(0,depth/18));this.renderer.toneMappingExposure=1.18-inside*.52;this.skyLight.intensity=1.4-inside*.9;this.sun.intensity=2.2-inside*1.7;const f=this.frame(s,this.driveOffset(s)),head=this.frame(s+60,this.driveOffset(s+60)).p,motion=this.suspension.update({s,speed:v,curvature:this.curvature(s),acceleration},motionDt,shakeAmount);this.camera.position.copy(f.p).addScaledVector(f.right,motion.lateral);this.camera.position.y+= (panorama?3.0:3.1)+motion.vertical;head.addScaledVector(f.right,motion.lateral);head.y+=(panorama?2.9:3.1)+motion.vertical;this.camera.lookAt(head);this.camera.rotateX(motion.pitch);this.camera.rotateY(motion.yaw);this.camera.rotateZ(motion.roll);this.traffic.update(s,motionDt);this.playerTrain?.update(s,outer);if(outer)this.playerTrain?.camera(s);this.renderer.render(this.scene,this.camera);}
+ render(s,v,time,panorama,acceleration=0,shakeAmount=1,motionDt=1/60,outer=false){if(this.cameraMode!==panorama){if(panorama||!this.cabViewOrigin)this.camera.clearViewOffset();else this.camera.setViewOffset(DISPLAY_WIDTH,DISPLAY_HEIGHT,DISPLAY_WIDTH/2-this.cabViewOrigin.x,DISPLAY_HEIGHT/2-this.cabViewOrigin.y,DISPLAY_WIDTH,DISPLAY_HEIGHT);this.cameraMode=panorama;}const tunnel=this.routeStructures.tunnelAt(s),depth=tunnel?Math.min(s-tunnel.sStart,tunnel.sEnd-s):0,inside=Math.min(1,Math.max(0,depth/18));this.renderer.toneMappingExposure=1.18-inside*.52;this.skyLight.intensity=1.4-inside*.9;this.sun.intensity=2.2-inside*1.7;const f=this.frame(s,this.driveOffset(s)),head=this.frame(s+60,this.driveOffset(s+60)).p,motion=this.suspension.update({s,speed:v,curvature:this.curvature(s),acceleration},motionDt,shakeAmount);this.camera.position.copy(f.p).addScaledVector(f.right,motion.lateral);this.camera.position.y+= (panorama?3.0:3.1)+motion.vertical;head.addScaledVector(f.right,motion.lateral);head.y+=(panorama?2.9:3.1)+motion.vertical;this.camera.lookAt(head);this.camera.rotateX(motion.pitch);this.camera.rotateY(motion.yaw);this.camera.rotateZ(motion.roll);this.trees?.update(s);this.traffic.update(s,motionDt);this.playerTrain?.update(s,outer);if(outer)this.playerTrain?.camera(s);this.renderer.render(this.scene,this.camera);}
 }
