@@ -18,7 +18,7 @@ export class RealTrees{
   const batch={group,items,meshes:[],disposed:false};this.batches.add(batch);
   this.ready.then(()=>{if(this.disposed||batch.disposed)return;for(let variant=0;variant<5;variant++)for(let detail=0;detail<2;detail++){
    const selected=items.filter(a=>a.variant===variant);if(!selected.length)continue;
-   const mesh=new T.InstancedMesh(this.geometries[variant][detail],this.material,selected.length);mesh.count=0;mesh.raycast=()=>{};mesh.userData.sharedTreeResource=true;mesh.userData.ignoreOuterCamera=true;group.add(mesh);batch.meshes.push({mesh,selected,detail});
+   const mesh=new T.InstancedMesh(this.geometries[variant][detail],this.material,selected.length);mesh.userData.shadowCaster=detail===0;this.world.atmosphere?.prepare(mesh);mesh.count=0;mesh.raycast=()=>{};mesh.userData.sharedTreeResource=true;mesh.userData.ignoreOuterCamera=true;group.add(mesh);batch.meshes.push({mesh,selected,detail});
   }this.fill(batch,this.lastS??0);}).catch(error=>{if(!this.warned){console.warn('Real tree assets:',error.message);this.warned=true;}});
   return batch;
  }

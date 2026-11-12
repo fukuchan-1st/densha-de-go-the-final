@@ -1,7 +1,7 @@
 import * as T from './assets/vendor/three.module.js';
 export function repair701Body(group,front,under,resources){
- const material=(options)=>{const m=new T.MeshBasicMaterial(options);resources.materials.set('701-repair-'+resources.materials.size,m);return m;};
- const add=(geometry,mat,x,y,z)=>{resources.geometries.add(geometry);const mesh=new T.Mesh(geometry,mat);mesh.position.set(x,y,z);group.add(mesh);return mesh;};
+ const material=(options)=>{const m=new T.MeshStandardMaterial({roughness:.78,metalness:.1,...options});resources.materials.set('701-repair-'+resources.materials.size,m);return m;};
+ const add=(geometry,mat,x,y,z)=>{resources.geometries.add(geometry);const mesh=new T.Mesh(geometry,mat);mesh.userData.shadowCaster=true;mesh.position.set(x,y,z);group.add(mesh);return mesh;};
  // The supplied body has a blank +Z end. This is the driving front specified by the user.
  add(new T.PlaneGeometry(2.77,3.18),material({map:front,side:T.DoubleSide}),0,2.36,10.045);
  add(new T.BoxGeometry(2.5,.52,18.6),material({color:'#3f4447'}),0,.64,0);

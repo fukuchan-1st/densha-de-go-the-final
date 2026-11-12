@@ -2,7 +2,7 @@ import {yaganPlanningSpec,yaganBoardingReady,yaganBoardingDelay} from './yagan-t
 import {progress,serviceKey} from './scenario-progress.js?v=72';
 import {scenarioRanges} from './scenario-ranges.js?v=72';
 import {installCheats,jumpToStation} from './game-cheats.js?v=72';
-import {mountGameShell} from './game-shell.js?v=75';
+import {mountGameShell} from './game-shell.js?v=76';
 import {DutyRecorder,replayStateAt,recordReplayAudio} from './replay-store.js?v=72';
 import {osakaPlanningSpec} from './osaka-timetable.js?v=72';
 import {collectStationReports,collectRestrictionReports,pauseWhenSpeechEnds} from './station-timing.js?v=72';
@@ -19,7 +19,7 @@ import {mountScoring,checkpointMarks,scoringStations,buildScoreTimetable,resolve
 import {mountDrivingOverlay} from './driving-overlay.js?v=72';import {mountLookahead,changesFromSections,stationMarks} from './lookahead.js?v=evaluation59';
 import {serviceChoices,makeServiceRoute} from './train-selection.js?v=traffic64';
 import {GeneratedCab,generatedCab} from './generated-cab.js';
-import {FinalWorld} from './final-world.js?v=75';
+import {FinalWorld} from './final-world.js?v=76';
 import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=72';
 import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=72';
 import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,routeLimitAt,stopPosition,finishStop,beginDoorClosing,isDoorClosing,takeDepartureCall} from './final-model.js?v=72';
@@ -62,7 +62,7 @@ function playMenuSound(name,{waitForEnd=false}={}){
 }
 const menuMusic=mountMenuMusic(()=>audioMix.bgm,{active:false});
 let shellActive=true;
-const gameShell=mountGameShell({stage:$('stage'),settings,mix:audioMix,onSound:playMenuSound,onPage:page=>menuMusic.setMenu(page!=='title'),onTitleStart:()=>{menuEffects?.playSequence([new URL('./assets/title-start.wav',location.href).href],audioMix.se);},onActive:active=>{shellActive=active;if(!active&&mode==='drive')menuMusic.setMenu(false);$('menuScreen').inert=active;$('menuControls').inert=active;},onDrive:()=>{setMode('menu');document.querySelector('#routeCards button')?.focus();},onReplay:playSavedReplay,onSettings:kind=>{saveSettings();sound?.setMix(audioMix);menuMusic.setVolume();world?.setDrawDistance?.(settings.drawDistance);if(kind==='close'&&mode==='drive'){paused=false;pauseAudio(false);}}});
+const gameShell=mountGameShell({stage:$('stage'),settings,mix:audioMix,onSound:playMenuSound,onPage:page=>menuMusic.setMenu(page!=='title'),onTitleStart:()=>{menuEffects?.playSequence([new URL('./assets/title-start.wav',location.href).href],audioMix.se);},onActive:active=>{shellActive=active;if(!active&&mode==='drive')menuMusic.setMenu(false);$('menuScreen').inert=active;$('menuControls').inert=active;},onDrive:()=>{setMode('menu');document.querySelector('#routeCards button')?.focus();},onReplay:playSavedReplay,onSettings:kind=>{saveSettings();sound?.setMix(audioMix);menuMusic.setVolume();world?.setDrawDistance?.(settings.drawDistance);world?.setQuality?.(settings.quality);if(kind==='close'&&mode==='drive'){paused=false;pauseAudio(false);}}});
 if(new URLSearchParams(location.search).get('menu')==='main')gameShell.showMain();
 const routeMain=document.createElement('button');routeMain.id='routeMainMenu';routeMain.textContent='Esc　メインメニューへ';$('menuScreen').append(routeMain);routeMain.onclick=()=>gameShell.showMain();
 
@@ -324,7 +324,7 @@ function frame(now){
   if(!replaySession)recorder?.capture(run,score.engine.points,score.engine.chain);
   hud();
   if(replaySession)replayHud();
-  world.render(run.s,run.v,paused?0:dt,{acceleration:run.acceleration,shake:settings.shake,panorama,outer:viewMode===2});
+  world.render(run.s,run.v,paused?0:dt,{acceleration:run.acceleration,shake:settings.shake,panorama,outer:viewMode===2,clock:run.clockStart+run.elapsed});
   if(!panorama)panel?.render(run,paused?0:dt,Boolean(world.structureAt(run.s,'tunnel'))||Boolean(r.night));
  }
  requestAnimationFrame(frame);

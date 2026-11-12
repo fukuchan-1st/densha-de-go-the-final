@@ -1,4 +1,4 @@
-import {ImportedTrafficModels,opposingVehicle} from './opposing-models.js?v=75';
+import {ImportedTrafficModels,opposingVehicle} from './opposing-models.js?v=76';
 import * as T from './assets/vendor/three.module.js';
 import {interpolateKnots} from './track-layout.js';
 
@@ -42,7 +42,7 @@ export class OpposingTrains {
   const {s,track,positions}=choices[this.serial++%choices.length];
   const group=new T.Group(),cars=[];
   for(let i=0;i<count;i++){const car=this.models.car(vehicle,i,count);group.add(car);cars.push(car);}
-  this.world.scene.add(group);this.trains.push({s,x:track.x,y:track.y,speed:urban?17:22,group,cars,positions,blocked:0});return true;
+  this.world.atmosphere?.prepare(group);this.world.scene.add(group);this.trains.push({s,x:track.x,y:track.y,speed:urban?17:22,group,cars,positions,blocked:0});return true;
  }
  update(player,dt){
   this.clock.update(dt,this.type(player),()=>this.spawn(player));

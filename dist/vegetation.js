@@ -1,4 +1,5 @@
-import {RealTrees,treeVariant} from './real-trees.js?v=74';
+import {createTerrainMaterial} from './terrain-materials.js?v=76';
+import {RealTrees,treeVariant} from './real-trees.js?v=76';
 import {settlementAt} from './route-data.js?v=23';
 import * as T from './assets/vendor/three.module.js?v=23';
 
@@ -30,21 +31,7 @@ function grassTexture(){const r=random(776);return canvasTexture(256,256,(ctx)=>
  }
 });}
 
-export function createSurfaceMaterial(kind='ground'){
- const r=random(kind==='ballast'?192:kind==='field'?174:701),ballast=kind==='ballast',field=kind==='field';
- const texture=canvasTexture(512,512,(ctx,w,h)=>{
-  ctx.fillStyle=ballast?'#78766b':field?'#9a9b58':'#777d4b';ctx.fillRect(0,0,w,h);
-  for(let i=0;i<(ballast?12500:19000);i++){
-   const x=r()*w,y=r()*h,shade=r();
-   if(ballast){const c=Math.floor(64+shade*105);ctx.fillStyle=`rgb(${c+4},${c+3},${c-2})`;const s=1+r()*4;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+s,y-s*.7);ctx.lineTo(x+s*1.5,y+s*.7);ctx.lineTo(x+s*.3,y+s);ctx.closePath();ctx.fill();}
-   else {const c=field?78:55;ctx.fillStyle=`rgba(${c+Math.floor(shade*60)},${c+10+Math.floor(shade*65)},${25+Math.floor(shade*38)},${.2+r()*.4})`;ctx.fillRect(x,y,.5+r()*3,1+r()*5);}
-  }
-  if(field){ctx.strokeStyle='#596b3930';ctx.lineWidth=1;for(let x=0;x<w;x+=9){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke();}}
- });
- texture.wrapS=texture.wrapT=T.RepeatWrapping;
- const m=new T.MeshStandardMaterial({map:texture,color:ballast?'#dbd9cd':'#e1e1cc',roughness:1,side:T.DoubleSide});
- m.name=`procedural-${kind}`;return m;
-}
+export function createSurfaceMaterial(kind='ground'){return createTerrainMaterial(kind==='ground'?'grass':kind);}
 
 function addInstances(scene,geometry,material,items){
  const meshes=[],dummy=new T.Object3D(),color=new T.Color();

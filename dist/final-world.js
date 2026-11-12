@@ -1,23 +1,25 @@
-import {RealTrees,treeVariant} from './real-trees.js?v=74';
-import {PlayerTrain} from './player-train.js?v=75';
+import {createTerrainMaterial,createBuildingMaterial,terrainKind,terrainShade} from './terrain-materials.js?v=76';
+import {SceneAtmosphere} from './scene-atmosphere.js?v=76';
+import {RealTrees,treeVariant} from './real-trees.js?v=76';
+import {PlayerTrain} from './player-train.js?v=76';
 import {prepareLeftTraffic} from './route-traffic.js?v=traffic64';
 import {prepareCorridorScenery,corridorSceneryType} from './corridor-scenery.js?v=controls55';
 import {sampleRouteCurve} from './route-curve.js?v=39';
 import {prepareTurnoutLayout} from './turnout-layout.js?v=39';
-import {addTurnouts} from './turnout-scene.js?v=75';
-import {OpposingTrains} from './opposing-trains.js?v=75';
+import {addTurnouts} from './turnout-scene.js?v=76';
+import {OpposingTrains} from './opposing-trains.js?v=76';
 import * as T from './assets/vendor/three.module.js';
 import {CabSuspension} from './cab-motion.js?v=24';
 import {addTrackSignal} from './track-signal.js?v=32';
-import {addStoppingMarker} from './stop-scene.js?v=75';
+import {addStoppingMarker} from './stop-scene.js?v=76';
 import {interpolateKnots} from './track-layout.js?v=23';
-import {addYaganHillsides,addYaganTunnel} from './yagan-scenery.js?v=74';
+import {addYaganHillsides,addYaganTunnel} from './yagan-scenery.js?v=76';
 const clamp=T.MathUtils.clamp;
 // Original streamed scenery. Track coordinates come from the route JSON; buildings and platforms are approximate.
 export class FinalWorld {
  constructor(container,route,{quality='standard',drawDistance=1500}={}){
   route=prepareLeftTraffic(prepareCorridorScenery(route));
-  this.route=route;this.sceneryStations=route.sceneryStations??route.stations;this.points=route.points;this.length=route.stations.at(-1).s;this.chunks=new Map();this.suspension=new CabSuspension();this.materials=new Map();this.rural=['yagan','shinonoi','oito','chuo-shinshu','chuo-kofu','chuo-system','ome','itsukaichi','chuo-itsukaichi','ome-okutama','chuo-ome','chuo-oito','suwa-nagano','chuo-extended','shinonoi-extended','chuo'].includes(route.id);
+  this.quality=quality;this.route=route;this.sceneryStations=route.sceneryStations??route.stations;this.points=route.points;this.length=route.stations.at(-1).s;this.chunks=new Map();this.suspension=new CabSuspension();this.materials=new Map();this.rural=['yagan','shinonoi','oito','chuo-shinshu','chuo-kofu','chuo-system','ome','itsukaichi','chuo-itsukaichi','ome-okutama','chuo-ome','chuo-oito','suwa-nagano','chuo-extended','shinonoi-extended','chuo'].includes(route.id);
   this.chuoCorridor=['chuo','chuo-extended','chuo-ome','chuo-oito'].includes(route.id);
   this.mountainStart=this.chuoCorridor?(this.sceneryStations.find(st=>st.name==='高尾')?.s??Infinity):-Infinity;
   this.cityEnd=this.chuoCorridor?(this.sceneryStations.find(st=>st.name==='中野')?.s??0):0;
@@ -39,8 +41,19 @@ export class FinalWorld {
    this.camera.add(this.headlight,this.headlight.target);
    this.scene.add(this.camera);
   }
+  this.atmosphere=new SceneAtmosphere(this);
  }
- mat(color){if(!this.materials.has(color)){const material=new T.MeshStandardMaterial({color,roughness:.85});if(['#b7b5aa','#b1b7b5'].includes(color)){const canvas=document.createElement('canvas');canvas.width=128;canvas.height=256;const c=canvas.getContext('2d');c.fillStyle='#c4c6c1';c.fillRect(0,0,128,256);for(let y=12;y<250;y+=29)for(let x=9;x<125;x+=24){c.fillStyle=(x+y)%3?'#496570':'#6b7f83';c.fillRect(x,y,13,15);c.fillStyle='#dce1d8';c.fillRect(x+6,y,1,15);c.fillRect(x,y+7,13,1);}material.map=new T.CanvasTexture(canvas);material.map.colorSpace=T.SRGBColorSpace;}this.materials.set(color,material);}return this.materials.get(color);}
+ setQuality(quality){this.atmosphere.setQuality(quality);}
+ mat(color){
+  if(!this.materials.has(color)){
+   const kind=terrainKind(color),facade=['#b7b5aa','#b1b7b5','#d1c4a9'].includes(color);
+   const material=kind?createTerrainMaterial(kind):facade?createBuildingMaterial(color,color==='#d1c4a9'):new T.MeshStandardMaterial({color,roughness:.85});
+   if(kind&&this.quality==='light')material.normalMap=null;
+   if(['grass','forest'].includes(kind))material.vertexColors=true;
+   if(color==='#405d68'){material.userData.windowLight=true;material.emissive.set('#ffbc72');material.emissiveIntensity=0;}
+   this.materials.set(color,material);
+  }return this.materials.get(color);
+ }
  point(s){const [x,z,y]=sampleRouteCurve(this.points,s);return new T.Vector3(x,y,-z);}
  frame(s,offset=0){const p=this.point(s),dir=this.point(s+3).sub(this.point(s-3)).normalize(),right=new T.Vector3(-dir.z,0,dir.x).normalize();p.addScaledVector(right,offset);return {p,dir,right,angle:Math.atan2(-dir.x,-dir.z)};}
  driveOffset(s){return this.route.drivingTrack?interpolateKnots(this.route.drivingTrack,s):0;}
@@ -79,9 +92,18 @@ export class FinalWorld {
   const outside=Math.max(platformStart-s,s-platformEnd,0);
   return T.MathUtils.lerp(spacing,4,clamp(outside/100,0,1));
  }
- cube(group,s,x,y,w,h,d,color){const f=this.frame(s,x),m=new T.Mesh(this.box,this.mat(color));m.position.copy(f.p);m.position.y+=y+h/2;m.rotation.order='YXZ';m.rotation.set(Math.asin(clamp(f.dir.y,-1,1)),f.angle,0);m.scale.set(w,h,d);group.add(m);return m;}
- ribbon(group,start,end,offset,width,height,color,step=7){const pos=[],idx=[];for(let s=start,i=0;s<=end+.01;s=Math.min(end,s+step),i++){const x=typeof offset==='function'?offset(s):offset,w=typeof width==='function'?width(s):width,f=this.frame(s,x);for(const dx of[-w/2,w/2])pos.push(f.p.x+f.right.x*dx,f.p.y+(typeof height==='function'?height(s):height),f.p.z+f.right.z*dx);if(i){const k=i*2;idx.push(k-2,k-1,k,k-1,k+1,k);}if(s===end)break;}const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.setIndex(idx);g.computeVertexNormals();const m=new T.Mesh(g,this.mat(color));m.material.side=T.DoubleSide;group.add(m);}
- instances(group,items,color,geometry=this.box){if(!items.length)return;const m=new T.InstancedMesh(geometry,this.mat(color),items.length),o=new T.Object3D();items.forEach((a,i)=>{const f=this.frame(a.s,a.x);o.position.copy(f.p);o.position.y+=a.y+a.h/2;o.rotation.order='YXZ';o.rotation.set(Math.asin(clamp(f.dir.y,-1,1)),f.angle,0);o.scale.set(a.w,a.h,a.d);o.updateMatrix();m.setMatrixAt(i,o.matrix);});m.computeBoundingSphere();group.add(m);}
+ cube(group,s,x,y,w,h,d,color){const f=this.frame(s,x),m=new T.Mesh(this.box,this.mat(color));m.position.copy(f.p);m.position.y+=y+h/2;m.rotation.order='YXZ';m.rotation.set(Math.asin(clamp(f.dir.y,-1,1)),f.angle,0);m.scale.set(w,h,d);m.userData.shadowCaster=h>.4;group.add(m);return m;}
+ ribbon(group,start,end,offset,width,height,color,step=7){
+  const pos=[],idx=[],uv=[],colors=[],kind=terrainKind(color),tile=kind==='ballast'?3:kind==='asphalt'?5:7;
+  for(let s=start,i=0;s<=end+.01;s=Math.min(end,s+step),i++){
+   const x=typeof offset==='function'?offset(s):offset,w=typeof width==='function'?width(s):width,f=this.frame(s,x);
+   for(const dx of[-w/2,w/2]){const px=f.p.x+f.right.x*dx,pz=f.p.z+f.right.z*dx;pos.push(px,f.p.y+(typeof height==='function'?height(s):height),pz);uv.push(px/tile,pz/tile);const shade=terrainShade(px,pz);colors.push(shade,shade,shade);}
+   if(i){const k=i*2;idx.push(k-2,k-1,k,k-1,k+1,k);}if(s===end)break;
+  }
+  const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setAttribute('color',new T.Float32BufferAttribute(colors,3));g.setIndex(idx);g.computeVertexNormals();
+  const m=new T.Mesh(g,this.mat(color));m.material.side=T.DoubleSide;m.userData.shadowCaster=color==='#677778';group.add(m);
+ }
+ instances(group,items,color,geometry=this.box){if(!items.length)return;const m=new T.InstancedMesh(geometry,this.mat(color),items.length),o=new T.Object3D();items.forEach((a,i)=>{const f=this.frame(a.s,a.x);o.position.copy(f.p);o.position.y+=a.y+a.h/2;o.rotation.order='YXZ';o.rotation.set(Math.asin(clamp(f.dir.y,-1,1)),f.angle,0);o.scale.set(a.w,a.h,a.d);o.updateMatrix();m.setMatrixAt(i,o.matrix);});m.computeBoundingSphere();m.userData.shadowCaster=items.some(a=>a.h>.5);group.add(m);}
  sign(group,name,s,x,level=0){const canvas=document.createElement('canvas');canvas.width=512;canvas.height=128;const c=canvas.getContext('2d');c.fillStyle='#f0f0df';c.fillRect(0,0,512,128);c.fillStyle=this.route.color??'#5aa642';c.fillRect(0,96,512,16);c.fillStyle='#16282a';c.font='bold 55px sans-serif';c.textAlign='center';c.fillText(name,256,74);const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;const m=new T.Mesh(new T.PlaneGeometry(2.7,.675),new T.MeshBasicMaterial({map:texture,side:T.DoubleSide})),f=this.frame(s,x);m.position.copy(f.p);m.position.y+=level+2.4;m.rotation.y=f.angle;group.add(m);}
  platformBounds(st,platform,s,tracks){
   const relative=s-st.s;
@@ -223,7 +245,7 @@ export class FinalWorld {
    }
   }
   this.instances(group,roofs,'#616b71',this.route.id==='tokaido'?this.houseRoof:this.box);
-  this.instances(group,buildings,index%2?'#b7b5aa':'#b1b7b5');this.instances(group,windows,'#405d68');this.trees.add(group,trees.map(a=>({...a,y:0,variant:treeVariant(random()),rotation:random()*Math.PI*2}))); 
+  this.instances(group,buildings.filter(a=>a.h>9),index%2?'#b7b5aa':'#b1b7b5');this.instances(group,buildings.filter(a=>a.h<=9),'#d1c4a9');this.instances(group,windows,'#405d68');this.trees.add(group,trees.map(a=>({...a,y:0,variant:treeVariant(random()),rotation:random()*Math.PI*2}))); 
   for(const st of nearby){
    const drive=this.driveOffset(st.s),opposite=this.oppositeOffset(st.s);
    const edge=drive+(opposite>=drive?-1.55:1.55);
@@ -276,15 +298,15 @@ export class FinalWorld {
    if(signal.s>=start&&signal.s<end)addTrackSignal(T,this,group,signal);
   }
   addTurnouts(this,group,this.turnouts,this.railTracks,start,end);
-  this.scene.add(group);return group;
+  this.atmosphere.prepare(group);this.scene.add(group);return group;
  }
  disposeChunk(group){this.trees.release(group);this.scene.remove(group);group.traverse(o=>{if(o.isInstancedMesh)o.dispose();if(o.geometry&&o.geometry!==this.box&&o.geometry!==this.pine&&o.geometry!==this.canopy&&o.geometry!==this.houseRoof)o.geometry.dispose();if(o.material?.map){o.material.map.dispose();o.material.dispose();}else if(o.userData.disposeWithChunk)o.material.dispose();});}
  setPlayerTrain(id,count){this.playerTrain?.dispose();this.playerTrain=new PlayerTrain(this,id,count);}
  setCabView(origin){this.viewOrigin=origin;this.currentView=undefined;}
  setDrawDistance(value){this.drawDistance=Math.max(500,Math.min(2000,Number(value)||1500));this.camera.far=this.drawDistance+400;this.camera.updateProjectionMatrix();this.scene.fog.far=this.drawDistance;this.scene.fog.near=Math.min(350,this.drawDistance*.3);}
- render(s,v,dt,{acceleration=0,shake=1,panorama=false,outer=false}={}){const chunk=Math.floor(s/500);for(let i=chunk-1;i<=chunk+Math.ceil(this.drawDistance/500);i++)if(!this.chunks.has(i))this.chunks.set(i,this.buildChunk(i));for(const [i,g]of this.chunks)if(i<chunk-1||i>chunk+Math.ceil(this.drawDistance/500)){this.disposeChunk(g);this.chunks.delete(i);}
+ render(s,v,dt,{acceleration=0,shake=1,panorama=false,outer=false,clock}={}){const chunk=Math.floor(s/500);for(let i=chunk-1;i<=chunk+Math.ceil(this.drawDistance/500);i++)if(!this.chunks.has(i))this.chunks.set(i,this.buildChunk(i));for(const [i,g]of this.chunks)if(i<chunk-1||i>chunk+Math.ceil(this.drawDistance/500)){this.disposeChunk(g);this.chunks.delete(i);}
   if(this.currentView!==panorama){if(!panorama&&this.viewOrigin)this.camera.setViewOffset(1600,900,800-this.viewOrigin.x,450-this.viewOrigin.y,1600,900);else this.camera.clearViewOffset();this.currentView=panorama;}
-  const f=this.driveFrame(s),head=this.drivePoint(s+45),motion=this.suspension.update({s,speed:v,curvature:this.curvature(s),acceleration},dt,shake),eye=Number(this.route.eyeHeight??2.7),offset=(this.route.eyeOffset??0)+motion.lateral;this.camera.position.copy(f.p).addScaledVector(f.right,offset);this.camera.position.y+=eye+motion.vertical;head.addScaledVector(f.right,offset);head.y+=eye+motion.vertical;this.camera.lookAt(head);this.camera.rotateX(motion.pitch);this.camera.rotateY(motion.yaw);this.camera.rotateZ(motion.roll);const tunnel=(this.route.structures??[]).some(t=>t.kind==='tunnel'&&s>=t.sStart&&s<=t.sEnd);this.sky.intensity=this.route.night?.22:tunnel?.6:2.1;this.sun.intensity=this.route.night?.04:tunnel?.3:2.1;if(this.headlight)this.headlight.intensity=this.route.night?750:tunnel?550:0;this.trees.update(s);this.traffic.update(s,dt);this.playerTrain?.update(s,outer);if(outer)this.playerTrain?.camera(s);this.renderer.render(this.scene,this.camera);
+  const f=this.driveFrame(s),head=this.drivePoint(s+45),motion=this.suspension.update({s,speed:v,curvature:this.curvature(s),acceleration},dt,shake),eye=Number(this.route.eyeHeight??2.7),offset=(this.route.eyeOffset??0)+motion.lateral;this.camera.position.copy(f.p).addScaledVector(f.right,offset);this.camera.position.y+=eye+motion.vertical;head.addScaledVector(f.right,offset);head.y+=eye+motion.vertical;this.camera.lookAt(head);this.camera.rotateX(motion.pitch);this.camera.rotateY(motion.yaw);this.camera.rotateZ(motion.roll);const tunnel=(this.route.structures??[]).some(t=>t.kind==='tunnel'&&s>=t.sStart&&s<=t.sEnd);this.sky.intensity=this.route.night?.22:tunnel?.6:2.1;this.sun.intensity=this.route.night?.04:tunnel?.3:2.1;if(this.headlight)this.headlight.intensity=this.route.night?750:tunnel?550:0;this.trees.update(s);this.traffic.update(s,dt);this.playerTrain?.update(s,outer);if(outer)this.playerTrain?.camera(s);this.atmosphere.update(s,dt,{tunnel,clock,moving:Math.abs(v)>.1||this.traffic.trains.length>0});this.renderer.render(this.scene,this.camera);
  }
- dispose(){this.trees.dispose();this.playerTrain?.dispose();this.traffic.dispose();for(const g of this.chunks.values())this.disposeChunk(g);this.chunks.clear();for(const m of this.materials.values()){m.map?.dispose();m.dispose();}this.box.dispose();this.houseRoof.dispose();this.pine?.dispose();this.canopy?.dispose();this.renderer.dispose();this.renderer.forceContextLoss();this.renderer.domElement.remove();}
+ dispose(){this.atmosphere.dispose();this.trees.dispose();this.playerTrain?.dispose();this.traffic.dispose();for(const g of this.chunks.values())this.disposeChunk(g);this.chunks.clear();for(const m of this.materials.values()){m.map?.dispose();m.emissiveMap?.dispose();m.userData.richNormalMap?.dispose();m.dispose();}this.box.dispose();this.houseRoof.dispose();this.pine?.dispose();this.canopy?.dispose();this.renderer.dispose();this.renderer.forceContextLoss();this.renderer.domElement.remove();}
 }

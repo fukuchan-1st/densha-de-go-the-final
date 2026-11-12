@@ -1,4 +1,5 @@
-import {treeVariant} from './real-trees.js?v=74';
+import {terrainShade} from './terrain-materials.js?v=76';
+import {treeVariant} from './real-trees.js?v=76';
 import {interpolateKnots} from './track-layout.js?v=23';
 
 const hillsides=[-148,-96,-61,-36,-20,-10,10,20,36,61,96,148];
@@ -11,14 +12,14 @@ function hillsideHeight(s,x){
 }
 
 export function addYaganHillsides(T,world,group,start,end,envelope,bridges,random){
- const vertices=[],indices=[];
+ const vertices=[],indices=[],uv=[],colors=[];
  const deckDrop=s=>bridges.some(bridge=>s>=bridge.sStart&&s<=bridge.sEnd)?-8:0;
  const railEdge=(x,limits)=>x<0?limits[0]:limits[1];
  for(let s=start,row=0;;s=Math.min(s+10,end),row++){
   const limits=envelope(s);
   for(const x of hillsides){
    const {p}=world.frame(s,x+railEdge(x,limits));
-   vertices.push(p.x,p.y+hillsideHeight(s,x)+deckDrop(s),p.z);
+   vertices.push(p.x,p.y+hillsideHeight(s,x)+deckDrop(s),p.z);uv.push(p.x/7,p.z/7);const shade=terrainShade(p.x,p.z);colors.push(shade,shade,shade);
   }
   const width=hillsides.length;
   if(row)for(let col=0;col<width-1;col++){
@@ -29,11 +30,11 @@ export function addYaganHillsides(T,world,group,start,end,envelope,bridges,rando
  }
  const ground=new T.BufferGeometry();
  ground.setAttribute('position',new T.Float32BufferAttribute(vertices,3));
- ground.setIndex(indices);
+ ground.setAttribute('uv',new T.Float32BufferAttribute(uv,2));ground.setAttribute('color',new T.Float32BufferAttribute(colors,3));ground.setIndex(indices);
  ground.computeVertexNormals();
  const material=world.mat('#667d52');
  material.side=T.DoubleSide;
- group.add(new T.Mesh(ground,material));
+ const hillside=new T.Mesh(ground,material);hillside.userData.shadowCaster=true;group.add(hillside);
 
  const tunnelRanges=world.route.structures.filter(structure=>structure.kind==='tunnel');
  const trees=[],pines=[],leaves=[],shade=[];

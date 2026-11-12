@@ -6,3 +6,5 @@
 #legacyCheats{margin-top:20px;border-top:1px solid #7c8b8c;padding-top:12px}#legacyCheats p{font-size:15px;line-height:1.8}#legacyCheats small{display:block;margin-top:10px;color:#b8c7c8}
 
 .museum-selector{max-height:510px;overflow-y:auto;overscroll-behavior:contain;padding:5px;scrollbar-color:#d4a85e #102537}.museum-selector button[data-model^="223"],.museum-selector button[data-model="6050"]{font-size:18px;line-height:1.5}
+
+.quality-buttons{flex-wrap:wrap;gap:14px 22px}.quality-buttons small{flex-basis:100%;font-size:17px;color:#bfd2dd;line-height:1.3}.quality-buttons button[aria-pressed="true"]{border:2px solid #fff3a7}.quality-buttons button:focus-visible{outline:3px solid #fff4ac;outline-offset:4px}

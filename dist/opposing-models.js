@@ -1,5 +1,5 @@
 import {decodeVertices} from './model-format.js?v=72';
-import {repair701Body} from './701-body-repair.js?v=72';
+import {repair701Body} from './701-body-repair.js?v=76';
 import * as T from './assets/vendor/three.module.js';
 export function opposingVehicle(route={},s=0){
  const id=route.id??'tohoku';if(id==='yagan')return null;
@@ -25,10 +25,10 @@ export class ImportedTrafficModels{
     const key=JSON.stringify(item.material);if(!this.materials.has(key)){
      const data=item.material;let texture;
      if(data.texture){if(!this.textures.has(data.texture)){const pending=new T.TextureLoader().loadAsync(new URL('./assets/opposing/'+data.texture,import.meta.url).href).then(value=>{value.colorSpace=T.SRGBColorSpace;return value;});this.textures.set(data.texture,pending);}texture=await this.textures.get(data.texture);}
-     this.materials.set(key,new T.MeshBasicMaterial({color:new T.Color().setRGB(...data.color),map:texture??null,side:T.DoubleSide,opacity:data.alpha,transparent:data.alpha<.99,alphaTest:.4}));
+     this.materials.set(key,new T.MeshStandardMaterial({roughness:.68,metalness:.13,color:new T.Color().setRGB(...data.color),map:texture??null,side:T.DoubleSide,opacity:data.alpha,transparent:data.alpha<.99,alphaTest:.4}));
     }
-    const geometry=new T.BufferGeometry();geometry.setAttribute('position',new T.InterleavedBufferAttribute(interleaved,3,0));if(part.stride!==5)geometry.setAttribute('normal',new T.InterleavedBufferAttribute(interleaved,3,3));geometry.setAttribute('uv',new T.InterleavedBufferAttribute(interleaved,2,part.stride===5?3:6));if(index)geometry.setIndex(new T.BufferAttribute(index,1));geometry.setDrawRange(item.start,item.count);geometry.computeBoundingSphere();this.geometries.add(geometry);
-    group.add(new T.Mesh(geometry,this.materials.get(key)));
+    const geometry=new T.BufferGeometry();geometry.setAttribute('position',new T.InterleavedBufferAttribute(interleaved,3,0));if(part.stride!==5)geometry.setAttribute('normal',new T.InterleavedBufferAttribute(interleaved,3,3));geometry.setAttribute('uv',new T.InterleavedBufferAttribute(interleaved,2,part.stride===5?3:6));if(index)geometry.setIndex(new T.BufferAttribute(index,1));geometry.setDrawRange(item.start,item.count);if(part.stride===5)geometry.computeVertexNormals();geometry.computeBoundingSphere();this.geometries.add(geometry);
+    const mesh=new T.Mesh(geometry,this.materials.get(key));mesh.userData.shadowCaster=true;group.add(mesh);
    }variants[role]=group;
   }
   if(id==='701'&&definition.frontRepair){const loader=new T.TextureLoader(),load=async file=>{const texture=await loader.loadAsync(new URL('./assets/opposing/'+file,import.meta.url).href);texture.colorSpace=T.SRGBColorSpace;this.textures.set('701-repair-'+file,Promise.resolve(texture));return texture;};const [front,under]=await Promise.all([load(definition.frontRepair.front),load(definition.frontRepair.under)]);for(const group of Object.values(variants))repair701Body(group,front,under,this);}

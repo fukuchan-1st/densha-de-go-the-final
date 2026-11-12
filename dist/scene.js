@@ -1,33 +1,38 @@
-import {PlayerTrain} from './player-train.js?v=75';
+import {createBuildingMaterial} from './terrain-materials.js?v=76';
+import {SceneAtmosphere} from './scene-atmosphere.js?v=76';
+import {PlayerTrain} from './player-train.js?v=76';
 import {prepareTurnoutLayout} from './turnout-layout.js?v=39';
-import {addTurnouts} from './turnout-scene.js?v=75';
-import {OpposingTrains} from './opposing-trains.js?v=75';
+import {addTurnouts} from './turnout-scene.js?v=76';
+import {OpposingTrains} from './opposing-trains.js?v=76';
 import {CabSuspension} from './cab-motion.js?v=23';
 import {interpolateKnots} from './track-layout.js';
 import {TrackLayout} from './track-layout.js?v=23';
-import {buildRailways,addStations} from './station-scene.js?v=75';
+import {buildRailways,addStations} from './station-scene.js?v=76';
 import * as T from './assets/vendor/three.module.js?v=23';
 import {settlementAt} from './route-data.js?v=23';
 import {DISPLAY_WIDTH,DISPLAY_HEIGHT} from './display.js?v=23';
 import {addStructures} from './structures.js?v=23';
 import {structureRanges,segmentIntersects,corridorOccupied} from './structure-ranges.js?v=23';
-import {addVegetation,createSurfaceMaterial} from './vegetation.js?v=74';
+import {addVegetation,createSurfaceMaterial} from './vegetation.js?v=76';
 import {addTrackSignal} from './track-signal.js?v=32';
 export class RailWorld {
- constructor(container,geometry,stations,profile,structures,stationLayouts,signals=[]){
+ constructor(container,geometry,stations,profile,structures,stationLayouts,signals=[],{quality='standard',drawDistance=1500}={}){
+  this.quality=quality;this.drawDistance=drawDistance;
   this.suspension=new CabSuspension();
   const prepared=prepareTurnoutLayout(stationLayouts.tracks,{length:geometry.points.at(-1)[0],stations:stationLayouts.stations});this.turnouts=prepared.turnouts;this.trackLayout=new TrackLayout({...stationLayouts,tracks:prepared.tracks});
   this.structuresData=structures;this.ranges=structureRanges(structures);this.isStructureCorridor=(s,offset)=>corridorOccupied(structures,s,offset)||this.trackLayout.occupied(s,offset);
   this.profile=profile;
   this.points=geometry.points;this.length=this.points.at(-1)[0]; this.stations=stations; this.container=container;
   this.scene=new T.Scene();this.scene.background=new T.Color('#a9cadd');this.scene.fog=new T.Fog('#b8ccd0',250,1500);
-  this.renderer=new T.WebGLRenderer({antialias:true,powerPreference:'high-performance'});this.renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));this.renderer.setSize(DISPLAY_WIDTH,DISPLAY_HEIGHT);this.renderer.outputColorSpace=T.SRGBColorSpace;this.renderer.toneMapping=T.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1.18;container.append(this.renderer.domElement);
+  this.renderer=new T.WebGLRenderer({antialias:quality!=='light',powerPreference:'high-performance'});this.renderer.setPixelRatio(Math.min(devicePixelRatio,quality==='light'?1:1.5));this.renderer.setSize(DISPLAY_WIDTH,DISPLAY_HEIGHT);this.renderer.outputColorSpace=T.SRGBColorSpace;this.renderer.toneMapping=T.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1.18;container.append(this.renderer.domElement);
   this.camera=new T.PerspectiveCamera(60,16/9,.15,2200);
   this.skyLight=new T.HemisphereLight('#e6f0ff','#57583b',1.4);this.scene.add(this.skyLight);const sun=new T.DirectionalLight('#fff0d7',2.2);sun.position.set(-400,600,200);this.scene.add(sun);this.sun=sun;
   this.traffic=new OpposingTrains(this);this.materials={}; this.box=new T.BoxGeometry(1,1,1); this.build();this.routeStructures=addStructures(this,structures);
   for(const signal of signals)addTrackSignal(T,this,this.scene,signal);
+  this.atmosphere=new SceneAtmosphere(this);this.atmosphere.prepare(this.scene);
   addEventListener('resize',()=>{this.renderer.setSize(DISPLAY_WIDTH,DISPLAY_HEIGHT);this.camera.aspect=16/9;this.camera.updateProjectionMatrix();});
  }
+ setQuality(quality){this.atmosphere.setQuality(quality);}
  raw(s){const p=this.points;if(s<=0){const a=p[0],b=p[1],t=s/(b[0]-a[0]);return new T.Vector3(a[1]+(b[1]-a[1])*t,0,-a[2]-(b[2]-a[2])*t);}if(s>=this.length){const a=p.at(-2),b=p.at(-1),t=(s-a[0])/(b[0]-a[0]);return new T.Vector3(a[1]+(b[1]-a[1])*t,0,-a[2]-(b[2]-a[2])*t);}let lo=0,hi=p.length-1;while(hi-lo>1){const m=(lo+hi)>>1;if(p[m][0]<=s)lo=m;else hi=m;}const a=p[lo],b=p[hi],t=(s-a[0])/(b[0]-a[0]);return new T.Vector3(T.MathUtils.lerp(a[1],b[1],t),0,-T.MathUtils.lerp(a[2],b[2],t));}
  horizontalPoint(s){
   const p=this.points;if(s<=0||s>=this.length)return this.raw(s);
@@ -42,9 +47,9 @@ export class RailWorld {
  frame(s,offset=0){const p=this.point(s),dir=this.point(s+5).sub(this.point(s-5)).normalize(),right=new T.Vector3(-dir.z,0,dir.x).normalize();p.addScaledVector(right,offset);return {p,dir,right,angle:Math.atan2(-dir.x,-dir.z)};}
  driveOffset(s){return interpolateKnots(this.trackLayout.tracks.find(t=>t.id==='player').knots,s);}
  curvature(s){const a=this.frame(s-20).dir.setY(0).normalize(),b=this.frame(s+20).dir.setY(0).normalize();return Math.atan2(a.x*b.z-a.z*b.x,a.dot(b))/40;}
- mat(color){return this.materials[color]??=new T.MeshStandardMaterial({color,roughness:.9});}
- mesh(w,h,d,color,s,offset=0,y=0){const f=this.frame(s,offset),m=new T.Mesh(this.box,this.mat(color));m.scale.set(w,h,d);m.position.copy(f.p);m.position.y=f.p.y+y+h/2;m.rotation.order='YXZ';m.rotation.y=f.angle;m.rotation.x=Math.asin(f.dir.y);this.scene.add(m);return m;}
- instances(geo,color,items,override=null){const group=new T.Group(),material=override??this.mat(color),o=new T.Object3D();for(let base=0;base<items.length;base+=1200){const part=items.slice(base,base+1200),m=new T.InstancedMesh(geo,material,part.length);part.forEach((a,i)=>{o.position.set(a.x,a.y,a.z);o.rotation.order='YXZ';o.rotation.set(a.pitch??0,a.r??0,0);o.scale.set(a.w,a.h,a.d);o.updateMatrix();m.setMatrixAt(i,o.matrix);});m.computeBoundingSphere();group.add(m);}this.scene.add(group);return group;}
+ mat(color){return this.materials[color]??=(['#bfb6a3','#d1c4a9'].includes(color)?createBuildingMaterial(color,true):new T.MeshStandardMaterial({color,roughness:.9}));}
+ mesh(w,h,d,color,s,offset=0,y=0){const f=this.frame(s,offset),m=new T.Mesh(this.box,this.mat(color));m.scale.set(w,h,d);m.userData.shadowCaster=h>.5;m.position.copy(f.p);m.position.y=f.p.y+y+h/2;m.rotation.order='YXZ';m.rotation.y=f.angle;m.rotation.x=Math.asin(f.dir.y);this.scene.add(m);return m;}
+ instances(geo,color,items,override=null){const group=new T.Group(),material=override??this.mat(color),o=new T.Object3D();for(let base=0;base<items.length;base+=1200){const part=items.slice(base,base+1200),m=new T.InstancedMesh(geo,material,part.length);part.forEach((a,i)=>{o.position.set(a.x,a.y,a.z);o.rotation.order='YXZ';o.rotation.set(a.pitch??0,a.r??0,0);o.scale.set(a.w,a.h,a.d);o.updateMatrix();m.setMatrixAt(i,o.matrix);});m.computeBoundingSphere();m.userData.shadowCaster=items.some(a=>a.h>.5);group.add(m);}this.scene.add(group);return group;}
  ribbon(offset,width,y,color,kind=null){const pos=[],uv=[],idx=[],tile=kind==='ballast'?3:kind==='ground'?6:5;for(let s=-200,i=0;s<=this.length+400;s+=5,i++){const f=this.frame(s,offset);for(const a of [-width/2,width/2]){pos.push(f.p.x+f.right.x*a,f.p.y+y,f.p.z+f.right.z*a);uv.push((a+width/2)/tile,s/tile);}if(i>0&&!((kind==='ground'||kind==='ballast')&&this.ranges.groundGaps.some(x=>segmentIntersects(s-5,s,x)))){const k=i*2;idx.push(k-2,k-1,k,k-1,k+1,k);}}const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setIndex(idx);g.computeVertexNormals();const mat=kind?createSurfaceMaterial(kind):new T.MeshStandardMaterial({color,roughness:.95,side:T.DoubleSide});mat.side=T.DoubleSide;this.scene.add(new T.Mesh(g,mat));}
  build(){
   let seed=701;const rand=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
@@ -75,5 +80,5 @@ export class RailWorld {
  setPlayerTrain(id,count){this.playerTrain?.dispose();this.playerTrain=new PlayerTrain(this,id,count);}
  setCabView(origin){this.cabViewOrigin=origin;this.cameraMode=null;}
  resetMotion(){this.suspension=new CabSuspension();this.traffic.dispose();this.traffic=new OpposingTrains(this);}
- render(s,v,time,panorama,acceleration=0,shakeAmount=1,motionDt=1/60,outer=false){if(this.cameraMode!==panorama){if(panorama||!this.cabViewOrigin)this.camera.clearViewOffset();else this.camera.setViewOffset(DISPLAY_WIDTH,DISPLAY_HEIGHT,DISPLAY_WIDTH/2-this.cabViewOrigin.x,DISPLAY_HEIGHT/2-this.cabViewOrigin.y,DISPLAY_WIDTH,DISPLAY_HEIGHT);this.cameraMode=panorama;}const tunnel=this.routeStructures.tunnelAt(s),depth=tunnel?Math.min(s-tunnel.sStart,tunnel.sEnd-s):0,inside=Math.min(1,Math.max(0,depth/18));this.renderer.toneMappingExposure=1.18-inside*.52;this.skyLight.intensity=1.4-inside*.9;this.sun.intensity=2.2-inside*1.7;const f=this.frame(s,this.driveOffset(s)),head=this.frame(s+60,this.driveOffset(s+60)).p,motion=this.suspension.update({s,speed:v,curvature:this.curvature(s),acceleration},motionDt,shakeAmount);this.camera.position.copy(f.p).addScaledVector(f.right,motion.lateral);this.camera.position.y+= (panorama?3.0:3.1)+motion.vertical;head.addScaledVector(f.right,motion.lateral);head.y+=(panorama?2.9:3.1)+motion.vertical;this.camera.lookAt(head);this.camera.rotateX(motion.pitch);this.camera.rotateY(motion.yaw);this.camera.rotateZ(motion.roll);this.trees?.update(s);this.traffic.update(s,motionDt);this.playerTrain?.update(s,outer);if(outer)this.playerTrain?.camera(s);this.renderer.render(this.scene,this.camera);}
+ render(s,v,time,panorama,acceleration=0,shakeAmount=1,motionDt=1/60,outer=false,clock){if(this.cameraMode!==panorama){if(panorama||!this.cabViewOrigin)this.camera.clearViewOffset();else this.camera.setViewOffset(DISPLAY_WIDTH,DISPLAY_HEIGHT,DISPLAY_WIDTH/2-this.cabViewOrigin.x,DISPLAY_HEIGHT/2-this.cabViewOrigin.y,DISPLAY_WIDTH,DISPLAY_HEIGHT);this.cameraMode=panorama;}const tunnel=this.routeStructures.tunnelAt(s),depth=tunnel?Math.min(s-tunnel.sStart,tunnel.sEnd-s):0,inside=Math.min(1,Math.max(0,depth/18));this.renderer.toneMappingExposure=1.18-inside*.52;this.skyLight.intensity=1.4-inside*.9;this.sun.intensity=2.2-inside*1.7;const f=this.frame(s,this.driveOffset(s)),head=this.frame(s+60,this.driveOffset(s+60)).p,motion=this.suspension.update({s,speed:v,curvature:this.curvature(s),acceleration},motionDt,shakeAmount);this.camera.position.copy(f.p).addScaledVector(f.right,motion.lateral);this.camera.position.y+= (panorama?3.0:3.1)+motion.vertical;head.addScaledVector(f.right,motion.lateral);head.y+=(panorama?2.9:3.1)+motion.vertical;this.camera.lookAt(head);this.camera.rotateX(motion.pitch);this.camera.rotateY(motion.yaw);this.camera.rotateZ(motion.roll);this.trees?.update(s);this.traffic.update(s,motionDt);this.playerTrain?.update(s,outer);if(outer)this.playerTrain?.camera(s);this.atmosphere.update(s,motionDt,{tunnel:inside,clock,moving:Math.abs(v)>.1||this.traffic.trains.length>0});this.renderer.render(this.scene,this.camera);}
 }
