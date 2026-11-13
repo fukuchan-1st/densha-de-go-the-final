@@ -1,4 +1,4 @@
-import {RailJointAudio} from './rail-joints.js?v=78';
+import {RailJointAudio} from './rail-joints.js?v=79';
 import * as T from './assets/vendor/three.module.js';
 export function crossingCenter(c){return c.sOrigin??((c.sStart+c.sEnd)/2);}
 export function crossingActive(c,s,speed,length=40){const x=crossingCenter(c);return s>=x-Math.max(320,speed*20)&&s-length<=x+25;}

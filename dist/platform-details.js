@@ -1,4 +1,4 @@
-import {interpolateKnots} from './track-layout.js?v=78';
+import {interpolateKnots} from './track-layout.js?v=79';
 import * as T from './assets/vendor/three.module.js';
 export function railColumnGeometry(){const shape=new T.Shape(),outline=[[-.075,-.075],[.075,-.075],[.075,-.055],[.012,-.045],[.012,.035],[.036,.045],[.036,.075],[-.036,.075],[-.036,.045],[-.012,.035],[-.012,-.045],[-.075,-.055]];outline.forEach(([x,y],i)=>i?shape.lineTo(x,y):shape.moveTo(x,y));shape.closePath();const g=new T.ExtrudeGeometry(shape,{depth:1,bevelEnabled:false,steps:1});g.rotateX(-Math.PI/2);g.translate(0,-.5,0);g.name='reused-white-rail-column';return g;}
 export function whiteRailPost(world,parent,s,x,base,height=3.35){world.platformRailGeometry??=railColumnGeometry();const f=world.frame(s,x),m=new T.Mesh(world.platformRailGeometry,world.mat('#edece4'));m.position.copy(f.p);m.position.y+=base+height/2;m.scale.y=height;m.rotation.y=f.angle;m.userData.shadowCaster=true;parent.add(m);return m;}

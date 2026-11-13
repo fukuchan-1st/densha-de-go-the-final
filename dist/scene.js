@@ -1,16 +1,16 @@
-import {RoadScenery} from './road-scenery.js?v=78';
-import {BallastDetail} from './ballast-detail.js?v=78';
-import {LevelCrossings} from './crossings.js?v=78';
-import {createBuildingMaterial,buildingVariant,buildingPalette} from './terrain-materials.js?v=78';
-import {SceneAtmosphere} from './scene-atmosphere.js?v=78';
-import {PlayerTrain} from './player-train.js?v=78';
+import {RoadScenery} from './road-scenery.js?v=79';
+import {BallastDetail} from './ballast-detail.js?v=79';
+import {LevelCrossings} from './crossings.js?v=79';
+import {createBuildingMaterial,buildingVariant,buildingPalette} from './terrain-materials.js?v=79';
+import {SceneAtmosphere} from './scene-atmosphere.js?v=79';
+import {PlayerTrain} from './player-train.js?v=79';
 import {prepareTurnoutLayout} from './turnout-layout.js?v=39';
 import {addTurnouts} from './turnout-scene.js?v=76';
 import {OpposingTrains} from './opposing-trains.js?v=76';
 import {CabSuspension} from './cab-motion.js?v=23';
-import {interpolateKnots} from './track-layout.js?v=78';
-import {TrackLayout} from './track-layout.js?v=78';
-import {buildRailways,addStations} from './station-scene.js?v=78';
+import {interpolateKnots} from './track-layout.js?v=79';
+import {TrackLayout} from './track-layout.js?v=79';
+import {buildRailways,addStations} from './station-scene.js?v=79';
 import * as T from './assets/vendor/three.module.js?v=23';
 import {settlementAt} from './route-data.js?v=23';
 import {DISPLAY_WIDTH,DISPLAY_HEIGHT} from './display.js?v=23';
@@ -19,8 +19,8 @@ import {structureRanges,segmentIntersects,corridorOccupied} from './structure-ra
 import {addVegetation,createSurfaceMaterial} from './vegetation.js?v=76';
 import {addTrackSignal} from './track-signal.js?v=32';
 export class RailWorld {
- constructor(container,geometry,stations,profile,structures,stationLayouts,signals=[],{quality='standard',drawDistance=1500}={}){
-  this.quality=quality;this.drawDistance=drawDistance;
+ constructor(container,geometry,stations,profile,structures,stationLayouts,signals=[],{quality='standard',drawDistance=1500,roads=[]}={}){
+  this.quality=quality;this.drawDistance=drawDistance;this.routeRoads=roads;
   this.suspension=new CabSuspension();
   const prepared=prepareTurnoutLayout(stationLayouts.tracks,{length:geometry.points.at(-1)[0],stations:stationLayouts.stations});this.turnouts=prepared.turnouts;this.trackLayout=new TrackLayout({...stationLayouts,tracks:prepared.tracks});
   this.structuresData=structures;this.ranges=structureRanges(structures);this.isStructureCorridor=(s,offset)=>corridorOccupied(structures,s,offset)||this.trackLayout.occupied(s,offset);

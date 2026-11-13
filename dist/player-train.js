@@ -1,4 +1,4 @@
-import {RailfanCamera} from './railfan-camera.js?v=78';
+import {RailfanCamera} from './railfan-camera.js?v=79';
 import {OuterCamera} from './outer-camera.js?v=73';
 import * as T from './assets/vendor/three.module.js';
 import {ImportedTrafficModels} from './opposing-models.js?v=76';

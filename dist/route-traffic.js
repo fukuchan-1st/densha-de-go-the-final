@@ -1,6 +1,6 @@
-import {widenBoardingClearance,mergePlatformSurfaces} from './platform-details.js?v=78';
-import {yamanoteParallel} from './yamanote-parallel.js?v=78';
-import {interpolateKnots} from './track-layout.js?v=78';
+import {widenBoardingClearance,mergePlatformSurfaces} from './platform-details.js?v=79';
+import {yamanoteParallel} from './yamanote-parallel.js?v=79';
+import {interpolateKnots} from './track-layout.js?v=79';
 
 // All offsets are measured to the driver's right. A direction belongs to a
 // rail, rather than being guessed from its distance to the player's train.

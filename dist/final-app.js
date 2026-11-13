@@ -1,14 +1,15 @@
-import {CrossingAudio} from './crossings.js?v=78';
-import {VIEW_LABELS,normalizedView,replayViewMode} from './view-modes.js?v=78';
+import {loadRoadAsset} from './road-assets.js?v=79';
+import {CrossingAudio} from './crossings.js?v=79';
+import {VIEW_LABELS,normalizedView,replayViewMode} from './view-modes.js?v=79';
 import {yaganPlanningSpec,yaganBoardingReady,yaganBoardingDelay} from './yagan-timetable.js?v=75';
 import {progress,serviceKey} from './scenario-progress.js?v=72';
 import {scenarioRanges} from './scenario-ranges.js?v=72';
 import {installCheats,jumpToStation} from './game-cheats.js?v=72';
 import {mountGameShell} from './game-shell.js?v=76';
-import {DutyRecorder,replayStateAt,recordReplayAudio} from './replay-store.js?v=78';
+import {DutyRecorder,replayStateAt,recordReplayAudio} from './replay-store.js?v=79';
 import {osakaPlanningSpec} from './osaka-timetable.js?v=72';
 import {collectStationReports,collectRestrictionReports,pauseWhenSpeechEnds} from './station-timing.js?v=72';
-import {buildConnectingRoutes} from './service-catalog.js?v=78';
+import {buildConnectingRoutes} from './service-catalog.js?v=79';
 import {loadAudioMix,audioMixMarkup,bindAudioMix} from './audio-mix.js?v=keys61fix';
 import {bindRouteKeys,bindScreenKeys} from './screen-keys.js?v=72';
 import {sharedEffects} from './buffered-effects.js?v=phone58fix';
@@ -19,9 +20,9 @@ import {mountTrainDetails} from './train-details.js?v=72';
 import {mountWheelPicker} from './wheel-picker.js?v=72';
 import {routePlanningSpec,mountScoring,checkpointMarks,scoringStations,buildScoreTimetable,resolveScoreSchedule,scoreHazards,hornMarks,currentScoreRestriction,signalRestriction} from './scoring.js?v=77';
 import {mountDrivingOverlay} from './driving-overlay.js?v=72';import {mountLookahead,changesFromSections,stationMarks} from './lookahead.js?v=evaluation59';
-import {serviceChoices,makeServiceRoute} from './train-selection.js?v=78';
+import {serviceChoices,makeServiceRoute} from './train-selection.js?v=79';
 import {GeneratedCab,generatedCab} from './generated-cab.js';
-import {FinalWorld} from './final-world.js?v=78';
+import {FinalWorld} from './final-world.js?v=79';
 import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=72';
 import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=72';
 import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,routeLimitAt,stopPosition,finishStop,beginDoorClosing,isDoorClosing,takeDepartureCall} from './final-model.js?v=72';
@@ -197,7 +198,7 @@ async function start(startIndex){
   if(meta.legacy){
    menuMusic.setMenu(false);
    await playMenuSound('confirm',{waitForEnd:true});
-   location.href=`./tohoku.html?v=78&drive=1&direction=${chosenOption?.reverse?'reverse':'forward'}&station=${startIndex??freeStart}&end=${detailEndIndex??TOHOKU_STATIONS.length-1}&duty=${encodeURIComponent(currentDutyKey())}${generatedCab?'&cab=generated':''}`;
+   location.href=`./tohoku.html?v=79&drive=1&direction=${chosenOption?.reverse?'reverse':'forward'}&station=${startIndex??freeStart}&end=${detailEndIndex??TOHOKU_STATIONS.length-1}&duty=${encodeURIComponent(currentDutyKey())}${generatedCab?'&cab=generated':''}`;
    return;
   }
   if(mode==='menu')playMenuSound('confirm');
@@ -340,9 +341,9 @@ requestAnimationFrame(frame);
 try {
  const routeLoads=META.map(async meta=>{
   if(meta.legacy)return {id:meta.id,name:meta.name,length:TOHOKU_STATIONS.at(-1).s,stations:TOHOKU_STATIONS};
-  const response=await fetch(`./assets/final/${meta.id}-route.json?v=78`);
+  const response=await fetch(`./assets/final/${meta.id}-route.json?v=79`);
   if(!response.ok)throw Error('路線データを読み込めません');
-  return response.json();
+  return loadRoadAsset(await response.json());
  });
  [recipes,packs,...routes]=await Promise.all([loadVehicleRecipes(),loadBundledTrainPacks(),...routeLoads]);
  $('routeCards').innerHTML=META.map((m,i)=>`<button class="route-card${m.card?' yagan-card':m.legacy?' tohoku-card':''}" data-route="${i}" style="--i:${i};--route-color:${m.color};--card-image:url(./assets/final/${m.card??m.id+'-route-button-v25.png'})" aria-pressed="false"><span class="route-copy"><strong>${m.name}</strong><small>${m.english}</small><em>普通　${m.train}</em></span><span class="sun" aria-hidden="true">☀</span></button>`).join('');
@@ -350,8 +351,8 @@ try {
  $('compactRoute').innerHTML=META.map((m,i)=>`<option value="${i}">${m.name} · ${m.train}</option>`).join('');
  $('compactRoute').onchange=event=>{choose(Number(event.target.value));openTrainSelection();};
  const additions=await Promise.all(['chuo-extended','shinonoi-extended','chuo-kofu','chuo-shinshu','shinonoi','oito','ome','ome-okutama','itsukaichi'].map(async id=>{
- const response=await fetch('./assets/final/'+id+'-route.json?v=78');
- if(response.ok)extraRoutes.set(id,await response.json());
+ const response=await fetch('./assets/final/'+id+'-route.json?v=79');
+ if(response.ok)extraRoutes.set(id,await loadRoadAsset(await response.json()));
 }));
  for(const [id,r] of buildConnectingRoutes(extraRoutes))extraRoutes.set(id,r);
  registerProgressCatalog();
@@ -421,7 +422,7 @@ function showTrainDetails(){
 addEventListener('pagehide',()=>recorder?.flush());
 async function playSavedReplay(data){
  if(!data?.samples?.length)return;
- if(data.legacy){location.href='./tohoku.html?v=78&drive=1&replay=1&direction='+data.direction+'&station='+data.startIndex+'&end='+data.endIndex;return;}
+ if(data.legacy){location.href='./tohoku.html?v=79&drive=1&replay=1&direction='+data.direction+'&station='+data.startIndex+'&end='+data.endIndex;return;}
  try{
   await cleanup();selected=Math.max(0,META.findIndex(x=>x.id===data.lineId));chosenVehicle=data.trainId;chosenOption=null;
   activeRoute=structuredClone(data.route);const train=data.train,pack=packs.get(train.id);if(!pack)throw Error('リプレイの車両素材がありません');

@@ -1,6 +1,6 @@
 import {ImportedTrafficModels,opposingVehicle} from './opposing-models.js?v=76';
 import * as T from './assets/vendor/three.module.js';
-import {interpolateKnots} from './track-layout.js?v=78';
+import {interpolateKnots} from './track-layout.js?v=79';
 
 export function trafficInterval(type){return type==='city'?60:300;}
 export function adjacentTracks(world,s){

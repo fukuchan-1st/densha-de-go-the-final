@@ -1,7 +1,7 @@
-import {whiteRailPost,tactileMaterial,platformStripClear} from './platform-details.js?v=78';
-import {createTerrainMaterial} from './terrain-materials.js?v=78';
+import {whiteRailPost,tactileMaterial,platformStripClear} from './platform-details.js?v=79';
+import {createTerrainMaterial} from './terrain-materials.js?v=79';
 import * as T from './assets/vendor/three.module.js?v=23';
-import {interpolateKnots} from './track-layout.js?v=78';
+import {interpolateKnots} from './track-layout.js?v=79';
 import {createSurfaceMaterial} from './vegetation.js?v=23';
 import {segmentIntersects} from './structure-ranges.js?v=23';
 import {addStoppingMarker} from './stop-scene.js';
