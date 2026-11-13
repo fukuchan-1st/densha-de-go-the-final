@@ -1,6 +1,6 @@
 import {terrainShade} from './terrain-materials.js?v=76';
 import {treeVariant} from './real-trees.js?v=76';
-import {interpolateKnots} from './track-layout.js?v=23';
+import {interpolateKnots} from './track-layout.js?v=78';
 
 const hillsides=[-148,-96,-61,-36,-20,-10,10,20,36,61,96,148];
 

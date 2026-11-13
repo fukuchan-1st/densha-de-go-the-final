@@ -1,5 +1,7 @@
+import {whiteRailPost,tactileMaterial,platformStripClear} from './platform-details.js?v=78';
+import {createTerrainMaterial} from './terrain-materials.js?v=78';
 import * as T from './assets/vendor/three.module.js?v=23';
-import {interpolateKnots} from './track-layout.js?v=23';
+import {interpolateKnots} from './track-layout.js?v=78';
 import {createSurfaceMaterial} from './vegetation.js?v=23';
 import {segmentIntersects} from './structure-ranges.js?v=23';
 import {addStoppingMarker} from './stop-scene.js';
@@ -22,13 +24,13 @@ export function buildRailways(world){
 export function addStations(world){
  const layout=world.trackLayout,stationRecords=[];
  function surface(p,topY,side=null,color='#b4b5a6'){
-  const pos=[],idx=[];let previous=false;
+  const pos=[],idx=[],uv=[],rails=layout.tracks.filter(t=>t.knots[0][0]<=p.end&&t.knots.at(-1)[0]>=p.start).map(t=>({start:t.knots[0][0],end:t.knots.at(-1)[0],height:t.knots[0][2]??0,offset:s=>interpolateKnots(t.knots,s)})),bounds=s=>{const b=layout.bounds(p,s);return [b.left,b.right];};let previous=false,previousS=p.start;
   for(let s=p.start;s<=p.end+.001;s=Math.min(p.end,s+4)){
-   const b=layout.bounds(p,s);let l=b.left,r=b.right;if(side==='left'){r=l+.22;l+=.08;}else if(side==='right'){l=r-.22;r-=.08;}
-   const f=world.frame(s),n=pos.length/3;for(const x of[l,r])pos.push(f.p.x+f.right.x*x,f.p.y+topY,f.p.z+f.right.z*x);
-   if(previous&&b.width>.3)idx.push(n-2,n-1,n,n-1,n+1,n);previous=b.width>.3;if(s===p.end)break;
+   const b=layout.bounds(p,s);let l=b.left,r=b.right;if(side==='left'){r=l+.43;l+=.13;}else if(side==='right'){l=r-.43;r-=.13;}
+   const f=world.frame(s),n=pos.length/3;for(const x of[l,r]){pos.push(f.p.x+f.right.x*x,f.p.y+topY,f.p.z+f.right.z*x);uv.push(side?(x-l)/.3:x/7,side?s/.3:s/7);}
+   if(previous&&b.width>.8&&platformStripClear(previousS,s,bounds,rails,side==='left'?0:side==='right'?1:null))idx.push(n-2,n-1,n,n-1,n+1,n);previous=b.width>.8;previousS=s;if(s===p.end)break;
   }
-  const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.setIndex(idx);g.computeVertexNormals();world.scene.add(new T.Mesh(g,new T.MeshStandardMaterial({color,roughness:.96,side:T.DoubleSide})));
+  const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.setIndex(idx);g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.computeVertexNormals();world.scene.add(new T.Mesh(g,side?tactileMaterial():createTerrainMaterial('concrete')));
  }
  for(const st of layout.stations){
   const totalBounds=[];
@@ -37,9 +39,9 @@ export function addStations(world){
    for(let s=p.start+2;s<p.end;s+=8){const b=layout.bounds(p,s),len=Math.min(8,p.end-s);if(b.width<.8)continue;world.mesh(.12,.92,len,'#7d827a',s+len/2,b.left+.02,.02);world.mesh(.12,.92,len,'#7d827a',s+len/2,b.right-.02,.02);}
    const roofStart=Math.max(p.start+8,Math.min(st.s-50,p.end-20)-p.roofLength/2),roofEnd=Math.min(p.end-8,roofStart+p.roofLength);
    for(let s=roofStart;s<roofEnd;s+=10){const b=layout.bounds(p,s),len=Math.min(10,roofEnd-s);if(b.width<1)continue;const width=Math.min(b.width-.35,11);world.mesh(width,.19,len,st.roofColor,s+len/2,b.center,4.1);world.mesh(width,.08,len,'#ced2c9',s+len/2,b.center,4.29);}
-   for(let s=roofStart+5;s<roofEnd;s+=18){const b=layout.bounds(p,s);if(b.width<1.3)continue;world.mesh(.15,3.12,.15,'#c6cac0',s,b.center,.98);world.mesh(Math.min(b.width-.5,10),.12,.14,'#78847c',s,b.center,3.92);}
+   for(let s=roofStart+5;s<roofEnd;s+=18){const b=layout.bounds(p,s);if(b.width<1.3)continue;whiteRailPost(world,world.scene,s,b.center,.98,3.12);world.mesh(Math.min(b.width-.5,10),.12,.14,'#78847c',s,b.center,3.92);}
    for(let s=p.start+22;s<p.end-8;s+=45){const b=layout.bounds(p,s);if(b.width<1.4)continue;world.mesh(1.3,.11,.45,'#728f80',s,b.center,1.42);for(const dx of[-.45,.45])world.mesh(.08,.45,.1,'#78837b',s,b.center+dx,1.0);}
-   for(const s of [Math.max(p.start+14,st.s-120),Math.min(p.end-8,st.s+8)]){const b=layout.bounds(p,s);if(b.width<1.2)continue;world.mesh(.08,1.95,.08,'#8d9890',s,b.center,.98);world.sign(st.name,s,b.center,2.65,Math.min(2.8,b.width-.3),.58);}
+   for(const s of [roofStart+10,roofEnd-10]){const b=layout.bounds(p,s);if(b.width<1.2)continue;world.sign(st.name,s,b.center,3.52,2.8,.58,true);for(const delta of[-.85,.85])world.mesh(.025,.25,.025,'#aeb3ad',s+delta,b.center,3.81);}
    totalBounds.push(layout.bounds(p,st.s));
    for(let s=p.start+5;s<p.end;s+=6){const b=layout.bounds(p,s);if(b.width<1)continue;const rails=layout.activeAt(s);for(const [x,direction] of [[b.left,-1],[b.right,1]]){if(rails.some(t=>Math.abs(t.x-(x+direction*1.5))<.6))continue;world.mesh(.06,1.1,.06,'#d0d4ca',s,x-direction*.15,.98);world.mesh(.06,.06,5.8,'#c9d1c7',s,x-direction*.15,1.9);}}
   });

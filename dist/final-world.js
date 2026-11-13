@@ -1,8 +1,13 @@
-import {createTerrainMaterial,createBuildingMaterial,terrainKind,terrainShade} from './terrain-materials.js?v=76';
-import {SceneAtmosphere} from './scene-atmosphere.js?v=76';
+import {prepareUrbanViaduct} from './urban-viaduct.js?v=78';
+import {RoadScenery} from './road-scenery.js?v=78';
+import {BallastDetail} from './ballast-detail.js?v=78';
+import {whiteRailPost,tactileMaterial,safePlatformBounds,platformStripClear} from './platform-details.js?v=78';
+import {LevelCrossings} from './crossings.js?v=78';
+import {createTerrainMaterial,createBuildingMaterial,terrainKind,terrainShade,buildingVariant,buildingPalette} from './terrain-materials.js?v=78';
+import {SceneAtmosphere} from './scene-atmosphere.js?v=78';
 import {RealTrees,treeVariant} from './real-trees.js?v=76';
-import {PlayerTrain} from './player-train.js?v=76';
-import {prepareLeftTraffic} from './route-traffic.js?v=traffic64';
+import {PlayerTrain} from './player-train.js?v=78';
+import {prepareLeftTraffic} from './route-traffic.js?v=78';
 import {prepareCorridorScenery,corridorSceneryType} from './corridor-scenery.js?v=controls55';
 import {sampleRouteCurve} from './route-curve.js?v=39';
 import {prepareTurnoutLayout} from './turnout-layout.js?v=39';
@@ -12,13 +17,13 @@ import * as T from './assets/vendor/three.module.js';
 import {CabSuspension} from './cab-motion.js?v=24';
 import {addTrackSignal} from './track-signal.js?v=32';
 import {addStoppingMarker} from './stop-scene.js?v=76';
-import {interpolateKnots} from './track-layout.js?v=23';
+import {interpolateKnots} from './track-layout.js?v=78';
 import {addYaganHillsides,addYaganTunnel} from './yagan-scenery.js?v=76';
 const clamp=T.MathUtils.clamp;
 // Original streamed scenery. Track coordinates come from the route JSON; buildings and platforms are approximate.
 export class FinalWorld {
  constructor(container,route,{quality='standard',drawDistance=1500}={}){
-  route=prepareLeftTraffic(prepareCorridorScenery(route));
+  route=prepareUrbanViaduct(prepareLeftTraffic(prepareCorridorScenery(route)));
   this.quality=quality;this.route=route;this.sceneryStations=route.sceneryStations??route.stations;this.points=route.points;this.length=route.stations.at(-1).s;this.chunks=new Map();this.suspension=new CabSuspension();this.materials=new Map();this.rural=['yagan','shinonoi','oito','chuo-shinshu','chuo-kofu','chuo-system','ome','itsukaichi','chuo-itsukaichi','ome-okutama','chuo-ome','chuo-oito','suwa-nagano','chuo-extended','shinonoi-extended','chuo'].includes(route.id);
   this.chuoCorridor=['chuo','chuo-extended','chuo-ome','chuo-oito'].includes(route.id);
   this.mountainStart=this.chuoCorridor?(this.sceneryStations.find(st=>st.name==='高尾')?.s??Infinity):-Infinity;
@@ -41,13 +46,13 @@ export class FinalWorld {
    this.camera.add(this.headlight,this.headlight.target);
    this.scene.add(this.camera);
   }
-  this.atmosphere=new SceneAtmosphere(this);
+  this.atmosphere=new SceneAtmosphere(this);this.crossings=new LevelCrossings(this);this.ballastDetail=new BallastDetail(this);this.roadScenery=new RoadScenery(this);
  }
  setQuality(quality){this.atmosphere.setQuality(quality);}
  mat(color){
   if(!this.materials.has(color)){
-   const kind=terrainKind(color),facade=['#b7b5aa','#b1b7b5','#d1c4a9'].includes(color);
-   const material=kind?createTerrainMaterial(kind):facade?createBuildingMaterial(color,color==='#d1c4a9'):new T.MeshStandardMaterial({color,roughness:.85});
+   const kind=terrainKind(color),id=color.startsWith('facade:')?color.split(':'):null,facade=id||['#b7b5aa','#b1b7b5','#d1c4a9'].includes(color);
+   const material=kind==='tactile'?tactileMaterial():kind?createTerrainMaterial(kind):facade?createBuildingMaterial(id?buildingPalette(Number(id[2]),id[1]==='house'):color,id?id[1]==='house':color==='#d1c4a9',id?Number(id[2]):0):new T.MeshStandardMaterial({color,roughness:.85});
    if(kind&&this.quality==='light')material.normalMap=null;
    if(['grass','forest'].includes(kind))material.vertexColors=true;
    if(color==='#405d68'){material.userData.windowLight=true;material.emissive.set('#ffbc72');material.emissiveIntensity=0;}
@@ -93,47 +98,32 @@ export class FinalWorld {
   return T.MathUtils.lerp(spacing,4,clamp(outside/100,0,1));
  }
  cube(group,s,x,y,w,h,d,color){const f=this.frame(s,x),m=new T.Mesh(this.box,this.mat(color));m.position.copy(f.p);m.position.y+=y+h/2;m.rotation.order='YXZ';m.rotation.set(Math.asin(clamp(f.dir.y,-1,1)),f.angle,0);m.scale.set(w,h,d);m.userData.shadowCaster=h>.4;group.add(m);return m;}
- ribbon(group,start,end,offset,width,height,color,step=7){
-  const pos=[],idx=[],uv=[],colors=[],kind=terrainKind(color),tile=kind==='ballast'?3:kind==='asphalt'?5:7;
+ ribbon(group,start,end,offset,width,height,color,step=7,valid=null){
+  let lastS=start;const pos=[],idx=[],uv=[],colors=[],kind=terrainKind(color),tile=kind==='ballast'?3:kind==='asphalt'?5:7;
   for(let s=start,i=0;s<=end+.01;s=Math.min(end,s+step),i++){
    const x=typeof offset==='function'?offset(s):offset,w=typeof width==='function'?width(s):width,f=this.frame(s,x);
-   for(const dx of[-w/2,w/2]){const px=f.p.x+f.right.x*dx,pz=f.p.z+f.right.z*dx;pos.push(px,f.p.y+(typeof height==='function'?height(s):height),pz);uv.push(px/tile,pz/tile);const shade=terrainShade(px,pz);colors.push(shade,shade,shade);}
-   if(i){const k=i*2;idx.push(k-2,k-1,k,k-1,k+1,k);}if(s===end)break;
+   for(const dx of[-w/2,w/2]){const px=f.p.x+f.right.x*dx,pz=f.p.z+f.right.z*dx;pos.push(px,f.p.y+(typeof height==='function'?height(s):height),pz);if(kind==='tactile')uv.push(dx/Math.max(.001,w)+.5,s/.3);else uv.push(px/tile,pz/tile);const shade=terrainShade(px,pz);colors.push(shade,shade,shade);}
+   if(i&&(!valid||valid(lastS,s))){const k=i*2;idx.push(k-2,k-1,k,k-1,k+1,k);}lastS=s;if(s===end)break;
   }
   const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setAttribute('color',new T.Float32BufferAttribute(colors,3));g.setIndex(idx);g.computeVertexNormals();
   const m=new T.Mesh(g,this.mat(color));m.material.side=T.DoubleSide;m.userData.shadowCaster=color==='#677778';group.add(m);
  }
  instances(group,items,color,geometry=this.box){if(!items.length)return;const m=new T.InstancedMesh(geometry,this.mat(color),items.length),o=new T.Object3D();items.forEach((a,i)=>{const f=this.frame(a.s,a.x);o.position.copy(f.p);o.position.y+=a.y+a.h/2;o.rotation.order='YXZ';o.rotation.set(Math.asin(clamp(f.dir.y,-1,1)),f.angle,0);o.scale.set(a.w,a.h,a.d);o.updateMatrix();m.setMatrixAt(i,o.matrix);});m.computeBoundingSphere();m.userData.shadowCaster=items.some(a=>a.h>.5);group.add(m);}
- sign(group,name,s,x,level=0){const canvas=document.createElement('canvas');canvas.width=512;canvas.height=128;const c=canvas.getContext('2d');c.fillStyle='#f0f0df';c.fillRect(0,0,512,128);c.fillStyle=this.route.color??'#5aa642';c.fillRect(0,96,512,16);c.fillStyle='#16282a';c.font='bold 55px sans-serif';c.textAlign='center';c.fillText(name,256,74);const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;const m=new T.Mesh(new T.PlaneGeometry(2.7,.675),new T.MeshBasicMaterial({map:texture,side:T.DoubleSide})),f=this.frame(s,x);m.position.copy(f.p);m.position.y+=level+2.4;m.rotation.y=f.angle;group.add(m);}
- platformBounds(st,platform,s,tracks){
-  const relative=s-st.s;
-  let left=interpolateKnots(platform.edges,relative,1);
-  let right=interpolateKnots(platform.edges,relative,2);
-  const middle=(left+right)/2;
-  for(const rail of tracks){
-   if(s<rail.start||s>rail.end||Math.abs((rail.height??0)-(platform.height??0))>.3)continue;
-   const x=rail.offset(s);
-   if(x<middle)left=Math.max(left,x+1.45);
-   else right=Math.min(right,x-1.45);
-  }
-  if(left>right){
-   const edge=middle>=0?left:right;
-   return [edge,edge];
-  }
-  return [left,right];
- }
+ sign(group,name,s,x,level=0){const canvas=document.createElement('canvas');canvas.width=512;canvas.height=128;const c=canvas.getContext('2d');c.fillStyle='#f0f0df';c.fillRect(0,0,512,128);c.fillStyle=this.route.color??'#5aa642';c.fillRect(0,96,512,16);c.fillStyle='#16282a';c.font='bold 55px sans-serif';c.textAlign='center';c.fillText(name,256,74);const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;const m=new T.Mesh(new T.PlaneGeometry(2.7,.675),new T.MeshBasicMaterial({map:texture,side:T.DoubleSide})),f=this.frame(s,x);m.position.copy(f.p);m.position.y+=level+3.75;m.rotation.y=f.angle+Math.PI/2;group.add(m);for(const delta of[-.85,.85])this.cube(group,s+delta,x,level+4.08,.025,.3,.025,'#aeb3ad');}
+ platformBounds(st,platform,s,tracks){return safePlatformBounds(st,platform,s,tracks);}
  addPlatform(group,st,platform,tracks,start,end){
-  const from=Math.max(start,st.s+platform.edges[0][0]);
-  const to=Math.min(end,st.s+platform.edges.at(-1)[0]);
+  const from=Math.max(start,st.s+(platform.boarding===false?platform.edges[0][0]:Math.min(platform.edges[0][0],18-this.platformLength())));
+  const to=Math.min(end,st.s+(platform.boarding===false?platform.edges.at(-1)[0]:Math.max(platform.edges.at(-1)[0],18)));
   if(to<=from)return;
   const bounds=s=>this.platformBounds(st,platform,s,tracks);
   const level=s=>(platform.height??0)+this.deckHeight(s);
   const center=s=>{const [l,r]=bounds(s);return (l+r)/2;};
   const width=s=>{const [l,r]=bounds(s);return r-l;};
-  this.ribbon(group,from,to,center,width,s=>level(s)+1,'#a8aaa1',4);
+  this.ribbon(group,from,to,center,width,s=>level(s)+1,'#a8aaa1',2,(a,b)=>platformStripClear(a,b,bounds,tracks));
+  for(let a=from;a<to;a+=12){const d=Math.min(12,to-a),s=a+d/2;if(this.deckHeight(s)>1.3&&width(s)>1){this.cube(group,s,center(s),level(s)-.6,width(s),.6,d,'#929991');if(Math.floor(a/12)%3===0)this.cube(group,s,center(s),0,.65,Math.max(.2,level(s)-.6),.9,'#a6aaa2');}}
   for(const edge of [0,1]){
-   const inset=edge===0?.15:-.15;
-   this.ribbon(group,from,to,s=>bounds(s)[edge]+inset,s=>Math.min(.18,width(s)),s=>level(s)+1.015,'#e3ce67',4);
+   const inset=edge===0?.28:-.28;
+   this.ribbon(group,from,to,s=>bounds(s)[edge]+inset,s=>Math.min(.3,width(s)),s=>level(s)+1.015,'#e3ce67',2,(a,b)=>platformStripClear(a,b,bounds,tracks,edge));
    for(let a=from;a<to;a+=5){
     const d=Math.min(5,to-a),s=a+d/2;
     if(width(s)>.65)this.cube(group,s,bounds(s)[edge]+inset/3,level(s),.1,1,d,'#7d837c');
@@ -144,7 +134,7 @@ export class FinalWorld {
   if(roofTo>roofFrom){
    this.ribbon(group,roofFrom,roofTo,center,s=>Math.max(0,Math.min(width(s)-.35,10)),s=>level(s)+4.4,'#677778',4);
    for(let s=st.s-107;s<roofTo;s+=16){
-    if(s>=roofFrom&&width(s)>1.2)this.cube(group,s,center(s),level(s)+1,.14,3.35,.14,'#c2c9c3');
+    if(s>=roofFrom&&width(s)>1.2)whiteRailPost(this,group,s,center(s),level(s)+1);
    }
   }
   for(const s of [st.s-105,st.s-22]){
@@ -152,7 +142,7 @@ export class FinalWorld {
   }
  }
  buildChunk(index){const group=new T.Group(),start=Math.max(-300,index*500),end=Math.min(this.length+300,(index+1)*500);if(end<=start)return group;
-  if(!this.rural||start<this.mountainStart)this.ribbon(group,start,this.rural?Math.min(end,this.mountainStart):end,0,260,-.2,'#869177',20);
+  if(!this.rural||start<this.mountainStart){const finish=this.rural?Math.min(end,this.mountainStart):end;for(let a=start;a<finish;a+=50){const b=Math.min(finish,a+50),kind=this.sceneryTypeAt((a+b)/2);this.ribbon(group,a,b,0,260,-.2,kind==='mountain'?'#869177':'#9a9d93',10);}}
   const tracks=[{start,end,offset:s=>this.driveOffset(s)}];
   const nearby=(this.sceneryStations??this.route.stations).filter(st=>st.s+360>=start&&st.s-420<=end);
   if(this.route.neighborTracks){
@@ -231,11 +221,14 @@ export class FinalWorld {
    const near=this.stationNear(s),kind=this.sceneryTypeAt(s);
    if(this.structureAt(s,'tunnel')||(kind==='mountain'&&(near.d>260||random()>.38)))continue;
    const urban=kind==='city',[min,max]=trackEnvelope(s),edge=side<0?min:max;
-   const x=edge+side*(urban?18+random()*43:13+random()*30);
    const h=urban?14+random()*42:3.2+random()*2.8,w=urban?8+random()*15:5.5+random()*3,d=urban?10+random()*12:6+random()*3;
-   buildings.push({s,x,y:0,w,h,d});
+   const x=edge+side*(urban?8+w/2+random()*7:13+random()*30);
+   if((this.route.structures??[]).some(c=>c.kind==='crossing'&&Math.abs((c.sOrigin??c.sStart)-s)<d/2+9))continue;
+   const frontageClear=this.roadScenery.buildingClear(s,x,w,d);if(frontageClear)buildings.push({s,x,y:0,w,h,d});
+   if(urban)for(const row of(this.quality==='light'?[1]:[1,2])){const xx=edge+side*(row===1?43+random()*12:77+random()*18),height=18+random()*(row===1?44:65);const ww=14+random()*13,dd=18+random()*7;if(this.roadScenery.buildingClear(s,xx,ww,dd))buildings.push({s,x:xx,y:0,w:ww,h:height,d:dd});}
+   if(!urban&&!frontageClear)continue;
    if(!urban){roofs.push({s,x,y:h,w:w+.5,h:this.route.id==='tokaido'?1.7:.3,d:d+.5});if(this.route.id==='tokaido'){const x2=x+side*18;buildings.push({s:s+8,x:x2,y:0,w:w*.9,h:h*.9,d});roofs.push({s:s+8,x:x2,y:h*.9,w:w*.9+.5,h:1.7,d:d+.5});}}
-   if(this.quality!=='light')for(let y=2.5;y<h-1;y+=3)windows.push({s:s-d/2-.03,x,y,w:w*.65,h:1.1,d:.05});
+   if(frontageClear&&this.quality!=='light')for(let y=2.5;y<h-1;y+=3)windows.push({s:s-d/2-.03,x,y,w:w*.65,h:1.1,d:.05});
 
   }
   for(let s=Math.ceil(start/14)*14;s<end;s+=14){
@@ -245,7 +238,7 @@ export class FinalWorld {
    }
   }
   this.instances(group,roofs,'#616b71',this.route.id==='tokaido'?this.houseRoof:this.box);
-  this.instances(group,buildings.filter(a=>a.h>9),index%2?'#b7b5aa':'#b1b7b5');this.instances(group,buildings.filter(a=>a.h<=9),'#d1c4a9');this.instances(group,windows,'#405d68');this.trees.add(group,trees.map(a=>({...a,y:0,variant:treeVariant(random()),rotation:random()*Math.PI*2}))); 
+  for(let variant=0;variant<30;variant++){this.instances(group,buildings.filter(a=>a.h>9&&buildingVariant(a.s,a.x)===variant),'facade:office:'+variant);this.instances(group,buildings.filter(a=>a.h<=9&&buildingVariant(a.s,a.x)===variant),'facade:house:'+variant);}this.instances(group,windows,'#405d68');this.trees.add(group,trees.map(a=>({...a,y:0,variant:treeVariant(random()),rotation:random()*Math.PI*2}))); 
   for(const st of nearby){
    const drive=this.driveOffset(st.s),opposite=this.oppositeOffset(st.s);
    const edge=drive+(opposite>=drive?-1.55:1.55);
@@ -298,15 +291,15 @@ export class FinalWorld {
    if(signal.s>=start&&signal.s<end)addTrackSignal(T,this,group,signal);
   }
   addTurnouts(this,group,this.turnouts,this.railTracks,start,end);
-  this.atmosphere.prepare(group);this.scene.add(group);return group;
+  for(const c of this.route.structures??[])if(c.kind==='crossing'&&(c.sOrigin??c.sStart)>=start&&(c.sOrigin??c.sStart)<end)this.crossings.add(group,c);this.atmosphere.prepare(group);this.scene.add(group);return group;
  }
- disposeChunk(group){this.trees.release(group);this.scene.remove(group);group.traverse(o=>{if(o.isInstancedMesh)o.dispose();if(o.geometry&&o.geometry!==this.box&&o.geometry!==this.pine&&o.geometry!==this.canopy&&o.geometry!==this.houseRoof)o.geometry.dispose();if(o.material?.map){o.material.map.dispose();o.material.dispose();}else if(o.userData.disposeWithChunk)o.material.dispose();});}
+ disposeChunk(group){this.crossings.release(group);this.trees.release(group);this.scene.remove(group);group.traverse(o=>{if(o.isInstancedMesh)o.dispose();if(o.geometry&&o.geometry!==this.box&&o.geometry!==this.platformRailGeometry&&o.geometry!==this.pine&&o.geometry!==this.canopy&&o.geometry!==this.houseRoof)o.geometry.dispose();if(o.material?.map){o.material.map.dispose();o.material.dispose();}else if(o.userData.disposeWithChunk)o.material.dispose();});}
  setPlayerTrain(id,count){this.playerTrain?.dispose();this.playerTrain=new PlayerTrain(this,id,count);}
  setCabView(origin){this.viewOrigin=origin;this.currentView=undefined;}
  setDrawDistance(value){this.drawDistance=Math.max(500,Math.min(2000,Number(value)||1500));this.camera.far=this.drawDistance+400;this.camera.updateProjectionMatrix();this.scene.fog.far=this.drawDistance;this.scene.fog.near=Math.min(350,this.drawDistance*.3);}
- render(s,v,dt,{acceleration=0,shake=1,panorama=false,outer=false,clock}={}){const chunk=Math.floor(s/500);for(let i=chunk-1;i<=chunk+Math.ceil(this.drawDistance/500);i++)if(!this.chunks.has(i))this.chunks.set(i,this.buildChunk(i));for(const [i,g]of this.chunks)if(i<chunk-1||i>chunk+Math.ceil(this.drawDistance/500)){this.disposeChunk(g);this.chunks.delete(i);}
+ render(s,v,dt,{acceleration=0,shake=1,panorama=false,outer=false,railfan=false,clock}={}){this.externalView=outer;const chunk=Math.floor(s/500);for(let i=chunk-1;i<=chunk+Math.ceil(this.drawDistance/500);i++)if(!this.chunks.has(i))this.chunks.set(i,this.buildChunk(i));for(const [i,g]of this.chunks)if(i<chunk-1||i>chunk+Math.ceil(this.drawDistance/500)){this.disposeChunk(g);this.chunks.delete(i);}
   if(this.currentView!==panorama){if(!panorama&&this.viewOrigin)this.camera.setViewOffset(1600,900,800-this.viewOrigin.x,450-this.viewOrigin.y,1600,900);else this.camera.clearViewOffset();this.currentView=panorama;}
-  const f=this.driveFrame(s),head=this.drivePoint(s+45),motion=this.suspension.update({s,speed:v,curvature:this.curvature(s),acceleration},dt,shake),eye=Number(this.route.eyeHeight??2.7),offset=(this.route.eyeOffset??0)+motion.lateral;this.camera.position.copy(f.p).addScaledVector(f.right,offset);this.camera.position.y+=eye+motion.vertical;head.addScaledVector(f.right,offset);head.y+=eye+motion.vertical;this.camera.lookAt(head);this.camera.rotateX(motion.pitch);this.camera.rotateY(motion.yaw);this.camera.rotateZ(motion.roll);const tunnel=(this.route.structures??[]).some(t=>t.kind==='tunnel'&&s>=t.sStart&&s<=t.sEnd);this.sky.intensity=this.route.night?.22:tunnel?.6:2.1;this.sun.intensity=this.route.night?.04:tunnel?.3:2.1;if(this.headlight)this.headlight.intensity=this.route.night?750:tunnel?550:0;this.trees.update(s);this.traffic.update(s,dt);this.playerTrain?.update(s,outer);if(outer)this.playerTrain?.camera(s);this.atmosphere.update(s,dt,{tunnel,clock,moving:Math.abs(v)>.1||this.traffic.trains.length>0});this.renderer.render(this.scene,this.camera);
+  const f=this.driveFrame(s),head=this.drivePoint(s+45),motion=this.suspension.update({s,speed:v,curvature:this.curvature(s),acceleration},dt,shake),eye=Number(this.route.eyeHeight??2.7),offset=(this.route.eyeOffset??0)+motion.lateral;this.camera.position.copy(f.p).addScaledVector(f.right,offset);this.camera.position.y+=eye+motion.vertical;head.addScaledVector(f.right,offset);head.y+=eye+motion.vertical;this.camera.lookAt(head);this.camera.rotateX(motion.pitch);this.camera.rotateY(motion.yaw);this.camera.rotateZ(motion.roll);const tunnel=(this.route.structures??[]).some(t=>t.kind==='tunnel'&&s>=t.sStart&&s<=t.sEnd);this.sky.intensity=this.route.night?.22:tunnel?.6:2.1;this.sun.intensity=this.route.night?.04:tunnel?.3:2.1;if(this.headlight)this.headlight.intensity=this.route.night?750:tunnel?550:0;this.trees.update(s);this.traffic.update(s,dt);this.playerTrain?.update(s,outer);if(outer)this.playerTrain?.camera(s,railfan,v,dt);this.crossings.update(s,v,dt,(this.playerTrain?.count??2)*20);this.ballastDetail.update(s,railfan?this.playerTrain?.railfanController.spot?.s??s:s);this.roadScenery.update(s,v,dt,railfan?this.playerTrain?.railfanController.spot?.s??s:s);this.atmosphere.update(s,dt,{tunnel,clock,moving:Math.abs(v)>.1||this.traffic.trains.length>0});this.renderer.render(this.scene,this.camera);
  }
- dispose(){this.atmosphere.dispose();this.trees.dispose();this.playerTrain?.dispose();this.traffic.dispose();for(const g of this.chunks.values())this.disposeChunk(g);this.chunks.clear();for(const m of this.materials.values()){m.map?.dispose();m.emissiveMap?.dispose();m.userData.richNormalMap?.dispose();m.dispose();}this.box.dispose();this.houseRoof.dispose();this.pine?.dispose();this.canopy?.dispose();this.renderer.dispose();this.renderer.forceContextLoss();this.renderer.domElement.remove();}
+ dispose(){this.roadScenery.dispose();this.ballastDetail.dispose();this.crossings.dispose();this.atmosphere.dispose();this.trees.dispose();this.playerTrain?.dispose();this.traffic.dispose();for(const g of this.chunks.values())this.disposeChunk(g);this.chunks.clear();for(const m of this.materials.values()){m.map?.dispose();m.emissiveMap?.dispose();m.bumpMap?.dispose();m.userData.richNormalMap?.dispose();m.dispose();}this.box.dispose();this.platformRailGeometry?.dispose();this.houseRoof.dispose();this.pine?.dispose();this.canopy?.dispose();this.renderer.dispose();this.renderer.forceContextLoss();this.renderer.domElement.remove();}
 }

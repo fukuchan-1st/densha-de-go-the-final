@@ -1,7 +1,7 @@
-import {prepareLeftTraffic} from './route-traffic.js?v=traffic64';
+import {prepareLeftTraffic} from './route-traffic.js?v=78';
 import {selectTokaidoServiceTrack} from './tokaido-service-track.js?v=services63';
-import {serviceChoices,STOP_PATTERNS} from './service-catalog.js?v=traffic64';
-import {sliceRoute,reverseRoute} from './service-routes.js?v=traffic64';
+import {serviceChoices,STOP_PATTERNS} from './service-catalog.js?v=78';
+import {sliceRoute,reverseRoute} from './service-routes.js?v=78';
 export {serviceChoices};
 function makeDefaultServiceRoute(route,vehicle,service){
  route=selectTokaidoServiceTrack(route,service);
