@@ -1,5 +1,5 @@
 import {createTerrainMaterial} from './terrain-materials.js?v=76';
-import {RealTrees,treeVariant} from './real-trees.js?v=82';
+import {RealTrees,treeVariant} from './real-trees.js?v=83';
 import {settlementAt} from './route-data.js?v=23';
 import * as T from './assets/vendor/three.module.js?v=23';
 

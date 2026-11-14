@@ -32,7 +32,7 @@ test('village scenery stays geographic in both directions and contains low woode
   assert.equal(villageAt(q,at('人里')),true);assert.equal(villageAt(q,at('霧雨')),true);assert.equal(villageAt(q,at('命蓮寺')),true);assert.equal(villageAt(q,at('紅魔')),false);
  }
  const batches=[];addTohoHouses({route:routes.get('toho-village'),quality:'standard',structureAt:()=>null,stationNear:()=>({d:5000}),instances:(_,items,color)=>batches.push({items,color}),houseRoof:{}},{},0,170,()=>[0,0],()=>.5);
- const bodies=batches.filter(x=>x.color.startsWith('toho-wood:')).flatMap(x=>x.items);assert.ok(bodies.length>=50);assert.ok(bodies.every(x=>x.h<7));
+ const bodies=batches.filter(x=>x.color.startsWith('toho-wood:')).flatMap(x=>x.items);assert.ok(bodies.length>=25);assert.ok(bodies.every(x=>x.h<7));
 });
 test('published Tokaido Shinano departures and the full station stop pattern are retained',()=>{
  for(const x of serviceChoices.tokaido.filter(x=>x[1]==='383')){const r=makeServiceRoute(routes.get(x[0]),...x.slice(1)),schedule=resolveScoreSchedule(r,0,{maxSpeedKmh:130});assert.deepEqual(r.stations.map(x=>x.name),x[3].reverse?['大阪','新大阪','京都']:['京都','新大阪','大阪']);assert.equal(r.stations[0].departure,x[3].reverse?8*3600+58*60:18*3600+50*60);assert.equal(schedule.clockStart,r.stations[0].departure-30);assert.equal(schedule.adjustments.length,0);}

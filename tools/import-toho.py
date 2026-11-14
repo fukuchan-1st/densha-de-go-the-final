@@ -53,6 +53,19 @@ for name,identity in [('東方本線','toho'),('人里線','toho-village'),('セ
    x+=dx*math.cos(angle);z+=dx*math.sin(angle)
    points.append([round(a['s']+(j+1)*dx,3),round(x,3),round(z,3),0])
  points.append([L+300,x+300*math.cos(tangents[-1]),z+300*math.sin(tangents[-1]),0])
+ if identity=='toho':
+  # Meikai is 60 m above the lowland. Station tangents remain level;
+  # smooth 250 m grade transitions limit the climb to 22.65 per mille.
+  height=60;begin=250;span=2900;ramp=250;grade=height/(span-ramp)
+  def elevation(s):
+   u=max(0,min(span,s-begin))
+   if u<ramp:drop=grade*(u-ramp/math.pi*math.sin(math.pi*u/ramp))/2
+   elif u>span-ramp:
+    remaining=span-u;drop=height-grade*(remaining-ramp/math.pi*math.sin(math.pi*remaining/ramp))/2
+   else:drop=grade*(u-ramp/2)
+   return round(height-drop,5)
+  points=[[s,x,z,elevation(s)] for s,x,z,_ in points]
+  for st in stations:st['elevationM']=elevation(st['s'])
  stations[0]['startTime']='09:00:00'
  structures=[{'kind':'tunnel','sStart':100,'sEnd':L+250,'source':'User instruction: underground center branch'}] if identity=='toho-center' else []
  data=dict(id=identity,name='東方鉄道・'+name,length=L,loop=False,direction=stations[0]['name']+' → '+stations[-1]['name'],stations=stations,points=points,limits=[dict(sStart=0,sEnd=L+1,kmh=75 if identity=='toho' else 55)],grades=[],signals=[],structures=structures,neighborTracks=[],drivingTrack=[[-300,0],[L+300,0]],trafficSections=[dict(sStart=-300,sEnd=L+300,tracks=1)],stationLayouts={st['name']:{'platforms':[dict(boarding=True,edges=[[-100,-6,-1.55],[18,-6,-1.55]],roof=[-85,5])]} for st in stations},sources=[dict(title=SOURCE.name,type='user-provided station distance workbook')],geometryQuality='提供地図・駅間距離から作成した架空路線',importNotes=['木造・江戸風の家屋。人里線全線および霧雨〜命蓮寺は人里。','実在の鉄道路線や実測配線ではありません。'])

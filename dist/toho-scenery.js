@@ -1,3 +1,4 @@
+import {districtAt} from './toho-biomes.js?v=83';
 import * as T from './assets/vendor/three.module.js';
 export const isToho=route=>route.id?.startsWith('toho');
 const terrainIndexes=new WeakMap();
@@ -14,6 +15,7 @@ export function tohoTerrainHeight(route,p,height){
 }
 export function villageAt(route,s){
  if(route.id==='toho-village')return true;
+ if(route.id==='toho-center')return (route.sceneryStations??route.stations).some(st=>st.name==='人里'&&Math.abs(s-st.s)<200);
  if(route.id!=='toho')return false;
  const stations=route.sceneryStations??route.stations,a=stations.find(x=>x.name==='霧雨'),b=stations.find(x=>x.name==='命蓮寺');
  return !!a&&!!b&&s>=Math.min(a.s,b.s)-150&&s<=Math.max(a.s,b.s)+150;
@@ -32,9 +34,10 @@ export function addTohoHouses(world,group,start,end,envelope,random){
  const houses=[],roofs=[],posts=[],beams=[];
  for(let s=Math.ceil(start/17)*17;s<end;s+=17){
   if(world.structureAt(s,'tunnel'))continue;
-  const dense=villageAt(world.route,s);if(!dense&&world.stationNear(s).d>180)continue;
+  const dense=villageAt(world.route,s);if(!dense)continue;
   const edges=envelope(s);
   for(const side of [-1,1])for(let row=0;row<(dense?(world.quality==='light'?2:3):1);row++){
+   const district=districtAt(world.route,s);if(side===(world.route.reverseDirection?-1:1)&&district?.landmark&&district.distance<160)continue;
    if(!dense&&random()>.35)continue;
    const w=7+random()*4,d=8+random()*3,h=3.8+random()*2,x=edges[side<0?0:1]+side*(14+row*17+random()*3),ss=s+(random()-.5)*4;
    houses.push({s:ss,x,y:0,w,h,d});roofs.push({s:ss,x,y:h,w:w+2,h:2,d:d+2});

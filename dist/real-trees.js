@@ -4,7 +4,7 @@ export function treeVariant(value){return Math.min(4,Math.max(0,Math.floor(value
 export function treeDetail(distance,light=false){return distance<(light?40:75)?0:1;}
 // Five source meshes, shared materials, and per-instance near/far selection.
 export class RealTrees{
- constructor(world){this.world=world;this.batches=new Set();this.resources=[];this.ready=this.load();this.lastUpdate=-Infinity;}
+ constructor(world){this.world=world;this.batches=new Set();this.resources=[];this.tints=new Map();this.ready=this.load();this.lastUpdate=-Infinity;}
  async load(){
   const base='./assets/trees/',response=await fetch(base+'manifest.json?v=74');if(!response.ok)throw Error('Tree manifest could not be loaded');this.manifest=await response.json();
   const loader=new T.TextureLoader(),atlas=await loader.loadAsync(base+this.manifest.atlas),normal=await loader.loadAsync(base+this.manifest.normal);atlas.colorSpace=T.SRGBColorSpace;atlas.flipY=false;normal.flipY=false;atlas.anisotropy=2;
@@ -14,11 +14,18 @@ export class RealTrees{
    const data=decodeVertices(vertices,'float16'),buffer=new T.InterleavedBuffer(data,8),geometry=new T.BufferGeometry();geometry.setAttribute('position',new T.InterleavedBufferAttribute(buffer,3,0));geometry.setAttribute('normal',new T.InterleavedBufferAttribute(buffer,3,3));geometry.setAttribute('uv',new T.InterleavedBufferAttribute(buffer,2,6));geometry.setIndex(new T.BufferAttribute(new Uint16Array(indices),1));geometry.computeBoundingSphere();this.resources.push(geometry);return geometry;
   }))));
  }
- add(group,items){
+ tintedMaterial(tint){
+  if(!tint)return this.material;if(this.tints.has(tint))return this.tints.get(tint);
+  const material=this.material.clone(),color=tint==='sakura'?'vec3(1.0,0.58,0.86)':'vec3(0.94,0.45,0.10)';
+  if(tint==='sakura'){material.emissive.set('#76365e');material.emissiveIntensity=.16;}
+  material.onBeforeCompile=shader=>{shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>',`#include <map_fragment>\nfloat foliageMask = smoothstep(0.025, 0.16, (diffuseColor.g - max(diffuseColor.r, diffuseColor.b)) / max(0.015, diffuseColor.g));\nvec3 foliageTint = ${color} * (0.65 + dot(diffuseColor.rgb, vec3(0.24,0.60,0.16)) * 1.2);\ndiffuseColor.rgb = mix(diffuseColor.rgb, foliageTint, foliageMask);`);};
+  material.customProgramCacheKey=()=>tint;this.tints.set(tint,material);this.resources.push(material);return material;
+ }
+ add(group,items,{tint=null}={}){
   const batch={group,items,meshes:[],disposed:false};this.batches.add(batch);
   this.ready.then(()=>{if(this.disposed||batch.disposed)return;for(let variant=0;variant<5;variant++)for(let detail=0;detail<2;detail++){
    const selected=items.filter(a=>a.variant===variant);if(!selected.length)continue;
-   const mesh=new T.InstancedMesh(this.geometries[variant][detail],this.material,selected.length);mesh.userData.shadowCaster=detail===0;this.world.atmosphere?.prepare(mesh);mesh.count=0;mesh.raycast=()=>{};mesh.userData.sharedTreeResource=true;mesh.userData.ignoreOuterCamera=true;group.add(mesh);batch.meshes.push({mesh,selected,detail});
+   const mesh=new T.InstancedMesh(this.geometries[variant][detail],this.tintedMaterial(tint),selected.length);mesh.userData.shadowCaster=detail===0;this.world.atmosphere?.prepare(mesh);mesh.count=0;mesh.raycast=()=>{};mesh.userData.sharedTreeResource=true;mesh.userData.ignoreOuterCamera=true;group.add(mesh);batch.meshes.push({mesh,selected,detail});
   }this.fill(batch,this.lastS??0);}).catch(error=>{if(!this.warned){console.warn('Real tree assets:',error.message);this.warned=true;}});
   return batch;
  }
