@@ -1,3 +1,4 @@
+import {tunnelFilmingPlan,tunnelRanges,filmingTracks} from './railfan-tunnel.js?v=81';
 import * as T from './assets/vendor/three.module.js';
 import {crossingCenter} from './crossings.js?v=79';
 export const RAILFAN_EYE_HEIGHT=1.68;
@@ -10,12 +11,21 @@ export function filmingSpots(route){const rows=route.structures??[],stations=rou
  return spots.filter(x=>!inTunnel(x.s)).sort((a,b)=>a.s-b.s);
 }
 export class RailfanCamera{
- constructor(world,train,frame){this.world=world;this.train=train;this.frame=frame;this.ray=new T.Raycaster();this.spots=filmingSpots(world.route??{stations:world.stations,structures:world.routeStructures?.structures,length:world.length});}
- reset(){this.spot=null;this.lastS=null;this.elapsed=0;this.passAt=null;}
- choose(s,length){const choices=this.spots.filter(x=>x.s>s+65);this.spot=choices.find(x=>x.s<s+800)??choices[0]??{s:Math.min(this.world.length-10,s+80),kind:'line',name:'沿線'};this.passAt=null;this.position=null;this.rotation=null;this.elapsed=0;
+ constructor(world,train,frame){this.world=world;this.train=train;this.frame=frame;this.ray=new T.Raycaster();this.normalNear=world.camera.near;this.spots=filmingSpots(world.route??{stations:world.stations,structures:world.routeStructures?.structures,length:world.length});}
+ reset(){this.tunnelPlan=null;this.pendingOutdoor=false;this.position=null;this.rotation=null;this.setNear(this.normalNear);this.spot=null;this.lastS=null;this.elapsed=0;this.passAt=null;}
+ setNear(near){if(this.world.camera.near!==near){this.world.camera.near=near;this.world.camera.updateProjectionMatrix();}}
+ nextSpot(s){const nearby=this.spots.find(x=>x.s>s+65&&x.s<s+800);if(nearby)return nearby;const tunnels=tunnelRanges(this.world);for(const distance of[100,60,160,30,-50,-100]){const at=Math.max(5,Math.min(this.world.length-5,s+distance));if(!tunnels.some(t=>at>t.sStart-20&&at<t.sEnd+20))return {s:at,kind:'line',name:'沿線'};}return {s:Math.max(5,Math.min(this.world.length-5,s)),kind:'line',name:'沿線'};}
+ prepare(s){
+  const length=this.world.playerTrain?.count*20||40,plan=tunnelFilmingPlan(this.world,s,length,this.tunnelPlan);
+  if(plan){const changed=this.tunnelPlan?.tunnelKey!==plan.tunnelKey||this.tunnelPlan?.s!==plan.s||this.tunnelPlan?.double!==plan.double;this.tunnelPlan=plan;this.spot=plan;this.pendingOutdoor=false;if(changed){this.rotation=null;this.passAt=null;this.elapsed=0;}this.position=this.world.frame(plan.s,plan.offset).p.clone();this.position.y+=(this.world.deckHeight?.(plan.s)??0)+plan.eye;this.sideDistance=Math.abs(plan.offset-(this.world.driveOffset?.(plan.s)??0));this.setNear(plan.double?.1:.04);return plan.s;}
+  if(this.tunnelPlan){this.reset();}
+  const seek=this.lastS!=null&&(s<this.lastS-10||Math.abs(s-this.lastS)>200);if(!this.spot||seek||trainHasCleared(s,this.spot.s,length)){this.spot=this.nextSpot(s);this.pendingOutdoor=true;}
+  this.setNear(this.normalNear);return this.spot.s;
+ }
+ choose(s,length){this.spot=this.nextSpot(s);this.passAt=null;this.position=null;this.rotation=null;this.elapsed=0;this.pendingOutdoor=false;
   const {world,spot}=this,f=this.frame(spot.s),drive=world.driveOffset?.(spot.s)??0;let offsets=[drive-10,drive+10,drive-14,drive+14];let platform=false;
   const layout=spot.station&&world.route?.stationLayouts?.[spot.station.name];if(layout?.platforms?.length){const edge=layout.platforms[0].edges?.[0];if(edge){offsets=[(edge[1]+edge[2])/2,...offsets];platform=true;}}
-  const rails=world.railTracks?.filter(t=>spot.s>=t.knots[0][0]&&spot.s<=t.knots.at(-1)[0]).map(t=>{const k=t.knots;let i=1;while(i<k.length-1&&k[i][0]<spot.s)i++;const a=k[i-1],b=k[i];return a[1]+(b[1]-a[1])*(spot.s-a[0])/Math.max(.001,b[0]-a[0]);})??world.trackLayout?.activeAt(spot.s).map(t=>t.x)??[drive,drive+4.2];
+  const rails=filmingTracks(world,spot.s);
   offsets=[...(platform?[offsets[0]]:[]),Math.min(...rails)-5.5,Math.max(...rails)+5.5,...offsets];
   const target=this.frame(spot.s-10).p.clone();target.y+=2;
   world.scene.updateMatrixWorld(true);const obstacles=world.scene.children.filter(x=>x!==this.train&&x!==world.camera&&x.visible),grounds=[];world.scene.traverse(o=>{if(o.isMesh&&['textured-grass','textured-forest'].includes(o.material?.name))grounds.push(o);});
@@ -25,10 +35,11 @@ export class RailfanCamera{
   }
   if(!this.position){this.position=world.frame(spot.s,Math.min(...rails)-8).p.clone();this.position.y+=RAILFAN_EYE_HEIGHT;this.sideDistance=8;}
  }
- update(s,speed,dt,time=0){const length=this.world.playerTrain?.count*20||40;if(!this.spot||this.lastS!=null&&(s<this.lastS-10||Math.abs(s-this.lastS)>200)||trainHasCleared(s,this.spot.s,length))this.choose(s,length);this.elapsed+=dt;
+ update(s,speed,dt,time=0){const length=this.world.playerTrain?.count*20||40;this.prepare(s);if(this.pendingOutdoor||!this.position)this.choose(s,length);this.elapsed+=dt;
+
   if(this.lastS!=null&&this.lastS<this.spot.s&&s>=this.spot.s){this.passAt=this.elapsed;this.passSpeed=speed;}
   if(dt===0&&this.lastS!=null&&Math.abs(s-this.lastS)>1)this.rotation=null;
-  const camera=this.world.camera,target=this.frame(s-10-Math.min(length*.35,Math.max(0,s-this.spot.s)*.28)).p.clone();target.y+=2;camera.clearViewOffset();camera.position.copy(this.position);camera.lookAt(target);const desired=camera.quaternion.clone();if(this.rotation){this.rotation.slerp(desired,1-Math.exp(-Math.max(0,dt)/.14));camera.quaternion.copy(this.rotation);}else this.rotation=desired;
+  const camera=this.world.camera,target=this.frame(s-10-Math.min(length*.35,Math.max(0,s-this.spot.s)*.28)).p.clone();target.y+=this.tunnelPlan&&!this.tunnelPlan.double?1.2:2;camera.clearViewOffset();camera.position.copy(this.position);camera.lookAt(target);const desired=camera.quaternion.clone();if(this.rotation){this.rotation.slerp(desired,1-Math.exp(-Math.max(0,dt)/.14));camera.quaternion.copy(this.rotation);}else this.rotation=desired;
   const shake=this.passAt==null?0:passbyShake(this.passSpeed??speed,this.elapsed-this.passAt,this.sideDistance);camera.rotateX(Math.sin(time*61)*shake*.4);camera.rotateY(Math.sin(time*47+.7)*shake*.6);camera.rotateZ(Math.sin(time*73)*shake);this.lastS=s;
  }
 }

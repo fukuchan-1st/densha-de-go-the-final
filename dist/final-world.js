@@ -1,3 +1,4 @@
+import {filmingChunkIndices} from './railfan-tunnel.js?v=81';
 import {chuoScenery,mountainArea} from './geographic-sections.js?v=80';
 import {prepareUrbanViaduct} from './urban-viaduct.js?v=79';
 import {RoadScenery} from './road-scenery.js?v=80';
@@ -7,17 +8,17 @@ import {LevelCrossings} from './crossings.js?v=79';
 import {createTerrainMaterial,createBuildingMaterial,terrainKind,terrainShade,buildingVariant,buildingPalette} from './terrain-materials.js?v=79';
 import {SceneAtmosphere} from './scene-atmosphere.js?v=79';
 import {RealTrees,treeVariant} from './real-trees.js?v=76';
-import {PlayerTrain} from './player-train.js?v=80';
+import {PlayerTrain} from './player-train.js?v=81';
 import {prepareLeftTraffic} from './route-traffic.js?v=79';
 import {prepareCorridorScenery,corridorSceneryType} from './corridor-scenery.js?v=controls55';
 import {sampleRouteCurve} from './route-curve.js?v=39';
 import {prepareTurnoutLayout} from './turnout-layout.js?v=39';
-import {addTurnouts} from './turnout-scene.js?v=76';
+import {addTurnouts} from './turnout-scene.js?v=81';
 import {OpposingTrains} from './opposing-trains.js?v=80';
 import * as T from './assets/vendor/three.module.js';
 import {CabSuspension} from './cab-motion.js?v=24';
 import {addTrackSignal} from './track-signal.js?v=32';
-import {addStoppingMarker} from './stop-scene.js?v=76';
+import {addStoppingMarker} from './stop-scene.js?v=81';
 import {interpolateKnots} from './track-layout.js?v=79';
 import {addYaganHillsides,addYaganTunnel} from './yagan-scenery.js?v=80';
 const clamp=T.MathUtils.clamp;
@@ -298,9 +299,9 @@ export class FinalWorld {
  setPlayerTrain(id,count){this.playerTrain?.dispose();this.playerTrain=new PlayerTrain(this,id,count);}
  setCabView(origin){this.viewOrigin=origin;this.currentView=undefined;}
  setDrawDistance(value){this.drawDistance=Math.max(500,Math.min(2000,Number(value)||1500));this.camera.far=this.drawDistance+400;this.camera.updateProjectionMatrix();this.scene.fog.far=this.drawDistance;this.scene.fog.near=Math.min(350,this.drawDistance*.3);}
- render(s,v,dt,{acceleration=0,shake=1,panorama=false,outer=false,railfan=false,clock}={}){this.externalView=outer;const chunk=Math.floor(s/500);for(let i=chunk-1;i<=chunk+Math.ceil(this.drawDistance/500);i++)if(!this.chunks.has(i))this.chunks.set(i,this.buildChunk(i));for(const [i,g]of this.chunks)if(i<chunk-1||i>chunk+Math.ceil(this.drawDistance/500)){this.disposeChunk(g);this.chunks.delete(i);}
-  if(this.currentView!==panorama){if(!panorama&&this.viewOrigin)this.camera.setViewOffset(1600,900,800-this.viewOrigin.x,450-this.viewOrigin.y,1600,900);else this.camera.clearViewOffset();this.currentView=panorama;}
-  const f=this.driveFrame(s),head=this.drivePoint(s+45),motion=this.suspension.update({s,speed:v,curvature:this.curvature(s),acceleration},dt,shake),eye=Number(this.route.eyeHeight??2.7),offset=(this.route.eyeOffset??0)+motion.lateral;this.camera.position.copy(f.p).addScaledVector(f.right,offset);this.camera.position.y+=eye+motion.vertical;head.addScaledVector(f.right,offset);head.y+=eye+motion.vertical;this.camera.lookAt(head);this.camera.rotateX(motion.pitch);this.camera.rotateY(motion.yaw);this.camera.rotateZ(motion.roll);const tunnel=(this.route.structures??[]).some(t=>t.kind==='tunnel'&&s>=t.sStart&&s<=t.sEnd);this.sky.intensity=this.route.night?.22:tunnel?.6:2.1;this.sun.intensity=this.route.night?.04:tunnel?.3:2.1;if(this.headlight)this.headlight.intensity=this.route.night?750:tunnel?550:0;this.trees.update(s);this.traffic.update(s,dt);this.playerTrain?.update(s,outer);if(outer)this.playerTrain?.camera(s,railfan,v,dt);this.crossings.update(s,v,dt,(this.playerTrain?.count??2)*20);this.ballastDetail.update(s,railfan?this.playerTrain?.railfanController.spot?.s??s:s);this.roadScenery.update(s,v,dt,railfan?this.playerTrain?.railfanController.spot?.s??s:s);this.atmosphere.update(s,dt,{tunnel,clock,moving:Math.abs(v)>.1||this.traffic.trains.length>0});this.renderer.render(this.scene,this.camera);
+ render(s,v,dt,{acceleration=0,shake=1,panorama=false,outer=false,railfan=false,clock}={}){this.externalView=outer;const focus=railfan?this.playerTrain?.railfanController.prepare(s):s,needed=filmingChunkIndices(s,focus,this.drawDistance);for(const i of needed)if(!this.chunks.has(i))this.chunks.set(i,this.buildChunk(i));for(const [i,g]of this.chunks)if(!needed.has(i)){this.disposeChunk(g);this.chunks.delete(i);}
+
+  const f=this.driveFrame(s),head=this.drivePoint(s+45),motion=this.suspension.update({s,speed:v,curvature:this.curvature(s),acceleration},dt,shake),eye=Number(this.route.eyeHeight??2.7),offset=(this.route.eyeOffset??0)+motion.lateral;this.camera.position.copy(f.p).addScaledVector(f.right,offset);this.camera.position.y+=eye+motion.vertical;head.addScaledVector(f.right,offset);head.y+=eye+motion.vertical;this.camera.lookAt(head);this.camera.rotateX(motion.pitch);this.camera.rotateY(motion.yaw);this.camera.rotateZ(motion.roll);const tunnel=(this.route.structures??[]).some(t=>t.kind==='tunnel'&&(railfan?focus:s)>=t.sStart&&(railfan?focus:s)<=t.sEnd);this.sky.intensity=this.route.night?.22:tunnel?.6:2.1;this.sun.intensity=this.route.night?.04:tunnel?.3:2.1;if(this.headlight)this.headlight.intensity=this.route.night?750:tunnel?550:0;this.trees.update(s);this.traffic.update(s,dt);this.playerTrain?.update(s,outer);if(outer)this.playerTrain?.camera(s,railfan,v,dt);this.crossings.update(s,v,dt,(this.playerTrain?.count??2)*20);this.ballastDetail.update(s,railfan?this.playerTrain?.railfanController.spot?.s??s:s);this.roadScenery.update(s,v,dt,railfan?this.playerTrain?.railfanController.spot?.s??s:s);this.atmosphere.update(s,dt,{tunnel,clock,moving:Math.abs(v)>.1||this.traffic.trains.length>0});this.renderer.render(this.scene,this.camera);
  }
  dispose(){this.roadScenery.dispose();this.ballastDetail.dispose();this.crossings.dispose();this.atmosphere.dispose();this.trees.dispose();this.playerTrain?.dispose();this.traffic.dispose();for(const g of this.chunks.values())this.disposeChunk(g);this.chunks.clear();for(const m of this.materials.values()){m.map?.dispose();m.emissiveMap?.dispose();m.bumpMap?.dispose();m.userData.richNormalMap?.dispose();m.dispose();}this.box.dispose();this.platformRailGeometry?.dispose();this.houseRoof.dispose();this.pine?.dispose();this.canopy?.dispose();this.renderer.dispose();this.renderer.forceContextLoss();this.renderer.domElement.remove();}
 }

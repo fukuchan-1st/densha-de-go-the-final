@@ -1,5 +1,5 @@
 import {setRailPose} from './rail-pose.js?v=80';
-import {RailfanCamera} from './railfan-camera.js?v=79';
+import {RailfanCamera} from './railfan-camera.js?v=81';
 import {OuterCamera} from './outer-camera.js?v=73';
 import * as T from './assets/vendor/three.module.js';
 import {ImportedTrafficModels} from './opposing-models.js?v=80';
