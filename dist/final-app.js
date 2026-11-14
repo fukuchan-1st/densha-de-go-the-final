@@ -18,11 +18,11 @@ import {beginTerminalOpening,advanceTerminalOpening} from './terminal-arrival.js
 import {vehiclePhoto} from './vehicle-photos.js?v=corridor1';
 import {mountTrainDetails} from './train-details.js?v=72';
 import {mountWheelPicker} from './wheel-picker.js?v=72';
-import {routePlanningSpec,mountScoring,checkpointMarks,scoringStations,buildScoreTimetable,resolveScoreSchedule,scoreHazards,hornMarks,currentScoreRestriction,signalRestriction} from './scoring.js?v=77';
+import {routePlanningSpec,mountScoring,checkpointMarks,scoringStations,buildScoreTimetable,resolveScoreSchedule,scoreHazards,hornMarks,currentScoreRestriction,signalRestriction} from './scoring.js?v=80';
 import {mountDrivingOverlay} from './driving-overlay.js?v=72';import {mountLookahead,changesFromSections,stationMarks} from './lookahead.js?v=evaluation59';
-import {serviceChoices,makeServiceRoute} from './train-selection.js?v=79';
+import {serviceChoices,makeServiceRoute} from './train-selection.js?v=80';
 import {GeneratedCab,generatedCab} from './generated-cab.js';
-import {FinalWorld} from './final-world.js?v=79';
+import {FinalWorld} from './final-world.js?v=80';
 import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=72';
 import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=72';
 import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,routeLimitAt,stopPosition,finishStop,beginDoorClosing,isDoorClosing,takeDepartureCall} from './final-model.js?v=72';
@@ -276,7 +276,7 @@ function hud(){{const lr=route(),end=lr.stations[run.endIndex]?.s??Infinity;look
   $('nativeDistance').textContent=distanceLabel(upcoming.s-run.s);
  }
  const limit=routeLimitAt(r,run.s);
- $('vehicleLimit').textContent=limit===null?`車両上限 ${recipe().playableSpecs.maxSpeedKmh} km/h`:`区間制限 ${limit} km/h`;
+ $('vehicleLimit').textContent=limit===null?'区間制限 解除':`区間制限 ${limit} km/h`;
  $('vehicleLimit').classList.toggle('overspeed',limit!==null&&speed>limit);
  $('eventText').textContent=run.correctedStopError!=null&&run.doorPhase==='waiting-open'?`行き過ぎ ${distanceLabel(run.correctedStopError)} → 停止位置 0 cm に補正`:run.doorPhase==='waiting-open'?`停車確認 ${Math.min(3,Math.floor(run.stopWait))} / 3秒`:run.doorPhase==='boarding'?`乗降中　戸閉合図まで ${Math.max(0,Math.ceil(Math.max(15-run.dwell,yaganBoardingDelay(run,r))))}秒`:run.doorPhase==='announcement'?'合図音を再生中':run.doorPhase==='closing'?'戸閉中 · 音の終了後に戸閉灯が点灯':run.elapsed<toastUntil?toastText:`次の停車駅は ${next.name} です。`;
  const controller=controlsFor(recipe());overlayControls.update({value:run.notch,min:controller.min,max:controller.max,labels:controller.labels,disabled:paused||run.finished});

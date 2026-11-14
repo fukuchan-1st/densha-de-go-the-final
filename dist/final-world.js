@@ -1,24 +1,25 @@
+import {chuoScenery,mountainArea} from './geographic-sections.js?v=80';
 import {prepareUrbanViaduct} from './urban-viaduct.js?v=79';
-import {RoadScenery} from './road-scenery.js?v=79';
+import {RoadScenery} from './road-scenery.js?v=80';
 import {BallastDetail} from './ballast-detail.js?v=79';
 import {whiteRailPost,tactileMaterial,safePlatformBounds,platformStripClear} from './platform-details.js?v=79';
 import {LevelCrossings} from './crossings.js?v=79';
 import {createTerrainMaterial,createBuildingMaterial,terrainKind,terrainShade,buildingVariant,buildingPalette} from './terrain-materials.js?v=79';
 import {SceneAtmosphere} from './scene-atmosphere.js?v=79';
 import {RealTrees,treeVariant} from './real-trees.js?v=76';
-import {PlayerTrain} from './player-train.js?v=79';
+import {PlayerTrain} from './player-train.js?v=80';
 import {prepareLeftTraffic} from './route-traffic.js?v=79';
 import {prepareCorridorScenery,corridorSceneryType} from './corridor-scenery.js?v=controls55';
 import {sampleRouteCurve} from './route-curve.js?v=39';
 import {prepareTurnoutLayout} from './turnout-layout.js?v=39';
 import {addTurnouts} from './turnout-scene.js?v=76';
-import {OpposingTrains} from './opposing-trains.js?v=76';
+import {OpposingTrains} from './opposing-trains.js?v=80';
 import * as T from './assets/vendor/three.module.js';
 import {CabSuspension} from './cab-motion.js?v=24';
 import {addTrackSignal} from './track-signal.js?v=32';
 import {addStoppingMarker} from './stop-scene.js?v=76';
 import {interpolateKnots} from './track-layout.js?v=79';
-import {addYaganHillsides,addYaganTunnel} from './yagan-scenery.js?v=76';
+import {addYaganHillsides,addYaganTunnel} from './yagan-scenery.js?v=80';
 const clamp=T.MathUtils.clamp;
 // Original streamed scenery. Track coordinates come from the route JSON; buildings and platforms are approximate.
 export class FinalWorld {
@@ -76,7 +77,7 @@ export class FinalWorld {
  curvature(s){const a=this.driveFrame(s-20).dir.setY(0).normalize(),b=this.driveFrame(s+20).dir.setY(0).normalize();return Math.atan2(a.x*b.z-a.z*b.x,a.dot(b))/40;}
  grade(s){return clamp((this.point(s+10).y-this.point(s-10).y)/20*1000,-40,40);}
  structureAt(s,kind){return this.route.structures?.find(item=>(!kind||item.kind===kind)&&s>=item.sStart&&s<=item.sEnd);}
- sceneryTypeAt(s){if(['itsukaichi','chuo-itsukaichi'].includes(this.route.id)){const end=this.sceneryStations.find(st=>st.name==='武蔵増戸')?.s??this.length;return this.route.reverseDirection?(s>end?'suburban':'mountain'):(s<end?'suburban':'mountain');}const corridor=corridorSceneryType(this.route,s);if(corridor)return corridor;if(this.chuoCorridor)return s<this.cityEnd?'city':s<this.mountainStart?'suburban':'mountain';return this.rural?'mountain':(['yamanote','osaka'].includes(this.route.id)||this.stationNear(s).d<900?'city':'suburban');}
+ sceneryTypeAt(s){if(['itsukaichi','chuo-itsukaichi'].includes(this.route.id)){const end=this.sceneryStations.find(st=>st.name==='武蔵増戸')?.s??this.length;return this.route.reverseDirection?(s>end?'suburban':'mountain'):(s<end?'suburban':'mountain');}const chuo=chuoScenery(this.route,s);if(chuo)return chuo;const corridor=corridorSceneryType(this.route,s);if(corridor)return corridor;if(this.chuoCorridor)return s<this.cityEnd?'city':s<this.mountainStart?'suburban':'mountain';return this.rural?'mountain':(['yamanote','osaka'].includes(this.route.id)||this.stationNear(s).d<900?'city':'suburban');}
  stationNear(s){let nearest=null,d=Infinity;for(const st of this.sceneryStations??this.route.stations){const dd=Math.abs(st.s-s);if(dd<d){nearest=st;d=dd;}}return {st:nearest,d};}
  platformLength(){return clamp((this.route.carCount??10)*20+20,180,280);}
  oppositeOffset(s){
@@ -142,7 +143,7 @@ export class FinalWorld {
   }
  }
  buildChunk(index){const group=new T.Group(),start=Math.max(-300,index*500),end=Math.min(this.length+300,(index+1)*500);if(end<=start)return group;
-  if(!this.rural||start<this.mountainStart){const finish=this.rural?Math.min(end,this.mountainStart):end;for(let a=start;a<finish;a+=50){const b=Math.min(finish,a+50),kind=this.sceneryTypeAt((a+b)/2);this.ribbon(group,a,b,0,260,-.2,kind==='mountain'?'#869177':'#9a9d93',10);}}
+  {const finish=end;for(let a=start;a<finish;a+=50){const b=Math.min(finish,a+50),kind=this.sceneryTypeAt((a+b)/2);this.ribbon(group,a,b,0,260,-.2,kind==='mountain'?'#869177':'#9a9d93',10);}}
   const tracks=[{start,end,offset:s=>this.driveOffset(s)}];
   const nearby=(this.sceneryStations??this.route.stations).filter(st=>st.s+360>=start&&st.s-420<=end);
   if(this.route.neighborTracks){
@@ -160,7 +161,7 @@ export class FinalWorld {
   const structures=(this.route.structures??[]).filter(item=>item.sStart<end&&item.sEnd>start);
   let seed=(index*1297+this.route.id.length*701)>>>0;
   const random=()=>{seed=(1664525*seed+1013904223)>>>0;return seed/4294967296;};
-  if(this.rural&&end>this.mountainStart)addYaganHillsides(T,this,group,Math.max(start,this.mountainStart),end,trackEnvelope,structures.filter(item=>item.kind==='bridge'),random);
+  if(this.rural&&mountainArea(this.route,(start+end)/2))addYaganHillsides(T,this,group,start,end,trackEnvelope,structures.filter(item=>item.kind==='bridge'),random);
   if(this.route.elevatedTrack){
    for(let a=start;a<end;a+=6){
     const depth=Math.min(6,end-a),s=a+depth/2,height=this.deckHeight(s);
@@ -174,7 +175,7 @@ export class FinalWorld {
     const [min,max]=trackEnvelope(s);
     for(const x of [min-1.8,max+1.8])this.cube(group,s,x,0,1.15,height-.8,1.3,'#a5a69b');
    }
-   for(const road of this.route.roadsBelow??[]){
+   for(const road of this.route.roads?.length?[]:this.route.roadsBelow??[]){
     if(road.s<start||road.s>=end)continue;
     const f=this.point(road.s),mesh=new T.Mesh(this.box,this.mat('#565b5b'));
     mesh.position.set(road.x,f.y-.13,-road.z);

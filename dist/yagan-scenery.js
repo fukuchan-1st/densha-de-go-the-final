@@ -1,13 +1,14 @@
+import {valleyWidth} from './geographic-sections.js?v=80';
 import {terrainShade} from './terrain-materials.js?v=76';
 import {treeVariant} from './real-trees.js?v=76';
 import {interpolateKnots} from './track-layout.js?v=79';
 
 const hillsides=[-148,-96,-61,-36,-20,-10,10,20,36,61,96,148];
 
-function hillsideHeight(s,x){
+function hillsideHeight(s,x,valleyWidth=10){
  const distance=Math.abs(x),side=Math.sign(x);
  const valley=.63+.25*Math.sin(s/640+side)+.12*Math.sin(s/161+side*2);
- const rise=Math.max(0,distance-10);
+ const rise=Math.max(0,distance-valleyWidth);
  return rise*valley*.8+Math.min(7,rise*.18)*Math.sin(s/95+x/23)-.25;
 }
 
@@ -16,10 +17,10 @@ export function addYaganHillsides(T,world,group,start,end,envelope,bridges,rando
  const deckDrop=s=>bridges.some(bridge=>s>=bridge.sStart&&s<=bridge.sEnd)?-8:0;
  const railEdge=(x,limits)=>x<0?limits[0]:limits[1];
  for(let s=start,row=0;;s=Math.min(s+10,end),row++){
-  const limits=envelope(s);
+  const limits=envelope(s),basinWidth=valleyWidth(world.route??{},s);
   for(const x of hillsides){
    const {p}=world.frame(s,x+railEdge(x,limits));
-   vertices.push(p.x,p.y+hillsideHeight(s,x)+deckDrop(s),p.z);uv.push(p.x/7,p.z/7);const shade=terrainShade(p.x,p.z);colors.push(shade,shade,shade);
+   vertices.push(p.x,p.y+hillsideHeight(s,x,basinWidth)+deckDrop(s),p.z);uv.push(p.x/7,p.z/7);const shade=terrainShade(p.x,p.z);colors.push(shade,shade,shade);
   }
   const width=hillsides.length;
   if(row)for(let col=0;col<width-1;col++){

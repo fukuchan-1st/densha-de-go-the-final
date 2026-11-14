@@ -15,15 +15,13 @@ export class ScoreEngine{
   this.presses=this.presses.filter(x=>t-x<=this.cfg.hornBurstSeconds);if(this.presses.length===0)this.burstBad=false;
   const eb=context.eb===notch;if(eb&&!this.eb&&(v>.01||(prev?.v??0)>.01))this.award('×','走行中の非常ブレーキ',50);this.eb=eb;
   this.checkHorn(s,context.hazards);
-  const limit=Number.isFinite(context.limit)?context.limit:null,key=context.limitKey??limit;
-  if(!this.zone||!Object.is(this.zone.limit,limit)||!Object.is(this.zone.key,key)){
-   // Complete only the restriction actually observed in the previous interval.
-   // The current speed is checked against the new limit below, never the old one.
-   if(this.zone&&Number.isFinite(this.zone.limit)&&this.zone.clean&&!this.zone.bad&&prev&&s>this.zone.startS)this.award('〇','制限速度厳守 '+this.zone.limit+' km/h');
-   this.zone={limit,key,bad:false,clean:true,startS:s};
+  if(prev&&s>prev.s)for(const sign of context.restrictionSigns??[]){
+   if(!Number.isFinite(sign.kmh)||prev.s>=sign.s||s<sign.s)continue;
+   const id='restriction-sign:'+sign.id;if(this.done.has(id))continue;this.done.add(id);
+   const f=(sign.s-prev.s)/(s-prev.s),speed=(prev.v+(v-prev.v)*f)*3.6;
+   if(speed>=sign.kmh+3)this.award('×','制限標識 '+sign.kmh+' km/h 速度超過',this.cfg.overspeedPenalty);
+   else if(speed<=sign.kmh+1e-6)this.award('〇','制限標識 '+sign.kmh+' km/h');
   }
-  if(Number.isFinite(limit)&&v*3.6>limit+1e-6)this.zone.clean=false;
-  if(Number.isFinite(limit)&&v*3.6>=limit+3&&!this.zone.bad){this.zone.bad=true;this.award('×','速度超過',this.cfg.overspeedPenalty);}
   const clock=(state.clockStart??28800)+t;
   for(const st of context.stations??[]){if(st.s<=this.start+1)continue;const key='time:'+st.id,target=timeSeconds(st.time);let actual=null;
    if(!st.stop&&prev&&prev.s<st.s&&s>=st.s){const f=(st.s-prev.s)/Math.max(.00001,s-prev.s);actual=(state.clockStart??28800)+prev.t+(t-prev.t)*f;}

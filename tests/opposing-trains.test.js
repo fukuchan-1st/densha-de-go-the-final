@@ -5,7 +5,7 @@ import {TrafficClock,adjacentTracks,OpposingTrains} from '../dist/opposing-train
 import {readFile} from 'node:fs/promises';
 import {interpolateKnots} from '../dist/track-layout.js';
 
-function modelFixture(){const definitions=new Map(['e233','e235','211','221','323','701'].map(id=>[id,{carCount:id==='701'?2:id==='211'?3:6}]));return {models:definitions,load:async id=>definitions.get(id),car:()=>new T.Group(),dispose(){}};}
+function modelFixture(){const definitions=new Map(['e233','e235','211','221','323','701','e127','e353','383','313'].map(id=>[id,{carCount:['701','e127','313'].includes(id)?2:id==='211'?3:6}]));return {models:definitions,load:async id=>definitions.get(id),car:()=>new T.Group(),dispose(){}};}
 
 test('山手線と大糸線の実データで最初の対向列車が表示される',async()=>{
  for(const id of ['yamanote','oito']){

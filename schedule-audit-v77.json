@@ -422,7 +422,7 @@
       "partialStarts": 5,
       "sections": 10,
       "checkpoints": 20,
-      "adjusted": 0
+      "adjusted": 1
     },
     {
       "line": "chuo",
@@ -612,7 +612,7 @@
       "partialStarts": 4,
       "sections": 34,
       "checkpoints": 68,
-      "adjusted": 29
+      "adjusted": 30
     },
     {
       "line": "chuo",

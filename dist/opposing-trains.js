@@ -1,4 +1,5 @@
-import {ImportedTrafficModels,opposingVehicle} from './opposing-models.js?v=76';
+import {setRailPose} from './rail-pose.js?v=80';
+import {ImportedTrafficModels,opposingVehicle,opposingVehicles} from './opposing-models.js?v=80';
 import * as T from './assets/vendor/three.module.js';
 import {interpolateKnots} from './track-layout.js?v=79';
 
@@ -18,11 +19,11 @@ export class TrafficClock {
 
 // Lightweight original models follow the same mapped rail positions as the scenery.
 export class OpposingTrains {
- constructor(world,{models}={}){this.world=world;this.clock=new TrafficClock();this.trains=[];this.serial=0;this.geometry=new T.BoxGeometry(1,1,1);this.materials=new Map();this.models=models??new ImportedTrafficModels();const ids=new Set([opposingVehicle(world.route,0),opposingVehicle(world.route,world.length)]);for(const id of ids)if(id)this.models.load(id).catch(error=>console.warn('対向列車:',error.message));}
+ constructor(world,{models}={}){this.world=world;this.clock=new TrafficClock();this.trains=[];this.serial=0;this.geometry=new T.BoxGeometry(1,1,1);this.materials=new Map();this.models=models??new ImportedTrafficModels();const stations=world.route?.sceneryStations??world.route?.stations??[],ids=new Set([0,world.length,...stations.map(x=>x.s+1)].flatMap(s=>opposingVehicles(world.route,s)));for(const id of ids)if(id)this.models.load(id).catch(error=>console.warn('対向列車:',error.message));}
  mat(color){if(!this.materials.has(color))this.materials.set(color,new T.MeshStandardMaterial({color,roughness:.65}));return this.materials.get(color);}
  type(s){return this.world.sceneryTypeAt?.(s)??'mountain';}
  spawn(player){
-  const vehicle=opposingVehicle(this.world.route,player);if(!vehicle||this.trains.length>=2)return false;const imported=this.models.models.get(vehicle);if(!imported)return false;
+  const vehicle=opposingVehicle(this.world.route,Math.min(this.world.length,player+360),this.serial++);if(!vehicle||this.trains.length>=2)return false;const imported=this.models.models.get(vehicle);if(!imported)return false;
   const urban=this.type(player)==='city',id=this.world.route?.id??'tohoku',count=imported.carCount;
   const choices=[];
   for(const distance of [360,520,700,900,1100,180,80,20]){
@@ -39,7 +40,7 @@ export class OpposingTrains {
    if(choices.length)break;
   }
   if(!choices.length)return false;
-  const {s,track,positions}=choices[this.serial++%choices.length];
+  const {s,track,positions}=choices[(this.serial-1)%choices.length];
   const group=new T.Group(),cars=[];
   for(let i=0;i<count;i++){const car=this.models.car(vehicle,i,count);group.add(car);cars.push(car);}
   this.world.atmosphere?.prepare(group);this.world.scene.add(group);this.trains.push({s,x:track.x,y:track.y,speed:urban?17:22,group,cars,positions,blocked:0});return true;
@@ -57,8 +58,7 @@ export class OpposingTrains {
    const valid=train.s+train.cars.length*20>player-350&&train.blocked<40;
    for(let i=0;valid&&i<train.cars.length;i++){
     const s=train.s+i*20.1,near=train.positions[i],f=this.world.frame(s,near.x),aheadTracks=adjacentTracks(this.world,s+3),next=aheadTracks.sort((a,b)=>Math.abs(a.x-near.x)-Math.abs(b.x-near.x))[0];
-    const car=train.cars[i];car.position.copy(f.p);car.position.y+=near.y+(this.world.deckHeight?.(s)??0);
-    const ahead=this.world.frame(s+3,next?.x??near.x).p;car.rotation.y=Math.atan2(-(ahead.x-f.p.x),-(ahead.z-f.p.z));
+    const car=train.cars[i],railPoint=at=>{const p=this.world.frame(at,near.x).p;p.y+=near.y+(this.world.deckHeight?.(at)??0);return p;};setRailPose(car,railPoint(s-7.1),railPoint(s+7.1));
    }
 
    if(!valid){this.world.scene.remove(train.group);this.trains.splice(this.trains.indexOf(train),1);}

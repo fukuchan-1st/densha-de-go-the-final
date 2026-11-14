@@ -3,7 +3,8 @@ export {routePlanningSpec};
 import {yaganPlanningSpec,rebuildYaganTimetable,planningGrade} from './yagan-timetable.js?v=75';
 import {osakaPlanningSpec,rebuildOsakaTimetable} from './osaka-timetable.js?v=72';
 import {ScoreAudio} from './score-audio.js?v=phone58fix';
-import {ScoreEngine,timeSeconds} from './score-engine.js?v=evaluation59';
+import {ScoreEngine,timeSeconds} from './score-engine.js?v=80';
+import {restrictionSigns} from './restriction-signs.js?v=80';
 export function mountScoring(parent,{badge,volume=()=>.65,blueTolerance=3}={}){
  const hud=document.createElement('div');hud.className='score-hud';hud.innerHTML='<small><b class="chain-number">0</b> chain</small><strong><b class="points-number">0</b> points</strong>';
  if(badge){[...badge.children].forEach(c=>c.hidden=true);badge.append(hud);badge.classList.add('scoring-badge');}else parent.append(hud);
@@ -31,7 +32,7 @@ export function hornMarks(hazards=[],done=new Set()){return hazards.filter(h=>!d
 export function currentScoreRestriction(route,s){
  const active=(route.limits??[]).map((x,i)=>({...x,index:i})).filter(x=>s>=x.sStart&&s<x.sEnd&&Number.isFinite(x.kmh));
  const signal=signalRestriction(route.signals,s),limit=Math.min(...active.map(x=>x.kmh),signal?.limit??Infinity);
- return Number.isFinite(limit)?{limit,limitKey:[...active.filter(x=>x.kmh===limit).map(x=>'track:'+x.index),...(signal?.limit===limit?[signal.key]:[])].join('|')}:{limit:null,limitKey:null};
+ const signs=restrictionSigns(route);return Number.isFinite(limit)?{restrictionSigns:signs,limit,limitKey:[...active.filter(x=>x.kmh===limit).map(x=>'track:'+x.index),...(signal?.limit===limit?[signal.key]:[])].join('|')}:{restrictionSigns:signs,limit:null,limitKey:null};
 }
 export function signalRestriction(signals,s){const index=(signals??[]).findLastIndex(x=>x.s<=s);const signal=signals?.[index];if(!signal||['green','proceed','G',0].includes(signal.aspect))return null;const limit=signal.speedLimitKmh??signal.speedLimit??signal.limitKmh;return Number.isFinite(limit)?{limit,key:'signal:'+index}:null;}
 

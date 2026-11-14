@@ -1,3 +1,4 @@
+import {releaseMatsumotoExpressLimit} from './geographic-sections.js?v=80';
 import {prepareLeftTraffic} from './route-traffic.js?v=79';
 import {selectTokaidoServiceTrack} from './tokaido-service-track.js?v=services63';
 import {serviceChoices,STOP_PATTERNS} from './service-catalog.js?v=79';
@@ -6,6 +7,7 @@ export {serviceChoices};
 function makeDefaultServiceRoute(route,vehicle,service){
  route=selectTokaidoServiceTrack(route,service);
  route={...route,sceneryStations:route.sceneryStations??route.stations,limits:route.limitsByVehicle?.[vehicle]??route.limits};
+ route=releaseMatsumotoExpressLimit(route,vehicle,service);
  // Yagan service: 70 km/h across ordinary sections; keep lower station/point limits.
  if(route.id==='yagan'){const end=route.length??route.stations.at(-1)?.s??0;route={...route,serviceSpeedKmh:70,limits:[{sStart:0,sEnd:end+1,kmh:70},...(route.limits??[]).filter(x=>x.kmh<70).map(x=>({...x}))]};}
  if(route.id==='oito'){
@@ -22,6 +24,7 @@ function makeDefaultServiceRoute(route,vehicle,service){
 export function makeServiceRoute(route,vehicle,service,option){
  if(!option)return makeDefaultServiceRoute(route,vehicle,service);
  let r=selectTokaidoServiceTrack(route,service.includes('しなの')?'特急':service);r={...r,sceneryStations:r.sceneryStations??r.stations,limits:r.limitsByVehicle?.[vehicle]??r.limits};
+ r=releaseMatsumotoExpressLimit(r,vehicle,service);
  if(r.id==='yagan')r=makeDefaultServiceRoute(r,vehicle,'普通');
  r=prepareLeftTraffic(r);
  if(option.from||option.to)r=sliceRoute(r,option.from,option.to);

@@ -3,19 +3,19 @@ import {ScoreEngine} from '../dist/score-engine.js';import {currentScoreRestrict
 const state=(s,kmh,t)=>({s,v:kmh/3.6,elapsed:t,notch:0,clockStart:0});
 const route={limits:[{sStart:0,sEnd:1000,kmh:80},{sStart:200,sEnd:300,kmh:120},{sStart:1000,sEnd:2000,kmh:60}]};
 const tick=(e,s,v,t,r=route)=>e.tick(state(s,v,t),{...currentScoreRestriction(r,s),eb:-9,stations:[]},.1);
-test('compliant active interval earns one circle at its end and participates in chains',()=>{
- const e=new ScoreEngine();for(const [s,v,t] of [[0,0,0],[100,60,1],[210,60,2],[310,60,3],[999,60,4]])tick(e,s,v,t);
- assert.equal(e.points,0);tick(e,1000,60,5);assert.equal(e.points,50);tick(e,1100,50,6);tick(e,2000,80,7);assert.equal(e.points,150);assert.equal(e.chain,2);
+test('numeric sign scores once on passage, never for waiting, interval completion or release',()=>{
+ const e=new ScoreEngine();tick(e,0,60,0);tick(e,999,60,1);assert.equal(e.points,0);tick(e,1000,60,2);assert.equal(e.points,50);tick(e,1100,50,3);tick(e,2000,50,4);assert.equal(e.points,50);assert.equal(e.chain,1);
+ tick(e,999,60,5);tick(e,1000,60,6);assert.equal(e.points,50);
 });
-test('3km/h over gives one -100, resets chain, and suppresses completion reward',()=>{
- const e=new ScoreEngine();e.award('〇','prior');tick(e,0,70,0);tick(e,200,83,1);tick(e,500,90,2);tick(e,1000,50,3);
- assert.equal(e.points,-50);assert.equal(e.chain,0);assert.equal(e.events.filter(x=>x.reason==='速度超過').length,1);assert.equal(e.events.filter(x=>x.reason.startsWith('制限速度厳守')).length,0);
+test('3km/h over at the actual sign gives -100; later speeding does not repeat its event',()=>{
+ const e=new ScoreEngine();e.award('〇','prior');tick(e,0,70,0);tick(e,999,63,1);tick(e,1000,63,2);assert.equal(e.points,-50);assert.equal(e.chain,0);tick(e,1500,90,3);tick(e,2000,90,4);assert.equal(e.points,-50);
 });
-test('less than 3km/h over has no penalty but is not a compliant interval',()=>{const e=new ScoreEngine();tick(e,0,81,0);tick(e,1000,50,1);assert.equal(e.events.length,0);});
-test('restrictive signal counts and proceed signal releases it',()=>{
- const e=new ScoreEngine(),r={limits:[],signals:[{s:0,aspect:'yellow',speedLimitKmh:45},{s:500,aspect:'green'}]};tick(e,0,40,0,r);tick(e,499,40,1,r);tick(e,500,80,2,r);assert.equal(e.points,50);assert.equal(currentScoreRestriction(r,600).limit,null);
- const f=new ScoreEngine();tick(f,0,48,0,r);tick(f,500,80,2,r);assert.equal(f.points,-100);
+test('less than 3km/h over at a sign has neither reward nor penalty',()=>{const e=new ScoreEngine();tick(e,999,62,0);tick(e,1000,62,1);assert.equal(e.events.length,0);});
+test('non-proceed signal is scored on passage, proceed and release never score',()=>{
+ const r={limits:[],signals:[{s:100,aspect:'yellow',speedLimitKmh:45},{s:500,aspect:'green'}]},e=new ScoreEngine();tick(e,0,40,0,r);tick(e,100,40,1,r);assert.equal(e.points,50);tick(e,500,80,2,r);assert.equal(e.points,50);assert.equal(currentScoreRestriction(r,600).limit,null);
+ const f=new ScoreEngine();tick(f,0,48,0,r);tick(f,100,48,1,r);tick(f,500,80,2,r);assert.equal(f.points,-100);
 });
+
 test('tunnel and worker positions remain distinct and adjacent tunnel fragments merge',()=>{
  const hazards=scoreHazards({structures:[{kind:'tunnel',sStart:500,sEnd:600},{kind:'tunnel',sStart:600,sEnd:700},{kind:'workers',s:1200},{kind:'maintenance',s:1600}],workers:[{position:2000}]});assert.equal(hazards.length,4);assert.equal(new Set(hazards.map(h=>h.id)).size,4);assert.equal(hornMarks(hazards)[0].s,350);
 });

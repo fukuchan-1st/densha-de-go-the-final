@@ -10,7 +10,7 @@ import {reverseLegacyProfile,reverseLegacyLayout,normalizeLegacyLayout} from './
 import {loadAudioMix,audioMixMarkup,bindAudioMix} from './audio-mix.js?v=keys61fix';
 import {bindScreenKeys} from './screen-keys.js?v=72';
 import {beginTerminalOpening,advanceTerminalOpening} from './terminal-arrival.js?v=score13';
-import {mountScoring,checkpointMarks,buildScoreTimetable,resolveScoreSchedule,scoreHazards,hornMarks,currentScoreRestriction,signalRestriction} from './scoring.js?v=77';
+import {mountScoring,checkpointMarks,buildScoreTimetable,resolveScoreSchedule,scoreHazards,hornMarks,currentScoreRestriction,signalRestriction} from './scoring.js?v=80';
 import {mountLookahead,changesFromSteps,stationMarks} from './lookahead.js?v=evaluation59';const lookahead=mountLookahead(document.getElementById('drive'));
 import {GeneratedCab,generatedCab} from './generated-cab.js';
 import {mountResponsiveUI} from './responsive-ui.js?v=phone58fix';
