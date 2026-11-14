@@ -2,7 +2,7 @@ import {loadRoadAsset} from './road-assets.js?v=79';
 import {CrossingAudio} from './crossings.js?v=79';
 import {VIEW_LABELS,normalizedView,replayViewMode} from './view-modes.js?v=79';
 import {progress,serviceKey} from './scenario-progress.js?v=72';
-import {serviceChoices} from './service-catalog.js?v=79';
+import {serviceChoices} from './service-catalog.js?v=82';
 import {installCheats,jumpToStation} from './game-cheats.js?v=72';
 import {DutyRecorder,loadReplay,replayStateAt,recordReplayAudio} from './replay-store.js?v=79';
 import {collectStationReports,collectRestrictionReports,pauseWhenSpeechEnds} from './station-timing.js?v=72';
@@ -10,7 +10,7 @@ import {reverseLegacyProfile,reverseLegacyLayout,normalizeLegacyLayout} from './
 import {loadAudioMix,audioMixMarkup,bindAudioMix} from './audio-mix.js?v=keys61fix';
 import {bindScreenKeys} from './screen-keys.js?v=72';
 import {beginTerminalOpening,advanceTerminalOpening} from './terminal-arrival.js?v=score13';
-import {mountScoring,checkpointMarks,buildScoreTimetable,resolveScoreSchedule,scoreHazards,hornMarks,currentScoreRestriction,signalRestriction} from './scoring.js?v=80';
+import {mountScoring,checkpointMarks,buildScoreTimetable,resolveScoreSchedule,scoreHazards,hornMarks,currentScoreRestriction,signalRestriction} from './scoring.js?v=82';
 import {mountLookahead,changesFromSteps,stationMarks} from './lookahead.js?v=evaluation59';const lookahead=mountLookahead(document.getElementById('drive'));
 import {GeneratedCab,generatedCab} from './generated-cab.js';
 import {mountResponsiveUI} from './responsive-ui.js?v=phone58fix';
@@ -20,7 +20,7 @@ import {LAST_STATION_INDEX as FULL_LAST_STATION_INDEX,BVE_END} from './route-dat
 import {mountDisplay,stoppingMarker,formatStopDistance} from './display.js?v=41';
 import {STATIONS as ALL_STATIONS,SPECS,step,newRun,stoppingDistance,assistBrake,notchDeltaForKey,NOTCH_MIN,NOTCH_LABELS,clampNotch} from './physics.js?v=72';
 import {RouteProfile} from './route-profile.js?v=23';
-import {RailWorld} from './scene.js?v=81';
+import {RailWorld} from './scene.js?v=82';
 import {SoundEngine} from './assets/audio/sound-engine.js?v=72';
 const rangeQuery=new URLSearchParams(location.search),requestedEnd=Number(rangeQuery.get('end')),requestedStart=Number(rangeQuery.get('station')??0);
 const reverseDirection=rangeQuery.get('direction')==='reverse',fullLength=ALL_STATIONS.at(-1).s,DIRECTION_STATIONS=reverseDirection?ALL_STATIONS.map(x=>({...x,s:fullLength-x.s})).reverse():ALL_STATIONS;
@@ -171,7 +171,7 @@ function advance(dt){if(run.finished)return;const next=STATIONS[run.next],d=next
 function updateDriverCalls(){
  if(run.doors||run.finished||run.v<=.01)return;
  const distance=STATIONS[run.next].s-run.s;
- if(run.lastCalledStop!==run.next&&distance>=0&&distance<=150){
+ if(run.lastCalledStop!==run.next&&distance>=0&&distance<=300){
   run.lastCalledStop=run.next;
   sound.callRouteCue('701-approach',ALL_STATIONS.findIndex(st=>st.name===STATIONS[run.next].name));
  }

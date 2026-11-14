@@ -1,6 +1,7 @@
-import {valleyWidth} from './geographic-sections.js?v=80';
+import {tohoTerrainHeight} from './toho-scenery.js?v=82';
+import {valleyWidth} from './geographic-sections.js?v=82';
 import {terrainShade} from './terrain-materials.js?v=76';
-import {treeVariant} from './real-trees.js?v=76';
+import {treeVariant} from './real-trees.js?v=82';
 import {interpolateKnots} from './track-layout.js?v=79';
 
 const hillsides=[-148,-96,-61,-36,-20,-10,10,20,36,61,96,148];
@@ -12,15 +13,23 @@ function hillsideHeight(s,x,valleyWidth=10){
  return rise*valley*.8+Math.min(7,rise*.18)*Math.sin(s/95+x/23)-.25;
 }
 
+export function hillsideSurfaceHeight(s,x,start,end,route,deckDrop=()=>0,heightAt=null){
+ const row=Math.min(end-0.0001,Math.max(start,s)),a=start+Math.floor((row-start)/10)*10,b=Math.min(end,a+10),u=(row-a)/Math.max(.001,b-a);
+ let i=0;while(i<hillsides.length-2&&hillsides[i+1]<x)i++;
+ const left=hillsides[i],right=hillsides[i+1],v=Math.max(0,Math.min(1,(x-left)/(right-left))),height=heightAt??((ss,xx)=>hillsideHeight(ss,xx,valleyWidth(route,ss))+deckDrop(ss));
+ const h00=height(a,left),h01=height(a,right),h10=height(b,left),h11=height(b,right);
+ return u+v<=1?h00+u*(h10-h00)+v*(h01-h00):h11+(1-u)*(h01-h11)+(1-v)*(h10-h11);
+}
 export function addYaganHillsides(T,world,group,start,end,envelope,bridges,random){
  const vertices=[],indices=[],uv=[],colors=[];
  const deckDrop=s=>bridges.some(bridge=>s>=bridge.sStart&&s<=bridge.sEnd)?-8:0;
  const railEdge=(x,limits)=>x<0?limits[0]:limits[1];
+ const groundHeight=(s,x)=>tohoTerrainHeight(world.route,world.frame(s,x+railEdge(x,envelope(s))).p,hillsideHeight(s,x,valleyWidth(world.route,s))+deckDrop(s));
  for(let s=start,row=0;;s=Math.min(s+10,end),row++){
   const limits=envelope(s),basinWidth=valleyWidth(world.route??{},s);
   for(const x of hillsides){
    const {p}=world.frame(s,x+railEdge(x,limits));
-   vertices.push(p.x,p.y+hillsideHeight(s,x,basinWidth)+deckDrop(s),p.z);uv.push(p.x/7,p.z/7);const shade=terrainShade(p.x,p.z);colors.push(shade,shade,shade);
+   vertices.push(p.x,p.y+groundHeight(s,x),p.z);uv.push(p.x/7,p.z/7);const shade=terrainShade(p.x,p.z);colors.push(shade,shade,shade);
   }
   const width=hillsides.length;
   if(row)for(let col=0;col<width-1;col++){
@@ -52,8 +61,8 @@ export function addYaganHillsides(T,world,group,start,end,envelope,bridges,rando
    const [left,right]=envelope(s);
    if(x>left-5&&x<right+5)continue;
    const height=interpolateKnots(knots,s,2);
-   const groundLevel=hillsideHeight(s,x-railEdge(x,[left,right]))+deckDrop(s);
-   addTree({s,x,y:Math.max(groundLevel,height)},model.startsWith('TreesC')?pines:leaves);
+   const groundLevel=hillsideSurfaceHeight(s,x-railEdge(x,[left,right]),start,end,world.route,deckDrop,groundHeight)-.07;
+   addTree({s,x,y:groundLevel},model.startsWith('TreesC')?pines:leaves);
   }
  }
  const deepForest=world.route.id==='yagan';
@@ -65,7 +74,7 @@ export function addYaganHillsides(T,world,group,start,end,envelope,bridges,rando
    for(const distance of (deepForest?[station.d<180?32:16,27,39,52,66,81,97,113,129,140]:[station.d<180?32:16,29,45,65,88,116])){
     const x=side*(distance+random()*7);
     const ss=s+(random()-.5)*6;
-    const position={s:ss,x:x+railEdge(x,limits),y:hillsideHeight(ss,x)+deckDrop(ss)};
+    const bounds=envelope(ss);const position={s:ss,x:x+railEdge(x,bounds),y:hillsideSurfaceHeight(ss,x,start,end,world.route,deckDrop,groundHeight)-.07};
     const crown=random()<.57?pines:random()<.55?leaves:shade;
     addTree(position,crown);
    }

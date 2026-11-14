@@ -1,8 +1,9 @@
-import {releaseMatsumotoExpressLimit} from './geographic-sections.js?v=80';
+import {applyPublishedSchedule} from './published-schedules.js?v=82';
+import {releaseMatsumotoExpressLimit} from './geographic-sections.js?v=82';
 import {prepareLeftTraffic} from './route-traffic.js?v=79';
 import {selectTokaidoServiceTrack} from './tokaido-service-track.js?v=services63';
-import {serviceChoices,STOP_PATTERNS} from './service-catalog.js?v=79';
-import {sliceRoute,reverseRoute} from './service-routes.js?v=79';
+import {serviceChoices,STOP_PATTERNS} from './service-catalog.js?v=82';
+import {sliceRoute,reverseRoute} from './service-routes.js?v=82';
 export {serviceChoices};
 function makeDefaultServiceRoute(route,vehicle,service){
  route=selectTokaidoServiceTrack(route,service);
@@ -22,7 +23,7 @@ function makeDefaultServiceRoute(route,vehicle,service){
 }
 
 export function makeServiceRoute(route,vehicle,service,option){
- if(!option)return makeDefaultServiceRoute(route,vehicle,service);
+ if(!option)return applyPublishedSchedule(makeDefaultServiceRoute(route,vehicle,service),vehicle,service);
  let r=selectTokaidoServiceTrack(route,service.includes('しなの')?'特急':service);r={...r,sceneryStations:r.sceneryStations??r.stations,limits:r.limitsByVehicle?.[vehicle]??r.limits};
  r=releaseMatsumotoExpressLimit(r,vehicle,service);
  if(r.id==='yagan')r=makeDefaultServiceRoute(r,vehicle,'普通');
@@ -36,5 +37,5 @@ export function makeServiceRoute(route,vehicle,service,option){
  else stops=makeDefaultServiceRoute(r,vehicle,service).stations;
  r={...r,sceneryStations:all,stations:stops,service,vehicle,serviceOption:option};if(option.reverse)r=reverseRoute(r);
  if(option.startTime){r={...r,night:!!option.night,stations:r.stations.map(x=>{const st={...x};for(const k of ['arrival','departure','time','passTime','startTime'])delete st[k];return st;}),sceneryStations:r.sceneryStations.map(x=>{const st={...x};for(const k of ['arrival','departure','time','passTime','startTime'])delete st[k];return st;})};r.stations[0].startTime=option.startTime??'20:00:00';}
- return r;
+ return applyPublishedSchedule(r,vehicle,service);
 }

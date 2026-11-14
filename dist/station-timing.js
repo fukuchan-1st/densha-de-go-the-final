@@ -1,5 +1,5 @@
 import {timeSeconds} from './score-engine.js';
-import {stationVoiceData} from './station-voice-data.js?v=72';
+import {stationVoiceData} from './station-voice-data.js?v=82';
 import {timingVoiceData} from './timing-voice-data.js?v=72';
 export const TIMING_VOICE_WINDOW=5;
 export function timingReport(kind,error){

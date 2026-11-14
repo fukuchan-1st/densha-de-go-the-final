@@ -91,7 +91,7 @@ configs={
  'e353':(9,{'head':['E353/Tc_E353.x'],'middle':['E353/M_E353.x'],'tail':['E353/Tc_E352.x']})}
 for id,(count,roles) in configs.items():
  variants={role:export(id,role,xparts(paths),paths) for role,paths in roles.items()}
- manifest['models'][id]={'carCount':count,'variants':variants,'frontRotation':(3.141592653589793 if (id.startswith('223') or id in ['383','681']) else 0),'tailRotation':(3.141592653589793 if id in ['383','e353','681'] else 0)}
+ manifest['models'][id]={'carCount':count,'variants':variants,'frontRotation':(3.141592653589793 if (id.startswith('223') or id in ['383','681']) else 0),'tailRotation':(3.141592653589793 if id in ['383','681'] else 0)}
  if id=='681':manifest['models'][id]['formation']=['head','trailer','middle','trailer200','motor200','coupledFront','coupledRear','trailer300','tail']
  print(id,sum((OUT/p[k]).stat().st_size for p in variants.values() for k in ['file','indexFile']))
 

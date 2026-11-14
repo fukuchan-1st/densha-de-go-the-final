@@ -1,5 +1,5 @@
 import {setRailPose} from './rail-pose.js?v=80';
-import {ImportedTrafficModels,opposingVehicle,opposingVehicles} from './opposing-models.js?v=80';
+import {ImportedTrafficModels,opposingVehicle,opposingVehicles} from './opposing-models.js?v=82';
 import * as T from './assets/vendor/three.module.js';
 import {interpolateKnots} from './track-layout.js?v=79';
 

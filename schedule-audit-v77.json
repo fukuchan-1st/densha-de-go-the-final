@@ -1,7 +1,7 @@
 {
-  "scenarios": 84,
-  "sections": 2016,
-  "partialStarts": 1148,
+  "scenarios": 102,
+  "sections": 2212,
+  "partialStarts": 1314,
   "failures": [],
   "summary": [
     {
@@ -29,20 +29,20 @@
       "vehicle": "e353",
       "service": "特急",
       "reverse": false,
-      "partialStarts": 17,
+      "partialStarts": 13,
       "sections": 65,
       "checkpoints": 130,
-      "adjusted": 43
+      "adjusted": 4
     },
     {
       "line": "chuo",
       "vehicle": "e353",
       "service": "特急",
       "reverse": true,
-      "partialStarts": 17,
+      "partialStarts": 13,
       "sections": 65,
       "checkpoints": 130,
-      "adjusted": 65
+      "adjusted": 4
     },
     {
       "line": "chuo",
@@ -69,17 +69,17 @@
       "vehicle": "383",
       "service": "特急",
       "reverse": false,
-      "partialStarts": 5,
+      "partialStarts": 3,
       "sections": 18,
       "checkpoints": 36,
-      "adjusted": 14
+      "adjusted": 0
     },
     {
       "line": "chuo",
       "vehicle": "383",
       "service": "特急",
       "reverse": true,
-      "partialStarts": 5,
+      "partialStarts": 3,
       "sections": 18,
       "checkpoints": 36,
       "adjusted": 0
@@ -369,20 +369,20 @@
       "vehicle": "e353",
       "service": "特急",
       "reverse": false,
-      "partialStarts": 4,
+      "partialStarts": 1,
       "sections": 11,
       "checkpoints": 22,
-      "adjusted": 11
+      "adjusted": 0
     },
     {
       "line": "chuo",
       "vehicle": "e353",
       "service": "特急",
       "reverse": true,
-      "partialStarts": 4,
+      "partialStarts": 1,
       "sections": 11,
       "checkpoints": 22,
-      "adjusted": 11
+      "adjusted": 0
     },
     {
       "line": "chuo",
@@ -410,59 +410,119 @@
       "service": "特急",
       "reverse": false,
       "partialStarts": 5,
+      "sections": 10,
+      "checkpoints": 20,
+      "adjusted": 4
+    },
+    {
+      "line": "chuo",
+      "vehicle": "e353",
+      "service": "特急",
+      "reverse": true,
+      "partialStarts": 5,
+      "sections": 10,
+      "checkpoints": 20,
+      "adjusted": 4
+    },
+    {
+      "line": "chuo",
+      "vehicle": "211",
+      "service": "普通",
+      "reverse": false,
+      "partialStarts": 10,
       "sections": 10,
       "checkpoints": 20,
       "adjusted": 10
     },
     {
       "line": "chuo",
-      "vehicle": "e353",
-      "service": "特急",
+      "vehicle": "211",
+      "service": "普通",
       "reverse": true,
-      "partialStarts": 5,
+      "partialStarts": 10,
       "sections": 10,
       "checkpoints": 20,
+      "adjusted": 0
+    },
+    {
+      "line": "chuo",
+      "vehicle": "383",
+      "service": "特急",
+      "reverse": false,
+      "partialStarts": 2,
+      "sections": 14,
+      "checkpoints": 28,
+      "adjusted": 0
+    },
+    {
+      "line": "chuo",
+      "vehicle": "383",
+      "service": "特急",
+      "reverse": true,
+      "partialStarts": 2,
+      "sections": 14,
+      "checkpoints": 28,
+      "adjusted": 0
+    },
+    {
+      "line": "chuo",
+      "vehicle": "211",
+      "service": "普通",
+      "reverse": false,
+      "partialStarts": 5,
+      "sections": 5,
+      "checkpoints": 10,
+      "adjusted": 0
+    },
+    {
+      "line": "chuo",
+      "vehicle": "211",
+      "service": "普通",
+      "reverse": true,
+      "partialStarts": 5,
+      "sections": 5,
+      "checkpoints": 10,
+      "adjusted": 0
+    },
+    {
+      "line": "chuo",
+      "vehicle": "211",
+      "service": "普通みすず",
+      "reverse": false,
+      "partialStarts": 22,
+      "sections": 22,
+      "checkpoints": 44,
+      "adjusted": 2
+    },
+    {
+      "line": "chuo",
+      "vehicle": "211",
+      "service": "普通みすず",
+      "reverse": true,
+      "partialStarts": 22,
+      "sections": 22,
+      "checkpoints": 44,
+      "adjusted": 3
+    },
+    {
+      "line": "chuo",
+      "vehicle": "211",
+      "service": "快速",
+      "reverse": false,
+      "partialStarts": 9,
+      "sections": 13,
+      "checkpoints": 26,
       "adjusted": 1
     },
     {
       "line": "chuo",
       "vehicle": "211",
-      "service": "普通",
-      "reverse": false,
-      "partialStarts": 10,
-      "sections": 10,
-      "checkpoints": 20,
-      "adjusted": 10
-    },
-    {
-      "line": "chuo",
-      "vehicle": "211",
-      "service": "普通",
+      "service": "快速",
       "reverse": true,
-      "partialStarts": 10,
-      "sections": 10,
-      "checkpoints": 20,
-      "adjusted": 0
-    },
-    {
-      "line": "chuo",
-      "vehicle": "383",
-      "service": "特急",
-      "reverse": false,
-      "partialStarts": 4,
-      "sections": 14,
-      "checkpoints": 28,
-      "adjusted": 14
-    },
-    {
-      "line": "chuo",
-      "vehicle": "383",
-      "service": "特急",
-      "reverse": true,
-      "partialStarts": 4,
-      "sections": 14,
-      "checkpoints": 28,
-      "adjusted": 0
+      "partialStarts": 9,
+      "sections": 13,
+      "checkpoints": 26,
+      "adjusted": 1
     },
     {
       "line": "chuo",
@@ -492,7 +552,7 @@
       "partialStarts": 7,
       "sections": 7,
       "checkpoints": 14,
-      "adjusted": 5
+      "adjusted": 1
     },
     {
       "line": "chuo",
@@ -792,7 +852,7 @@
       "partialStarts": 2,
       "sections": 16,
       "checkpoints": 32,
-      "adjusted": 2
+      "adjusted": 0
     },
     {
       "line": "tokaido",
@@ -802,7 +862,7 @@
       "partialStarts": 2,
       "sections": 16,
       "checkpoints": 32,
-      "adjusted": 15
+      "adjusted": 0
     },
     {
       "line": "tohoku",
@@ -812,7 +872,7 @@
       "partialStarts": 23,
       "sections": 23,
       "checkpoints": 46,
-      "adjusted": 23
+      "adjusted": 0
     },
     {
       "line": "tohoku",
@@ -822,7 +882,7 @@
       "partialStarts": 23,
       "sections": 23,
       "checkpoints": 46,
-      "adjusted": 5
+      "adjusted": 0
     },
     {
       "line": "yagan",
@@ -843,6 +903,126 @@
       "sections": 8,
       "checkpoints": 16,
       "adjusted": 8
+    },
+    {
+      "line": "toho",
+      "vehicle": "6050",
+      "service": "普通",
+      "reverse": false,
+      "partialStarts": 24,
+      "sections": 24,
+      "checkpoints": 48,
+      "adjusted": 0
+    },
+    {
+      "line": "toho",
+      "vehicle": "6050",
+      "service": "普通",
+      "reverse": true,
+      "partialStarts": 24,
+      "sections": 24,
+      "checkpoints": 48,
+      "adjusted": 0
+    },
+    {
+      "line": "toho",
+      "vehicle": "211",
+      "service": "普通",
+      "reverse": false,
+      "partialStarts": 24,
+      "sections": 24,
+      "checkpoints": 48,
+      "adjusted": 0
+    },
+    {
+      "line": "toho",
+      "vehicle": "211",
+      "service": "普通",
+      "reverse": true,
+      "partialStarts": 24,
+      "sections": 24,
+      "checkpoints": 48,
+      "adjusted": 0
+    },
+    {
+      "line": "toho",
+      "vehicle": "6050",
+      "service": "普通",
+      "reverse": false,
+      "partialStarts": 4,
+      "sections": 4,
+      "checkpoints": 8,
+      "adjusted": 0
+    },
+    {
+      "line": "toho",
+      "vehicle": "6050",
+      "service": "普通",
+      "reverse": true,
+      "partialStarts": 4,
+      "sections": 4,
+      "checkpoints": 8,
+      "adjusted": 0
+    },
+    {
+      "line": "toho",
+      "vehicle": "211",
+      "service": "普通",
+      "reverse": false,
+      "partialStarts": 4,
+      "sections": 4,
+      "checkpoints": 8,
+      "adjusted": 0
+    },
+    {
+      "line": "toho",
+      "vehicle": "211",
+      "service": "普通",
+      "reverse": true,
+      "partialStarts": 4,
+      "sections": 4,
+      "checkpoints": 8,
+      "adjusted": 0
+    },
+    {
+      "line": "toho",
+      "vehicle": "6050",
+      "service": "普通",
+      "reverse": false,
+      "partialStarts": 1,
+      "sections": 1,
+      "checkpoints": 2,
+      "adjusted": 0
+    },
+    {
+      "line": "toho",
+      "vehicle": "6050",
+      "service": "普通",
+      "reverse": true,
+      "partialStarts": 1,
+      "sections": 1,
+      "checkpoints": 2,
+      "adjusted": 0
+    },
+    {
+      "line": "toho",
+      "vehicle": "211",
+      "service": "普通",
+      "reverse": false,
+      "partialStarts": 1,
+      "sections": 1,
+      "checkpoints": 2,
+      "adjusted": 0
+    },
+    {
+      "line": "toho",
+      "vehicle": "211",
+      "service": "普通",
+      "reverse": true,
+      "partialStarts": 1,
+      "sections": 1,
+      "checkpoints": 2,
+      "adjusted": 0
     }
   ]
 }

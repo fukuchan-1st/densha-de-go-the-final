@@ -16,7 +16,9 @@ export function routePlanningSpec(route,spec={}){
 
  for(let i=1;i<stations.length;i++){
   const a=stations[i-1],b=stations[i],both=set=>set.has(a.name)&&set.has(b.name);let min=60,max=100;
-  if(route.id==='yamanote'){min=60;max=90;}
+  if(route.id?.startsWith('toho')){min=40;max=route.id==='toho'?75:55;}
+  else if(route.id==='tatsuno'){min=55;max=85;}
+  else if(route.id==='yamanote'){min=60;max=90;}
   else if(route.id==='osaka'){min=60;max=80;}
   else if(route.id==='tokaido'){min=max=express?130:route.service==='新快速'?130:90;}
   else if(route.id==='tohoku'){min=max=105;}

@@ -18,4 +18,4 @@ export function releaseMatsumotoExpressLimit(route,vehicle,service){
 }
 
 const basin=new Set('松本 南松本 平田 村井 広丘 塩尻'.split(' '));
-export function valleyWidth(route,s){const leg=stationLeg(route,s),m=(route.sceneryStations??route.stations??[]).find(st=>st.name==='松本');return (leg.length===2&&leg.every(st=>basin.has(st.name)))||(m&&Math.abs(s-m.s)<1600)?90:10;}
+export function valleyWidth(route,s){if(route.id?.startsWith('toho'))return 85;const leg=stationLeg(route,s),m=(route.sceneryStations??route.stations??[]).find(st=>st.name==='松本');return (leg.length===2&&leg.every(st=>basin.has(st.name)))||(m&&Math.abs(s-m.s)<1600)?90:10;}

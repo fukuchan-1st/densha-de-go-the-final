@@ -1,3 +1,4 @@
+import {scheduledBoardingDelay} from './published-schedules.js?v=82';
 import {loadRoadAsset} from './road-assets.js?v=79';
 import {CrossingAudio} from './crossings.js?v=79';
 import {VIEW_LABELS,normalizedView,replayViewMode} from './view-modes.js?v=79';
@@ -5,11 +6,11 @@ import {yaganPlanningSpec,yaganBoardingReady,yaganBoardingDelay} from './yagan-t
 import {progress,serviceKey} from './scenario-progress.js?v=72';
 import {scenarioRanges} from './scenario-ranges.js?v=72';
 import {installCheats,jumpToStation} from './game-cheats.js?v=72';
-import {mountGameShell} from './game-shell.js?v=76';
+import {mountGameShell} from './game-shell.js?v=82';
 import {DutyRecorder,replayStateAt,recordReplayAudio} from './replay-store.js?v=79';
 import {osakaPlanningSpec} from './osaka-timetable.js?v=72';
 import {collectStationReports,collectRestrictionReports,pauseWhenSpeechEnds} from './station-timing.js?v=72';
-import {buildConnectingRoutes} from './service-catalog.js?v=79';
+import {buildConnectingRoutes} from './service-catalog.js?v=82';
 import {loadAudioMix,audioMixMarkup,bindAudioMix} from './audio-mix.js?v=keys61fix';
 import {bindRouteKeys,bindScreenKeys} from './screen-keys.js?v=72';
 import {sharedEffects} from './buffered-effects.js?v=phone58fix';
@@ -18,13 +19,13 @@ import {beginTerminalOpening,advanceTerminalOpening} from './terminal-arrival.js
 import {vehiclePhoto} from './vehicle-photos.js?v=corridor1';
 import {mountTrainDetails} from './train-details.js?v=72';
 import {mountWheelPicker} from './wheel-picker.js?v=72';
-import {routePlanningSpec,mountScoring,checkpointMarks,scoringStations,buildScoreTimetable,resolveScoreSchedule,scoreHazards,hornMarks,currentScoreRestriction,signalRestriction} from './scoring.js?v=80';
+import {routePlanningSpec,mountScoring,checkpointMarks,scoringStations,buildScoreTimetable,resolveScoreSchedule,scoreHazards,hornMarks,currentScoreRestriction,signalRestriction} from './scoring.js?v=82';
 import {mountDrivingOverlay} from './driving-overlay.js?v=72';import {mountLookahead,changesFromSections,stationMarks} from './lookahead.js?v=evaluation59';
-import {serviceChoices,makeServiceRoute} from './train-selection.js?v=80';
+import {serviceChoices,makeServiceRoute} from './train-selection.js?v=82';
 import {GeneratedCab,generatedCab} from './generated-cab.js';
-import {FinalWorld} from './final-world.js?v=81';
-import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=72';
-import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=72';
+import {FinalWorld} from './final-world.js?v=82';
+import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=82';
+import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=82';
 import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,routeLimitAt,stopPosition,finishStop,beginDoorClosing,isDoorClosing,takeDepartureCall} from './final-model.js?v=72';
 import {STATIONS as TOHOKU_STATIONS} from './route-data.js?v=41';
 import {FINAL_SCENARIOS,scenarioJourney} from './final-scenarios.js?v=41';
@@ -38,7 +39,8 @@ const $=id=>document.getElementById(id),META=[
  {id:'osaka',name:'大阪環状線',english:'OSAKA LOOP LINE',vehicle:'323',color:'#e85248',trainColor:'#e57227',summary:'大阪 → 大阪 · 外回り',train:'323系',short:'323'},
  {id:'tokaido',name:'東海道線',english:'TOKAIDO LINE',vehicle:'207',color:'#5caddb',summary:'京都 → 神戸 · 各駅停車',train:'207系2000番台',short:'207'},
  {id:'tohoku',name:'東北本線',english:'TOHOKU MAIN LINE',vehicle:'701',color:'#78b888',summary:'黒磯 → 福島 · 各駅停車',train:'701系1500番台',short:'701',legacy:true},
- {id:'yagan',name:'野岩鉄道',english:'AIZU KINUGAWA LINE',vehicle:'6050',color:'#d7b991',trainColor:'#a53037',bodyColor:'#f2e4c7',summary:'新藤原 → 会津高原尾瀬口 · 各駅停車',train:'6050型',short:'6050',series:'型',card:'yagan-route-button.svg'}
+ {id:'yagan',name:'野岩鉄道',english:'AIZU KINUGAWA LINE',vehicle:'6050',color:'#d7b991',trainColor:'#a53037',bodyColor:'#f2e4c7',summary:'新藤原 → 会津高原尾瀬口 · 各駅停車',train:'6050型',short:'6050',series:'型',card:'yagan-route-button.svg'},
+ {id:'toho',name:'東方鉄道線',english:'TOHO RAILWAY',vehicle:'6050',color:'#cda86f',summary:'東方本線・人里線・センター支線',train:'6050型 / 211系',short:'6050',series:'型',card:'toho-route-button.svg'}
 ];
 const preferredRoute=new URLSearchParams(location.search).get('route');
 let selected=Math.max(0,META.findIndex(meta=>meta.id===preferredRoute)),recipes,routes=[],world,panel,sound,run,mode='menu',paused=false,assist=false,panorama=false,viewMode=0,token=0,loading=false,toastText='',toastUntil=0,modalPaused=false;
@@ -112,8 +114,8 @@ function showModal(content,{pause=true}={}){if(mode==='drive'&&pause&&!paused){p
 function closeModal(){if(mode==='menu')playMenuSound('cancel');$('modal').close();if(modalPaused&&!run?.finished){paused=false;pauseAudio(false);}modalPaused=false;}
 $('closeModal').onclick=closeModal;$('modal').addEventListener('cancel',e=>{e.preventDefault();closeModal();});
 function settingsDialog(){if(mode==='drive'){paused=true;pauseAudio(true);}gameShell.showOptions(mode==='drive'?'drive':'main');}
-function helpDialog(){showModal(`<p class="eyebrow">DRIVING GUIDE</p><h2>一駅ずつ、確実に。</h2><p><kbd>S / ↓</kbd> P側へ　<kbd>W / ↑</kbd> EB側へ<br><kbd>←</kbd> 惰行　<kbd>Space</kbd> 非常ブレーキ<br><kbd>Enter 長押し</kbd> 警笛　<kbd>Esc</kbd> 一時停止</p><p>扉は自動です。停止位置±3m以内で3秒停止すると戸開、15秒乗降後に合図音→戸閉音の順に再生し、最後まで鳴ってから戸閉灯が点きます。最初の駅は戸開で開始します。</p><p>停止位置±10mで右端のひし形が上から下へ動きます。残り5m以内はcm表示。5m以上行き過ぎて停止すると、停止位置の0cmに補正します。</p><p>運転士音声は駅の手前150mで「駅名、停車。停止位置と両数」、戸閉灯の点灯後に「戸閉、点」「出発進行」が順に鳴り、発車すると「出発駅名、定発」が続きます。出発の喚呼はこの試作での発車扱いに合わせています。</p><small>停車アシストはブレーキを補助します。通常のドア開閉ではノッチは変わりません。207系はP6、323系は抑速を備えます。</small>`);}
-function dataDialog(){showModal(`<p class="eyebrow">ROUTE & VEHICLE</p><h2>6路線、6車両。</h2><p>山手線 / E235系 · 中央線 / E233系0番台<br>大阪環状線 / 323系 · 東海道線 / 207系2000番台<br>東北本線 / 701系1500番台 · 野岩鉄道 / 6050型</p><p>野岩鉄道は提供BVEデータの新藤原〜会津高原尾瀬口を再現。線形、勾配、ホーム、トンネル・橋、明示された速度制限、車内放送を読み込みます。山や林は景観用の近似です。</p><p>線路の曲がり方はOpenStreetMap、駅間距離は公開駅一覧を使用。4路線のホーム・並走線は地図やJRの構内図を参照し、電車でGO！FINALの映像で見え方を照合しました。建物・停止目標は試作上の概略です。シナリオの運転区間はFINALの公開プレイ記録を参照し、現在の車両で各駅に停まります。</p><p>中央線・大阪環状線は位置を確認できた信号機を描画します。FINALを参考にした4路線の速度上限は車両性能の設定です。ゲームの実データとは区別しています。</p><p>E235系は提供データの15両設定を参考に、山手線用の11両・起動加速度3.0km/h/sを試作設定。E233系は提供12両、323系8両、207系7両です。力行は提供の速度別引張力表を補間し、常用制動・抵抗は簡易モデルです。</p><p>E235系は提供データの起動時モーター音、E233系は三菱IGBTの力行・制動モーター音を使用します。発車合図には東北本線と共通のホイッスルを使います。4路線の運転士喚呼にはFINALの路線別音声を使います。</p><small class="credits-note"><a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors / ODbL</a> · <a href="./assets/final/route-data-notes.md" target="_blank">路線の出典・検証</a> · <a href="./assets/final/scenario-notes.md" target="_blank">シナリオの出典</a></small>`);}
+function helpDialog(){showModal(`<p class="eyebrow">DRIVING GUIDE</p><h2>一駅ずつ、確実に。</h2><p><kbd>S / ↓</kbd> P側へ　<kbd>W / ↑</kbd> EB側へ<br><kbd>←</kbd> 惰行　<kbd>Space</kbd> 非常ブレーキ<br><kbd>Enter 長押し</kbd> 警笛　<kbd>Esc</kbd> 一時停止</p><p>扉は自動です。停止位置±3m以内で3秒停止すると戸開、15秒乗降後に合図音→戸閉音の順に再生し、最後まで鳴ってから戸閉灯が点きます。最初の駅は戸開で開始します。</p><p>停止位置±10mで右端のひし形が上から下へ動きます。残り5m以内はcm表示。5m以上行き過ぎて停止すると、停止位置の0cmに補正します。</p><p>運転士音声は駅の手前300mで「駅名、停車。停止位置と両数」、戸閉灯の点灯後に「戸閉、点」「出発進行」が順に鳴り、発車すると「出発駅名、定発」が続きます。出発の喚呼はこの試作での発車扱いに合わせています。</p><small>停車アシストはブレーキを補助します。通常のドア開閉ではノッチは変わりません。207系はP6、323系は抑速を備えます。</small>`);}
+function dataDialog(){showModal(`<p class="eyebrow">ROUTE & VEHICLE</p><h2>7路線の運転乗務。</h2><p>山手線 / E235系 · 中央線 / E233系0番台<br>大阪環状線 / 323系 · 東海道線 / 207系2000番台<br>東北本線 / 701系1500番台 · 野岩鉄道 / 6050型<br>東方鉄道線 / 6050型・211系（提供地図と駅間距離から作成した架空路線）</p><p>東方鉄道線は提供地図と駅間距離から作成した架空路線です。東方本線・人里線・センター支線で6050型と211系を選べます。</p><p>野岩鉄道は提供BVEデータの新藤原〜会津高原尾瀬口を再現。線形、勾配、ホーム、トンネル・橋、明示された速度制限、車内放送を読み込みます。山や林は景観用の近似です。</p><p>線路の曲がり方はOpenStreetMap、駅間距離は公開駅一覧を使用。4路線のホーム・並走線は地図やJRの構内図を参照し、電車でGO！FINALの映像で見え方を照合しました。建物・停止目標は試作上の概略です。シナリオの運転区間はFINALの公開プレイ記録を参照し、現在の車両で各駅に停まります。</p><p>中央線・大阪環状線は位置を確認できた信号機を描画します。FINALを参考にした4路線の速度上限は車両性能の設定です。ゲームの実データとは区別しています。</p><p>E235系は提供データの15両設定を参考に、山手線用の11両・起動加速度3.0km/h/sを試作設定。E233系は提供12両、323系8両、207系7両です。力行は提供の速度別引張力表を補間し、常用制動・抵抗は簡易モデルです。</p><p>E235系は提供データの起動時モーター音、E233系は三菱IGBTの力行・制動モーター音を使用します。発車合図には東北本線と共通のホイッスルを使います。4路線の運転士喚呼にはFINALの路線別音声を使います。</p><small class="credits-note"><a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors / ODbL</a> · <a href="./assets/final/route-data-notes.md" target="_blank">路線の出典・検証</a> · <a href="./assets/final/scenario-notes.md" target="_blank">シナリオの出典</a> · <a href="./assets/final/expansion-v82-notes.md" target="_blank">追加路線・ダイヤの出典</a></small>`);}
 $('settingsButton').onclick=()=>{playMenuSound('confirm');settingsDialog();};
 $('driveSettings').onclick=settingsDialog;
 function setNotch(n){if(replaySession)return;if(mode!=='drive'||paused||run.finished)return;const c=controlsFor(recipe());run.notch=clamp(n,c.min,c.max);}
@@ -175,7 +177,7 @@ function updateDriverCalls(){
  }
  if(run.v<=.01)return;
  const station=r.stations[run.next],distance=station.s-run.s;
- if(run.lastCalledStop!==run.next&&distance>=0&&distance<=150){
+ if(run.lastCalledStop!==run.next&&distance>=0&&distance<=300){
   run.lastCalledStop=run.next;
   sound.callStation('approach',station);
  }
@@ -183,7 +185,7 @@ function updateDriverCalls(){
  if(block!==null)sound.callRouteCue('signal',block);
 }
 $('audioRetry').onclick=()=>{$('audioRetry').hidden=true;closeSequence(token);};
-function updateDoors(dt){if(advanceTerminalOpening(run,route().stations[run.endIndex].s,dt)){paused=true;pauseAfterArrivalVoice();showResults();return;}if(run.doorPhase==='opening-terminal')return;if(run.finished||run.doorPhase==='audio-error')return;const st=route().stations[run.next];if(!run.doors){if(run.v<=.01&&Math.abs(st.s-run.s)<=3){run.stopWait+=dt;run.doorPhase='waiting-open';if(run.stopWait>=3){run.v=0;run.doors=true;run.doorPhase='boarding';run.dwell=0;const opening=effect('open');if(run.next===run.endIndex)beginTerminalOpening(run,opening);else opening.catch(()=>{});effect('relayOff').catch(()=>{});}}else{run.stopWait=0;run.doorPhase=null;}}else if(run.doorPhase==='boarding'){run.dwell+=dt;if(run.dwell>=15&&yaganBoardingReady(run,route()))closeSequence(token);}}
+function updateDoors(dt){if(advanceTerminalOpening(run,route().stations[run.endIndex].s,dt)){paused=true;pauseAfterArrivalVoice();showResults();return;}if(run.doorPhase==='opening-terminal')return;if(run.finished||run.doorPhase==='audio-error')return;const st=route().stations[run.next];if(!run.doors){if(run.v<=.01&&Math.abs(st.s-run.s)<=3){run.stopWait+=dt;run.doorPhase='waiting-open';if(run.stopWait>=3){run.v=0;run.doors=true;run.doorPhase='boarding';run.dwell=0;const opening=effect('open');if(run.next===run.endIndex)beginTerminalOpening(run,opening);else opening.catch(()=>{});effect('relayOff').catch(()=>{});}}else{run.stopWait=0;run.doorPhase=null;}}else if(run.doorPhase==='boarding'){run.dwell+=dt;if(run.dwell>=15&&yaganBoardingReady(run,route())&&scheduledBoardingDelay(run,route())<=0)closeSequence(token);}}
 async function start(startIndex){
  if(loading||!recipes)return;
  const meta=META[selected];
@@ -225,6 +227,7 @@ async function start(startIndex){
   run.scoreVehicleSpec=routePlanningSpec(r,yaganPlanningSpec(r,osakaPlanningSpec(r,{...train.playableSpecs,maxSpeedKmh:Math.min(train.playableSpecs.maxSpeedKmh,r.serviceSpeedKmh??Infinity),powerNotches:controlsFor(train).max,powerForceRows:train.performance?.power?.force?.rows})));
   const schedule=resolveScoreSchedule(r,run.s,run.scoreVehicleSpec);
   run.clockStart=schedule.clockStart;
+  run.scoreVehicleSpec=schedule.planningSpec;
   run.scoreTimetable=schedule.timetable.filter(st=>st.s<=r.stations[run.endIndex].s+.5);
   r.color=meta.color;
   r.carCount=train.playableSpecs.carCount;
@@ -250,7 +253,7 @@ async function start(startIndex){
   $('hornButton').hidden=!sound.effectRef('hornPrimary');
   toast(`${r.stations[startIndex].name}で戸開中。合図音の後に自動で戸閉します。`,8);
   recorder=new DutyRecorder({lineId:meta.id,lineName:meta.name,trainId:train.id,trainName:train.name,from:r.stations[startIndex].name,to:r.stations[run.endIndex].name,route:structuredClone(r),train:structuredClone(train),timetable:structuredClone(run.scoreTimetable)});recorder.capture(run);
-  closeSequence(token);
+  if(r.publishedSchedule){run.doorPhase='boarding';run.dwell=0;}else closeSequence(token);
  }catch(error){
   if(nextSound&&nextSound!==sound)await nextSound.dispose().catch(()=>{});
   await cleanup();
@@ -278,7 +281,7 @@ function hud(){{const lr=route(),end=lr.stations[run.endIndex]?.s??Infinity;look
  const limit=routeLimitAt(r,run.s);
  $('vehicleLimit').textContent=limit===null?'区間制限 解除':`区間制限 ${limit} km/h`;
  $('vehicleLimit').classList.toggle('overspeed',limit!==null&&speed>limit);
- $('eventText').textContent=run.correctedStopError!=null&&run.doorPhase==='waiting-open'?`行き過ぎ ${distanceLabel(run.correctedStopError)} → 停止位置 0 cm に補正`:run.doorPhase==='waiting-open'?`停車確認 ${Math.min(3,Math.floor(run.stopWait))} / 3秒`:run.doorPhase==='boarding'?`乗降中　戸閉合図まで ${Math.max(0,Math.ceil(Math.max(15-run.dwell,yaganBoardingDelay(run,r))))}秒`:run.doorPhase==='announcement'?'合図音を再生中':run.doorPhase==='closing'?'戸閉中 · 音の終了後に戸閉灯が点灯':run.elapsed<toastUntil?toastText:`次の停車駅は ${next.name} です。`;
+ $('eventText').textContent=run.correctedStopError!=null&&run.doorPhase==='waiting-open'?`行き過ぎ ${distanceLabel(run.correctedStopError)} → 停止位置 0 cm に補正`:run.doorPhase==='waiting-open'?`停車確認 ${Math.min(3,Math.floor(run.stopWait))} / 3秒`:run.doorPhase==='boarding'?`乗降中　戸閉合図まで ${Math.max(0,Math.ceil(Math.max(15-run.dwell,yaganBoardingDelay(run,r),scheduledBoardingDelay(run,r))))}秒`:run.doorPhase==='announcement'?'合図音を再生中':run.doorPhase==='closing'?'戸閉中 · 音の終了後に戸閉灯が点灯':run.elapsed<toastUntil?toastText:`次の停車駅は ${next.name} です。`;
  const controller=controlsFor(recipe());overlayControls.update({value:run.notch,min:controller.min,max:controller.max,labels:controller.labels,disabled:paused||run.finished});
 }
 function advance(dt){
@@ -350,7 +353,7 @@ try {
  $('routeCards').querySelectorAll('button').forEach(button=>button.onclick=()=>{choose(Number(button.dataset.route));openTrainSelection();});
  $('compactRoute').innerHTML=META.map((m,i)=>`<option value="${i}">${m.name} · ${m.train}</option>`).join('');
  $('compactRoute').onchange=event=>{choose(Number(event.target.value));openTrainSelection();};
- const additions=await Promise.all(['chuo-extended','shinonoi-extended','chuo-kofu','chuo-shinshu','shinonoi','oito','ome','ome-okutama','itsukaichi'].map(async id=>{
+ const additions=await Promise.all(['chuo-extended','shinonoi-extended','chuo-kofu','chuo-shinshu','shinonoi','oito','ome','ome-okutama','itsukaichi','tatsuno','toho-village','toho-center'].map(async id=>{
  const response=await fetch('./assets/final/'+id+'-route.json?v=79');
  if(response.ok)extraRoutes.set(id,await loadRoadAsset(await response.json()));
 }));

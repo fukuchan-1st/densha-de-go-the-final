@@ -1,4 +1,5 @@
-import {routePlanningSpec,operatingBand,operatingCap} from './planning-profile.js?v=77';
+import {resolvePublishedSchedule} from './published-schedules.js?v=82';
+import {routePlanningSpec,operatingBand,operatingCap} from './planning-profile.js?v=82';
 export {routePlanningSpec};
 import {yaganPlanningSpec,rebuildYaganTimetable,planningGrade} from './yagan-timetable.js?v=75';
 import {osakaPlanningSpec,rebuildOsakaTimetable} from './osaka-timetable.js?v=72';
@@ -53,6 +54,7 @@ export function formatScoreTime(value,current=false){const seconds=timeSeconds(v
 
 export function resolveScoreSchedule(route,startS,spec={}){
  spec=routePlanningSpec(route,yaganPlanningSpec(route,osakaPlanningSpec(route,spec)));
+ if(route.publishedSchedule)return resolvePublishedSchedule(route,startS,spec,sectionSpeedPlan);
  const raw=scoringStations(route).map(st=>({...st}));let elapsed=0,carry=0;for(let i=0;i<raw.length;i++){if(i===0){raw[i].time=0;continue;}const plan=sectionSpeedPlan({...raw[i-1],time:elapsed},{...raw[i],time:null},route.limits??[],spec,carry);elapsed=plan.departure+plan.duration;carry=plan.speeds.at(-1);raw[i].time=elapsed;}const sources=[...(route.sceneryStations??[]),...route.stations];
  const sourceAt=s=>sources.filter(st=>Math.abs(st.s-s)<.5).reduce((a,b)=>({...a,...b}),{});
  const anchors=[];let last=-Infinity;
@@ -139,15 +141,29 @@ export function checkpointSectionPlan(a,b,limits,spec={},initialSpeed=0){
   }
   accept(plan.speeds.length-1);
  }
+ // Published-minute anchors can require a fractional cruising speed. The HUD
+ // and scoring both use whole km/h, so retain that attainable steady cruise
+ // rather than force a different integer speed and miss the station time.
+ if(!best&&base.feasible){
+  const target=Math.round(peak);let begin=null;
+  for(let n=0;n<base.speeds.length;n++){
+   const flat=Math.abs(base.speeds[n]*3.6-peak)<.001;
+   if(flat&&begin===null)begin=n;
+   if(begin!==null&&(!flat||n===base.speeds.length-1)){
+    const end=flat?n:n-1,distance=base.positions[end]-base.positions[begin];
+    if(distance>Math.max(2,target/3.6)&&target>0)best={plan:base,target,begin,end,distance,arrivalError:base.departure+base.duration-timeSeconds(b.time),fractionalCruise:true};begin=null;
+   }
+  }
+ }
  return best;
 }
 export function makeCheckpoints(stations,limits,startS,clock,spec={}){
- spec={...spec,...(stations.planningSpec??{}),departureTimes:spec.departureTimes};
+ spec={...spec,...(stations.planningSpec??{}),departureTimes:{...(stations.planningSpec?.departureTimes??{}),...spec.departureTimes}};
  const rows=stations.filter(s=>s.s>startS+1),all=[{s:startS,time:clock,stop:true},...rows],result=[];let carry=0,carryTime=clock;
  for(let i=1;i<all.length;i++){
   const a=all[i-1],b=all[i],planningSpec=a.stop?spec:{...spec,departureTimes:{...spec.departureTimes,[a.s]:carryTime}},base=sectionSpeedPlan(a,b,limits,planningSpec,carry),pair=checkpointSectionPlan(a,b,limits,planningSpec,carry);
   const chosen=pair?.plan??base;carry=chosen.speeds.at(-1);carryTime=chosen.departure+chosen.duration;if(!pair){const peakIndex=base.speeds.indexOf(Math.max(...base.speeds)),pointS=Math.min(b.s-.01,Math.max(a.s+.01,base.positions[peakIndex]));result.push({id:'speed:'+pointS,s:pointS,kind:'speed',target:Math.round(base.at(pointS).speed),station:b.name,deadlineFeasible:base.feasible,arrivalError:base.departure+base.duration-timeSeconds(b.time)});continue;}
-  const {plan,target,begin,end,arrivalError}=pair,left=plan.positions[begin],right=plan.positions[end],s=left+(right-left)*.3,t=left+(right-left)*.7;
+  const {plan,target,begin,end,arrivalError}=pair,left=plan.positions[begin],right=plan.positions[end],s=left+(right-left)*.3,t=s+Math.min((right-left)*.4,target/3.6*15);
   const metadata={station:b.name,stationTime:timeSeconds(b.time),deadlineFeasible:true,arrivalError,cruiseFrom:left,cruiseTo:right,cruiseSpeedKmh:target,speedPointTime:plan.at(s).time};
   result.push({id:'speed:'+s,s,kind:'speed',target,...metadata},{id:'time:'+t,s:t,kind:'time',target:Math.round(plan.at(s).time+(t-s)/(target/3.6)),...metadata});
  }
