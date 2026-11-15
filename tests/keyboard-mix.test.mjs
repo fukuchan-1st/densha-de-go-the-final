@@ -12,5 +12,5 @@ test('vehicle audio actually routes one shots and sustained running loops throug
  const audio=new LocalTrainAudio({},{},{context,volume:1,mix:{se:.1,running:.2,voice:.3}});audio.buffers.set('se',{});audio.buffers.set('voice',{});audio.buffers.set('run',{});
  const a=audio.playRef({entryIndex:'se'});await new Promise(r=>setImmediate(r));assert.equal(sources[0].output,audio.mix.gains.se);sources[0].onended();await a;
  const b=audio.playRef({entryIndex:'voice',driverVoiceFile:'voice.wav'});await new Promise(r=>setImmediate(r));assert.equal(sources[1].output,audio.mix.gains.voice);sources[1].onended();await b;
- await audio.loop('run',{entryIndex:'run'});assert.equal(sources[2].output.output,audio.mix.gains.running);audio.setMix({se:0,running:.6,voice:1});assert.equal(audio.mix.gains.running.gain.value,.6);
+ await audio.loop('run',{entryIndex:'run'});assert.equal(sources[2].output.output,audio.passby.running.output);assert.equal(audio.passby.running.output.output,audio.mix.gains.running);audio.setMix({se:0,running:.6,voice:1});assert.equal(audio.mix.gains.running.gain.value,.6);
 });

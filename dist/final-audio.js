@@ -1,9 +1,10 @@
+import {TrainPassbyAudio} from './train-passby-audio.js?v=85';
 import {timingVoiceRefs,timingPreloadRefs,restrictionVoiceRefs} from './station-timing.js?v=84';
 import {stationCueRefs,stationVoiceBank} from './station-voice.js?v=84';
 import {createMixGains,voiceCategory} from './audio-mix.js?v=keys61fix';
-import {interpolateColumn} from './final-vehicle.js?v=84';
+import {interpolateColumn} from './final-vehicle.js?v=85';
 import {runPitch} from './assets/audio/run-pitch.js';
-import {HeldHorn} from './assets/audio/held-horn.js';
+import {HeldHorn} from './assets/audio/held-horn.js?v=85';
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const whistle={entryIndex:'departure-whistle'};
 const voiceBanks={e235:['kanko0','uta'],e233:['kanko1','utb'],323:['kanko2','utd'],207:['kanko3','ute']};
@@ -38,7 +39,7 @@ export function motorPitch(table,column,speed){
 }
 
 export class LocalTrainAudio {
- constructor(recipe,pack,{context,volume=.65,mix={}}={}){const AC=globalThis.AudioContext??globalThis.webkitAudioContext;this.context=context??new AC();this.ownsContext=!context;this.recipe=recipe;this.pack=pack;this.buffers=new Map();this.loops=new Map();this.sources=new Set();this.master=this.context.createGain();this.master.gain.value=volume;this.master.connect(this.context.destination);this.mix=createMixGains(this.context,this.master,mix);this.volume=volume;this.paused=false;this.stopped=false;this.generation=0;}
+ constructor(recipe,pack,{context,volume=.65,mix={}}={}){const AC=globalThis.AudioContext??globalThis.webkitAudioContext;this.context=context??new AC();this.ownsContext=!context;this.recipe=recipe;this.pack=pack;this.buffers=new Map();this.loops=new Map();this.sources=new Set();this.master=this.context.createGain();this.master.gain.value=volume;this.master.connect(this.context.destination);this.mix=createMixGains(this.context,this.master,mix);this.passby=new TrainPassbyAudio(this.context,this.mix.gains.running,this.mix.gains.se);this.volume=volume;this.paused=false;this.stopped=false;this.generation=0;}
  static async create(recipe,pack,options){const audio=new LocalTrainAudio(recipe,pack,options);await audio.context.resume();return audio;}
  async buffer(ref){
   if(!ref)return null;
@@ -133,10 +134,11 @@ export class LocalTrainAudio {
   }[name];
  }
  setHorn(pressed){
-  this.horn??=new HeldHorn(this.context,this.mix.gains.se);
+  this.horn??=new HeldHorn(this.context,this.passby.horn.output);
   if(!pressed){this.horn.release();return;}
   if(this.paused||this.stopped||this.horn.active)return;
   const name=['323','207'].includes(this.recipe.id)?'hornSecondary':'hornPrimary';
+  this.horn.setPlaybackRate(this.passby.horn.pitch);
   this.horn.press(this.buffer(this.effectRef(name)),this.buffer(this.effectRef(name+'Release')));
  }
  playNotch(previous,next){
@@ -148,8 +150,8 @@ export class LocalTrainAudio {
   if(next<0||previous<0&&next===0)return this.playEffect(next<previous?'brakeApply':'brakeRelease');
   return this.playEffect(next>previous?'powerUp':'powerDown');
  }
- playEffect(name){this.stopped=false;return this.playRef(this.effectRef(name));}
- async playRef(ref){if(!ref)return false;const generation=this.generation,buffer=await this.buffer(ref);if(this.stopped||generation!==this.generation)return false;const source=this.context.createBufferSource();source.buffer=buffer;source.connect(this.mix.gains[voiceCategory(ref)]);this.sources.add(source);return new Promise(resolve=>{source.onended=()=>{this.sources.delete(source);source.disconnect();resolve(generation===this.generation);};source.start();});}
+ playEffect(name){this.stopped=false;return this.playRef(this.effectRef(name),name.startsWith('horn')?'horn':null);}
+ async playRef(ref,spatialKind=null){if(!ref)return false;const generation=this.generation,buffer=await this.buffer(ref);if(this.stopped||generation!==this.generation)return false;const source=this.context.createBufferSource();source.buffer=buffer;source.connect(spatialKind?this.passby[spatialKind].output:this.mix.gains[voiceCategory(ref)]);if(spatialKind)this.passby.track(source,1,spatialKind);this.sources.add(source);return new Promise(resolve=>{source.onended=()=>{this.sources.delete(source);this.passby.forget(source);source.disconnect();resolve(generation===this.generation);};source.start();});}
  async loop(key,ref){
   if(!ref||this.loops.has(key))return;
   const loop={volume:0,pitch:1};
@@ -165,14 +167,14 @@ export class LocalTrainAudio {
    source.playbackRate.value=loop.pitch;
    gain.gain.value=loop.volume;
    source.connect(gain);
-   gain.connect(this.mix.gains.running);
+   gain.connect(this.passby.running.output);
    source.onended=()=>{
-    this.sources.delete(source);
+    this.sources.delete(source);this.passby.forget(source);
     if(this.loops.get(key)===loop)this.loops.delete(key);
     source.disconnect();
     gain.disconnect();
    };
-   source.start();
+   this.passby.track(source,loop.pitch);source.start();
    this.sources.add(source);
   }catch(e){
    if(this.loops.get(key)===loop)this.loops.delete(key);
@@ -187,7 +189,7 @@ export class LocalTrainAudio {
   loop.pitch=pitch;
   const time=this.context.currentTime;
   loop.gain?.gain.setTargetAtTime(volume,time,.08);
-  loop.source?.playbackRate.setTargetAtTime(pitch,time,.06);
+  if(loop.source)this.passby.track(loop.source,pitch);
  }
  releaseLoop(key){
   const loop=this.loops.get(key);
@@ -219,11 +221,12 @@ export class LocalTrainAudio {
    else this.releaseLoop(key);
   }
  }
+ updatePassby(world,s,speed,viewMode,paused){this.passby.update(world,s,speed,viewMode,paused);this.horn?.setPlaybackRate(this.passby.horn.pitch);}
  setMix(values){this.mix.update(values);}
  setVolume(n){this.volume=clamp(n,0,1);this.master.gain.value=this.volume;}
  async setPaused(paused){this.paused=paused;this.master.gain.value=paused?0:this.volume;if(paused){this.horn?.end(true);await this.context.suspend();}else await this.context.resume();}
  pause(){return this.setPaused(true);}
  resume(){return this.setPaused(false);}
- stop(){this.horn?.end(true);this.stopped=true;this.lastNotch=undefined;this.generation++;this.driverQueue=null;for(const source of this.sources){try{source.stop();}catch{}}this.sources.clear();this.loops.clear();}
- async dispose(){this.stop();this.buffers.clear();this.master.disconnect();for(const node of Object.values(this.mix.gains))node.disconnect();if(this.ownsContext)await this.context.close();}
+ stop(){this.horn?.end(true);this.passby.reset();this.stopped=true;this.lastNotch=undefined;this.generation++;this.driverQueue=null;for(const source of this.sources){try{source.stop();}catch{}}this.sources.clear();this.loops.clear();}
+ async dispose(){this.stop();this.passby.dispose();this.buffers.clear();this.master.disconnect();for(const node of Object.values(this.mix.gains))node.disconnect();if(this.ownsContext)await this.context.close();}
 }

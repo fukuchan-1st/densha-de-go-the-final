@@ -1,5 +1,5 @@
 import {setRailPose} from './rail-pose.js?v=80';
-import {ImportedTrafficModels,opposingVehicle,opposingVehicles} from './opposing-models.js?v=82';
+import {ImportedTrafficModels,opposingVehicle,opposingVehicles,opposingCarCount} from './opposing-models.js?v=85';
 import * as T from './assets/vendor/three.module.js';
 import {interpolateKnots} from './track-layout.js?v=79';
 
@@ -24,7 +24,7 @@ export class OpposingTrains {
  type(s){return this.world.sceneryTypeAt?.(s)??'mountain';}
  spawn(player){
   const vehicle=opposingVehicle(this.world.route,Math.min(this.world.length,player+360),this.serial++);if(!vehicle||this.trains.length>=2)return false;const imported=this.models.models.get(vehicle);if(!imported)return false;
-  const urban=this.type(player)==='city',id=this.world.route?.id??'tohoku',count=imported.carCount;
+  const urban=this.type(player)==='city',id=this.world.route?.id??'tohoku',count=opposingCarCount(this.world.route,player,vehicle,imported.carCount);
   const choices=[];
   for(const distance of [360,520,700,900,1100,180,80,20]){
    const s=player+distance;if(s+count*20.1>this.world.length)continue;

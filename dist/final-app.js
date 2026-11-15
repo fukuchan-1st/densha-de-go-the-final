@@ -1,36 +1,36 @@
 import {scheduledBoardingDelay} from './published-schedules.js?v=82';
 import {loadRoadAsset} from './road-assets.js?v=79';
-import {CrossingAudio} from './crossings.js?v=79';
+import {CrossingAudio} from './crossings.js?v=85';
 import {VIEW_LABELS,normalizedView,replayViewMode} from './view-modes.js?v=79';
 import {yaganPlanningSpec,yaganBoardingReady,yaganBoardingDelay} from './yagan-timetable.js?v=75';
-import {progress,serviceKey} from './scenario-progress.js?v=72';
+import {progress,serviceKey} from './scenario-progress.js?v=85';
 import {scenarioRanges} from './scenario-ranges.js?v=72';
-import {installCheats,jumpToStation} from './game-cheats.js?v=72';
-import {mountGameShell} from './game-shell.js?v=84';
-import {DutyRecorder,replayStateAt,recordReplayAudio} from './replay-store.js?v=79';
+import {installCheats,jumpToStation} from './game-cheats.js?v=85';
+import {mountGameShell} from './game-shell.js?v=85';
+import {DutyRecorder,replayStateAt,recordReplayAudio} from './replay-store.js?v=85';
 import {osakaPlanningSpec} from './osaka-timetable.js?v=72';
 import {collectStationReports,collectRestrictionReports,pauseWhenSpeechEnds} from './station-timing.js?v=84';
-import {buildConnectingRoutes} from './service-catalog.js?v=82';
+import {buildConnectingRoutes} from './service-catalog.js?v=85';
 import {loadAudioMix,audioMixMarkup,bindAudioMix} from './audio-mix.js?v=keys61fix';
 import {bindRouteKeys,bindScreenKeys} from './screen-keys.js?v=72';
 import {sharedEffects} from './buffered-effects.js?v=phone58fix';
 import {bindTrainSelectionKeys} from './selection-keys.js?v=keys61fix';
 import {beginTerminalOpening,advanceTerminalOpening} from './terminal-arrival.js?v=score13';
 import {vehiclePhoto} from './vehicle-photos.js?v=corridor1';
-import {mountTrainDetails} from './train-details.js?v=72';
-import {mountWheelPicker} from './wheel-picker.js?v=72';
+import {mountTrainDetails} from './train-details.js?v=85';
+import {mountWheelPicker} from './wheel-picker.js?v=85';
 import {routePlanningSpec,mountScoring,checkpointMarks,scoringStations,buildScoreTimetable,resolveScoreSchedule,scoreHazards,hornMarks,currentScoreRestriction,signalRestriction} from './scoring.js?v=82';
 import {mountDrivingOverlay} from './driving-overlay.js?v=72';import {mountLookahead,changesFromSections,stationMarks} from './lookahead.js?v=evaluation59';
-import {serviceChoices,makeServiceRoute} from './train-selection.js?v=82';
+import {serviceChoices,makeServiceRoute} from './train-selection.js?v=85';
 import {GeneratedCab,generatedCab} from './generated-cab.js';
-import {FinalWorld} from './final-world.js?v=84';
+import {FinalWorld} from './final-world.js?v=85';
 import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=82';
-import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=84';
+import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=85';
 import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,routeLimitAt,stopPosition,finishStop,beginDoorClosing,isDoorClosing,takeDepartureCall} from './final-model.js?v=72';
 import {STATIONS as TOHOKU_STATIONS} from './route-data.js?v=41';
 import {FINAL_SCENARIOS,scenarioJourney} from './final-scenarios.js?v=41';
-import {correctStoppedOverrun,nextSignalCall} from './train-operations.js?v=doors62';
-import {bindHornButton} from './assets/audio/held-horn.js';
+import {correctStoppedOverrun,nextSignalCall} from './train-operations.js?v=85';
+import {bindHornButton} from './assets/audio/held-horn.js?v=85';
 
 const TOHOKU_TRAIN={id:'701',name:'701系1500番台',playableSpecs:{carCount:2}};
 const $=id=>document.getElementById(id),META=[
@@ -185,7 +185,7 @@ function updateDriverCalls(){
  if(block!==null)sound.callRouteCue('signal',block);
 }
 $('audioRetry').onclick=()=>{$('audioRetry').hidden=true;closeSequence(token);};
-function updateDoors(dt){if(advanceTerminalOpening(run,route().stations[run.endIndex].s,dt)){paused=true;pauseAfterArrivalVoice();showResults();return;}if(run.doorPhase==='opening-terminal')return;if(run.finished||run.doorPhase==='audio-error')return;const st=route().stations[run.next];if(!run.doors){if(run.v<=.01&&Math.abs(st.s-run.s)<=3){run.stopWait+=dt;run.doorPhase='waiting-open';if(run.stopWait>=3){run.v=0;run.doors=true;run.doorPhase='boarding';run.dwell=0;const opening=effect('open');if(run.next===run.endIndex)beginTerminalOpening(run,opening);else opening.catch(()=>{});effect('relayOff').catch(()=>{});}}else{run.stopWait=0;run.doorPhase=null;}}else if(run.doorPhase==='boarding'){run.dwell+=dt;if(run.dwell>=15&&yaganBoardingReady(run,route())&&scheduledBoardingDelay(run,route())<=0)closeSequence(token);}}
+function updateDoors(dt){if(advanceTerminalOpening(run,route().stations[run.endIndex].s,dt)){paused=true;pauseAfterArrivalVoice();showResults();return;}if(run.doorPhase==='opening-terminal')return;if(run.finished||run.doorPhase==='audio-error')return;const st=route().stations[run.next];if(!run.doors){if(run.v<=.01&&Math.abs(st.s-run.s)<=3){run.stopWait+=dt;run.doorPhase='waiting-open';if(run.stopWait>=3){run.v=0;run.doors=true;if(!replaySession)progress.recordStop(run.dutyKey,route().stations[run.startIndex].s,st.s,run);run.doorPhase='boarding';run.dwell=0;const opening=effect('open');if(run.next===run.endIndex)beginTerminalOpening(run,opening);else opening.catch(()=>{});effect('relayOff').catch(()=>{});}}else{run.stopWait=0;run.doorPhase=null;}}else if(run.doorPhase==='boarding'){run.dwell+=dt;if(run.dwell>=15&&yaganBoardingReady(run,route())&&scheduledBoardingDelay(run,route())<=0)closeSequence(token);}}
 async function start(startIndex){
  if(loading||!recipes)return;
  const meta=META[selected];
@@ -290,7 +290,7 @@ function advance(dt){
  if(assist&&!run.doors)brakeAssist(run,r,train);
  driveStep(run,train,dt,world.grade(run.s));cheats.clockStep(run,dt);
  score.update(run,{eb:controlsFor(train).min,...currentScoreRestriction(r,run.s),hazards:scoreHazards(r),vehicleSpec:run.scoreVehicleSpec??train.playableSpecs,routeLimits:r.limits,stations:run.scoreTimetable??scoringStations(r)},dt);
- const corrected=correctStoppedOverrun(run,station.s);
+ const corrected=correctStoppedOverrun(run,station.s,score.engine.cfg.blueTolerance);
  for(const change of collectRestrictionReports(run,changesFromSections(r.limits),previous))sound.callRestriction(change.kmh);
  for(const report of collectStationReports(run,run.scoreTimetable,previous,station.s)){sound.callStationTiming(report.kind,report.station,report.error);run.lastTimingReport=report;}
  if(corrected!==null)return;
@@ -335,7 +335,7 @@ function frame(now){
   if(!replaySession){run.viewMode=viewMode;recorder?.capture(run,score.engine.points,score.engine.chain);}
   hud();
   if(replaySession)replayHud();
-  world.render(run.s,run.v,paused?0:dt,{acceleration:run.acceleration,shake:settings.shake,panorama,outer:viewMode>=2,railfan:viewMode===3,clock:run.clockStart+run.elapsed});crossingAudio?.update(world,run.s,run.v,viewMode,paused,(world.playerTrain?.count??2)*20);
+  world.render(run.s,run.v,paused?0:dt,{acceleration:run.acceleration,shake:settings.shake,panorama,outer:viewMode>=2,railfan:viewMode===3,clock:run.clockStart+run.elapsed});sound?.updatePassby(world,run.s,run.v,viewMode,paused);crossingAudio?.update(world,run.s,run.v,viewMode,paused,(world.playerTrain?.count??2)*20);
   if(!panorama)panel?.render(run,paused?0:dt,Boolean(world.structureAt(run.s,'tunnel'))||Boolean(r.night));
  }
  requestAnimationFrame(frame);
@@ -344,7 +344,7 @@ requestAnimationFrame(frame);
 try {
  const routeLoads=META.map(async meta=>{
   if(meta.legacy)return {id:meta.id,name:meta.name,length:TOHOKU_STATIONS.at(-1).s,stations:TOHOKU_STATIONS};
-  const response=await fetch(`./assets/final/${meta.id}-route.json?v=79`);
+  const response=await fetch(`./assets/final/${meta.id}-route.json?v=85`);
   if(!response.ok)throw Error('路線データを読み込めません');
   return loadRoadAsset(await response.json());
  });
@@ -354,7 +354,7 @@ try {
  $('compactRoute').innerHTML=META.map((m,i)=>`<option value="${i}">${m.name} · ${m.train}</option>`).join('');
  $('compactRoute').onchange=event=>{choose(Number(event.target.value));openTrainSelection();};
  const additions=await Promise.all(['chuo-extended','shinonoi-extended','chuo-kofu','chuo-shinshu','shinonoi','oito','ome','ome-okutama','itsukaichi','tatsuno','toho-village','toho-center'].map(async id=>{
- const response=await fetch('./assets/final/'+id+'-route.json?v=79');
+ const response=await fetch('./assets/final/'+id+'-route.json?v=85');
  if(response.ok)extraRoutes.set(id,await loadRoadAsset(await response.json()));
 }));
  for(const [id,r] of buildConnectingRoutes(extraRoutes))extraRoutes.set(id,r);
@@ -404,7 +404,7 @@ function openTrainSelection(){
  $('trainChoice').replaceChildren(...choices.map(([routeId,vehicle,service,option],index)=>{
   const train=vehicle==='701'?TOHOKU_TRAIN:recipes.trains.find(t=>t.id===vehicle);
   const r=makeServiceRoute(extraRoutes.get(routeId)??routes[selected],vehicle,service,option);
-  const element=new Option((train?.name??vehicle)+' · '+service+' · '+r.name+' · '+r.stations[0].name+' → '+r.stations.at(-1).name,String(index));Object.assign(element.dataset,{train:train?.name??vehicle,service:service+(option.reverse?' / 逆方向':' / 順方向')+(option.night?'・夜':''),range:r.stations[0].name+' → '+r.stations.at(-1).name,photo:vehiclePhoto(vehicle,META[selected].id),index:String(index+1),cleared:String(progress.cleared(serviceKey(META[selected].id,choices[index]),r.stations[0].s,r.stations.at(-1).s))});return element;
+  const element=new Option((train?.name??vehicle)+' · '+service+' · '+r.name+' · '+r.stations[0].name+' → '+r.stations.at(-1).name,String(index));Object.assign(element.dataset,{train:train?.name??vehicle,service:service+(option.reverse?' / 逆方向':' / 順方向')+(option.night?'・夜':''),range:r.stations[0].name+' → '+r.stations.at(-1).name,photo:vehiclePhoto(vehicle,META[selected].id),index:String(index+1),progress:String(progress.fraction(serviceKey(META[selected].id,choices[index]),r.stations[0].s,r.stations.at(-1).s)),cleared:String(progress.cleared(serviceKey(META[selected].id,choices[index]),r.stations[0].s,r.stations.at(-1).s))});return element;
  }));
  showTrainList();trainSelectionOpen=true;$('menuScreen').hidden=true;$('menuControls').hidden=true;$('menuScreen').inert=true;$('menuControls').inert=true;document.body.dataset.mode='selection';applyTrainChoice();$('trainSelection').hidden=false;fit();$('trainChoice').wheel.sync();$('trainChoice').wheel.focus();
 }
@@ -418,8 +418,8 @@ function rNote(r){return r.geometrySections?'BVE収録区間を地図の線路�
 function switchSelectionLine(delta){choose((selected+delta+META.length)%META.length);openTrainSelection();}
 function showTrainList(){if(!trainDetails)return;trainDetails.hide();$('trainSelection').dataset.view='list';detailEndIndex=null;$('trainChoice')?.wheel?.focus();}
 function showTrainDetails(){
- if(loading||!recipes)return;playMenuSound('confirm');const base=makeServiceRoute(selectedRoute(),recipe().id,chosenService,chosenOption),ranges=scenarioRanges(META[selected].id,base,chosenOption?.reverse).map(range=>({...range,cleared:progress.cleared(currentDutyKey(),base.stations[range.start].s,base.stations[range.end].s)}));
- $('trainSelection').dataset.view='details';trainDetails.show({route:base,train:recipe(),service:chosenService,line:META[selected].id,ranges,isCleared:(a,b)=>progress.cleared(currentDutyKey(),base.stations[a].s,base.stations[b].s),start:Number($('startStation').value),end:detailEndIndex??base.stations.length-1});
+ if(loading||!recipes)return;playMenuSound('confirm');const base=makeServiceRoute(selectedRoute(),recipe().id,chosenService,chosenOption),ranges=scenarioRanges(META[selected].id,base,chosenOption?.reverse).map(range=>({...range,progress:progress.fraction(currentDutyKey(),base.stations[range.start].s,base.stations[range.end].s),cleared:progress.cleared(currentDutyKey(),base.stations[range.start].s,base.stations[range.end].s)}));
+ $('trainSelection').dataset.view='details';trainDetails.show({route:base,train:recipe(),service:chosenService,line:META[selected].id,ranges,fraction:(a,b)=>progress.fraction(currentDutyKey(),base.stations[a].s,base.stations[b].s),isCleared:(a,b)=>progress.cleared(currentDutyKey(),base.stations[a].s,base.stations[b].s),start:Number($('startStation').value),end:detailEndIndex??base.stations.length-1});
 }
 
 addEventListener('pagehide',()=>recorder?.flush());

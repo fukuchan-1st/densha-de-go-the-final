@@ -6,10 +6,12 @@ const chuoOrder=["東京", "神田", "御茶ノ水", "四ツ谷", "新宿", "中
 const rank=new Map(chuoOrder.map((name,i)=>[name,i]));
 const oitoNames=new Set('松本 北松本 島内 島高松 梓橋 一日市場 中萱 南豊科 豊科 柏矢町 穂高 有明 安曇追分 細野 北細野 信濃松川 安曇沓掛 信濃常盤 南大町 信濃大町 北大町 信濃木崎 稲尾 海ノ口 簗場 ヤナバ前 南神城 神城 飯森 白馬 信濃森上 白馬大池 千国 南小谷'.split(' '));
 const shinonoiNames=new Set('松本 田沢 明科 西条 坂北 聖高原 冠着 姨捨 稲荷山 篠ノ井 今井 川中島 安茂里 長野'.split(' '));
+const omeBranchNames=new Set('立川 西立川 東中神 中神 昭島 拝島 牛浜 福生 羽村 小作 河辺 東青梅 青梅 宮ノ平 日向和田 石神前 二俣尾 軍畑 沢井 御嶽 川井 古里 鳩ノ巣 白丸 奥多摩 熊川 東秋留 秋川 武蔵引田 武蔵増戸 武蔵五日市'.split(' '));
+export function opposingCarCount(route,s,vehicle,fallback){if(vehicle!=='e233')return fallback;if(route.id==='ome-okutama')return 4;if(['itsukaichi','chuo-itsukaichi'].includes(route.id))return 6;return fallback;}
 export function opposingVehicles(route={},s=0){
  const id=route.id??'tohoku';if(id==='yagan')return [];
  if(id==='yamanote')return ['e235'];if(id==='osaka')return ['323'];if(id==='tokaido')return ['221'];if(id==='tohoku')return ['701'];
- const leg=stationLeg(route,s),names=leg.map(x=>x.name);
+ const leg=stationLeg(route,s),names=leg.map(x=>x.name);if(['ome','ome-okutama','itsukaichi'].includes(id)||names.length===2&&names.every(n=>omeBranchNames.has(n)))return ['e233'];
  if(names.length===2&&names.every(x=>oitoNames.has(x))){const all=route.sceneryStations??route.stations,omachi=all.find(x=>x.name==='信濃大町'),matsumoto=all.find(x=>x.name==='松本');let north;
   if(omachi&&matsumoto)north=(s-omachi.s)*(matsumoto.s-omachi.s)<0;
   else north=names.some(x=>['北大町','信濃木崎','稲尾','海ノ口','簗場','南神城','神城','飯森','白馬','信濃森上','白馬大池','千国','南小谷'].includes(x));

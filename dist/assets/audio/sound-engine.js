@@ -1,11 +1,12 @@
+import {TrainPassbyAudio} from '../../train-passby-audio.js?v=85';
 import {stationCueRefs,driverWordRefs} from '../../station-voice.js?v=84';
 import {timingVoiceRefs,timingPreloadRefs,restrictionVoiceRefs} from '../../station-timing.js?v=84';
 import {STATIONS} from '../../route-data.js';
 import {createMixGains} from '../../audio-mix.js?v=keys61fix';
 import {sharedEffects} from '../../buffered-effects.js?v=phone58fix';
-import {departureFilesFor,STATION_DEPARTURE_AUDIO} from '../../train-operations.js?v=32';
+import {departureFilesFor,STATION_DEPARTURE_AUDIO} from '../../train-operations.js?v=85';
 import {runPitch} from './run-pitch.js';
-import {HeldHorn} from './held-horn.js';
+import {HeldHorn} from './held-horn.js?v=85';
 // Browser port of the supplied RTM RSM2 sound_701.js. Speed input is km/h.
 export function interpolate(points, speed) {
   if (points.length === 1) return 0;
@@ -44,7 +45,7 @@ export class SoundEngine {
     this.compressor.threshold.value=-6;
     this.compressor.ratio.value=8;
     this.master.connect(this.compressor).connect(this.ctx.destination);
-    this.mix=createMixGains(this.ctx,this.master,this.mixValues);
+    this.mix=createMixGains(this.ctx,this.master,this.mixValues);this.passby=new TrainPassbyAudio(this.ctx,this.mix.gains.running,this.mix.gains.se);
     this.loading=(async()=>{
       const response=await fetch(new URL('./sound-config.json',import.meta.url));
       if (!response.ok) throw Error('音源設定を読み込めません');
@@ -71,6 +72,7 @@ export class SoundEngine {
     })().catch(e=>{this.error=e.message; this.loading=null; throw e;});
     return this.loading;
   }
+  updatePassby(world,s,speed,viewMode,paused){this.passby?.update(world,s,speed,viewMode,paused);this.horn?.setPlaybackRate(this.passby?.horn.pitch??1);}
   setMix(values){this.mixValues={...values};this.mix?.update(values);}
   setVolume(value) {
     this.level=Math.max(0,Math.min(1,Number(value)));
@@ -105,14 +107,15 @@ export class SoundEngine {
           node.source=this.ctx.createBufferSource();
           node.source.buffer=node.buffer; node.source.loop=true;
           node.gain=this.ctx.createGain(); node.gain.gain.value=0;
-          node.source.connect(node.gain).connect(this.mix.gains.running);
+          node.source.connect(node.gain).connect(this.passby.running.output);
           node.source.playbackRate.value=pitch; node.source.start();
         }
         node.source.playbackRate.setTargetAtTime(pitch,t,.01);
         node.gain.gain.setTargetAtTime(volume,t,.01);
+        this.passby.track(node.source,pitch);
         this.activeTracks.push({name:node.track.fileName,pitch,volume});
       } else if (node.source) {
-        node.source.stop(); node.source.disconnect(); node.gain.disconnect(); node.source=null; node.gain=null;
+        this.passby.forget(node.source);node.source.stop(); node.source.disconnect(); node.gain.disconnect(); node.source=null; node.gain=null;
       }
     }
     this.updateBve(speed,notch,environment);
@@ -124,9 +127,9 @@ export class SoundEngine {
   }
   loopEffect(key,volume,pitch=1){
     this.bveNodes??=new Map();let node=this.bveNodes.get(key);
-    if(volume<=.001){if(node){node.source.stop();node.source.disconnect();node.gain.disconnect();this.bveNodes.delete(key);}return;}
-    if(!node){const source=this.ctx.createBufferSource(),gain=this.ctx.createGain();source.buffer=this.effects[key];if(!source.buffer)return;source.loop=true;gain.gain.value=0;source.connect(gain).connect(this.mix.gains.running);source.start();node={source,gain};this.bveNodes.set(key,node);}
-    node.source.playbackRate.setTargetAtTime(pitch,this.ctx.currentTime,.05);node.gain.gain.setTargetAtTime(volume,this.ctx.currentTime,.08);
+    if(volume<=.001){if(node){this.passby.forget(node.source);node.source.stop();node.source.disconnect();node.gain.disconnect();this.bveNodes.delete(key);}return;}
+    if(!node){const source=this.ctx.createBufferSource(),gain=this.ctx.createGain();source.buffer=this.effects[key];if(!source.buffer)return;source.loop=true;gain.gain.value=0;source.connect(gain).connect(this.passby.running.output);source.start();node={source,gain};this.bveNodes.set(key,node);}
+    this.passby.track(node.source,pitch);node.gain.gain.setTargetAtTime(volume,this.ctx.currentTime,.08);
   }
   updateBve(speed,notch,environment){
     const surface=environment.surface??'long',level=Math.min(1,speed/45)*.38,pitch=Math.max(.35,Math.min(2,speed/50));
@@ -138,8 +141,9 @@ export class SoundEngine {
   setHorn(pressed,name='hornPrimary'){
     if(!pressed){this.horn?.release();return;}
     if(!this.ready||this.paused)return;
-    this.horn??=new HeldHorn(this.ctx,this.mix.gains.se);
+    this.horn??=new HeldHorn(this.ctx,this.passby.horn.output);
     const release=name==='hornPrimary'?'hornRelease':null;
+    this.horn.setPlaybackRate(this.passby.horn.pitch);
     this.horn.press(this.effects[name],this.effects[release]);
   }
   callRestriction(kmh){return this.callVoiceRefs(restrictionVoiceRefs('tohoku',kmh));}
@@ -166,12 +170,12 @@ export class SoundEngine {
       if(generation===this.routeCueGeneration)await this.playEffectBuffer(buffer,'voice');
     }).catch(()=>{});
   }
-  playEffect(name){return this.playEffectBuffer(this.paused?null:this.effects?.[name]);}
-  playEffectBuffer(buffer,category='se') {
+  playEffect(name){return this.playEffectBuffer(this.paused?null:this.effects?.[name],'se',name.startsWith('horn')?'horn':null);}
+  playEffectBuffer(buffer,category='se',spatialKind=null) {
     if (!this.ready || !buffer) return Promise.resolve(false);
-    const source=this.ctx.createBufferSource();source.buffer=buffer;source.connect(this.mix.gains[category]);
+    const source=this.ctx.createBufferSource();source.buffer=buffer;source.connect(spatialKind?this.passby[spatialKind].output:this.mix.gains[category]);if(spatialKind)this.passby.track(source,1,spatialKind);
     this.effectSources??=new Map();let finish;const promise=new Promise(resolve=>finish=resolve);this.effectSources.set(source,finish);
-    source.onended=()=>{source.disconnect();this.effectSources.delete(source);finish(true);};
+    source.onended=()=>{this.passby?.forget(source);source.disconnect();this.effectSources.delete(source);finish(true);};
     try{source.start();}catch{source.disconnect();this.effectSources.delete(source);finish(false);}return promise;
   }
   async playDoorClose(){
@@ -208,6 +212,7 @@ export class SoundEngine {
     this.departure=null;active.source.onended=null;active.source.stop();active.source.disconnect();active.finish(false);
   }
   stop() {
+    this.passby?.reset();
     this.horn?.end(true);
     this.routeCueGeneration=(this.routeCueGeneration??0)+1;
     this.routeCueQueue=null;

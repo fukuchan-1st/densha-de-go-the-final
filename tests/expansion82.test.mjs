@@ -12,7 +12,7 @@ const routes=await loadServiceRoutes();
 test('fictional route distances follow the workbook and all three branches offer both vehicles and directions',()=>{
  assert.equal(routes.get('toho').length,71400);assert.equal(routes.get('toho-village').length,3480);assert.equal(routes.get('toho-center').length,4000);
  assert.equal(serviceChoices.toho.length,12);
- for(const choice of serviceChoices.toho){const r=makeServiceRoute(routes.get(choice[0]),...choice.slice(1));assert.equal(r.trafficSections[0].tracks,1);assert.equal(r.neighborTracks.length,0);assert.ok(r.stations.length>=2);}
+ for(const choice of serviceChoices.toho){const r=makeServiceRoute(routes.get(choice[0]),...choice.slice(1));assert.equal(r.trafficSections[0].tracks,1);assert.equal(r.neighborTracks.filter(t=>t.humanHub).length,3);assert.ok(r.stations.length>=2);}
  const center=routes.get('toho-center');assert.equal(center.structures[0].sStart,100);assert.ok(center.structures[0].sEnd>center.length);
 });
 test('fictional station approaches are straight and all intervening bends stay gentle',()=>{

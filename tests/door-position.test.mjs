@@ -10,7 +10,7 @@ test('late callbacks from an earlier attempt cannot complete the current closing
 });
 test('distant targets, invalid coordinates and moving trains never snap to another station',()=>{
  for(const [s,v,target] of [[3000,0,1000],[1000,0,3000],[NaN,0,1000],[1000,0,NaN],[1005,2,1000]]){const run={s,v,doors:false};assert.equal(correctStoppedOverrun(run,target),null);assert.ok(Object.is(run.s,s));}
- const nearby={s:1010,v:0,doors:false};assert.equal(correctStoppedOverrun(nearby,1000),10);assert.equal(nearby.s,1000);
+ const nearby={s:1004,v:0,doors:false};assert.equal(correctStoppedOverrun(nearby,1000),4);assert.equal(nearby.s,1000);
 });
 test('door completion refuses a different physical station without moving the train',()=>{const run={s:1000,v:0,next:2,doors:true,doorPhase:'closing',errors:[],served:0,endIndex:2};assert.equal(finishStop(run,route),false);assert.equal(run.s,1000);assert.equal(run.next,2);assert.equal(run.doors,true);});
 test('701 closing also leaves position unchanged and cannot advance twice',()=>{const run={s:1001,v:0,next:1,doors:true,doorPhase:'closing',doorCloseDone:true,errors:[],served:0};assert.equal(completeDoorSequence(run,route.stations),true);assert.equal(completeDoorSequence(run,route.stations),false);assert.equal(run.s,1001);assert.equal(run.next,2);});

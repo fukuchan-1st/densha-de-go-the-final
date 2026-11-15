@@ -17,8 +17,9 @@ export function replayStateAt(samples,time){
 }
 
 export function recordReplayAudio(sound,getRecorder,getState){
+ let depth=0;
  for(const method of ['playEffect','playRouteAnnouncement','callDriver','callStation','callStationTiming','callRestriction','callRouteCue','setHorn']){
   if(typeof sound[method]!=='function')continue;const original=sound[method].bind(sound);
-  sound[method]=(...args)=>{const recorder=getRecorder(),state=getState();if(recorder&&state)recorder.event(method,args,state.elapsed);return original(...args);};
+  sound[method]=(...args)=>{const recorder=getRecorder(),state=getState();if(recorder&&state&&depth===0)recorder.event(method,args,state.elapsed);depth++;try{return original(...args);}finally{depth--;}};
  }
 }

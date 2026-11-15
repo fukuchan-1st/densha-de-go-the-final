@@ -5,11 +5,11 @@ import {HeldHorn} from '../dist/assets/audio/held-horn.js';
 import {panelSpeedDigit} from '../dist/final-panel.js';
 import {correctStoppedOverrun,nextSignalCall,advanceDoorSequence,completeDoorSequence} from '../dist/train-operations.js';
 
-test('5m以上のオーバーランは停止時だけ0cmに戻し、停止誤差は記録する',()=>{
+test('青い範囲の先2m以内のオーバーランだけ停止時に0cmへ戻し、停止誤差は記録する',()=>{
  const run={s:105,v:1,notch:-3,next:0,errors:[],served:0,doors:false,stopWait:0};
  assert.equal(correctStoppedOverrun(run,100),null);
  run.v=0;
- run.s=104.99;
+ run.s=103;
  assert.equal(correctStoppedOverrun(run,100),null);
  run.s=105;
  assert.equal(correctStoppedOverrun(run,100),5);

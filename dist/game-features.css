@@ -11,3 +11,7 @@
 
 /* Seven route cards stay within the shared 16:9 canvas. */
 #routeCards{top:116px;gap:7px}.route-card{height:88px;min-height:0}.route-copy strong{font-size:31px}.route-copy em{margin-top:5px}
+
+.scenario-in-progress:not(.detail-summary){position:relative!important}.scenario-progress-ring{position:absolute;inset:0;border:3px solid #ffdf74;box-sizing:border-box;pointer-events:none;z-index:5;clip-path:inset(0 calc(100% - var(--scenario-progress,0%)) 0 0);filter:drop-shadow(0 0 4px #dba43270);transition:clip-path .4s ease}
+
+#trainDetails .detail-specs h3{line-height:1.1}#trainDetails .detail-specs p{line-height:1.3}

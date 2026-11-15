@@ -1,5 +1,5 @@
 export class HeldHorn {
- constructor(context,output){this.context=context;this.output=output;}
+ constructor(context,output){this.context=context;this.output=output;this.pitch=1;}
  async press(buffer,tail){
   if(this.active)return;
   this.end();
@@ -12,7 +12,7 @@ export class HeldHorn {
    const source=this.context.createBufferSource(),gain=this.context.createGain();
    hold.source=source;
    hold.gain=gain;
-   source.buffer=audio;
+   source.buffer=audio;if(source.playbackRate)source.playbackRate.value=this.pitch;
    source.loop=true;
    source.loopStart=audio.duration*.25;
    source.loopEnd=audio.duration*.62;
@@ -21,6 +21,7 @@ export class HeldHorn {
    source.start();
   }catch{if(this.active===hold)this.active=null;}
  }
+ setPlaybackRate(pitch){this.pitch=pitch;for(const source of [this.active?.source,this.tail])source?.playbackRate?.setTargetAtTime(pitch,this.context.currentTime,.065);}
  release(){
   const hold=this.active;
   this.end();
@@ -30,7 +31,7 @@ export class HeldHorn {
    if(!buffer||this.active||this.generation!==generation)return;
    const source=this.context.createBufferSource();
    this.tail=source;
-   source.buffer=buffer;
+   source.buffer=buffer;if(source.playbackRate)source.playbackRate.value=this.pitch;
    source.connect(this.output);
    source.onended=()=>{source.disconnect();if(this.tail===source)this.tail=null;};
    source.start();

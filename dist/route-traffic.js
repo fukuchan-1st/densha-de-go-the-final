@@ -1,3 +1,4 @@
+import {prepareSpecialStations} from './special-station-layouts.js?v=85';
 import {widenBoardingClearance,mergePlatformSurfaces} from './platform-details.js?v=79';
 import {yamanoteParallel} from './yamanote-parallel.js?v=79';
 import {interpolateKnots} from './track-layout.js?v=79';
@@ -78,11 +79,11 @@ export function prepareLeftTraffic(source){
    const best=gaps.sort((a,b)=>(b[1]-b[0])-(a[1]-a[0]))[0];if(best)platforms.push({...p,boarding:false,edges:p.edges.map(([s])=>[s,...best])});
   }
   const distance=p=>Math.min(...p.edges[0].slice(1).map(x=>Math.abs(x-drive)));
-  let boarding=platforms.filter(p=>distance(p)<=2&&p.edges[0][2]-p.edges[0][1]>=3.4).sort((a,b)=>distance(a)-distance(b))[0];
+  let boarding=platforms.filter(p=>distance(p)<=2&&p.edges[0][2]-p.edges[0][1]>=(source.id==='yagan'&&st.name==='男鹿高原'?2.5:3.4)).sort((a,b)=>distance(a)-distance(b))[0];
   const make=(l,r)=>({edges:[[-220,l,r],[20,l,r]],roof:[-185,0],boarding:false,basis:'左右の通行方向に合わせた試作ホーム'});
   if(!boarding){const lower=active.filter(x=>x<drive-.1).at(-1),left=Math.max(drive-7.5,(lower??-Infinity)+1.55);boarding=make(left,drive-1.55);platforms.push(boarding);}boarding.boarding=true;
   if(trafficSectionAt({...source,trafficSections:sections},st.s).tracks===4){const opposing=reverse?[0,8]:[8,16],l=opposing[0]+1.55,r=opposing[1]-1.55;if(!platforms.some(p=>p.edges[0][1]<=l&&p.edges[0][2]>=r))platforms.push(make(l,r));}
   layouts[st.name]={...layout,platforms:mergePlatformSurfaces(platforms.filter(p=>p===boarding||p.edges[0][2]-p.edges[0][1]>=2.5))};
  }
- return {...source,trafficSide:'left',leftTrafficVersion:5,trafficSections:sections,drivingTrack:driving,neighborTracks:neighbors,stationLayouts:layouts,corridorSceneryPrepared:true};
+ return prepareSpecialStations({...source,trafficSide:'left',leftTrafficVersion:5,trafficSections:sections,drivingTrack:driving,neighborTracks:neighbors,stationLayouts:layouts,corridorSceneryPrepared:true});
 }

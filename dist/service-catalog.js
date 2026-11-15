@@ -1,4 +1,4 @@
-import {joinRoutes,sliceRoute,reverseRoute} from './service-routes.js?v=82';
+import {joinRoutes,sliceRoute,reverseRoute} from './service-routes.js?v=85';
 const item=(route,vehicle,service,from,to,extra={})=>[route,vehicle,service,{from,to,...extra}];
 const special=['東京','神田','御茶ノ水','四ツ谷','新宿','中野','三鷹','国分寺','立川'];
 export const STOP_PATTERNS={
@@ -20,7 +20,7 @@ const base={
  item('chuo-extended','e353','特急','東京','松本'),item('chuo-extended','211','普通','高尾','松本'),item('shinonoi-extended','383','特急','長野','塩尻'),item('shinonoi-extended','211','普通','長野','塩尻'),
  item('chuo','e233','快速','東京','高尾'),item('chuo','e233','通勤特快','東京','高尾',{pattern:'通勤特快'}),item('chuo','e233','中央特快','東京','高尾',{pattern:'中央特快',beyond:'立川'}),item('chuo','e233','快速（土休日）','東京','高尾',{pattern:'holiday'}),
  item('chuo-ome','e233','青梅特快','東京','青梅',{pattern:'中央特快',beyond:'立川'}),item('chuo','e233','通勤快速','東京','高尾',{pattern:'通勤快速',beyond:'立川'}),item('chuo-ome','e233','ホリデー快速','新宿','青梅',{pattern:'ホリデー快速'}),item('chuo-extended','e233','快速','東京','大月',{pattern:'all'}),
- item('chuo','e353','特急','東京','八王子'),item('chuo-ome','e353','特急おうめ','東京','青梅',{pattern:'おうめ'}),item('itsukaichi','e233','各駅停車','拝島','武蔵五日市',{pattern:'all',carCount:6}),item('chuo-itsukaichi','e233','各駅停車','立川','武蔵五日市',{pattern:'all',carCount:6}),item('ome-okutama','e233','各駅停車','青梅','奥多摩',{pattern:'all'}),
+ item('chuo','e353','特急','東京','八王子'),item('chuo-ome','e353','特急おうめ','東京','青梅',{pattern:'おうめ'}),item('itsukaichi','e233','各駅停車','拝島','武蔵五日市',{pattern:'all',carCount:6}),item('chuo-itsukaichi','e233','各駅停車','立川','武蔵五日市',{pattern:'all',carCount:6}),item('ome-okutama','e233','各駅停車','青梅','奥多摩',{pattern:'all',carCount:4}),
  item('chuo-kofu','e353','特急'),item('chuo-kofu','211','普通'),item('chuo-shinshu','e353','特急'),item('chuo-shinshu','211','普通'),item('shinonoi','383','特急'),
  item('tatsuno','211','普通','岡谷','塩尻',{pattern:'all',startTime:'10:00:00'}),item('tatsuno-nagano','211','普通みすず','辰野','長野',{pattern:'all'}),item('shinonoi-extended','211','快速','長野','松本',{pattern:'長野松本快速'}),
  item('suwa-nagano','211','快速','上諏訪','長野',{pattern:'長野快速'}),item('chuo-extended','211','快速みすず','松本','岡谷',{pattern:'みすず'}),
