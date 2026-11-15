@@ -1,3 +1,4 @@
+import {sceneryDensity} from './scenery-profile.js?v=84';
 import {RoadScenery} from './road-scenery.js?v=80';
 import {BallastDetail} from './ballast-detail.js?v=79';
 import {LevelCrossings} from './crossings.js?v=79';
@@ -16,11 +17,11 @@ import {settlementAt} from './route-data.js?v=23';
 import {DISPLAY_WIDTH,DISPLAY_HEIGHT} from './display.js?v=23';
 import {addStructures} from './structures.js?v=23';
 import {structureRanges,segmentIntersects,corridorOccupied} from './structure-ranges.js?v=23';
-import {addVegetation,createSurfaceMaterial} from './vegetation.js?v=76';
+import {addVegetation,createSurfaceMaterial} from './vegetation.js?v=84';
 import {addTrackSignal} from './track-signal.js?v=32';
 export class RailWorld {
  constructor(container,geometry,stations,profile,structures,stationLayouts,signals=[],{quality='standard',drawDistance=1500,roads=[]}={}){
-  this.quality=quality;this.drawDistance=drawDistance;this.routeRoads=roads;
+  this.sceneryRoute={id:'tohoku',stations};this.quality=quality;this.drawDistance=drawDistance;this.routeRoads=roads;
   this.suspension=new CabSuspension();
   const prepared=prepareTurnoutLayout(stationLayouts.tracks,{length:geometry.points.at(-1)[0],stations:stationLayouts.stations});this.turnouts=prepared.turnouts;this.trackLayout=new TrackLayout({...stationLayouts,tracks:prepared.tracks});
   this.structuresData=structures;this.ranges=structureRanges(structures);this.isStructureCorridor=(s,offset)=>corridorOccupied(structures,s,offset)||this.trackLayout.occupied(s,offset);
@@ -70,10 +71,10 @@ export class RailWorld {
   }
   for(const tunnel of this.ranges.tunnels)for(let s=tunnel.sStart;s<tunnel.sEnd;s+=8){const a=this.frame(s).p,b=this.frame(Math.min(s+8,tunnel.sEnd)).p;wire.push(a.x,a.y+4.45,a.z,b.x,b.y+4.45,b.z);}
   this.instances(this.box,'#8c9290',poles);this.instances(this.box,'#656b6a',arms);const wg=new T.BufferGeometry();wg.setAttribute('position',new T.Float32BufferAttribute(wire,3));this.scene.add(new T.LineSegments(wg,new T.LineBasicMaterial({color:'#414c51',transparent:true,opacity:.7})));
-  for(let s=-150;s<this.length+500;s+=55)for(const side of [-1,1]){const urban=settlementAt(s);if(rand()<.35+urban*.6){const offset=side*((urban>.6?16:35)+rand()*65);if(this.isStructureCorridor(s,offset))continue;const f=this.frame(s,offset),h=3+rand()*(3+urban*10);houses.push({x:f.p.x,y:f.p.y+h/2,z:f.p.z,w:6+rand()*4,h,d:7,r:f.angle});roofs.push({x:f.p.x,y:f.p.y+h+.25,z:f.p.z,w:8,h:.5,d:9,r:f.angle});}}
+  for(let s=-150;s<this.length+500;s+=55)for(const side of [-1,1]){const urban=sceneryDensity(this.sceneryRoute,s).building/100;if(rand()<urban){const offset=side*((urban>.6?16:35)+rand()*65);if(this.isStructureCorridor(s,offset))continue;const f=this.frame(s,offset),h=3+rand()*(3+urban*10);houses.push({x:f.p.x,y:f.p.y+h/2,z:f.p.z,w:6+rand()*4,h,d:7,r:f.angle});roofs.push({x:f.p.x,y:f.p.y+h+.25,z:f.p.z,w:8,h:.5,d:9,r:f.angle});}}
   for(let variant=0;variant<30;variant++)this.instances(this.box,'facade:house:'+variant,houses.filter(a=>buildingVariant(a.x,a.z)===variant));this.instances(this.box,'#5c625d',roofs);
   addVegetation(this);
-  for(let s=-100;s<this.length+400;s+=120)for(const side of [-1,1]){if(this.isStructureCorridor(s,side*65)||settlementAt(s)>.5)continue;const f=this.frame(s,side*65);fields.push({x:f.p.x,y:f.p.y-.04,z:f.p.z,w:85,h:.04,d:100,r:f.angle,pitch:Math.asin(f.dir.y)});}const fieldMat=createSurfaceMaterial('field');fieldMat.map.repeat.set(16,18);this.instances(this.box,'#b3b377',fields,fieldMat);
+  for(let s=-100;s<this.length+400;s+=120)for(const side of [-1,1]){if(this.isStructureCorridor(s,side*65)||sceneryDensity(this.sceneryRoute,s).green<40)continue;const f=this.frame(s,side*65);fields.push({x:f.p.x,y:f.p.y-.04,z:f.p.z,w:85,h:.04,d:100,r:f.angle,pitch:Math.asin(f.dir.y)});}const fieldMat=createSurfaceMaterial('field');fieldMat.map.repeat.set(16,18);this.instances(this.box,'#b3b377',fields,fieldMat);
   for(let s=-300;s<this.length+900;s+=750)for(const side of [-1,1]){const f=this.frame(s,side*(650+rand()*500)),hill=new T.Mesh(new T.SphereGeometry(1,16,8),this.mat('#668375'));hill.position.copy(f.p);hill.position.y=f.p.y-30;hill.scale.set(450,110+rand()*130,500);this.scene.add(hill);}
   this.stationStats=addStations(this);
   for(const l of this.profile.limits){if(l.s<1)continue;this.mesh(.08,2.3,.08,'#a2aaa4',l.s,-2.5);this.sign(String(l.kmh),l.s,-2.5,2.55,.7,.55);}

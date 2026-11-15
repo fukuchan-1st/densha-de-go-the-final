@@ -1,7 +1,10 @@
-import {TohoLandmarks} from './toho-landmarks.js?v=83';
-import {isToho,villageAt,woodMaterial,addTohoHouses} from './toho-scenery.js?v=83';
+import {sceneryDensity} from './scenery-profile.js?v=84';
+import {BasinScenery,addBasinFields} from './basin-scenery.js?v=84';
+import {basinDensity,basinAnchors,basinTerrainAreas,basinTerrainAt} from './basin-profile.js?v=84';
+import {TohoLandmarks} from './toho-landmarks.js?v=84';
+import {isToho,villageAt,woodMaterial,addTohoHouses} from './toho-scenery.js?v=84';
 import {filmingChunkIndices} from './railfan-tunnel.js?v=81';
-import {chuoScenery,mountainArea} from './geographic-sections.js?v=82';
+import {chuoScenery,mountainArea} from './geographic-sections.js?v=84';
 import {prepareUrbanViaduct} from './urban-viaduct.js?v=79';
 import {RoadScenery} from './road-scenery.js?v=80';
 import {BallastDetail} from './ballast-detail.js?v=79';
@@ -22,7 +25,7 @@ import {CabSuspension} from './cab-motion.js?v=24';
 import {addTrackSignal} from './track-signal.js?v=32';
 import {addStoppingMarker} from './stop-scene.js?v=81';
 import {interpolateKnots} from './track-layout.js?v=79';
-import {addYaganHillsides,addYaganTunnel} from './yagan-scenery.js?v=83';
+import {addYaganHillsides,addYaganTunnel} from './yagan-scenery.js?v=84';
 const clamp=T.MathUtils.clamp;
 // Original streamed scenery. Track coordinates come from the route JSON; buildings and platforms are approximate.
 export class FinalWorld {
@@ -50,7 +53,7 @@ export class FinalWorld {
    this.camera.add(this.headlight,this.headlight.target);
    this.scene.add(this.camera);
   }
-  this.atmosphere=new SceneAtmosphere(this);this.crossings=new LevelCrossings(this);this.ballastDetail=new BallastDetail(this);this.roadScenery=new RoadScenery(this);this.landmarks=isToho(route)?new TohoLandmarks(this):null;
+  this.basin=new BasinScenery(this);this.atmosphere=new SceneAtmosphere(this);this.crossings=new LevelCrossings(this);this.ballastDetail=new BallastDetail(this);this.roadScenery=new RoadScenery(this);this.landmarks=isToho(route)?new TohoLandmarks(this):null;
  }
  setQuality(quality){this.atmosphere.setQuality(quality);}
  mat(color){
@@ -80,7 +83,7 @@ export class FinalWorld {
  curvature(s){const a=this.driveFrame(s-20).dir.setY(0).normalize(),b=this.driveFrame(s+20).dir.setY(0).normalize();return Math.atan2(a.x*b.z-a.z*b.x,a.dot(b))/40;}
  grade(s){return clamp((this.point(s+10).y-this.point(s-10).y)/20*1000,-40,40);}
  structureAt(s,kind){return this.route.structures?.find(item=>(!kind||item.kind===kind)&&s>=item.sStart&&s<=item.sEnd);}
- sceneryTypeAt(s){if(isToho(this.route))return villageAt(this.route,s)?'suburban':'mountain';if(['itsukaichi','chuo-itsukaichi'].includes(this.route.id)){const end=this.sceneryStations.find(st=>st.name==='武蔵増戸')?.s??this.length;return this.route.reverseDirection?(s>end?'suburban':'mountain'):(s<end?'suburban':'mountain');}const chuo=chuoScenery(this.route,s);if(chuo)return chuo;const corridor=corridorSceneryType(this.route,s);if(corridor)return corridor;if(this.chuoCorridor)return s<this.cityEnd?'city':s<this.mountainStart?'suburban':'mountain';return this.rural?'mountain':(['yamanote','osaka'].includes(this.route.id)||this.stationNear(s).d<900?'city':'suburban');}
+ sceneryTypeAt(s){if(isToho(this.route))return villageAt(this.route,s)?'suburban':'mountain';const density=sceneryDensity(this.route,s);if(density.source==='osm-600m'||Number.isFinite(density.urban))return density.building>=70?'city':density.forest>.45&&density.green>55?'mountain':'suburban';if(['itsukaichi','chuo-itsukaichi'].includes(this.route.id)){const end=this.sceneryStations.find(st=>st.name==='武蔵増戸')?.s??this.length;return this.route.reverseDirection?(s>end?'suburban':'mountain'):(s<end?'suburban':'mountain');}const chuo=chuoScenery(this.route,s);if(chuo)return chuo;const corridor=corridorSceneryType(this.route,s);if(corridor)return corridor;if(this.chuoCorridor)return s<this.cityEnd?'city':s<this.mountainStart?'suburban':'mountain';return this.rural?'mountain':(['yamanote','osaka'].includes(this.route.id)||this.stationNear(s).d<900?'city':'suburban');}
  stationNear(s){let nearest=null,d=Infinity;for(const st of this.sceneryStations??this.route.stations){const dd=Math.abs(st.s-s);if(dd<d){nearest=st;d=dd;}}return {st:nearest,d};}
  platformLength(){return clamp((this.route.carCount??10)*20+20,180,280);}
  oppositeOffset(s){
@@ -146,7 +149,7 @@ export class FinalWorld {
   }
  }
  buildChunk(index){const group=new T.Group(),start=Math.max(-300,index*500),end=Math.min(this.length+300,(index+1)*500);if(end<=start)return group;
-  {const finish=end;for(let a=start;a<finish;a+=50){const b=Math.min(finish,a+50),kind=this.sceneryTypeAt((a+b)/2);this.ribbon(group,a,b,0,260,-.2,kind==='mountain'?'#869177':'#9a9d93',10);}}
+  {const finish=end;for(let a=start;a<finish;a+=50){const b=Math.min(finish,a+50),kind=this.sceneryTypeAt((a+b)/2);if(basinTerrainAt(this.route,(a+b)/2))this.ribbon(group,a,b,0,2200,-.8,'#869177',10);this.ribbon(group,a,b,0,260,-.2,kind==='mountain'?'#869177':'#9a9d93',10);}}
   const tracks=[{start,end,offset:s=>this.driveOffset(s)}];
   const nearby=(this.sceneryStations??this.route.stations).filter(st=>st.s+360>=start&&st.s-420<=end);
   if(this.route.neighborTracks){
@@ -223,26 +226,29 @@ export class FinalWorld {
   const roofs=[];
   if(isToho(this.route))addTohoHouses(this,group,start,end,trackEnvelope,random);
   for(let s=Math.ceil(start/26)*26;s<end;s+=26)for(const side of[-1,1]){
-   const near=this.stationNear(s),kind=this.sceneryTypeAt(s);
+   const near=this.stationNear(s),kind=this.sceneryTypeAt(s),density=sceneryDensity(this.route,s),inBasin=!!basinTerrainAt(this.route,s);
+   if(density&&random()>density.building/100)continue;
    if(isToho(this.route))continue;
-   if(this.structureAt(s,'tunnel')||(kind==='mountain'&&(near.d>260||random()>.38)))continue;
-   const urban=kind==='city',[min,max]=trackEnvelope(s),edge=side<0?min:max;
-   const h=urban?14+random()*42:3.2+random()*2.8,w=urban?8+random()*15:5.5+random()*3,d=urban?10+random()*12:6+random()*3;
+   if(this.structureAt(s,'tunnel')||(kind==='mountain'&&density.building<35&&(near.d>260||random()>.38)))continue;
+   const urban=inBasin?density.building>=80&&near.d<600:kind==='city',[min,max]=trackEnvelope(s),edge=side<0?min:max;
+   const h=urban?14+random()*(inBasin?15:42):3.2+random()*2.8,w=urban?8+random()*15:5.5+random()*3,d=urban?10+random()*12:6+random()*3;
    const x=edge+side*(urban?8+w/2+random()*7:13+random()*30);
    if((this.route.structures??[]).some(c=>c.kind==='crossing'&&Math.abs((c.sOrigin??c.sStart)-s)<d/2+9))continue;
    const frontageClear=this.roadScenery.buildingClear(s,x,w,d);if(frontageClear)buildings.push({s,x,y:0,w,h,d});
-   if(urban)for(const row of(this.quality==='light'?[1]:[1,2])){const xx=edge+side*(row===1?43+random()*12:77+random()*18),height=18+random()*(row===1?44:65);const ww=14+random()*13,dd=18+random()*7;if(this.roadScenery.buildingClear(s,xx,ww,dd))buildings.push({s,x:xx,y:0,w:ww,h:height,d:dd});}
+   if(urban)for(const row of(this.quality==='light'?[1]:[1,2])){if(inBasin&&random()>.65)continue;const xx=edge+side*(row===1?43+random()*12:77+random()*18),height=inBasin?7+random()*20:18+random()*(row===1?44:65);const ww=14+random()*13,dd=18+random()*7;if(this.roadScenery.buildingClear(s,xx,ww,dd))buildings.push({s,x:xx,y:0,w:ww,h:height,d:dd});}
+   if(inBasin&&!urban)for(const row of [65,100,145]){if(random()>density.building/100)continue;const xx=edge+side*(row+random()*9);if(this.roadScenery.buildingClear(s,xx,w,d)){buildings.push({s,x:xx,y:0,w,h,d});roofs.push({s,x:xx,y:h,w:w+.5,h:.8,d:d+.5});}}
    if(!urban&&!frontageClear)continue;
    if(!urban){roofs.push({s,x,y:h,w:w+.5,h:this.route.id==='tokaido'?1.7:.3,d:d+.5});if(this.route.id==='tokaido'){const x2=x+side*18;buildings.push({s:s+8,x:x2,y:0,w:w*.9,h:h*.9,d});roofs.push({s:s+8,x:x2,y:h*.9,w:w*.9+.5,h:1.7,d:d+.5});}}
    if(frontageClear&&this.quality!=='light')for(let y=2.5;y<h-1;y+=3)windows.push({s:s-d/2-.03,x,y,w:w*.65,h:1.1,d:.05});
 
   }
   for(let s=Math.ceil(start/14)*14;s<end;s+=14){
-   const kind=this.sceneryTypeAt(s),near=this.stationNear(s);if(kind==='mountain'||this.structureAt(s,'tunnel')||near.d<200)continue;
+   const kind=this.sceneryTypeAt(s),near=this.stationNear(s),density=sceneryDensity(this.route,s);if(density&&random()>density.green/100)continue;if(kind==='mountain'||this.structureAt(s,'tunnel')||near.d<200)continue;
    const [min,max]=trackEnvelope(s);for(const side of [-1,1])for(const row of (kind==='city'?[15]:[16,33])){
     if(kind==='city'&&random()>.3)continue;trees.push({s:s+(random()-.5)*8,x:(side<0?min:max)+side*(row+random()*6),y:0,h:(kind==='city'?4:5)+random()*4});
    }
   }
+  addBasinFields(this,group,start,end,trackEnvelope,random);
   this.instances(group,roofs,'#616b71',this.route.id==='tokaido'?this.houseRoof:this.box);
   for(let variant=0;variant<30;variant++){this.instances(group,buildings.filter(a=>a.h>9&&buildingVariant(a.s,a.x)===variant),'facade:office:'+variant);this.instances(group,buildings.filter(a=>a.h<=9&&buildingVariant(a.s,a.x)===variant),'facade:house:'+variant);}this.instances(group,windows,'#405d68');this.trees.add(group,trees.map(a=>({...a,y:0,variant:treeVariant(random()),rotation:random()*Math.PI*2}))); 
   for(const st of nearby){
@@ -302,10 +308,11 @@ export class FinalWorld {
  disposeChunk(group){this.crossings.release(group);this.trees.release(group);this.scene.remove(group);const cached=new Set(this.materials.values());group.traverse(o=>{if(o.isInstancedMesh)o.dispose();if(o.userData.sharedDistrictResource)return;if(o.geometry&&o.geometry!==this.box&&o.geometry!==this.platformRailGeometry&&o.geometry!==this.pine&&o.geometry!==this.canopy&&o.geometry!==this.houseRoof)o.geometry.dispose();if(o.material?.map&&!cached.has(o.material)){o.material.map.dispose();o.material.dispose();}else if(o.userData.disposeWithChunk&&!cached.has(o.material))o.material.dispose();});}
  setPlayerTrain(id,count){this.playerTrain?.dispose();this.playerTrain=new PlayerTrain(this,id,count);}
  setCabView(origin){this.viewOrigin=origin;this.currentView=undefined;}
- setDrawDistance(value){this.drawDistance=Math.max(500,Math.min(2000,Number(value)||1500));this.camera.far=this.drawDistance+400;this.camera.updateProjectionMatrix();this.scene.fog.far=this.drawDistance;this.scene.fog.near=Math.min(350,this.drawDistance*.3);}
+ refreshScenery(){for(const g of this.chunks.values())this.disposeChunk(g);this.chunks.clear();}
+ setDrawDistance(value){this.drawDistance=Math.max(500,Math.min(2000,Number(value)||1500));this.camera.far=basinTerrainAreas(this.route).length?40000:this.drawDistance+400;this.camera.near=basinTerrainAreas(this.route).length?.5:.15;this.camera.updateProjectionMatrix();this.scene.fog.far=this.drawDistance;this.scene.fog.near=Math.min(350,this.drawDistance*.3);}
  render(s,v,dt,{acceleration=0,shake=1,panorama=false,outer=false,railfan=false,clock}={}){this.externalView=outer;const clearProjection=panorama||outer||!this.viewOrigin;if(this.currentView!==clearProjection){if(clearProjection)this.camera.clearViewOffset();else this.camera.setViewOffset(1600,900,800-clamp(this.viewOrigin.x,550,1050),450-clamp(this.viewOrigin.y,240,330),1600,900);this.currentView=clearProjection;}const focus=railfan?this.playerTrain?.railfanController.prepare(s)??s:s,needed=filmingChunkIndices(s,focus,this.drawDistance);for(const i of needed)if(!this.chunks.has(i))this.chunks.set(i,this.buildChunk(i));for(const [i,g]of this.chunks)if(!needed.has(i)){this.disposeChunk(g);this.chunks.delete(i);}
 
-  const f=this.driveFrame(s),head=this.drivePoint(s+45),motion=this.suspension.update({s,speed:v,curvature:this.curvature(s),acceleration},dt,shake),eye=Number(this.route.eyeHeight??2.7),offset=(this.route.eyeOffset??0)+motion.lateral;this.camera.position.copy(f.p).addScaledVector(f.right,offset);this.camera.position.y+=eye+motion.vertical;head.addScaledVector(f.right,offset);head.y+=eye+motion.vertical;this.camera.lookAt(head);this.camera.rotateX(motion.pitch);this.camera.rotateY(motion.yaw);this.camera.rotateZ(motion.roll);const tunnel=(this.route.structures??[]).some(t=>t.kind==='tunnel'&&(railfan?focus:s)>=t.sStart&&(railfan?focus:s)<=t.sEnd);this.sky.intensity=this.route.night?.22:tunnel?.6:2.1;this.sun.intensity=this.route.night?.04:tunnel?.3:2.1;if(this.headlight)this.headlight.intensity=this.route.night?750:tunnel?550:0;this.trees.update(s,focus);this.traffic.update(s,dt);this.playerTrain?.update(s,outer);if(outer)this.playerTrain?.camera(s,railfan,v,dt);this.crossings.update(s,v,dt,(this.playerTrain?.count??2)*20);this.ballastDetail.update(s,railfan?this.playerTrain?.railfanController.spot?.s??s:s);this.roadScenery.update(s,v,dt,railfan?this.playerTrain?.railfanController.spot?.s??s:s);this.atmosphere.update(s,dt,{tunnel,clock,moving:Math.abs(v)>.1||this.traffic.trains.length>0});this.landmarks?.update(focus??s,dt);this.renderer.render(this.scene,this.camera);
+  const f=this.driveFrame(s),head=this.drivePoint(s+45),motion=this.suspension.update({s,speed:v,curvature:this.curvature(s),acceleration},dt,shake),eye=Number(this.route.eyeHeight??2.7),offset=(this.route.eyeOffset??0)+motion.lateral;this.camera.position.copy(f.p).addScaledVector(f.right,offset);this.camera.position.y+=eye+motion.vertical;head.addScaledVector(f.right,offset);head.y+=eye+motion.vertical;this.camera.lookAt(head);this.camera.rotateX(motion.pitch);this.camera.rotateY(motion.yaw);this.camera.rotateZ(motion.roll);const tunnel=(this.route.structures??[]).some(t=>t.kind==='tunnel'&&(railfan?focus:s)>=t.sStart&&(railfan?focus:s)<=t.sEnd);this.sky.intensity=this.route.night?.22:tunnel?.6:2.1;this.sun.intensity=this.route.night?.04:tunnel?.3:2.1;if(this.headlight)this.headlight.intensity=this.route.night?750:tunnel?550:0;this.trees.update(s,focus);this.traffic.update(s,dt);this.playerTrain?.update(s,outer);if(outer)this.playerTrain?.camera(s,railfan,v,dt);this.crossings.update(s,v,dt,(this.playerTrain?.count??2)*20);this.ballastDetail.update(s,railfan?this.playerTrain?.railfanController.spot?.s??s:s);this.roadScenery.update(s,v,dt,railfan?this.playerTrain?.railfanController.spot?.s??s:s);this.atmosphere.update(s,dt,{tunnel,clock,moving:Math.abs(v)>.1||this.traffic.trains.length>0});this.landmarks?.update(focus??s,dt);this.basin?.update(focus??s);this.renderer.render(this.scene,this.camera);
  }
- dispose(){this.landmarks?.dispose();this.roadScenery.dispose();this.ballastDetail.dispose();this.crossings.dispose();this.atmosphere.dispose();this.trees.dispose();this.playerTrain?.dispose();this.traffic.dispose();for(const g of this.chunks.values())this.disposeChunk(g);this.chunks.clear();for(const m of this.materials.values()){m.map?.dispose();m.emissiveMap?.dispose();m.bumpMap?.dispose();m.userData.richNormalMap?.dispose();m.dispose();}this.box.dispose();this.platformRailGeometry?.dispose();this.houseRoof.dispose();this.pine?.dispose();this.canopy?.dispose();this.renderer.dispose();this.renderer.forceContextLoss();this.renderer.domElement.remove();}
+ dispose(){this.basin?.dispose();this.landmarks?.dispose();this.roadScenery.dispose();this.ballastDetail.dispose();this.crossings.dispose();this.atmosphere.dispose();this.trees.dispose();this.playerTrain?.dispose();this.traffic.dispose();for(const g of this.chunks.values())this.disposeChunk(g);this.chunks.clear();for(const m of this.materials.values()){m.map?.dispose();m.emissiveMap?.dispose();m.bumpMap?.dispose();m.userData.richNormalMap?.dispose();m.dispose();}this.box.dispose();this.platformRailGeometry?.dispose();this.houseRoof.dispose();this.pine?.dispose();this.canopy?.dispose();this.renderer.dispose();this.renderer.forceContextLoss();this.renderer.domElement.remove();}
 }

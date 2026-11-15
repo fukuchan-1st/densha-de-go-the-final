@@ -6,10 +6,10 @@ import {yaganPlanningSpec,yaganBoardingReady,yaganBoardingDelay} from './yagan-t
 import {progress,serviceKey} from './scenario-progress.js?v=72';
 import {scenarioRanges} from './scenario-ranges.js?v=72';
 import {installCheats,jumpToStation} from './game-cheats.js?v=72';
-import {mountGameShell} from './game-shell.js?v=82';
+import {mountGameShell} from './game-shell.js?v=84';
 import {DutyRecorder,replayStateAt,recordReplayAudio} from './replay-store.js?v=79';
 import {osakaPlanningSpec} from './osaka-timetable.js?v=72';
-import {collectStationReports,collectRestrictionReports,pauseWhenSpeechEnds} from './station-timing.js?v=72';
+import {collectStationReports,collectRestrictionReports,pauseWhenSpeechEnds} from './station-timing.js?v=84';
 import {buildConnectingRoutes} from './service-catalog.js?v=82';
 import {loadAudioMix,audioMixMarkup,bindAudioMix} from './audio-mix.js?v=keys61fix';
 import {bindRouteKeys,bindScreenKeys} from './screen-keys.js?v=72';
@@ -23,9 +23,9 @@ import {routePlanningSpec,mountScoring,checkpointMarks,scoringStations,buildScor
 import {mountDrivingOverlay} from './driving-overlay.js?v=72';import {mountLookahead,changesFromSections,stationMarks} from './lookahead.js?v=evaluation59';
 import {serviceChoices,makeServiceRoute} from './train-selection.js?v=82';
 import {GeneratedCab,generatedCab} from './generated-cab.js';
-import {FinalWorld} from './final-world.js?v=83';
+import {FinalWorld} from './final-world.js?v=84';
 import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=82';
-import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=82';
+import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=84';
 import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,routeLimitAt,stopPosition,finishStop,beginDoorClosing,isDoorClosing,takeDepartureCall} from './final-model.js?v=72';
 import {STATIONS as TOHOKU_STATIONS} from './route-data.js?v=41';
 import {FINAL_SCENARIOS,scenarioJourney} from './final-scenarios.js?v=41';
@@ -67,7 +67,7 @@ function playMenuSound(name,{waitForEnd=false}={}){
 }
 const menuMusic=mountMenuMusic(()=>audioMix.bgm,{active:false});
 let shellActive=true;
-const gameShell=mountGameShell({stage:$('stage'),settings,mix:audioMix,onSound:playMenuSound,onPage:page=>menuMusic.setMenu(page!=='title'),onTitleStart:()=>{menuEffects?.playSequence([new URL('./assets/title-start.wav',location.href).href],audioMix.se);},onActive:active=>{shellActive=active;if(!active&&mode==='drive')menuMusic.setMenu(false);$('menuScreen').inert=active;$('menuControls').inert=active;},onDrive:()=>{setMode('menu');document.querySelector('#routeCards button')?.focus();},onReplay:playSavedReplay,onSettings:kind=>{saveSettings();sound?.setMix(audioMix);menuMusic.setVolume();world?.setDrawDistance?.(settings.drawDistance);world?.setQuality?.(settings.quality);if(kind==='close'&&mode==='drive'){paused=false;pauseAudio(false);}}});
+const gameShell=mountGameShell({stage:$('stage'),settings,mix:audioMix,onSound:playMenuSound,onPage:page=>menuMusic.setMenu(page!=='title'),onTitleStart:()=>{menuEffects?.playSequence([new URL('./assets/title-start.wav',location.href).href],audioMix.se);},onActive:active=>{shellActive=active;if(!active&&mode==='drive')menuMusic.setMenu(false);$('menuScreen').inert=active;$('menuControls').inert=active;},onDrive:()=>{setMode('menu');document.querySelector('#routeCards button')?.focus();},onReplay:playSavedReplay,onSettings:kind=>{if(kind==='scenery')world?.refreshScenery?.();saveSettings();sound?.setMix(audioMix);menuMusic.setVolume();world?.setDrawDistance?.(settings.drawDistance);world?.setQuality?.(settings.quality);if(kind==='close'&&mode==='drive'){paused=false;pauseAudio(false);}}});
 if(new URLSearchParams(location.search).get('menu')==='main')gameShell.showMain();
 const routeMain=document.createElement('button');routeMain.id='routeMainMenu';routeMain.textContent='Esc　メインメニューへ';$('menuScreen').append(routeMain);routeMain.onclick=()=>gameShell.showMain();
 

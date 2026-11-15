@@ -1,4 +1,4 @@
-import {stationVoiceData} from './station-voice-data.js?v=82';
+import {stationVoiceData} from './station-voice-data.js?v=84';
 export function stationCueRefs(line,station,kind,carCount){
  const data=stationVoiceData[line],name=typeof station==='string'?station:station?.name;
  if(!data||!name||!['approach','departure'].includes(kind))return [];
@@ -11,3 +11,8 @@ export function stationCueRefs(line,station,kind,carCount){
  return [file,data.stop,position].filter(Boolean).map(ref);
 }
 export function stationVoiceBank(line){const data=stationVoiceData[line];return data?[data.bank,data.prefix]:null;}
+
+export function driverWordRefs(line,names){
+ const bank=stationVoiceBank(line),numbers={doorsClosed:'001',departure:'003',checkOkay:'124'};if(!bank)return [];
+ return names.filter(n=>numbers[n]).map(n=>{const file=`${bank[0]}/${bank[1]}${numbers[n]}.wav`;return {entryIndex:'station-voice:'+file,driverVoiceFile:'./assets/final/driver-voice/'+file};});
+}

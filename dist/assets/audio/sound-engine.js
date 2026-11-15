@@ -1,4 +1,5 @@
-import {timingVoiceRefs,timingPreloadRefs,restrictionVoiceRefs} from '../../station-timing.js?v=72';
+import {stationCueRefs,driverWordRefs} from '../../station-voice.js?v=84';
+import {timingVoiceRefs,timingPreloadRefs,restrictionVoiceRefs} from '../../station-timing.js?v=84';
 import {STATIONS} from '../../route-data.js';
 import {createMixGains} from '../../audio-mix.js?v=keys61fix';
 import {sharedEffects} from '../../buffered-effects.js?v=phone58fix';
@@ -64,7 +65,7 @@ export class SoundEngine {
       await Promise.all(Object.entries(this.bveConfig.files).map(async([key,path])=>{this.effects[key]=await load('bve/'+path);}));
       this.departureBuffers=new Map();
       this.routeCueBuffer=load;
-      await Promise.all(timingPreloadRefs('tohoku',STATIONS).map(ref=>load(new URL('../../'+ref.driverVoiceFile,import.meta.url).href)));
+      await Promise.all([...timingPreloadRefs('tohoku',STATIONS),...STATIONS.flatMap(st=>stationCueRefs('tohoku',st,'approach',2)),...driverWordRefs('tohoku',['doorsClosed','departure','checkOkay'])].map(ref=>load(new URL('../../'+ref.driverVoiceFile,import.meta.url).href)));
       await Promise.all([...new Set([...Object.values(STATION_DEPARTURE_AUDIO),'departure-chime.wav'])].map(async file=>this.departureBuffers.set(file,await load(file))));
       this.ready=true;
     })().catch(e=>{this.error=e.message; this.loading=null; throw e;});
@@ -142,6 +143,7 @@ export class SoundEngine {
     this.horn.press(this.effects[name],this.effects[release]);
   }
   callRestriction(kmh){return this.callVoiceRefs(restrictionVoiceRefs('tohoku',kmh));}
+  callStation(kind,station){return this.callVoiceRefs(stationCueRefs('tohoku',station,kind,2));}
   callStationTiming(kind,station,error){return this.callVoiceRefs(timingVoiceRefs('tohoku',station,kind,error));}
   callVoiceRefs(refs){
     const generation=this.routeCueGeneration;
@@ -155,6 +157,8 @@ export class SoundEngine {
     }).catch(()=>{});return this.routeCueQueue;
   }
   callRouteCue(kind,index){
+    if(kind==='701-approach')return this.callStation('approach',STATIONS[index]);
+    if(kind==='701-signal')return this.callVoiceRefs(driverWordRefs('tohoku',['checkOkay']));
     const generation=this.routeCueGeneration;
     this.routeCueQueue=(this.routeCueQueue??Promise.resolve()).then(async()=>{
       if(generation!==this.routeCueGeneration||!this.ready)return;

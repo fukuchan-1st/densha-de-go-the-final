@@ -1,3 +1,4 @@
+import {driverWordRefs} from './station-voice.js?v=84';
 import {loadRoadAsset} from './road-assets.js?v=79';
 import {CrossingAudio} from './crossings.js?v=79';
 import {VIEW_LABELS,normalizedView,replayViewMode} from './view-modes.js?v=79';
@@ -5,7 +6,7 @@ import {progress,serviceKey} from './scenario-progress.js?v=72';
 import {serviceChoices} from './service-catalog.js?v=82';
 import {installCheats,jumpToStation} from './game-cheats.js?v=72';
 import {DutyRecorder,loadReplay,replayStateAt,recordReplayAudio} from './replay-store.js?v=79';
-import {collectStationReports,collectRestrictionReports,pauseWhenSpeechEnds} from './station-timing.js?v=72';
+import {collectStationReports,collectRestrictionReports,pauseWhenSpeechEnds} from './station-timing.js?v=84';
 import {reverseLegacyProfile,reverseLegacyLayout,normalizeLegacyLayout} from './tohoku-direction.js?v=traffic64';
 import {loadAudioMix,audioMixMarkup,bindAudioMix} from './audio-mix.js?v=keys61fix';
 import {bindScreenKeys} from './screen-keys.js?v=72';
@@ -20,8 +21,8 @@ import {LAST_STATION_INDEX as FULL_LAST_STATION_INDEX,BVE_END} from './route-dat
 import {mountDisplay,stoppingMarker,formatStopDistance} from './display.js?v=41';
 import {STATIONS as ALL_STATIONS,SPECS,step,newRun,stoppingDistance,assistBrake,notchDeltaForKey,NOTCH_MIN,NOTCH_LABELS,clampNotch} from './physics.js?v=72';
 import {RouteProfile} from './route-profile.js?v=23';
-import {RailWorld} from './scene.js?v=82';
-import {SoundEngine} from './assets/audio/sound-engine.js?v=72';
+import {RailWorld} from './scene.js?v=84';
+import {SoundEngine} from './assets/audio/sound-engine.js?v=84';
 const rangeQuery=new URLSearchParams(location.search),requestedEnd=Number(rangeQuery.get('end')),requestedStart=Number(rangeQuery.get('station')??0);
 const reverseDirection=rangeQuery.get('direction')==='reverse',fullLength=ALL_STATIONS.at(-1).s,DIRECTION_STATIONS=reverseDirection?ALL_STATIONS.map(x=>({...x,s:fullLength-x.s})).reverse():ALL_STATIONS;
 const LAST_STATION_INDEX=rangeQuery.has('end')&&Number.isInteger(requestedEnd)&&requestedEnd>requestedStart?Math.min(FULL_LAST_STATION_INDEX,requestedEnd):FULL_LAST_STATION_INDEX;
@@ -138,7 +139,7 @@ function setNotch(n){if(mode!=='drive'||paused||run.finished)return;if(run.doors
 function requestDeparture(){const activeRun=run;sound.playDeparture(STATIONS[run.departureStationIndex??run.next].name,stage=>{if(run===activeRun&&run.doors)run.departureStage=stage;}).then(completed=>{if(completed&&run===activeRun&&run.doors&&run.doorPhase==='announcement')run.announcementDone=true;}).catch(error=>{if(run===activeRun&&run.doors){run.doorPhase='audio-error';toast('発車音声を再生できません。ドア欄の「音声を再試行」を押してください。',15);}});}
 function doors(){if(mode!=='drive'||paused||run.finished)return;if(run.doors&&run.doorPhase==='close-audio-error'){run.doorPhase='closing';requestDoorClosing();}else if(run.doors&&run.doorPhase==='audio-error'){run.doorPhase='announcement';requestDeparture();}else toast('戸開閉は自動です。±3m以内の停車後3秒で戸開します。');}
 function requestDoorClosing(){const activeRun=run;run.doorCloseDone=false;toast('戸閉中。戸閉音の終了後に戸閉灯が点灯します。',10);sound.playDoorClose().then(completed=>{if(completed&&run===activeRun&&run.doors&&run.doorPhase==='closing')run.doorCloseDone=true;}).catch(()=>{if(run===activeRun&&run.doors&&run.doorPhase==='closing'){run.doorPhase='close-audio-error';toast('戸閉音を再生できません。「音声を再試行」を押してください。',15);}});}
-function closeDoors(){if(!completeDoorSequence(run,STATIONS))return;sound.playEffect('pilotOn');if(run.finished)showResult();else toast(`戸閉よし。次は${STATIONS[run.next].name}。S／↓で出発。`);}
+function closeDoors(){const departedFrom=STATIONS[run.departureStationIndex??run.next];if(!completeDoorSequence(run,STATIONS))return;sound.playEffect('pilotOn');if(run.finished)showResult();else{sound.callStation('departure',departedFrom);sound.callVoiceRefs(driverWordRefs('tohoku',['doorsClosed','departure']));toast(`戸閉よし。次は${STATIONS[run.next].name}。S／↓で出発。`);}}
 function updateDoors(dt){if(advanceTerminalOpening(run,STATIONS[LAST_STATION_INDEX].s,dt)){showResult();return;}if(run.doorPhase==='opening-terminal')return;const action=advanceDoorSequence(run,STATIONS[run.next].s,dt);if(action==='open'){run.departureStationIndex=run.next;run.startingDeparture=false;const opening=sound.playEffect('open');if(run.next===LAST_STATION_INDEX)beginTerminalOpening(run,opening);else opening.catch(()=>{});sound.playEffect('pilotOff');toast(run.next===LAST_STATION_INDEX?'終点です。ドアを開いています。':'ドアが自動で開きました。15秒後に発車音声を流します。');}else if(action==='announcement'){toast('発車音声を再生中。再生後に自動で閉まります。');requestDeparture();}else if(action==='close')requestDoorClosing();else if(action==='closed')closeDoors();}
 
 function showResult(){if(!legacyReplay)progress.complete(run.dutyKey,run.startS??0,ROUTE_LENGTH,run);recorder?.capture(run,score.engine.points,score.engine.chain);recorder?.flush();paused=true;const endedRun=run;pauseWhenSpeechEnds(sound,()=>mode==='drive'&&run===endedRun,()=>sound.setPaused(true));const avg=run.errors.length?run.errors.reduce((a,b)=>a+Math.abs(b),0)/run.errors.length:0;info(`<p class="eyebrow">JOURNEY COMPLETE</p><h2>${STATIONS.at(-1).name}に到着。</h2><p>乗務おつかれさま！</p><table><tr><td>運転距離</td><td>${((ROUTE_LENGTH-(run.startS??0))/1000).toFixed(1)} km</td></tr><tr><td>停車できた駅</td><td>${run.served} / ${run.targetStops}</td></tr><tr><td>通過した駅</td><td>${run.missed}</td></tr><tr><td>平均停止位置誤差</td><td>${avg.toFixed(1)} m</td></tr><tr><td>速度制限を超過した時間</td><td>${Math.round(run.overspeedSeconds??0)}秒</td></tr><tr><td>運転時間</td><td>${Math.floor(run.elapsed/60)}分${Math.floor(run.elapsed%60)}秒</td></tr></table><button id="resultMenu" class="primary">メニューへ</button>`);$('resultMenu').onclick=()=>{$('info').close();toMenu();};}

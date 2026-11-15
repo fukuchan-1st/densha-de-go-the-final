@@ -1,3 +1,4 @@
+import {sceneryDensity} from './scenery-profile.js?v=84';
 import {districtAt} from './toho-biomes.js?v=83';
 import * as T from './assets/vendor/three.module.js';
 export const isToho=route=>route.id?.startsWith('toho');
@@ -38,7 +39,7 @@ export function addTohoHouses(world,group,start,end,envelope,random){
   const edges=envelope(s);
   for(const side of [-1,1])for(let row=0;row<(dense?(world.quality==='light'?2:3):1);row++){
    const district=districtAt(world.route,s);if(side===(world.route.reverseDirection?-1:1)&&district?.landmark&&district.distance<160)continue;
-   if(!dense&&random()>.35)continue;
+   if(random()>sceneryDensity(world.route,s).building/100)continue;
    const w=7+random()*4,d=8+random()*3,h=3.8+random()*2,x=edges[side<0?0:1]+side*(14+row*17+random()*3),ss=s+(random()-.5)*4;
    houses.push({s:ss,x,y:0,w,h,d});roofs.push({s:ss,x,y:h,w:w+2,h:2,d:d+2});
    for(const dx of [-w/2,w/2])posts.push({s:ss-d/2-.35,x:x+dx,y:0,w:.22,h:h+.25,d:.25});

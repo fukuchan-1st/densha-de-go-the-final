@@ -1,6 +1,8 @@
+import {sceneryDensity,sceneryTreeAmount} from './scenery-profile.js?v=84';
+import {basinDensity,basinTerrainAt} from './basin-profile.js?v=84';
 import {replacesNativeTrees,districtAt} from './toho-biomes.js?v=83';
-import {tohoTerrainHeight} from './toho-scenery.js?v=83';
-import {valleyWidth} from './geographic-sections.js?v=82';
+import {tohoTerrainHeight} from './toho-scenery.js?v=84';
+import {valleyWidth} from './geographic-sections.js?v=84';
 import {terrainShade} from './terrain-materials.js?v=76';
 import {treeVariant} from './real-trees.js?v=83';
 import {interpolateKnots} from './track-layout.js?v=79';
@@ -58,6 +60,8 @@ export function addYaganHillsides(T,world,group,start,end,envelope,bridges,rando
   const {sStart,interval,knots,model}=placement;
   const first=sStart+Math.max(0,Math.ceil((start-sStart)/interval))*interval;
   for(let s=first;s<end&&s<=placement.sEnd;s+=interval){
+   if(basinTerrainAt(world.route,s))continue;
+   if(random()>sceneryTreeAmount(world.route,s))continue;
    const x=interpolateKnots(knots,s);
    const [left,right]=envelope(s);
    if(x>left-5&&x<right+5)continue;
@@ -69,12 +73,15 @@ export function addYaganHillsides(T,world,group,start,end,envelope,bridges,rando
  const deepForest=world.route.id==='yagan';
  const interval=world.quality==='light'?(deepForest?9:12):(deepForest?6:8);
  for(let s=Math.ceil(start/interval)*interval;s<end;s+=interval){
+  if(basinTerrainAt(world.route,s))continue;
+   if(random()>sceneryTreeAmount(world.route,s))continue;
   if(replacesNativeTrees(world.route,s))continue;
   if(tunnelRanges.some(tunnel=>s>=tunnel.sStart-8&&s<=tunnel.sEnd+8))continue;
   const limits=envelope(s),station=world.stationNear(s);
   for(const side of [-1,1]){
    const district=districtAt(world.route,s);if(district?.landmark&&district.distance<160&&side===(world.route.reverseDirection?-1:1))continue;
    for(const distance of (deepForest?[station.d<180?32:16,27,39,52,66,81,97,113,129,140]:[station.d<180?32:16,29,45,65,88,116])){
+    if(random()>sceneryTreeAmount(world.route,s))continue;
     const x=side*(distance+random()*7);
     const ss=s+(random()-.5)*6;
     const bounds=envelope(ss);const position={s:ss,x:x+railEdge(x,bounds),y:hillsideSurfaceHeight(ss,x,start,end,world.route,deckDrop,groundHeight)-.07};

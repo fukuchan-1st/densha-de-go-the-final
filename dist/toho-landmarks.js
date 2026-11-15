@@ -1,3 +1,4 @@
+import {sceneryDensity} from './scenery-profile.js?v=84';
 import * as T from './assets/vendor/three.module.js';
 import {districtAt,fixedMoodAt,DISTRICTS} from './toho-biomes.js?v=83';
 import {treeVariant} from './real-trees.js?v=83';
@@ -53,7 +54,7 @@ export class TohoLandmarks{
   const nativeTrees={sakura:[],autumn:[]};
   const batches=new Map(),put=(geometry,material,s,x,y,w,h,d,r=0)=>{const key=geometry+'|'+material;if(!batches.has(key))batches.set(key,{geometry,material,items:[]});batches.get(key).items.push({s,x,y,w,h,d,r});};
   const box=(s,x,y,w,h,d,color)=>put('box',color,s,x,y,w,h,d),roof=(s,x,y,w,h,d,color='#53595a')=>put('roof',color,s,x,y,w,h,d),pole=(s,x,y,w,h,color)=>put('pole',color,s,x,y,w,h,w);
-  const tree=(s,x,autumn=false,pink=false)=>{const h=pink?8+random()*3:10+random()*4;if(pink||autumn){nativeTrees[pink?'sakura':'autumn'].push({s,x,y:-.25,h,variant:treeVariant(random()),rotation:random()*6.28,shade:1});return;}pole(s,x,-.25,.55,h*.75,'#655046');for(const [dx,ds,dy,k]of [[0,0,.65,1],[-1.8,-.8,.6,.7],[1.8,1,.65,.75],[0,1.4,.85,.75]])put('crown','#49683c',s+ds,x+dx,h*dy,h*.8*k,h*.8*k,h*.8*k);};
+  const tree=(s,x,autumn=false,pink=false)=>{if(random()>sceneryDensity(this.world.route,s).green/100)return;const h=pink?8+random()*3:10+random()*4;if(pink||autumn){nativeTrees[pink?'sakura':'autumn'].push({s,x,y:-.25,h,variant:treeVariant(random()),rotation:random()*6.28,shade:1});return;}pole(s,x,-.25,.55,h*.75,'#655046');for(const [dx,ds,dy,k]of [[0,0,.65,1],[-1.8,-.8,.6,.7],[1.8,1,.65,.75],[0,1.4,.85,.75]])put('crown','#49683c',s+ds,x+dx,h*dy,h*.8*k,h*.8*k,h*.8*k);};
   for(let s=Math.ceil(start/13)*13;s<end;s+=13){
    if(this.world.structureAt(s,'tunnel'))continue;const region=districtAt(this.world.route,s);if(!region||region.distance>1200)continue;
    const edge=envelope(s),kind=region.kind;

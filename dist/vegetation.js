@@ -1,3 +1,4 @@
+import {sceneryDensity,sceneryTreeAmount} from './scenery-profile.js?v=84';
 import {createTerrainMaterial} from './terrain-materials.js?v=76';
 import {RealTrees,treeVariant} from './real-trees.js?v=83';
 import {settlementAt} from './route-data.js?v=23';
@@ -44,6 +45,7 @@ export function addVegetation(world){
  const at=(s,offset)=>world.frame(s,offset).p;
  for(let s=-120;s<world.length+300;s+=14){
   for(const side of [-1,1])for(const row of [18,42,80]){
+   if(r()>sceneryTreeAmount(world.sceneryRoute,s))continue;
    // Denser woodland stretches alternate with open farmland.
    const wooded=settlementAt(s)<.6&&Math.sin(s/700)+Math.sin(s/211)>.1;
    if(!wooded&&r()>(settlementAt(s)>.65?.25:.65))continue;
@@ -53,12 +55,13 @@ export function addVegetation(world){
   }
  }
  for(let s=-120;s<world.length+300;s+=15){for(const side of [-1,1]){
-  if(r()>.72)continue;
+  if(r()>.72*sceneryDensity(world.sceneryRoute,s).green/100)continue;
   const ss=s+r()*13,offset=side*(side<0?6+r()*13:9+r()*13);if(stationClear(ss,offset))continue;
   const p=at(ss,offset),height=.7+r()*1.7,width=height*(1.5+r());
   for(let j=0;j<2;j++)bush.push({x:p.x,y:p.y+height*.45,z:p.z,w:width,h:height*1.2,rotation:j*Math.PI/2+r(),shade:.67+r()*.3});
  }}
  for(let s=-110;s<world.length+200;s+=6){for(const side of [-1,1]){
+  if(r()>sceneryDensity(world.sceneryRoute,s).green/100)continue;
   const ss=s+r()*5,offset=side<0?-(3.2+r()*5.5):7.25+r()*4.5;if(stationClear(ss,offset))continue;
   const p=at(ss,offset),height=.3+r()*.8,width=1.2+r()*2.3;
   for(let j=0;j<2;j++)grass.push({x:p.x,y:p.y+height*.48,z:p.z,w:width,h:height,rotation:r()*Math.PI,shade:.78+r()*.35});
