@@ -29,9 +29,9 @@ test('render errors restore the previous target/tone mapping and missing float b
 test('standard and light never allocate or invoke the high-quality postprocess',()=>{
  const r=renderer(),world={renderer:r,scene:new T.Scene(),camera:new T.Camera()},atmosphere={world,highRenderer:null};SceneAtmosphere.prototype.render.call(atmosphere);assert.equal(r.calls.length,1);assert.equal(r.calls[0].scene,world.scene);
 });
-test('Hakuba Shinano stops at Kamishiro in both directions; every Kamishiro platform is 60 m',async()=>{
+test('Hakuba Shinano stops at Kamishiro in both directions; every Kamishiro platform is 80 m',async()=>{
  const routes=await loadServiceRoutes(),choices=serviceChoices.chuo.filter(x=>x[0]==='chuo-oito'&&x[1]==='383');assert.equal(choices.length,2);
- for(const x of choices){const route=makeServiceRoute(routes.get(x[0]),...x.slice(1));assert.ok(route.stations.some(st=>st.name==='神城'));for(const platform of route.stationLayouts['神城'].platforms){const [a,b]=platformExtent(route,{name:'神城'},platform,280);assert.equal(b-a,60);}}
+ for(const x of choices){const route=makeServiceRoute(routes.get(x[0]),...x.slice(1));assert.ok(route.stations.some(st=>st.name==='神城'));for(const platform of route.stationLayouts['神城'].platforms){const [a,b]=platformExtent(route,{name:'神城'},platform,280);assert.equal(b-a,80);}}
  const tokyo=routes.get('chuo'),oito=routes.get('oito'),length=(r,name)=>{const p=r.stationLayouts[name].platforms.find(p=>p.boarding!==false),[a,b]=platformExtent(r,{name},p,280);return b-a;};
  assert.equal(length(tokyo,'東京'),240);assert.equal(length(oito,'豊科'),175);assert.ok(length(oito,'南小谷')<70);
  assert.deepEqual(platformExtent({id:'osaka'},{name:'大阪'},{edges:[[-100,0,3],[10,0,3]]},220),[-202,18]);

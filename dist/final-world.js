@@ -1,5 +1,5 @@
 import {sceneryDensity} from './scenery-profile.js?v=84';
-import {platformExtent} from './station-platform-length.js?v=87';
+import {platformExtent} from './station-platform-length.js?v=87b';
 import {BasinScenery,addBasinFields} from './basin-scenery.js?v=84';
 import {basinDensity,basinAnchors,basinTerrainAreas,basinTerrainAt} from './basin-profile.js?v=84';
 import {TohoLandmarks} from './toho-landmarks.js?v=84';
