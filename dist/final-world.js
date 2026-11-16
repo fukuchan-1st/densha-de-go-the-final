@@ -1,4 +1,5 @@
 import {sceneryDensity} from './scenery-profile.js?v=84';
+import {platformExtent} from './station-platform-length.js?v=87';
 import {BasinScenery,addBasinFields} from './basin-scenery.js?v=84';
 import {basinDensity,basinAnchors,basinTerrainAreas,basinTerrainAt} from './basin-profile.js?v=84';
 import {TohoLandmarks} from './toho-landmarks.js?v=84';
@@ -11,8 +12,8 @@ import {BallastDetail} from './ballast-detail.js?v=79';
 import {whiteRailPost,tactileMaterial,safePlatformBounds,platformStripClear} from './platform-details.js?v=79';
 import {LevelCrossings} from './crossings.js?v=85';
 import {createTerrainMaterial,createBuildingMaterial,terrainKind,terrainShade,buildingVariant,buildingPalette} from './terrain-materials.js?v=79';
-import {SceneAtmosphere} from './scene-atmosphere.js?v=79';
-import {RealTrees,treeVariant} from './real-trees.js?v=83';
+import {SceneAtmosphere} from './scene-atmosphere.js?v=87';
+import {RealTrees,treeVariant} from './real-trees.js?v=87';
 import {PlayerTrain} from './player-train.js?v=85';
 import {prepareLeftTraffic} from './route-traffic.js?v=85';
 import {prepareCorridorScenery,corridorSceneryType} from './corridor-scenery.js?v=controls55';
@@ -119,8 +120,9 @@ export class FinalWorld {
  sign(group,name,s,x,level=0){const canvas=document.createElement('canvas');canvas.width=512;canvas.height=128;const c=canvas.getContext('2d');c.fillStyle='#f0f0df';c.fillRect(0,0,512,128);c.fillStyle=this.route.color??'#5aa642';c.fillRect(0,96,512,16);c.fillStyle='#16282a';c.font='bold 55px sans-serif';c.textAlign='center';c.fillText(name,256,74);const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;const m=new T.Mesh(new T.PlaneGeometry(2.7,.675),new T.MeshBasicMaterial({map:texture,side:T.DoubleSide})),f=this.frame(s,x);m.position.copy(f.p);m.position.y+=level+3.75;m.rotation.y=f.angle+Math.PI/2;group.add(m);for(const delta of[-.85,.85])this.cube(group,s+delta,x,level+4.08,.025,.3,.025,'#aeb3ad');}
  platformBounds(st,platform,s,tracks){return safePlatformBounds(st,platform,s,tracks);}
  addPlatform(group,st,platform,tracks,start,end){
-  const from=Math.max(start,st.s+(platform.boarding===false?platform.edges[0][0]:Math.min(platform.edges[0][0],18-this.platformLength())));
-  const to=Math.min(end,st.s+(platform.boarding===false?platform.edges.at(-1)[0]:Math.max(platform.edges.at(-1)[0],18)));
+  const [platformFrom,platformTo]=platformExtent(this.route,st,platform,this.platformLength());
+  const from=Math.max(start,st.s+platformFrom);
+  const to=Math.min(end,st.s+platformTo);
   if(to<=from)return;
   const bounds=s=>this.platformBounds(st,platform,s,tracks);
   const level=s=>(platform.height??0)+this.deckHeight(s);
@@ -312,7 +314,7 @@ export class FinalWorld {
  setDrawDistance(value){this.drawDistance=Math.max(500,Math.min(2000,Number(value)||1500));this.camera.far=basinTerrainAreas(this.route).length?40000:this.drawDistance+400;this.camera.near=basinTerrainAreas(this.route).length?.5:.15;this.camera.updateProjectionMatrix();this.scene.fog.far=this.drawDistance;this.scene.fog.near=Math.min(350,this.drawDistance*.3);}
  render(s,v,dt,{acceleration=0,shake=1,panorama=false,outer=false,railfan=false,clock}={}){this.externalView=outer;const clearProjection=panorama||outer||!this.viewOrigin;if(this.currentView!==clearProjection){if(clearProjection)this.camera.clearViewOffset();else this.camera.setViewOffset(1600,900,800-clamp(this.viewOrigin.x,550,1050),450-clamp(this.viewOrigin.y,240,330),1600,900);this.currentView=clearProjection;}const focus=railfan?this.playerTrain?.railfanController.prepare(s)??s:s,needed=filmingChunkIndices(s,focus,this.drawDistance);for(const i of needed)if(!this.chunks.has(i))this.chunks.set(i,this.buildChunk(i));for(const [i,g]of this.chunks)if(!needed.has(i)){this.disposeChunk(g);this.chunks.delete(i);}
 
-  const f=this.driveFrame(s),head=this.drivePoint(s+45),motion=this.suspension.update({s,speed:v,curvature:this.curvature(s),acceleration},dt,shake),eye=Number(this.route.eyeHeight??2.7),offset=(this.route.eyeOffset??0)+motion.lateral;this.camera.position.copy(f.p).addScaledVector(f.right,offset);this.camera.position.y+=eye+motion.vertical;head.addScaledVector(f.right,offset);head.y+=eye+motion.vertical;this.camera.lookAt(head);this.camera.rotateX(motion.pitch);this.camera.rotateY(motion.yaw);this.camera.rotateZ(motion.roll);const tunnel=(this.route.structures??[]).some(t=>t.kind==='tunnel'&&(railfan?focus:s)>=t.sStart&&(railfan?focus:s)<=t.sEnd);this.sky.intensity=this.route.night?.22:tunnel?.6:2.1;this.sun.intensity=this.route.night?.04:tunnel?.3:2.1;if(this.headlight)this.headlight.intensity=this.route.night?750:tunnel?550:0;this.trees.update(s,focus);this.traffic.update(s,dt);this.playerTrain?.update(s,outer);if(outer)this.playerTrain?.camera(s,railfan,v,dt);this.crossings.update(s,v,dt,(this.playerTrain?.count??2)*20);this.ballastDetail.update(s,railfan?this.playerTrain?.railfanController.spot?.s??s:s);this.roadScenery.update(s,v,dt,railfan?this.playerTrain?.railfanController.spot?.s??s:s);this.atmosphere.update(s,dt,{tunnel,clock,moving:Math.abs(v)>.1||this.traffic.trains.length>0});this.landmarks?.update(focus??s,dt);this.basin?.update(focus??s);this.renderer.render(this.scene,this.camera);
+  const f=this.driveFrame(s),head=this.drivePoint(s+45),motion=this.suspension.update({s,speed:v,curvature:this.curvature(s),acceleration},dt,shake),eye=Number(this.route.eyeHeight??2.7),offset=(this.route.eyeOffset??0)+motion.lateral;this.camera.position.copy(f.p).addScaledVector(f.right,offset);this.camera.position.y+=eye+motion.vertical;head.addScaledVector(f.right,offset);head.y+=eye+motion.vertical;this.camera.lookAt(head);this.camera.rotateX(motion.pitch);this.camera.rotateY(motion.yaw);this.camera.rotateZ(motion.roll);const tunnel=(this.route.structures??[]).some(t=>t.kind==='tunnel'&&(railfan?focus:s)>=t.sStart&&(railfan?focus:s)<=t.sEnd);this.sky.intensity=this.route.night?.22:tunnel?.6:2.1;this.sun.intensity=this.route.night?.04:tunnel?.3:2.1;if(this.headlight)this.headlight.intensity=this.route.night?750:tunnel?550:0;this.trees.update(s,focus);this.traffic.update(s,dt);this.playerTrain?.update(s,outer);if(outer)this.playerTrain?.camera(s,railfan,v,dt);this.crossings.update(s,v,dt,(this.playerTrain?.count??2)*20);this.ballastDetail.update(s,railfan?this.playerTrain?.railfanController.spot?.s??s:s);this.roadScenery.update(s,v,dt,railfan?this.playerTrain?.railfanController.spot?.s??s:s);this.atmosphere.update(s,dt,{tunnel,clock,moving:Math.abs(v)>.1||this.traffic.trains.length>0});this.landmarks?.update(focus??s,dt);this.basin?.update(focus??s);this.atmosphere.render();
  }
  dispose(){this.basin?.dispose();this.landmarks?.dispose();this.roadScenery.dispose();this.ballastDetail.dispose();this.crossings.dispose();this.atmosphere.dispose();this.trees.dispose();this.playerTrain?.dispose();this.traffic.dispose();for(const g of this.chunks.values())this.disposeChunk(g);this.chunks.clear();for(const m of this.materials.values()){m.map?.dispose();m.emissiveMap?.dispose();m.bumpMap?.dispose();m.userData.richNormalMap?.dispose();m.dispose();}this.box.dispose();this.platformRailGeometry?.dispose();this.houseRoof.dispose();this.pine?.dispose();this.canopy?.dispose();this.renderer.dispose();this.renderer.forceContextLoss();this.renderer.domElement.remove();}
 }

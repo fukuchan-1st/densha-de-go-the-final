@@ -1,7 +1,7 @@
 {
   "scenarios": 94,
   "sections": 2127,
-  "partialStarts": 1242,
+  "partialStarts": 1244,
   "failures": [],
   "summary": [
     {
@@ -589,7 +589,7 @@
       "vehicle": "383",
       "service": "特急しなの",
       "reverse": false,
-      "partialStarts": 4,
+      "partialStarts": 5,
       "sections": 34,
       "checkpoints": 68,
       "adjusted": 30
@@ -599,7 +599,7 @@
       "vehicle": "383",
       "service": "特急しなの",
       "reverse": true,
-      "partialStarts": 4,
+      "partialStarts": 5,
       "sections": 34,
       "checkpoints": 68,
       "adjusted": 6

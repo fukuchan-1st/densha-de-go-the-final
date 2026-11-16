@@ -1,4 +1,5 @@
 import * as T from './assets/vendor/three.module.js';
+import {graphicsProfile,HighQualityRenderer} from './graphics-quality.js?v=87b';
 export function lightingProfile(quality='standard',night=false){
  const simple=quality==='light';return {simple,shadows:!simple&&!night,clouds:!simple,sky:night?.25:simple?1.3:.82,sun:night?.06:simple?1.8:3.1,exposure:night?1.02:1.04};
 }
@@ -42,15 +43,24 @@ export class SceneAtmosphere{
    const mesh=new T.Mesh(this.cloudGeometry,this.cloudMaterial);mesh.rotation.x=-Math.PI/2;mesh.customDepthMaterial=this.cloudDepth;mesh.userData.atmosphere=true;mesh.raycast=()=>{};this.clouds.add(mesh);this.patches.push({mesh,x,z});
   }this.world.scene.add(this.clouds);
  }
- prepare(root){applyObjectShadows(root,this.profile.shadows);root.traverse(o=>{for(const m of (Array.isArray(o.material)?o.material:o.material?[o.material]:[])){if(!m.userData.richNormalMap)continue;const map=this.profile.simple?null:m.userData.richNormalMap;if(m.normalMap!==map){m.normalMap=map;m.needsUpdate=true;}}});}
+ prepare(root){applyObjectShadows(root,this.profile.shadows);root.traverse(o=>{for(const m of (Array.isArray(o.material)?o.material:o.material?[o.material]:[])){
+  const anisotropy=Math.min(this.graphics.anisotropy,this.world.renderer.capabilities.getMaxAnisotropy());
+  for(const key of ['map','normalMap','bumpMap','roughnessMap'])if(m[key]?.isTexture&&m[key].anisotropy!==anisotropy){m[key].anisotropy=anisotropy;m[key].needsUpdate=true;}
+  if(!m.userData.richNormalMap)continue;const map=this.profile.simple?null:m.userData.richNormalMap;if(m.normalMap!==map){m.normalMap=map;m.needsUpdate=true;}
+ }});}
+
  setQuality(quality){
   if(this.quality===quality)return;this.quality=quality;this.world.quality=quality;this.profile=lightingProfile(quality,Boolean(this.world.route?.night));
-  const {renderer}=this.world;renderer.setPixelRatio(Math.min(globalThis.devicePixelRatio??1,this.profile.simple?1:1.5));
+  const {renderer}=this.world;this.graphics=graphicsProfile(quality,globalThis.devicePixelRatio??1,renderer.capabilities.maxTextureSize);renderer.setPixelRatio(this.graphics.pixelRatio);
+  renderer.shadowMap.type=this.graphics.shadowType;
+  this.sun.shadow.map?.dispose();this.sun.shadow.map=null;this.sun.shadow.mapPass?.dispose();this.sun.shadow.mapPass=null;
+  this.sun.shadow.mapSize.set(this.graphics.shadowSize,this.graphics.shadowSize);this.sun.shadow.radius=this.graphics.shadowRadius;this.sun.shadow.blurSamples=this.graphics.shadowSamples;this.sun.shadow.normalBias=this.graphics.high?.035:.065;
+  this.highRenderer?.dispose();this.highRenderer=this.graphics.high?new HighQualityRenderer(renderer):null;
   if(this.profile.clouds)this.makeClouds();if(this.clouds)this.clouds.visible=this.profile.clouds;
   this.setShadowState(this.profile.shadows);this.prepare(this.world.scene);this.lastShadowPosition=null;
  }
  setShadowState(enabled){
-  this.profile.shadows=enabled;if(this.shadowEnabled===enabled)return;this.shadowEnabled=enabled;const {renderer,scene}=this.world;renderer.shadowMap.enabled=enabled;this.sun.castShadow=enabled;this.prepare(scene);scene.traverse(o=>{for(const m of (Array.isArray(o.material)?o.material:o.material?[o.material]:[]))m.needsUpdate=true;});if(!enabled&&this.sun.shadow.map){this.sun.shadow.map.dispose();this.sun.shadow.map=null;}renderer.shadowMap.needsUpdate=enabled;
+  this.profile.shadows=enabled;if(this.shadowEnabled===enabled)return;this.shadowEnabled=enabled;const {renderer,scene}=this.world;renderer.shadowMap.enabled=enabled;this.sun.castShadow=enabled;this.prepare(scene);scene.traverse(o=>{for(const m of (Array.isArray(o.material)?o.material:o.material?[o.material]:[]))m.needsUpdate=true;});if(!enabled){this.sun.shadow.map?.dispose();this.sun.shadow.map=null;this.sun.shadow.mapPass?.dispose();this.sun.shadow.mapPass=null;}renderer.shadowMap.needsUpdate=enabled;
  }
  update(s,dt,{tunnel=0,moving=false,clock}={}){
   const {world}=this,point=(world.drivePoint?.(s)??world.frame(s,world.driveOffset?.(s)??0).p).clone();this.elapsed+=Math.max(0,Math.min(dt,.1));
@@ -81,5 +91,6 @@ export class SceneAtmosphere{
    world.renderer.shadowMap.needsUpdate=true;this.shadowClock=0;this.lastShadowPosition=point.clone();this.lastShadowTime=time;
   }
  }
- dispose(){this.world.scene.remove(this.sun.target,this.sunSprite);if(this.clouds)this.world.scene.remove(this.clouds);this.map?.dispose();this.cloudGeometry?.dispose();this.cloudMaterial?.dispose();this.cloudDepth?.dispose();this.sunMap.dispose();this.sunSpriteMaterial.dispose();this.sun.shadow.map?.dispose();}
+ render(){if(this.highRenderer)this.highRenderer.render(this.world.scene,this.world.camera);else this.world.renderer.render(this.world.scene,this.world.camera);}
+ dispose(){this.highRenderer?.dispose();this.sun.shadow.mapPass?.dispose();this.world.scene.remove(this.sun.target,this.sunSprite);if(this.clouds)this.world.scene.remove(this.clouds);this.map?.dispose();this.cloudGeometry?.dispose();this.cloudMaterial?.dispose();this.cloudDepth?.dispose();this.sunMap.dispose();this.sunSpriteMaterial.dispose();this.sun.shadow.map?.dispose();}
 }

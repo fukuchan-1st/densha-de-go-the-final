@@ -1,7 +1,7 @@
 import * as T from './assets/vendor/three.module.js';
 import {decodeVertices} from './model-format.js?v=72';
 export function treeVariant(value){return Math.min(4,Math.max(0,Math.floor(value*5)));}
-export function treeDetail(distance,light=false){return distance<(light?40:75)?0:1;}
+export function treeDetail(distance,light=false,high=false){return distance<(high?180:light?40:75)?0:1;}
 // Five source meshes, shared materials, and per-instance near/far selection.
 export class RealTrees{
  constructor(world){this.world=world;this.batches=new Set();this.resources=[];this.tints=new Map();this.ready=this.load();this.lastUpdate=-Infinity;}
@@ -30,7 +30,7 @@ export class RealTrees{
   return batch;
  }
  fill(batch,s,focus=this.lastFocus??s){
-  const dummy=new T.Object3D(),color=new T.Color();for(const {mesh,selected,detail} of batch.meshes){let count=0;for(const a of selected){const distance=Math.min(Math.hypot(a.s-s,a.x-(this.world.driveOffset?.(s)??0)),Math.hypot(a.s-focus,a.x-(this.world.driveOffset?.(focus)??0)));if(distance>Math.min(this.world.drawDistance??1500,1500)+150||treeDetail(distance,this.world.quality==='light')!==detail)continue;const f=this.world.frame(a.s,a.x);dummy.position.copy(f.p);dummy.position.y+=a.y??0;dummy.scale.set(a.h*1.25,a.h,a.h*1.25);dummy.rotation.set(0,a.rotation??0,0);dummy.updateMatrix();mesh.setMatrixAt(count,dummy.matrix);color.setScalar(a.shade??1);mesh.setColorAt(count,color);count++;}mesh.count=count;mesh.visible=count>0;mesh.instanceMatrix.needsUpdate=true;if(mesh.instanceColor)mesh.instanceColor.needsUpdate=true;if(count)mesh.computeBoundingSphere();}
+  const dummy=new T.Object3D(),color=new T.Color();for(const {mesh,selected,detail} of batch.meshes){let count=0;for(const a of selected){const distance=Math.min(Math.hypot(a.s-s,a.x-(this.world.driveOffset?.(s)??0)),Math.hypot(a.s-focus,a.x-(this.world.driveOffset?.(focus)??0)));if(distance>Math.min(this.world.drawDistance??1500,this.world.quality==='high'?2000:1500)+150||treeDetail(distance,this.world.quality==='light',this.world.quality==='high')!==detail)continue;const f=this.world.frame(a.s,a.x);dummy.position.copy(f.p);dummy.position.y+=a.y??0;dummy.scale.set(a.h*1.25,a.h,a.h*1.25);dummy.rotation.set(0,a.rotation??0,0);dummy.updateMatrix();mesh.setMatrixAt(count,dummy.matrix);color.setScalar(a.shade??1);mesh.setColorAt(count,color);count++;}mesh.count=count;mesh.visible=count>0;mesh.instanceMatrix.needsUpdate=true;if(mesh.instanceColor)mesh.instanceColor.needsUpdate=true;if(count)mesh.computeBoundingSphere();}
  }
  update(s,focus=s){const focusChanged=Math.abs(focus-(this.lastFocus??focus))>30;this.lastFocus=focus;this.lastS=s;const now=performance.now();if(!focusChanged&&now-this.lastUpdate<250&&Math.abs(s-(this.updatedS??s))<60)return;this.lastUpdate=now;this.updatedS=s;for(const batch of this.batches)this.fill(batch,s,focus);}
  release(group){for(const batch of this.batches)if(batch.group===group){batch.disposed=true;for(const {mesh} of batch.meshes){group.remove(mesh);mesh.dispose();}this.batches.delete(batch);}}
