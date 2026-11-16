@@ -3,7 +3,7 @@ import {loadRoadAsset} from './road-assets.js?v=79';
 import {CrossingAudio} from './crossings.js?v=85';
 import {VIEW_LABELS,normalizedView,replayViewMode} from './view-modes.js?v=79';
 import {progress,serviceKey} from './scenario-progress.js?v=85';
-import {serviceChoices} from './service-catalog.js?v=85';
+import {serviceChoices} from './service-catalog.js?v=86';
 import {installCheats,jumpToStation} from './game-cheats.js?v=85';
 import {DutyRecorder,loadReplay,replayStateAt,recordReplayAudio} from './replay-store.js?v=85';
 import {collectStationReports,collectRestrictionReports,pauseWhenSpeechEnds} from './station-timing.js?v=84';
@@ -11,7 +11,7 @@ import {reverseLegacyProfile,reverseLegacyLayout,normalizeLegacyLayout} from './
 import {loadAudioMix,audioMixMarkup,bindAudioMix} from './audio-mix.js?v=keys61fix';
 import {bindScreenKeys} from './screen-keys.js?v=72';
 import {beginTerminalOpening,advanceTerminalOpening} from './terminal-arrival.js?v=score13';
-import {mountScoring,checkpointMarks,buildScoreTimetable,resolveScoreSchedule,scoreHazards,hornMarks,currentScoreRestriction,signalRestriction} from './scoring.js?v=82';
+import {mountScoring,checkpointMarks,buildScoreTimetable,resolveScoreSchedule,scoreHazards,hornMarks,currentScoreRestriction,signalRestriction} from './scoring.js?v=86';
 import {mountLookahead,changesFromSteps,stationMarks} from './lookahead.js?v=evaluation59';const lookahead=mountLookahead(document.getElementById('drive'));
 import {GeneratedCab,generatedCab} from './generated-cab.js';
 import {mountResponsiveUI} from './responsive-ui.js?v=85';

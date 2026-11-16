@@ -1,6 +1,24 @@
 // Published minute anchors; seconds and intermediate passing times are simulated.
 const book=(id,rows,url)=>({id,rows:rows.map(([name,arrival,departure])=>({name,arrival,departure})),url});
 export const SCHEDULES={
+ oumeDown:book('おうめ1号（5301M）',[
+ ['東京',null,'18:30'],['新宿',null,'18:45'],['立川','19:17'],['拝島','19:30'],['河辺','19:45'],['青梅','19:52']],null),
+ oumeUp:book('おうめ2号（5302M）',[
+ ['青梅',null,'06:18'],['河辺',null,'06:22'],['拝島',null,'06:33'],['立川',null,'06:45'],['新宿','07:17'],['東京','07:32']],null),
+ hachiojiDown:book('はちおうじ1号（5201M）',[
+ ['東京',null,'18:00'],['新宿',null,'18:15'],['立川','18:45'],['八王子','18:54']],null),
+ hachiojiUp:book('はちおうじ2号（5202M）',[
+ ['八王子',null,'06:28'],['立川',null,'06:38'],['新宿','07:05'],['東京','07:19']],null),
+ hakubaDown:book('はくば1号（8041M）',[
+ ['松本',null,'13:41'],['豊科','13:55','13:55'],['穂高','14:00','14:00'],['信濃大町','14:20','14:20'],['白馬','14:46']], 'https://timetables.jreast.co.jp/2611/train/110/112901.html'),
+ hakubaUp:book('はくば2号（8042M）',[
+ ['白馬',null,'15:21'],['信濃大町','15:47','15:48'],['穂高','16:03','16:04'],['豊科','16:08','16:09'],['松本','16:21']], 'https://timetables.jreast.co.jp/2611/train/110/112911.html'),
+ shinshuDown:book('信州1号（8091M）',[
+ ['塩尻',null,'06:58'],['松本',null,'07:10'],['田沢',null,'07:18'],['明科',null,'07:24'],['長野','08:09']], 'https://timetables.jreast.co.jp/2611/train/090/094611.html'),
+ shinshuUp:book('信州2号（8092M）',[
+ ['長野',null,'20:47'],['明科','21:35','21:36'],['田沢','21:41','21:42'],['松本','21:50','21:52'],['塩尻','22:02']], 'https://timetables.jreast.co.jp/2611/train/095/099331.html'),
+ rapidMisuzu:book('快速みすず（松本→辰野）',[
+ ['松本',null,'16:36'],['南松本','16:39','16:39'],['平田','16:41','16:42'],['村井','16:44','16:45'],['広丘','16:48','16:48'],['塩尻','16:52','16:53'],['みどり湖','16:57','16:57'],['岡谷','17:04','17:09'],['川岸','17:13','17:14'],['辰野','17:20']],null),
  azusa41:book('あずさ41号',[
  ['東京',null,'16:45'],['新宿','16:58','17:00'],['立川','17:23','17:24'],['八王子','17:32','17:33'],['甲府','18:28','18:29'],['韮崎','18:37','18:38'],['小淵沢','18:54','18:55'],['富士見','19:01','19:01'],['茅野','19:10','19:10'],['上諏訪','19:15','19:16'],['下諏訪','19:19','19:20'],['岡谷','19:23','19:24'],['塩尻','19:31','19:32'],['松本','19:41']], 'https://timetables.jreast.co.jp/2611/train/060/063971.html'),
  azusa4:book('あずさ4号',[
@@ -17,6 +35,9 @@ export const SCHEDULES={
  ['長野',null,'06:54'],['川中島','06:59','07:00'],['篠ノ井','07:05','07:05'],['稲荷山','07:09','07:10'],['聖高原','07:25','07:26'],['坂北','07:30','07:33'],['西条','07:37','07:37'],['明科','07:44','07:45'],['田沢','07:51','07:52'],['松本','08:01']], 'https://timetables.jreast.co.jp/2611/train/025/027811.html')
 };
 const seconds=value=>value==null?null:Number.isFinite(value)?value:value.split(':').reduce((n,x)=>n*60+Number(x),0)*(value.split(':').length===2?60:1);
+// Preserve the supplied minute while allowing the actual model to accelerate,
+// brake and open its doors between these short station intervals.
+const arrivalSeconds={misuzu:{'今井':10,'川中島':15,'安茂里':15},rapidMisuzu:{'平田':40,'村井':15}};
 function reverseBook(source,departure){
  const start=seconds(departure),origin=seconds(source.rows.at(-1).arrival),rows=source.rows.toReversed().map((row,i,all)=>({name:row.name,arrival:i===0?null:start+origin-seconds(row.departure??row.arrival),departure:i===all.length-1?null:start+origin-seconds(row.arrival??row.departure)}));
  return {id:source.id+'・逆方向（推定）',rows,url:null,estimated:true};
@@ -29,7 +50,11 @@ export function applyPublishedSchedule(route,vehicle,service){
  const all=route.sceneryStations??route.stations,first=all[0]?.name,last=all.at(-1)?.name;
  let key=null;
  if(route.id==='tokaido'&&vehicle==='383')key=first==='大阪'?'shinanoMorning':'shinanoEvening';
- else if(route.id==='tatsuno-nagano')key=first==='辰野'?'misuzu':'misuzuReverse';
+ else if(service==='特急おうめ')key=first==='東京'?'oumeDown':'oumeUp';
+ else if(service==='特急はちおうじ')key=first==='東京'?'hachiojiDown':'hachiojiUp';
+ else if(service==='特急はくば')key=first==='松本'?'hakubaDown':'hakubaUp';
+ else if(service==='特急信州')key=first==='塩尻'?'shinshuDown':'shinshuUp';
+ else if(route.id==='tatsuno-nagano')key=service==='快速みすず'?'rapidMisuzu':first==='辰野'?'misuzu':'misuzuReverse';
  else if(route.id==='chuo-extended'&&vehicle==='211'&&service==='快速みすず')key=first==='岡谷'?'misuzu':'misuzuReverse';
  else if(route.id==='shinonoi-extended'&&vehicle==='211'&&service==='快速'&&[first,last].includes('松本'))key=first==='長野'?'rapid2530':'rapidReverse';
  else if(route.id.startsWith('shinonoi')&&vehicle==='383')key=first==='塩尻'?'shinano5':'shinanoReverse';
@@ -41,10 +66,24 @@ export function applyPublishedSchedule(route,vehicle,service){
  }
  if(!key)return route;
  const source=SCHEDULES[key],byName=new Map(source.rows.map(x=>[x.name,x])),names=new Set(byName.keys());
- const clean=st=>{const result={...st};for(const k of ['time','arrival','departure','startTime','passTime'])delete result[k];const row=byName.get(st.name);if(row){if(row.arrival)result.arrival=seconds(row.arrival);if(row.departure)result.departure=seconds(row.departure)+(row.arrival===row.departure?25:0);}return result;};
+ const clean=st=>{
+  const result={...st};for(const k of ['time','arrival','departure','startTime','passTime'])delete result[k];
+  const row=byName.get(st.name);
+  if(row){
+   const offset=arrivalSeconds[key]?.[st.name]??0;
+   if(row.arrival!=null)result.arrival=seconds(row.arrival)+offset;
+   if(row.departure!=null)result.departure=seconds(row.departure)+(row.arrival===row.departure?25+offset:0);
+   // A departure-only intermediate stop still anchors the incoming run, and
+   // an arrival-only stop needs enough time for doors before its outgoing run.
+   if(st.name!==first&&result.arrival==null&&result.departure!=null)result.arrival=result.departure-25;
+   if(st.name!==last&&result.departure==null&&result.arrival!=null)result.departure=result.arrival+25;
+  }
+  return result;
+ };
  const scenery=all.map(clean),stops=scenery.filter((st,i)=>i===0||i===scenery.length-1||names.has(st.name));
  if(stops[0].departure!=null)stops[0].startTime=stops[0].departure-30;
- return {...route,stations:stops,sceneryStations:scenery,publishedSchedule:{id:key,title:source.id,url:source.url,estimated:!!source.estimated},night:key==='shinanoEvening'};
+ const night=key==='shinanoEvening'||['oumeDown','hachiojiDown','shinshuUp'].includes(key);
+ return {...route,stations:stops,sceneryStations:scenery,publishedSchedule:{id:key,title:source.id,url:source.url,estimated:!!source.estimated},night};
 }
 // Use published stops as anchors. Solve each complete leg, including all passing
 // stations, so an intermediate checkpoint cannot force a catch-up acceleration.

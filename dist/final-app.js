@@ -1,4 +1,4 @@
-import {scheduledBoardingDelay} from './published-schedules.js?v=82';
+import {scheduledBoardingDelay} from './published-schedules.js?v=86';
 import {loadRoadAsset} from './road-assets.js?v=79';
 import {CrossingAudio} from './crossings.js?v=85';
 import {VIEW_LABELS,normalizedView,replayViewMode} from './view-modes.js?v=79';
@@ -10,7 +10,7 @@ import {mountGameShell} from './game-shell.js?v=85';
 import {DutyRecorder,replayStateAt,recordReplayAudio} from './replay-store.js?v=85';
 import {osakaPlanningSpec} from './osaka-timetable.js?v=72';
 import {collectStationReports,collectRestrictionReports,pauseWhenSpeechEnds} from './station-timing.js?v=84';
-import {buildConnectingRoutes} from './service-catalog.js?v=85';
+import {buildConnectingRoutes} from './service-catalog.js?v=86';
 import {loadAudioMix,audioMixMarkup,bindAudioMix} from './audio-mix.js?v=keys61fix';
 import {bindRouteKeys,bindScreenKeys} from './screen-keys.js?v=72';
 import {sharedEffects} from './buffered-effects.js?v=phone58fix';
@@ -19,9 +19,9 @@ import {beginTerminalOpening,advanceTerminalOpening} from './terminal-arrival.js
 import {vehiclePhoto} from './vehicle-photos.js?v=corridor1';
 import {mountTrainDetails} from './train-details.js?v=85';
 import {mountWheelPicker} from './wheel-picker.js?v=85';
-import {routePlanningSpec,mountScoring,checkpointMarks,scoringStations,buildScoreTimetable,resolveScoreSchedule,scoreHazards,hornMarks,currentScoreRestriction,signalRestriction} from './scoring.js?v=82';
+import {routePlanningSpec,mountScoring,checkpointMarks,scoringStations,buildScoreTimetable,resolveScoreSchedule,scoreHazards,hornMarks,currentScoreRestriction,signalRestriction} from './scoring.js?v=86';
 import {mountDrivingOverlay} from './driving-overlay.js?v=72';import {mountLookahead,changesFromSections,stationMarks} from './lookahead.js?v=evaluation59';
-import {serviceChoices,makeServiceRoute} from './train-selection.js?v=85';
+import {serviceChoices,makeServiceRoute} from './train-selection.js?v=86';
 import {GeneratedCab,generatedCab} from './generated-cab.js';
 import {FinalWorld} from './final-world.js?v=85';
 import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=82';

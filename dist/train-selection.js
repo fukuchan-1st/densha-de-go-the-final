@@ -1,8 +1,8 @@
-import {applyPublishedSchedule} from './published-schedules.js?v=82';
+import {applyPublishedSchedule} from './published-schedules.js?v=86';
 import {releaseMatsumotoExpressLimit} from './geographic-sections.js?v=82';
 import {prepareLeftTraffic} from './route-traffic.js?v=85';
 import {selectTokaidoServiceTrack} from './tokaido-service-track.js?v=services63';
-import {serviceChoices,STOP_PATTERNS} from './service-catalog.js?v=85';
+import {serviceChoices,STOP_PATTERNS} from './service-catalog.js?v=86';
 import {sliceRoute,reverseRoute} from './service-routes.js?v=85';
 export {serviceChoices};
 function makeDefaultServiceRoute(route,vehicle,service){

@@ -7,6 +7,9 @@ export const STOP_PATTERNS={
  '通勤快速':[...special,'荻窪','吉祥寺'],
  'ホリデー快速':['新宿','中野','三鷹','国分寺','立川','西立川','拝島','福生','青梅'],
  'おうめ':['東京','新宿','立川','拝島','河辺','青梅'],
+ 'はちおうじ':['東京','新宿','立川','八王子'],
+ 'はくば':['松本','豊科','穂高','信濃大町','白馬'],
+ '信州':['塩尻','松本','田沢','明科','長野'],
  '大糸特急':['新宿','立川','八王子','大月','塩山','山梨市','石和温泉','甲府','韮崎','小淵沢','富士見','茅野','上諏訪','下諏訪','岡谷','塩尻','松本','豊科','穂高','信濃松川','信濃大町','白馬','南小谷'],
  '大糸快速':['南小谷','信濃森上','白馬','神城','簗場','信濃木崎','信濃大町'],
  'しなの':['京都','新大阪','大阪','塩尻','松本','穂高','信濃大町','白馬'],
@@ -30,7 +33,25 @@ const base={
  tokaido:[item('tokaido','207','普通'),item('tokaido','223-1000','新快速'),item('tokaido','681','特急'),item('tokaido','221','快速'),item('tokaido','221','普通'),item('tokaido','383','特急しなの','京都','大阪',{pattern:'しなの',night:true,startTime:'18:49:30'})],
  tohoku:[item('tohoku','701','普通')],yagan:[item('yagan','6050','普通')],toho:['toho','toho-village','toho-center'].flatMap(id=>['6050','211'].map(v=>item(id,v,'普通',undefined,undefined,{pattern:'all',startTime:'09:00:00'})))
 };
-export const serviceChoices=Object.fromEntries(Object.entries(base).map(([line,entries])=>[line,entries.flatMap(entry=>[entry,[...entry.slice(0,3),{...entry[3],reverse:true,...(line==='tokaido'&&entry[1]==='383'?{night:false,startTime:'08:57:30'}:{})}]])]));
+// These numbers refer to the original catalog, before removal or display sorting.
+const removedChuo=new Set([43,44,45,46,48,52,53,60]);
+function reviseChuo(entries){
+ const revised=entries.flatMap((entry,i)=>{
+  const number=i+1,reverse=!!entry[3].reverse;
+  if(removedChuo.has(number))return [];
+  if(number===25||number===26)return [item('chuo','e353','特急はちおうじ','東京','八王子',{pattern:'はちおうじ',reverse})];
+  if(number===39||number===40)return [item('shinonoi-extended','e353','特急信州','塩尻','長野',{pattern:'信州',reverse})];
+  if(number===54)return [item('tatsuno-nagano','211','快速みすず','松本','辰野',{pattern:'all'})];
+  if(number===63||number===64)return [item('chuo-oito','e353','特急はくば','松本','白馬',{pattern:'はくば',reverse})];
+  return [entry];
+ });
+ // Stable order retains the identities/progress of every unchanged service.
+ return [...revised.filter(x=>x[1]==='e233'),...revised.filter(x=>x[1]!=='e233')];
+}
+export const serviceChoices=Object.fromEntries(Object.entries(base).map(([line,entries])=>{
+ const paired=entries.flatMap(entry=>[entry,[...entry.slice(0,3),{...entry[3],reverse:true,...(line==='tokaido'&&entry[1]==='383'?{night:false,startTime:'08:57:30'}:{})}]]);
+ return [line,line==='chuo'?reviseChuo(paired):paired];
+}));
 export function buildConnectingRoutes(routes){
  const chuo=routes.get('chuo-extended'),oito=routes.get('oito'),shinonoi=routes.get('shinonoi-extended'),ome=routes.get('ome');
  const result=new Map([

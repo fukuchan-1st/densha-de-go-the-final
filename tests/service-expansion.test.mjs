@@ -1,6 +1,21 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {serviceChoices,makeServiceRoute} from '../dist/train-selection.js';import {reverseRoute,reverseSteps,samplePoint} from '../dist/service-routes.js';import {loadServiceRoutes} from './service-fixture.mjs';import {resolveScoreSchedule} from '../dist/scoring.js';
 const routes=await loadServiceRoutes();
-test('every timetable has both directions and selectable nonempty ranges',()=>{for(const [line,choices]of Object.entries(serviceChoices)){assert.equal(choices.length%2,0);for(let i=0;i<choices.length;i+=2){const [id,v,s,o]=choices[i];if(id==='tohoku')continue;const a=makeServiceRoute(routes.get(id),v,s,o),b=makeServiceRoute(routes.get(id),v,s,choices[i+1][3]);assert.ok(a.stations.length>=2,line);assert.equal(a.stations[0].name,b.stations.at(-1).name);assert.equal(a.stations.at(-1).name,b.stations[0].name);for(const r of [a,b]){for(let n=1;n<r.stations.length;n++)assert.ok(r.stations[n].s>r.stations[n-1].s);for(let n=1;n<r.points.length;n++)assert.ok(r.points[n][0]>r.points[n-1][0],id);assert.ok(r.points.every(p=>p.every(Number.isFinite)));}}}});
+test('all timetables have nonempty ranges; retained paired services run in both directions',()=>{
+ const oneWay=new Set(['tatsuno-nagano/211/普通みすず','tatsuno-nagano/211/快速みすず','suwa-nagano/211/快速','oito/e127/快速']);
+ for(const [line,choices] of Object.entries(serviceChoices))for(const [id,v,s,o] of choices){
+  if(id==='tohoku')continue;
+  const r=makeServiceRoute(routes.get(id),v,s,o);assert.ok(r.stations.length>=2,line);
+  for(let n=1;n<r.stations.length;n++)assert.ok(r.stations[n].s>r.stations[n-1].s);
+  for(let n=1;n<r.points.length;n++)assert.ok(r.points[n][0]>r.points[n-1][0],id);
+  assert.ok(r.points.every(p=>p.every(Number.isFinite)));
+  if(oneWay.has(id+'/'+v+'/'+s))continue;
+  const counterpart=choices.find(x=>x[0]===id&&x[1]===v&&x[2]===s&&x[3].from===o.from&&x[3].to===o.to&&!!x[3].reverse!==!!o.reverse);
+  assert.ok(counterpart,line+' '+id+' '+s+' reverse service');
+  const b=makeServiceRoute(routes.get(id),...counterpart.slice(1));
+  assert.equal(r.stations[0].name,b.stations.at(-1).name);assert.equal(r.stations.at(-1).name,b.stations[0].name);
+ }
+});
+
 test('removed short Shinonoi options are gone and 211 starts beyond Takao',()=>{assert.ok(!serviceChoices.chuo.some(([id,v])=>id==='shinonoi'&&['e353','211'].includes(v)));const item=serviceChoices.chuo.find(([id,v,s,o])=>id==='chuo-extended'&&v==='211'&&s==='普通'&&!o.reverse);assert.equal(item[3].from,'高尾');});
 test('Ome direct trains terminate at Ome, with a separate Ome–Okutama local',()=>{for(const [id,v,s,o]of serviceChoices.chuo.filter(x=>x[0]==='chuo-ome')){const r=makeServiceRoute(routes.get(id),v,s,o);assert.ok([r.stations[0].name,r.stations.at(-1).name].includes('青梅'));assert.ok(!r.stations.some(x=>x.name==='奥多摩'));}const item=serviceChoices.chuo.find(x=>x[0]==='ome-okutama'&&!x[3].reverse);const r=makeServiceRoute(routes.get(item[0]),...item.slice(1));assert.equal(r.stations[0].name,'青梅');assert.equal(r.stations.at(-1).name,'奥多摩');assert.equal(r.stations.length,13);});
 test('holiday rapid skips the three weekday-only stops while ordinary rapid retains them',()=>{const pick=s=>{const x=serviceChoices.chuo.find(x=>x[2]===s&&!x[3].reverse);return makeServiceRoute(routes.get(x[0]),...x.slice(1));};for(const name of ['高円寺','阿佐ケ谷','西荻窪']){assert.ok(pick('快速').stations.some(x=>x.name===name));assert.ok(!pick('快速（土休日）').stations.some(x=>x.name===name));}});
