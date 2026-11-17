@@ -1,5 +1,5 @@
 import * as T from './assets/vendor/three.module.js';
-import {ImportedTrafficModels} from './opposing-models.js?v=85';
+import {ImportedTrafficModels} from './opposing-models.js?v=88';
 export class MuseumViewer{
  constructor(container,status){
   this.container=container;this.status=status;this.models=new ImportedTrafficModels();this.scene=new T.Scene();this.scene.background=new T.Color('#081423');this.camera=new T.PerspectiveCamera(43,1100/540,.1,300);this.renderer=new T.WebGLRenderer({antialias:true});this.renderer.setSize(1100,540);this.renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));this.renderer.outputColorSpace=T.SRGBColorSpace;this.renderer.toneMapping=T.ACESFilmicToneMapping;this.renderer.toneMappingExposure=.95;container.append(this.renderer.domElement);this.scene.add(new T.HemisphereLight(0xd4edff,0x37414b,3));const light=new T.DirectionalLight(0xffffff,3);light.position.set(20,25,15);this.scene.add(light);this.grid=new T.GridHelper(80,40,0x327d9b,0x183241);this.scene.add(this.grid);this.angle=.7;this.pitch=.2;this.distance=32;this.target=new T.Vector3(0,1.6,0);this.pointers=new Map();this.generation=0;

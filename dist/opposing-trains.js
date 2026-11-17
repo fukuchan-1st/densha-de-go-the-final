@@ -1,5 +1,5 @@
 import {setRailPose} from './rail-pose.js?v=80';
-import {ImportedTrafficModels,opposingVehicle,opposingVehicles,opposingCarCount} from './opposing-models.js?v=85';
+import {ImportedTrafficModels,opposingVehicle,opposingVehicles,opposingCarCount} from './opposing-models.js?v=88';
 import * as T from './assets/vendor/three.module.js';
 import {interpolateKnots} from './track-layout.js?v=79';
 
@@ -58,7 +58,7 @@ export class OpposingTrains {
    const valid=train.s+train.cars.length*20>player-350&&train.blocked<40;
    for(let i=0;valid&&i<train.cars.length;i++){
     const s=train.s+i*20.1,near=train.positions[i],f=this.world.frame(s,near.x),aheadTracks=adjacentTracks(this.world,s+3),next=aheadTracks.sort((a,b)=>Math.abs(a.x-near.x)-Math.abs(b.x-near.x))[0];
-    const car=train.cars[i],railPoint=at=>{const p=this.world.frame(at,near.x).p;p.y+=near.y+(this.world.deckHeight?.(at)??0);return p;};setRailPose(car,railPoint(s-7.1),railPoint(s+7.1));
+    const car=train.cars[i],railPoint=at=>{const p=this.world.frame(at,near.x).p;p.y+=near.y+(this.world.frameIncludesDeck?0:this.world.deckHeight?.(at)??0);return p;};setRailPose(car,railPoint(s-7.1),railPoint(s+7.1));
    }
 
    if(!valid){this.world.scene.remove(train.group);this.trains.splice(this.trains.indexOf(train),1);}

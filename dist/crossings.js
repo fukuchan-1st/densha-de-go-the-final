@@ -6,7 +6,7 @@ export function crossingDoppler(s,speed,crossing,lateral=6){const delta=crossing
 export class LevelCrossings{
  constructor(world){this.world=world;this.items=[];this.materials=new Map();this.box=new T.BoxGeometry(1,1,1);this.pole=new T.CylinderGeometry(.075,.075,1,8);this.lamp=new T.SphereGeometry(.14,8,6);}
  mat(color){if(!this.materials.has(color))this.materials.set(color,new T.MeshStandardMaterial({color,roughness:.8}));return this.materials.get(color);}
- add(parent,c){const s=crossingCenter(c),world=this.world,frame=world.frame(s),group=new T.Group();group.position.copy(frame.p);group.rotation.y=frame.angle;group.userData.crossing=true;const drive=world.driveOffset?.(s)??0;
+ add(parent,c){const s=crossingCenter(c),world=this.world,frame=world.frame(s),group=new T.Group();group.position.copy(frame.p);if(!world.frameIncludesDeck)group.position.y+=world.deckHeight?.(s)??0;group.rotation.y=frame.angle;group.userData.crossing=true;const drive=world.driveOffset?.(s)??0;
   const offsets=[drive,...(world.railTracks?.filter(t=>s>=t.knots[0][0]&&s<=t.knots.at(-1)[0]).map(t=>{const knots=t.knots;let i=1;while(i<knots.length-1&&knots[i][0]<s)i++;const a=knots[i-1],b=knots[i];return a[1]+(b[1]-a[1])*(s-a[0])/Math.max(.001,b[0]-a[0]);})??world.trackLayout?.activeAt(s).map(t=>t.x)??[drive+4.2])].filter(x=>Math.abs(x-drive)<28),left=Math.min(...offsets)-3.2,right=Math.max(...offsets)+3.2;
   const mesh=(w,h,d,x,y,z,color)=>{const m=new T.Mesh(this.box,this.mat(color));m.scale.set(w,h,d);m.position.set(x,y,z);m.userData.shadowCaster=h>.3;group.add(m);return m;};
   // Asphalt panels remain below the rail head, and the approaches extend away from the track.

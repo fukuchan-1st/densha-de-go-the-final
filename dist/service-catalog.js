@@ -46,7 +46,7 @@ function reviseChuo(entries){
   return [entry];
  });
  // Stable order retains the identities/progress of every unchanged service.
- return [...revised.filter(x=>x[1]==='e233'),...revised.filter(x=>x[1]!=='e233')];
+ return [...revised.filter(x=>x[1]==='e233'),...revised.filter(x=>x[1]!=='e233'),item('chuo-extended','e131','普通','高尾','松本',{pattern:'all'}),item('chuo-extended','e131','普通','高尾','松本',{pattern:'all',reverse:true})];
 }
 export const serviceChoices=Object.fromEntries(Object.entries(base).map(([line,entries])=>{
  const paired=entries.flatMap(entry=>[entry,[...entry.slice(0,3),{...entry[3],reverse:true,...(line==='tokaido'&&entry[1]==='383'?{night:false,startTime:'08:57:30'}:{})}]]);

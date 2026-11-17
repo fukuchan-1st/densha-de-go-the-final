@@ -1,7 +1,7 @@
 {
-  "scenarios": 94,
-  "sections": 2127,
-  "partialStarts": 1244,
+  "scenarios": 96,
+  "sections": 2211,
+  "partialStarts": 1328,
   "failures": [],
   "summary": [
     {
@@ -603,6 +603,26 @@
       "sections": 34,
       "checkpoints": 68,
       "adjusted": 6
+    },
+    {
+      "line": "chuo",
+      "vehicle": "e131",
+      "service": "普通",
+      "reverse": false,
+      "partialStarts": 42,
+      "sections": 42,
+      "checkpoints": 84,
+      "adjusted": 34
+    },
+    {
+      "line": "chuo",
+      "vehicle": "e131",
+      "service": "普通",
+      "reverse": true,
+      "partialStarts": 42,
+      "sections": 42,
+      "checkpoints": 84,
+      "adjusted": 42
     },
     {
       "line": "osaka",

@@ -1,4 +1,4 @@
-import {decodeVertices} from './model-format.js?v=72';
+import {decodeVertices,decodeIndices} from './model-format.js?v=88';
 import {repair701Body} from './701-body-repair.js?v=76';
 import * as T from './assets/vendor/three.module.js';
 import {stationLeg} from './geographic-sections.js?v=82';
@@ -20,10 +20,10 @@ export function opposingVehicles(route={},s=0){
  if(names.length===2&&names.every(x=>shinonoiNames.has(x)))return ['211','383','e127'];
  if(names.length===2&&names.every(x=>rank.has(x))){const n=names.reduce((sum,x)=>sum+rank.get(x),0)/2;
   if(n<rank.get('高尾'))return ['e233','e353'];
-  if(n<rank.get('大月'))return ['211','e233','e353'];
-  if(n<rank.get('上諏訪'))return ['211','e353'];
-  if(n<rank.get('塩尻'))return ['211','e353','313'];
-  return ['211','e353','313','383','e127'];
+  if(n<rank.get('大月'))return ['211','e131','e233','e353'];
+  if(n<rank.get('上諏訪'))return ['211','e131','e353'];
+  if(n<rank.get('塩尻'))return ['211','e131','e353','313'];
+  return ['211','e131','e353','313','383','e127'];
  }
  if(/chuo|shinonoi|oito/.test(id))return ['211'];return ['701'];
 }
@@ -35,12 +35,12 @@ export class ImportedTrafficModels{
   const promise=this.loadModel(id);this.loading.set(id,promise);return promise;
  }
  async loadModel(id){
-  this.manifest??=fetch(new URL('./assets/opposing/manifest.json?v=82',import.meta.url)).then(response=>{if(!response.ok)throw Error('対向列車データを取得できません');return response.json();});
+  this.manifest??=fetch(new URL('./assets/opposing/manifest.json?v=88',import.meta.url)).then(response=>{if(!response.ok)throw Error('対向列車データを取得できません');return response.json();});
   const definition=(await this.manifest).models[id];if(!definition)throw Error('対向列車 '+id+' がありません');
   const variants={};
   for(const [role,part]of Object.entries(definition.variants)){
-   const response=await fetch(new URL('./assets/opposing/'+part.file+'?v=80',import.meta.url));if(!response.ok)throw Error('対向列車の車体を取得できません');
-   const index=part.indexFile?new Uint32Array(await (await fetch(new URL('./assets/opposing/'+part.indexFile+'?v=80',import.meta.url))).arrayBuffer()):null;
+   const response=await fetch(new URL('./assets/opposing/'+part.file+'?v=88',import.meta.url));if(!response.ok)throw Error('対向列車の車体を取得できません');
+   const index=part.indexFile?decodeIndices(await (await fetch(new URL('./assets/opposing/'+part.indexFile+'?v=88',import.meta.url))).arrayBuffer()):null;
    const array=decodeVertices(await response.arrayBuffer(),part.componentType),interleaved=new T.InterleavedBuffer(array,part.stride??8),group=new T.Group();
    for(const item of part.groups){
     const key=JSON.stringify(item.material);if(!this.materials.has(key)){

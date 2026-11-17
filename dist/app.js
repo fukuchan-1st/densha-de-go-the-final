@@ -5,7 +5,7 @@ import {loadRoadAsset} from './road-assets.js?v=79';
 import {CrossingAudio} from './crossings.js?v=85';
 import {VIEW_LABELS,normalizedView,replayViewMode} from './view-modes.js?v=79';
 import {progress,serviceKey} from './scenario-progress.js?v=85';
-import {serviceChoices} from './service-catalog.js?v=87';
+import {serviceChoices} from './service-catalog.js?v=88';
 import {installCheats,jumpToStation} from './game-cheats.js?v=85';
 import {DutyRecorder,loadReplay,replayStateAt,recordReplayAudio} from './replay-store.js?v=85';
 import {collectStationReports,collectRestrictionReports,pauseWhenSpeechEnds} from './station-timing.js?v=84';
@@ -23,7 +23,7 @@ import {LAST_STATION_INDEX as FULL_LAST_STATION_INDEX,BVE_END} from './route-dat
 import {mountDisplay,stoppingMarker,formatStopDistance} from './display.js?v=41';
 import {STATIONS as ALL_STATIONS,SPECS,step,newRun,stoppingDistance,assistBrake,notchDeltaForKey,NOTCH_MIN,NOTCH_LABELS,clampNotch} from './physics.js?v=72';
 import {RouteProfile} from './route-profile.js?v=23';
-import {RailWorld} from './scene.js?v=87';
+import {RailWorld} from './scene.js?v=88';
 import {SoundEngine} from './assets/audio/sound-engine.js?v=85';
 const rangeQuery=new URLSearchParams(location.search),requestedEnd=Number(rangeQuery.get('end')),requestedStart=Number(rangeQuery.get('station')??0);
 const reverseDirection=rangeQuery.get('direction')==='reverse',fullLength=ALL_STATIONS.at(-1).s,DIRECTION_STATIONS=reverseDirection?ALL_STATIONS.map(x=>({...x,s:fullLength-x.s})).reverse():ALL_STATIONS;
