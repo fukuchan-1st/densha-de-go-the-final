@@ -1,3 +1,4 @@
+import {updateDoorVisual} from './train-doors.js?v=89';
 import {scheduledBoardingDelay} from './published-schedules.js?v=86';
 import {loadRoadAsset} from './road-assets.js?v=79';
 import {CrossingAudio} from './crossings.js?v=85';
@@ -6,11 +7,11 @@ import {yaganPlanningSpec,yaganBoardingReady,yaganBoardingDelay} from './yagan-t
 import {progress,serviceKey} from './scenario-progress.js?v=85';
 import {scenarioRanges} from './scenario-ranges.js?v=72';
 import {installCheats,jumpToStation} from './game-cheats.js?v=85';
-import {mountGameShell} from './game-shell.js?v=88';
-import {DutyRecorder,replayStateAt,recordReplayAudio} from './replay-store.js?v=85';
+import {mountGameShell} from './game-shell.js?v=89';
+import {DutyRecorder,replayStateAt,recordReplayAudio} from './replay-store.js?v=89';
 import {osakaPlanningSpec} from './osaka-timetable.js?v=72';
 import {collectStationReports,collectRestrictionReports,pauseWhenSpeechEnds} from './station-timing.js?v=84';
-import {buildConnectingRoutes} from './service-catalog.js?v=88';
+import {buildConnectingRoutes} from './service-catalog.js?v=89';
 import {loadAudioMix,audioMixMarkup,bindAudioMix} from './audio-mix.js?v=keys61fix';
 import {bindRouteKeys,bindScreenKeys} from './screen-keys.js?v=72';
 import {sharedEffects} from './buffered-effects.js?v=phone58fix';
@@ -21,9 +22,9 @@ import {mountTrainDetails} from './train-details.js?v=85';
 import {mountWheelPicker} from './wheel-picker.js?v=85';
 import {routePlanningSpec,mountScoring,checkpointMarks,scoringStations,buildScoreTimetable,resolveScoreSchedule,scoreHazards,hornMarks,currentScoreRestriction,signalRestriction} from './scoring.js?v=86';
 import {mountDrivingOverlay} from './driving-overlay.js?v=72';import {mountLookahead,changesFromSections,stationMarks} from './lookahead.js?v=evaluation59';
-import {serviceChoices,makeServiceRoute} from './train-selection.js?v=88';
+import {serviceChoices,makeServiceRoute} from './train-selection.js?v=89';
 import {GeneratedCab,generatedCab} from './generated-cab.js';
-import {FinalWorld} from './final-world.js?v=88';
+import {FinalWorld} from './final-world.js?v=89';
 import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=82';
 import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=88';
 import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,routeLimitAt,stopPosition,finishStop,beginDoorClosing,isDoorClosing,takeDepartureCall} from './final-model.js?v=72';
@@ -332,7 +333,7 @@ function frame(now){
     sound.update(run.v*3.6,run.notch,dt,{doors:run.doors,surface,rollingIndex});
    }
   }
-  if(!replaySession){run.viewMode=viewMode;recorder?.capture(run,score.engine.points,score.engine.chain);}
+  if(!replaySession||!Number.isFinite(run.doorVisual))updateDoorVisual(run,paused?0:dt);world.doorVisual=run.doorVisual;world.doorState=run;if(!replaySession){run.viewMode=viewMode;recorder?.capture(run,score.engine.points,score.engine.chain);}
   hud();
   if(replaySession)replayHud();
   world.render(run.s,run.v,paused?0:dt,{acceleration:run.acceleration,shake:settings.shake,panorama,outer:viewMode>=2,railfan:viewMode===3,clock:run.clockStart+run.elapsed});sound?.updatePassby(world,run.s,run.v,viewMode,paused);crossingAudio?.update(world,run.s,run.v,viewMode,paused,(world.playerTrain?.count??2)*20);

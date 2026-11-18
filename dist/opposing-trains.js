@@ -1,5 +1,6 @@
+import {panoramaAtFront} from './train-formation.js?v=89';
 import {setRailPose} from './rail-pose.js?v=80';
-import {ImportedTrafficModels,opposingVehicle,opposingVehicles,opposingCarCount} from './opposing-models.js?v=88';
+import {ImportedTrafficModels,opposingVehicle,opposingVehicles,opposingCarCount} from './opposing-models.js?v=89';
 import * as T from './assets/vendor/three.module.js';
 import {interpolateKnots} from './track-layout.js?v=79';
 
@@ -42,7 +43,7 @@ export class OpposingTrains {
   if(!choices.length)return false;
   const {s,track,positions}=choices[(this.serial-1)%choices.length];
   const group=new T.Group(),cars=[];
-  for(let i=0;i<count;i++){const car=this.models.car(vehicle,i,count);group.add(car);cars.push(car);}
+  for(let i=0;i<count;i++){const car=this.models.car(vehicle,i,count,{panoramaAtFront:!panoramaAtFront(this.world.route)});group.add(car);cars.push(car);}
   this.world.atmosphere?.prepare(group);this.world.scene.add(group);this.trains.push({s,x:track.x,y:track.y,speed:urban?17:22,group,cars,positions,blocked:0});return true;
  }
  update(player,dt){

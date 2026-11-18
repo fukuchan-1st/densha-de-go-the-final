@@ -28,7 +28,7 @@ const base={
  item('tatsuno','211','普通','岡谷','塩尻',{pattern:'all',startTime:'10:00:00'}),item('tatsuno-nagano','211','普通みすず','辰野','長野',{pattern:'all'}),item('shinonoi-extended','211','快速','長野','松本',{pattern:'長野松本快速'}),
  item('suwa-nagano','211','快速','上諏訪','長野',{pattern:'長野快速'}),item('chuo-extended','211','快速みすず','松本','岡谷',{pattern:'みすず'}),
  item('oito','e127','普通','南小谷','信濃大町'),item('oito','211','普通','信濃大町','松本'),item('oito','e127','快速','南小谷','信濃大町',{pattern:'大糸快速',night:true,startTime:'21:23:30'}),
- item('chuo-oito','e353','特急あずさ','新宿','南小谷',{pattern:'大糸特急'}),item('chuo-oito','e353','特急あずさ','松本','白馬',{pattern:'大糸特急'}),item('chuo-oito','383','特急しなの','塩尻','白馬',{pattern:'しなの'})],
+ item('chuo-oito','e353','特急あずさ','新宿','南小谷',{pattern:'大糸特急'}),item('chuo-oito','e353','特急あずさ','松本','白馬',{pattern:'大糸特急'}),item('chuo-oito','383','特急しなの','塩尻','白馬',{pattern:'しなの',carCount:4})],
  osaka:[item('osaka','323','普通'),item('osaka','223','関空・紀州路快速'),item('osaka','221','大和路快速')],
  tokaido:[item('tokaido','207','普通'),item('tokaido','223-1000','新快速'),item('tokaido','681','特急'),item('tokaido','221','快速'),item('tokaido','221','普通'),item('tokaido','383','特急しなの','京都','大阪',{pattern:'しなの',night:true,startTime:'18:49:30'})],
  tohoku:[item('tohoku','701','普通')],yagan:[item('yagan','6050','普通')],toho:['toho','toho-village','toho-center'].flatMap(id=>['6050','211'].map(v=>item(id,v,'普通',undefined,undefined,{pattern:'all',startTime:'09:00:00'})))

@@ -3,7 +3,7 @@ import {confirmHighGraphics} from './graphics-warning.js?v=87';
 import {mountBasinEditor} from './basin-editor.js?v=84';
 import {startTitleIntro} from './title-intro.js?v=72';
 import {audioMixMarkup,bindAudioMix} from './audio-mix.js?v=keys61fix';
-import {loadReplay} from './replay-store.js?v=85';
+import {loadReplay} from './replay-store.js?v=89';
 import {MuseumViewer} from './museum.js?v=88';
 export const MAIN_MENU=[
  ['drive','運転乗務','運転乗務は、電車の運転をするゲームです。乗務完了後には、自分の運転をリプレイメニューから見ることもできます。'],

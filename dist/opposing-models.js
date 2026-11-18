@@ -1,3 +1,5 @@
+import {tint6050Bogies} from './vehicle-details.js?v=89';
+import {carVariant} from './train-formation.js?v=89';
 import {decodeVertices,decodeIndices} from './model-format.js?v=88';
 import {repair701Body} from './701-body-repair.js?v=76';
 import * as T from './assets/vendor/three.module.js';
@@ -35,7 +37,7 @@ export class ImportedTrafficModels{
   const promise=this.loadModel(id);this.loading.set(id,promise);return promise;
  }
  async loadModel(id){
-  this.manifest??=fetch(new URL('./assets/opposing/manifest.json?v=88',import.meta.url)).then(response=>{if(!response.ok)throw Error('対向列車データを取得できません');return response.json();});
+  this.manifest??=fetch(new URL('./assets/opposing/manifest.json?v=89',import.meta.url)).then(response=>{if(!response.ok)throw Error('対向列車データを取得できません');return response.json();});
   const definition=(await this.manifest).models[id];if(!definition)throw Error('対向列車 '+id+' がありません');
   const variants={};
   for(const [role,part]of Object.entries(definition.variants)){
@@ -53,8 +55,9 @@ export class ImportedTrafficModels{
    }variants[role]=group;
   }
   if(id==='701'&&definition.frontRepair){const loader=new T.TextureLoader(),load=async file=>{const texture=await loader.loadAsync(new URL('./assets/opposing/'+file,import.meta.url).href);texture.colorSpace=T.SRGBColorSpace;this.textures.set('701-repair-'+file,Promise.resolve(texture));return texture;};const [front,under]=await Promise.all([load(definition.frontRepair.front),load(definition.frontRepair.under)]);for(const group of Object.values(variants))repair701Body(group,front,under,this);}
+  if(id==='6050')for(const body of Object.values(variants))tint6050Bogies(body,this);
   const model={...definition,variants};if(!this.disposed)this.models.set(id,model);else this.dispose();return model;
  }
- car(id,index,count){const model=this.models.get(id);if(!model)return null;const car=new T.Group(),body=model.variants[model.formation?.length===count?model.formation[index]:index===0?'head':index===count-1?'tail':'middle'].clone(true);body.rotation.y=index===count-1&&count>1?(model.tailRotation??model.frontRotation??(['e233','211','221'].includes(id)?Math.PI:0)):(model.frontRotation??(['e233','211','221'].includes(id)?Math.PI:0));if(id==='701'&&index===count-1&&count>1)body.rotation.y+=Math.PI;car.add(body);return car;}
+ car(id,index,count,options){const model=this.models.get(id);if(!model)return null;const spec=carVariant(model,id,index,count,options),car=new T.Group(),body=model.variants[spec.role].clone(true);body.rotation.y=spec.rotation;body.userData.variant=spec.role;car.add(body);return car;}
  dispose(){this.disposed=true;for(const geometry of this.geometries)geometry.dispose();for(const material of this.materials.values())material.dispose();for(const texture of this.textures.values())texture.then(value=>value.dispose()).catch(()=>{});this.geometries.clear();this.materials.clear();this.models.clear();}
 }
