@@ -14,16 +14,17 @@ pair('高尾',music('ikst016-01',1),music('ikst012-02',4));rows['高尾'].platfo
 pair('相模湖 藤野 上野原 四方津 梁川 鳥沢 猿橋 大月 初狩 笹子 甲斐大和 勝沼ぶどう郷 塩山 東山梨 山梨市 春日居町 酒折 竜王 塩崎 韮崎 新府 穴山 日野春 長坂 小淵沢','ikst012-01','ikst012-02');rows['初狩'].down=music('ikst012-01');
 for(const name of ['相模湖','山梨市'])rows[name].platforms={1:'ikst012-02',2:'ikst012-08',3:'ikst012-01'};
 rows['大月'].platforms={3:'ikst012-02',4:'ikst012-03',5:'ikst012-01'};rows['塩山'].platforms={1:'ikst012-02',2:'ikst012-04',3:'ikst012-01'};rows['竜王'].platforms={1:'ikst012-02',2:'ikst012-04',3:'ikst012-01'};
-pair('石和温泉',null,'takedabushi_a');rows['石和温泉'].missingUp='武田節 B';pair('甲府',music('ikst012-01',2),music('ikst012-02',1));rows['甲府'].platforms={1:'ikst012-02',2:'ikst012-01',3:'ikst012-03'};
+pair('石和温泉','takedabushi_b','takedabushi_a');pair('甲府',music('ikst012-01',2),music('ikst012-02',1));rows['甲府'].platforms={1:'ikst012-02',2:'ikst012-01',3:'ikst012-03'};
 pair('富士見','kanno_bell_2','kanno_bell_2');pair('上諏訪 岡谷 村井 南松本 南小谷','kanno_bell','kanno_bell');
 pair('茅野',music('nagano4_p1',1),music('nagano4_p2',2));rows['茅野'].platforms={1:'nagano4_p1',2:'nagano4_p2',3:'nagano4_p3'};
 pair('下諏訪',music('nagano1_p1',1),music('nagano1_p2',2));rows['下諏訪'].platforms={1:'nagano1_p1',2:'nagano1_p2'};
-pair('塩尻',music('ikst012-01',1),music('syutoken39-1',2));rows['塩尻'].missingPlatforms={4:'首都圏39-4番'};rows['塩尻'].platforms={1:'ikst012-01',2:'syutoken39-1',3:'ikst012-shiojiri',6:'syutoken39-5'};
+pair('塩尻',music('ikst012-01',1),music('syutoken39-1',2));rows['塩尻'].platforms={1:'ikst012-01',2:'syutoken39-1',3:'ikst012-shiojiri',4:'syutoken39-4',6:'syutoken39-5'};
 pair('松本',music('ikst012-matsumoto',1),music('syutoken39-1',3));rows['松本'].platforms={1:'ikst012-matsumoto',2:'syutoken39',3:'syutoken39-1',4:'syutoken39-2',5:'syutoken39-3',6:'syutoken40'};
 pair('篠ノ井','watercrown','watercrown');pair('今井','ikst026-01','ikst026-02');pair('長野',music('old_music_box',3),music('spring_boxes',4));rows['長野'].platforms={3:'old_music_box',4:'spring_boxes'};
 // User confirmed all electronic bells share this supplied recording.
 pair('広丘 平田 すずらんの里 川中島 安茂里 豊科 穂高 信濃大町 白馬 信濃森上','bell(tokyu)','bell(tokyu)');
-const missing={明科:'長野2番',石和温泉:'武田節 B（上り）',塩尻:'首都圏39-4番（4番線）'};
+pair('明科','nagano2','nagano2');
+const missing={};
 const central='東京 神田 御茶ノ水 四ツ谷 新宿 中野 高円寺 阿佐ケ谷 荻窪 西荻窪 吉祥寺 三鷹 武蔵境 東小金井 武蔵小金井 国分寺 西国分寺 国立 立川 日野 豊田 八王子 西八王子 高尾 相模湖 藤野 上野原 四方津 梁川 鳥沢 猿橋 大月 初狩 笹子 甲斐大和 勝沼ぶどう郷 塩山 東山梨 山梨市 春日居町 石和温泉 酒折 甲府 竜王 塩崎 韮崎 新府 穴山 日野春 長坂 小淵沢 信濃境 富士見 すずらんの里 青柳 茅野 上諏訪 下諏訪 岡谷 みどり湖 塩尻 広丘 村井 平田 南松本 松本 田沢 明科 西条 坂北 聖高原 冠着 姨捨 稲荷山 篠ノ井 今井 川中島 安茂里 長野'.split(' ');
 const oito='松本 北松本 島内 島高松 梓橋 一日市場 中萱 南豊科 豊科 柏矢町 穂高 有明 安曇追分 細野 北細野 信濃松川 安曇沓掛 信濃常盤 南大町 信濃大町 北大町 信濃木崎 稲尾 海ノ口 簗場 ヤナバ前 南神城 神城 飯森 白馬 信濃森上 白馬大池 千国 南小谷'.split(' ');
 export const STATION_BROADCAST_ROWS=rows;export const MISSING_STATION_MELODIES=missing;

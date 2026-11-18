@@ -328,6 +328,13 @@
       "embeddedAnnouncement": true
     },
     {
+      "file": "nagano2.mp3",
+      "stations": [
+        "明科"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
       "file": "nagano4_p1.mp3",
       "stations": [
         "茅野"
@@ -409,6 +416,13 @@
       "embeddedAnnouncement": false
     },
     {
+      "file": "syutoken39-4.mp3",
+      "stations": [
+        "塩尻"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
       "file": "syutoken39-5.mp3",
       "stations": [
         "塩尻"
@@ -443,7 +457,9 @@
     },
     {
       "file": "takedabushi_b.mp3",
-      "stations": [],
+      "stations": [
+        "石和温泉"
+      ],
       "embeddedAnnouncement": false
     },
     {
@@ -1716,8 +1732,8 @@
       "station": "石和温泉",
       "direction": "上り",
       "platform": "通常番線（推定）",
-      "file": "",
-      "status": "武田節 B",
+      "file": "takedabushi_b.mp3",
+      "status": "対応済み",
       "embedded": false
     },
     {
@@ -1973,6 +1989,14 @@
       "direction": "番線優先",
       "platform": "3",
       "file": "ikst012-shiojiri.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "塩尻",
+      "direction": "番線優先",
+      "platform": "4",
+      "file": "syutoken39-4.mp3",
       "status": "対応済み",
       "embedded": false
     },
@@ -2274,26 +2298,18 @@
     },
     {
       "station": "明科",
-      "direction": "未対応",
-      "platform": "",
-      "file": "",
-      "status": "音源未確認：長野2番",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "nagano2.mp3",
+      "status": "対応済み",
       "embedded": false
     },
     {
-      "station": "石和温泉",
-      "direction": "未対応",
-      "platform": "",
-      "file": "",
-      "status": "音源未確認：武田節 B（上り）",
-      "embedded": false
-    },
-    {
-      "station": "塩尻",
-      "direction": "未対応",
-      "platform": "",
-      "file": "",
-      "status": "音源未確認：首都圏39-4番（4番線）",
+      "station": "明科",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "nagano2.mp3",
+      "status": "対応済み",
       "embedded": false
     }
   ]
