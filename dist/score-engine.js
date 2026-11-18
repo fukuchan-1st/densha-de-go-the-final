@@ -25,7 +25,13 @@ export class ScoreEngine{
   const clock=(state.clockStart??28800)+t;
   for(const st of context.stations??[]){if(st.s<=this.start+1)continue;const key='time:'+st.id,target=timeSeconds(st.time);let actual=null;
    if(!st.stop&&prev&&prev.s<st.s&&s>=st.s){const f=(st.s-prev.s)/Math.max(.00001,s-prev.s);actual=(state.clockStart??28800)+prev.t+(t-prev.t)*f;}
-   if(st.stop&&prev&&prev.v>.01&&v<=.01&&Math.abs(s-st.s)<=150){const error=state.correctedStopError??s-st.s;this.once('position:'+st.id,Math.abs(error)<=this.cfg.blueTolerance?'〇':'×',Math.abs(error)<=this.cfg.blueTolerance?'停止位置よし':'停止位置が青い範囲外',100);actual=clock;}
+   const latched=state.stoppedOverrun?.target===st.s?state.stoppedOverrun.error:null;
+   const error=latched??((state.correctedStopTarget==null||state.correctedStopTarget===st.s)?state.correctedStopError:null)??s-st.s;
+   if(st.stop&&v<=.01&&error>this.cfg.blueTolerance+1e-9&&(latched!==null||(!state.stoppedOverrun&&prev?.v>.01&&Math.abs(s-st.s)<=150))){
+    const position='position:'+st.id,alreadyBad=this.done.has('overrun:'+st.id);
+    if(!alreadyBad){this.done.add('overrun:'+st.id);this.done.add(position);this.award('×',st.name+' 停止位置が青い範囲外：オーバーラン（＋'+error.toFixed(2)+' m）',100);}
+    actual=clock;
+   }else if(st.stop&&prev&&prev.v>.01&&v<=.01&&Math.abs(s-st.s)<=150){const error=state.correctedStopError??s-st.s;this.once('position:'+st.id,Math.abs(error)<=this.cfg.blueTolerance?'〇':'×',Math.abs(error)<=this.cfg.blueTolerance?'停止位置よし':'停止位置が青い範囲外',100);actual=clock;}
    if(target!==null&&!this.done.has(key)){
     if(actual!==null){const grade=timingGrade(actual-target,st.stop);this.done.add(key);if(grade)this.award(grade,st.name+(st.stop?' 停車時刻':' 通過時刻'),100);}
     else if(clock-target>=(st.stop?15:10)&&s<st.s+200){this.once(key,'×',st.name+' 到着・通過遅延',100);}

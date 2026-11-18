@@ -12,7 +12,7 @@ import {DutyRecorder,replayStateAt,recordReplayAudio} from './replay-store.js?v=
 import {osakaPlanningSpec} from './osaka-timetable.js?v=72';
 import {collectStationReports,collectRestrictionReports,pauseWhenSpeechEnds} from './station-timing.js?v=84';
 import {buildConnectingRoutes} from './service-catalog.js?v=89';
-import {loadAudioMix,audioMixMarkup,bindAudioMix} from './audio-mix.js?v=keys61fix';
+import {loadAudioMix,audioMixMarkup,bindAudioMix} from './audio-mix.js?v=91';
 import {bindRouteKeys,bindScreenKeys} from './screen-keys.js?v=72';
 import {sharedEffects} from './buffered-effects.js?v=phone58fix';
 import {bindTrainSelectionKeys} from './selection-keys.js?v=keys61fix';
@@ -23,14 +23,14 @@ import {mountWheelPicker} from './wheel-picker.js?v=85';
 import {routePlanningSpec,mountScoring,checkpointMarks,scoringStations,buildScoreTimetable,resolveScoreSchedule,scoreHazards,hornMarks,currentScoreRestriction,signalRestriction} from './scoring.js?v=90';
 import {mountDrivingOverlay} from './driving-overlay.js?v=72';import {mountLookahead,changesFromSections,stationMarks} from './lookahead.js?v=evaluation59';
 import {serviceChoices,makeServiceRoute} from './train-selection.js?v=90';
-import {GeneratedCab,generatedCab} from './generated-cab.js';
+import {GeneratedCab,generatedCab} from './generated-cab.js?v=91';
 import {FinalWorld} from './final-world.js?v=90';
 import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=82';
 import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=88';
 import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,routeLimitAt,stopPosition,finishStop,beginDoorClosing,isDoorClosing,takeDepartureCall} from './final-model.js?v=72';
 import {STATIONS as TOHOKU_STATIONS} from './route-data.js?v=41';
 import {FINAL_SCENARIOS,scenarioJourney} from './final-scenarios.js?v=41';
-import {correctStoppedOverrun,nextSignalCall} from './train-operations.js?v=85';
+import {detectStoppedOverrun,correctStoppedOverrun,nextSignalCall} from './train-operations.js?v=91';
 import {bindHornButton} from './assets/audio/held-horn.js?v=85';
 
 const TOHOKU_TRAIN={id:'701',name:'701系1500番台',playableSpecs:{carCount:2}};
@@ -153,6 +153,7 @@ async function closeSequence(generation){
  try{
   const departureKey=activeRun.startingDeparture&&r.stations[activeRun.startIndex].departureSound;
   if(departureKey){await sound.playRouteAnnouncement(r.stations[activeRun.startIndex].announcementRouteId??r.id,departureKey);if(!current())return;}
+  await sound.playStationDeparture(r.stations[stationIndex],current);if(!current())return;
   await effect('whistle');if(!current())return;
   activeRun.doorPhase='closing';const completed=await effect('close');
   if(!current()||!completed)return;
@@ -282,7 +283,7 @@ function hud(){{const lr=route(),end=lr.stations[run.endIndex]?.s??Infinity;look
  const limit=routeLimitAt(r,run.s);
  $('vehicleLimit').textContent=limit===null?'区間制限 解除':`区間制限 ${limit} km/h`;
  $('vehicleLimit').classList.toggle('overspeed',limit!==null&&speed>limit);
- $('eventText').textContent=run.correctedStopError!=null&&run.doorPhase==='waiting-open'?`行き過ぎ ${distanceLabel(run.correctedStopError)} → 停止位置 0 cm に補正`:run.doorPhase==='waiting-open'?`停車確認 ${Math.min(3,Math.floor(run.stopWait))} / 3秒`:run.doorPhase==='boarding'?`乗降中　戸閉合図まで ${Math.max(0,Math.ceil(Math.max(15-run.dwell,yaganBoardingDelay(run,r),scheduledBoardingDelay(run,r))))}秒`:run.doorPhase==='announcement'?'合図音を再生中':run.doorPhase==='closing'?'戸閉中 · 音の終了後に戸閉灯が点灯':run.elapsed<toastUntil?toastText:`次の停車駅は ${next.name} です。`;
+ $('eventText').textContent=run.correctedStopError!=null&&run.doorPhase==='waiting-open'?`オーバーラン ＋${distanceLabel(run.correctedStopError)}（判定済み）→ 0 cm に補正`:run.doorPhase==='waiting-open'?`停車確認 ${Math.min(3,Math.floor(run.stopWait))} / 3秒`:run.doorPhase==='boarding'?`乗降中　戸閉合図まで ${Math.max(0,Math.ceil(Math.max(15-run.dwell,yaganBoardingDelay(run,r),scheduledBoardingDelay(run,r))))}秒`:run.doorPhase==='announcement'?'合図音を再生中':run.doorPhase==='closing'?'戸閉中 · 音の終了後に戸閉灯が点灯':run.elapsed<toastUntil?toastText:`次の停車駅は ${next.name} です。`;
  const controller=controlsFor(recipe());overlayControls.update({value:run.notch,min:controller.min,max:controller.max,labels:controller.labels,disabled:paused||run.finished});
 }
 function advance(dt){
@@ -290,6 +291,7 @@ function advance(dt){
  const r=route(),train=recipe(),station=r.stations[run.next],previous={s:run.s,v:run.v,elapsed:run.elapsed};
  if(assist&&!run.doors)brakeAssist(run,r,train);
  driveStep(run,train,dt,world.grade(run.s));cheats.clockStep(run,dt);
+ const overrun=detectStoppedOverrun(run,station.s,score.engine.cfg.blueTolerance);if(overrun)toast(`${station.name} オーバーラン ＋${distanceLabel(overrun.error)}`,8);
  score.update(run,{eb:controlsFor(train).min,...currentScoreRestriction(r,run.s),hazards:scoreHazards(r),vehicleSpec:run.scoreVehicleSpec??train.playableSpecs,routeLimits:r.limits,stations:run.scoreTimetable??scoringStations(r)},dt);
  const corrected=correctStoppedOverrun(run,station.s,score.engine.cfg.blueTolerance);
  for(const change of collectRestrictionReports(run,changesFromSections(r.limits),previous))sound.callRestriction(change.kmh);

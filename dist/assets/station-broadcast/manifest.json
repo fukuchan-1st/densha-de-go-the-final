@@ -1,0 +1,2300 @@
+{
+  "version": 91,
+  "checkedAt": "2026-11-18",
+  "sources": [
+    "https://ekimero.miraheze.org/wiki/中央快速線",
+    "https://ekimero.miraheze.org/wiki/中央本線",
+    "https://ekimero.miraheze.org/wiki/篠ノ井線",
+    "https://ekimero.miraheze.org/wiki/大糸線",
+    "https://ekimero.miraheze.org/wiki/信越本線"
+  ],
+  "sourceCredit": "駅別情報：首都圏駅メロwiki（CC BY-SA 4.0）。音源：ユーザー提供。",
+  "scope": "信越本線はSE-09〜SE-13。通常番線は推定、明示番線を優先。電子電鈴はユーザー指定によりbell(tokyu)へ統一。",
+  "sampleVoice": "voice/sample.mp3",
+  "files": [
+    {
+      "file": "bell(tokyu).mp3",
+      "stations": [
+        "広丘",
+        "平田",
+        "すずらんの里",
+        "川中島",
+        "安茂里",
+        "豊科",
+        "穂高",
+        "信濃大町",
+        "白馬",
+        "信濃森上"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "denshagokko_a.mp3",
+      "stations": [
+        "国分寺"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "denshagokko_b.mp3",
+      "stations": [
+        "国分寺"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "denshagokko_c.mp3",
+      "stations": [
+        "国分寺"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "denshagokko_d.mp3",
+      "stations": [
+        "国分寺"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "ichibanboshi_a.mp3",
+      "stations": [
+        "西国分寺"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "ichibanboshi_b.mp3",
+      "stations": [
+        "西国分寺"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "ikst011-01.mp3",
+      "stations": [
+        "中野",
+        "新宿"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "ikst011-02.mp3",
+      "stations": [
+        "新宿"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "ikst012-01.mp3",
+      "stations": [
+        "高尾",
+        "相模湖",
+        "藤野",
+        "上野原",
+        "四方津",
+        "梁川",
+        "鳥沢",
+        "猿橋",
+        "大月",
+        "初狩",
+        "笹子",
+        "甲斐大和",
+        "勝沼ぶどう郷",
+        "塩山",
+        "東山梨",
+        "山梨市",
+        "春日居町",
+        "酒折",
+        "竜王",
+        "塩崎",
+        "韮崎",
+        "新府",
+        "穴山",
+        "日野春",
+        "長坂",
+        "小淵沢",
+        "甲府",
+        "塩尻"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "ikst012-02.mp3",
+      "stations": [
+        "高尾",
+        "相模湖",
+        "藤野",
+        "上野原",
+        "四方津",
+        "梁川",
+        "鳥沢",
+        "猿橋",
+        "大月",
+        "笹子",
+        "甲斐大和",
+        "勝沼ぶどう郷",
+        "塩山",
+        "東山梨",
+        "山梨市",
+        "春日居町",
+        "酒折",
+        "竜王",
+        "塩崎",
+        "韮崎",
+        "新府",
+        "穴山",
+        "日野春",
+        "長坂",
+        "小淵沢",
+        "甲府"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "ikst012-03.mp3",
+      "stations": [
+        "大月",
+        "甲府"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "ikst012-04.mp3",
+      "stations": [
+        "塩山",
+        "竜王"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "ikst012-08.mp3",
+      "stations": [
+        "相模湖",
+        "山梨市"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "ikst012-matsumoto.mp3",
+      "stations": [
+        "松本"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "ikst012-shiojiri.mp3",
+      "stations": [
+        "塩尻"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "ikst016-01.mp3",
+      "stations": [
+        "神田",
+        "御茶ノ水",
+        "四ツ谷",
+        "中野",
+        "高円寺",
+        "荻窪",
+        "西荻窪",
+        "吉祥寺",
+        "武蔵境",
+        "東小金井",
+        "国立",
+        "立川",
+        "日野",
+        "西八王子",
+        "東京",
+        "新宿",
+        "武蔵小金井",
+        "高尾"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "ikst016-02.mp3",
+      "stations": [
+        "神田",
+        "御茶ノ水",
+        "四ツ谷",
+        "中野",
+        "高円寺",
+        "荻窪",
+        "西荻窪",
+        "吉祥寺",
+        "武蔵境",
+        "東小金井",
+        "国立",
+        "立川",
+        "日野",
+        "西八王子",
+        "東京",
+        "新宿",
+        "高尾"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "ikst016-03.mp3",
+      "stations": [
+        "立川"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "ikst016-04.mp3",
+      "stations": [
+        "東小金井",
+        "国立",
+        "立川",
+        "武蔵小金井"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "ikst026-01.mp3",
+      "stations": [
+        "今井"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "ikst026-02.mp3",
+      "stations": [
+        "今井"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "kanno_bell.mp3",
+      "stations": [
+        "上諏訪",
+        "岡谷",
+        "村井",
+        "南松本",
+        "南小谷"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "kanno_bell_2.mp3",
+      "stations": [
+        "富士見"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "medaka_a.mp3",
+      "stations": [
+        "三鷹"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "medaka_b.mp3",
+      "stations": [
+        "三鷹"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "medaka_e.mp3",
+      "stations": [
+        "三鷹"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "medaka_f.mp3",
+      "stations": [
+        "三鷹"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "nagano1_p1.mp3",
+      "stations": [
+        "下諏訪"
+      ],
+      "embeddedAnnouncement": true
+    },
+    {
+      "file": "nagano1_p2.mp3",
+      "stations": [
+        "下諏訪"
+      ],
+      "embeddedAnnouncement": true
+    },
+    {
+      "file": "nagano4_p1.mp3",
+      "stations": [
+        "茅野"
+      ],
+      "embeddedAnnouncement": true
+    },
+    {
+      "file": "nagano4_p2.mp3",
+      "stations": [
+        "茅野"
+      ],
+      "embeddedAnnouncement": true
+    },
+    {
+      "file": "nagano4_p3.mp3",
+      "stations": [
+        "茅野"
+      ],
+      "embeddedAnnouncement": true
+    },
+    {
+      "file": "old_music_box.mp3",
+      "stations": [
+        "長野"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "sakurasakura_a.mp3",
+      "stations": [
+        "武蔵小金井"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "sakurasakura_b.mp3",
+      "stations": [
+        "武蔵小金井"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "sakurasakura_c.mp3",
+      "stations": [],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "sakurasakura_d.mp3",
+      "stations": [],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "spring_boxes.mp3",
+      "stations": [
+        "長野"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "syutoken39-1.mp3",
+      "stations": [
+        "塩尻",
+        "松本"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "syutoken39-2.mp3",
+      "stations": [
+        "松本"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "syutoken39-3.mp3",
+      "stations": [
+        "松本"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "syutoken39-5.mp3",
+      "stations": [
+        "塩尻"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "syutoken39-6.mp3",
+      "stations": [],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "syutoken39.mp3",
+      "stations": [
+        "松本"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "syutoken40.mp3",
+      "stations": [
+        "松本"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "takedabushi_a.mp3",
+      "stations": [
+        "石和温泉"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "takedabushi_b.mp3",
+      "stations": [],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "takibi_a.mp3",
+      "stations": [
+        "豊田"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "takibi_b.mp3",
+      "stations": [
+        "豊田"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "tanabata_c.mp3",
+      "stations": [
+        "阿佐ケ谷"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "tanabata_d.mp3",
+      "stations": [
+        "阿佐ケ谷"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "watercrown.mp3",
+      "stations": [
+        "篠ノ井"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "yuuyake_a.mp3",
+      "stations": [
+        "八王子"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "yuuyake_b.mp3",
+      "stations": [
+        "八王子"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "yuuyake_d.mp3",
+      "stations": [
+        "八王子"
+      ],
+      "embeddedAnnouncement": false
+    }
+  ],
+  "stations": [
+    {
+      "station": "神田",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst016-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "神田",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst016-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "御茶ノ水",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst016-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "御茶ノ水",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst016-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "四ツ谷",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst016-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "四ツ谷",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst016-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "中野",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst016-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "中野",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst016-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "中野",
+      "direction": "番線優先",
+      "platform": "6",
+      "file": "ikst016-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "中野",
+      "direction": "番線優先",
+      "platform": "7",
+      "file": "ikst011-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "中野",
+      "direction": "番線優先",
+      "platform": "8",
+      "file": "ikst016-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "高円寺",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst016-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "高円寺",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst016-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "荻窪",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst016-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "荻窪",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst016-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "西荻窪",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst016-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "西荻窪",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst016-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "吉祥寺",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst016-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "吉祥寺",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst016-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "武蔵境",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst016-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "武蔵境",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst016-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "東小金井",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst016-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "東小金井",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst016-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "東小金井",
+      "direction": "番線優先",
+      "platform": "1",
+      "file": "ikst016-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "東小金井",
+      "direction": "番線優先",
+      "platform": "2",
+      "file": "ikst016-04.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "東小金井",
+      "direction": "番線優先",
+      "platform": "3",
+      "file": "ikst016-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "国立",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst016-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "国立",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst016-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "国立",
+      "direction": "番線優先",
+      "platform": "1",
+      "file": "ikst016-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "国立",
+      "direction": "番線優先",
+      "platform": "2",
+      "file": "ikst016-04.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "国立",
+      "direction": "番線優先",
+      "platform": "3",
+      "file": "ikst016-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "立川",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst016-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "立川",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst016-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "立川",
+      "direction": "番線優先",
+      "platform": "3",
+      "file": "ikst016-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "立川",
+      "direction": "番線優先",
+      "platform": "4",
+      "file": "ikst016-04.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "立川",
+      "direction": "番線優先",
+      "platform": "5",
+      "file": "ikst016-03.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "立川",
+      "direction": "番線優先",
+      "platform": "6",
+      "file": "ikst016-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "日野",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst016-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "日野",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst016-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "西八王子",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst016-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "西八王子",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst016-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "東京",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "",
+      "status": "対象なし",
+      "embedded": false
+    },
+    {
+      "station": "東京",
+      "direction": "下り",
+      "platform": 1,
+      "file": "ikst016-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "東京",
+      "direction": "番線優先",
+      "platform": "1",
+      "file": "ikst016-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "東京",
+      "direction": "番線優先",
+      "platform": "2",
+      "file": "ikst016-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "新宿",
+      "direction": "上り",
+      "platform": 8,
+      "file": "ikst016-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "新宿",
+      "direction": "下り",
+      "platform": 12,
+      "file": "ikst016-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "新宿",
+      "direction": "番線優先",
+      "platform": "7",
+      "file": "ikst011-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "新宿",
+      "direction": "番線優先",
+      "platform": "8",
+      "file": "ikst016-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "新宿",
+      "direction": "番線優先",
+      "platform": "11",
+      "file": "ikst011-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "新宿",
+      "direction": "番線優先",
+      "platform": "12",
+      "file": "ikst016-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "阿佐ケ谷",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "tanabata_d.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "阿佐ケ谷",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "tanabata_c.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "三鷹",
+      "direction": "上り",
+      "platform": 6,
+      "file": "medaka_e.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "三鷹",
+      "direction": "下り",
+      "platform": 4,
+      "file": "medaka_f.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "三鷹",
+      "direction": "番線優先",
+      "platform": "3",
+      "file": "medaka_b.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "三鷹",
+      "direction": "番線優先",
+      "platform": "4",
+      "file": "medaka_f.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "三鷹",
+      "direction": "番線優先",
+      "platform": "5",
+      "file": "medaka_a.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "三鷹",
+      "direction": "番線優先",
+      "platform": "6",
+      "file": "medaka_e.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "武蔵小金井",
+      "direction": "上り",
+      "platform": 4,
+      "file": "ikst016-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "武蔵小金井",
+      "direction": "下り",
+      "platform": 1,
+      "file": "sakurasakura_a.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "武蔵小金井",
+      "direction": "番線優先",
+      "platform": "1",
+      "file": "sakurasakura_a.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "武蔵小金井",
+      "direction": "番線優先",
+      "platform": "2",
+      "file": "sakurasakura_b.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "武蔵小金井",
+      "direction": "番線優先",
+      "platform": "3",
+      "file": "ikst016-04.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "武蔵小金井",
+      "direction": "番線優先",
+      "platform": "4",
+      "file": "ikst016-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "国分寺",
+      "direction": "上り",
+      "platform": 3,
+      "file": "denshagokko_d.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "国分寺",
+      "direction": "下り",
+      "platform": 2,
+      "file": "denshagokko_b.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "国分寺",
+      "direction": "番線優先",
+      "platform": "1",
+      "file": "denshagokko_a.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "国分寺",
+      "direction": "番線優先",
+      "platform": "2",
+      "file": "denshagokko_b.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "国分寺",
+      "direction": "番線優先",
+      "platform": "3",
+      "file": "denshagokko_d.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "国分寺",
+      "direction": "番線優先",
+      "platform": "4",
+      "file": "denshagokko_c.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "西国分寺",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ichibanboshi_a.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "西国分寺",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ichibanboshi_b.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "豊田",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "takibi_a.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "豊田",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "takibi_b.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "八王子",
+      "direction": "上り",
+      "platform": 2,
+      "file": "yuuyake_b.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "八王子",
+      "direction": "下り",
+      "platform": 4,
+      "file": "yuuyake_a.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "八王子",
+      "direction": "番線優先",
+      "platform": "2",
+      "file": "yuuyake_b.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "八王子",
+      "direction": "番線優先",
+      "platform": "3",
+      "file": "yuuyake_d.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "八王子",
+      "direction": "番線優先",
+      "platform": "4",
+      "file": "yuuyake_a.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "高尾",
+      "direction": "上り",
+      "platform": 1,
+      "file": "ikst016-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "高尾",
+      "direction": "下り",
+      "platform": 4,
+      "file": "ikst012-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "高尾",
+      "direction": "番線優先",
+      "platform": "1",
+      "file": "ikst016-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "高尾",
+      "direction": "番線優先",
+      "platform": "2",
+      "file": "ikst012-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "高尾",
+      "direction": "番線優先",
+      "platform": "3",
+      "file": "ikst016-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "高尾",
+      "direction": "番線優先",
+      "platform": "4",
+      "file": "ikst012-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "相模湖",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "相模湖",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "相模湖",
+      "direction": "番線優先",
+      "platform": "1",
+      "file": "ikst012-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "相模湖",
+      "direction": "番線優先",
+      "platform": "2",
+      "file": "ikst012-08.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "相模湖",
+      "direction": "番線優先",
+      "platform": "3",
+      "file": "ikst012-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "藤野",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "藤野",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "上野原",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "上野原",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "四方津",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "四方津",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "梁川",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "梁川",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "鳥沢",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "鳥沢",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "猿橋",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "猿橋",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "大月",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "大月",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "大月",
+      "direction": "番線優先",
+      "platform": "3",
+      "file": "ikst012-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "大月",
+      "direction": "番線優先",
+      "platform": "4",
+      "file": "ikst012-03.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "大月",
+      "direction": "番線優先",
+      "platform": "5",
+      "file": "ikst012-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "初狩",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "初狩",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "笹子",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "笹子",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "甲斐大和",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "甲斐大和",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "勝沼ぶどう郷",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "勝沼ぶどう郷",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "塩山",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "塩山",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "塩山",
+      "direction": "番線優先",
+      "platform": "1",
+      "file": "ikst012-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "塩山",
+      "direction": "番線優先",
+      "platform": "2",
+      "file": "ikst012-04.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "塩山",
+      "direction": "番線優先",
+      "platform": "3",
+      "file": "ikst012-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "東山梨",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "東山梨",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "山梨市",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "山梨市",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "山梨市",
+      "direction": "番線優先",
+      "platform": "1",
+      "file": "ikst012-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "山梨市",
+      "direction": "番線優先",
+      "platform": "2",
+      "file": "ikst012-08.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "山梨市",
+      "direction": "番線優先",
+      "platform": "3",
+      "file": "ikst012-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "春日居町",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "春日居町",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "酒折",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "酒折",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "竜王",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "竜王",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "竜王",
+      "direction": "番線優先",
+      "platform": "1",
+      "file": "ikst012-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "竜王",
+      "direction": "番線優先",
+      "platform": "2",
+      "file": "ikst012-04.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "竜王",
+      "direction": "番線優先",
+      "platform": "3",
+      "file": "ikst012-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "塩崎",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "塩崎",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "韮崎",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "韮崎",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "新府",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "新府",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "穴山",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "穴山",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "日野春",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "日野春",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "長坂",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "長坂",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "小淵沢",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "小淵沢",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst012-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "石和温泉",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "",
+      "status": "武田節 B",
+      "embedded": false
+    },
+    {
+      "station": "石和温泉",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "takedabushi_a.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "甲府",
+      "direction": "上り",
+      "platform": 2,
+      "file": "ikst012-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "甲府",
+      "direction": "下り",
+      "platform": 1,
+      "file": "ikst012-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "甲府",
+      "direction": "番線優先",
+      "platform": "1",
+      "file": "ikst012-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "甲府",
+      "direction": "番線優先",
+      "platform": "2",
+      "file": "ikst012-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "甲府",
+      "direction": "番線優先",
+      "platform": "3",
+      "file": "ikst012-03.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "富士見",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "kanno_bell_2.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "富士見",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "kanno_bell_2.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "上諏訪",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "kanno_bell.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "上諏訪",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "kanno_bell.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "岡谷",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "kanno_bell.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "岡谷",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "kanno_bell.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "村井",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "kanno_bell.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "村井",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "kanno_bell.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "南松本",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "kanno_bell.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "南松本",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "kanno_bell.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "南小谷",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "kanno_bell.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "南小谷",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "kanno_bell.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "茅野",
+      "direction": "上り",
+      "platform": 1,
+      "file": "nagano4_p1.mp3",
+      "status": "対応済み",
+      "embedded": true
+    },
+    {
+      "station": "茅野",
+      "direction": "下り",
+      "platform": 2,
+      "file": "nagano4_p2.mp3",
+      "status": "対応済み",
+      "embedded": true
+    },
+    {
+      "station": "茅野",
+      "direction": "番線優先",
+      "platform": "1",
+      "file": "nagano4_p1.mp3",
+      "status": "対応済み",
+      "embedded": true
+    },
+    {
+      "station": "茅野",
+      "direction": "番線優先",
+      "platform": "2",
+      "file": "nagano4_p2.mp3",
+      "status": "対応済み",
+      "embedded": true
+    },
+    {
+      "station": "茅野",
+      "direction": "番線優先",
+      "platform": "3",
+      "file": "nagano4_p3.mp3",
+      "status": "対応済み",
+      "embedded": true
+    },
+    {
+      "station": "下諏訪",
+      "direction": "上り",
+      "platform": 1,
+      "file": "nagano1_p1.mp3",
+      "status": "対応済み",
+      "embedded": true
+    },
+    {
+      "station": "下諏訪",
+      "direction": "下り",
+      "platform": 2,
+      "file": "nagano1_p2.mp3",
+      "status": "対応済み",
+      "embedded": true
+    },
+    {
+      "station": "下諏訪",
+      "direction": "番線優先",
+      "platform": "1",
+      "file": "nagano1_p1.mp3",
+      "status": "対応済み",
+      "embedded": true
+    },
+    {
+      "station": "下諏訪",
+      "direction": "番線優先",
+      "platform": "2",
+      "file": "nagano1_p2.mp3",
+      "status": "対応済み",
+      "embedded": true
+    },
+    {
+      "station": "塩尻",
+      "direction": "上り",
+      "platform": 1,
+      "file": "ikst012-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "塩尻",
+      "direction": "下り",
+      "platform": 2,
+      "file": "syutoken39-1.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "塩尻",
+      "direction": "番線優先",
+      "platform": "1",
+      "file": "ikst012-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "塩尻",
+      "direction": "番線優先",
+      "platform": "2",
+      "file": "syutoken39-1.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "塩尻",
+      "direction": "番線優先",
+      "platform": "3",
+      "file": "ikst012-shiojiri.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "塩尻",
+      "direction": "番線優先",
+      "platform": "6",
+      "file": "syutoken39-5.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "松本",
+      "direction": "上り",
+      "platform": 1,
+      "file": "ikst012-matsumoto.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "松本",
+      "direction": "下り",
+      "platform": 3,
+      "file": "syutoken39-1.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "松本",
+      "direction": "番線優先",
+      "platform": "1",
+      "file": "ikst012-matsumoto.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "松本",
+      "direction": "番線優先",
+      "platform": "2",
+      "file": "syutoken39.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "松本",
+      "direction": "番線優先",
+      "platform": "3",
+      "file": "syutoken39-1.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "松本",
+      "direction": "番線優先",
+      "platform": "4",
+      "file": "syutoken39-2.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "松本",
+      "direction": "番線優先",
+      "platform": "5",
+      "file": "syutoken39-3.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "松本",
+      "direction": "番線優先",
+      "platform": "6",
+      "file": "syutoken40.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "篠ノ井",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "watercrown.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "篠ノ井",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "watercrown.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "今井",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst026-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "今井",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst026-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "長野",
+      "direction": "上り",
+      "platform": 3,
+      "file": "old_music_box.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "長野",
+      "direction": "下り",
+      "platform": 4,
+      "file": "spring_boxes.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "長野",
+      "direction": "番線優先",
+      "platform": "3",
+      "file": "old_music_box.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "長野",
+      "direction": "番線優先",
+      "platform": "4",
+      "file": "spring_boxes.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "広丘",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "bell(tokyu).mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "広丘",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "bell(tokyu).mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "平田",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "bell(tokyu).mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "平田",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "bell(tokyu).mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "すずらんの里",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "bell(tokyu).mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "すずらんの里",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "bell(tokyu).mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "川中島",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "bell(tokyu).mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "川中島",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "bell(tokyu).mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "安茂里",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "bell(tokyu).mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "安茂里",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "bell(tokyu).mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "豊科",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "bell(tokyu).mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "豊科",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "bell(tokyu).mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "穂高",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "bell(tokyu).mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "穂高",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "bell(tokyu).mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "信濃大町",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "bell(tokyu).mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "信濃大町",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "bell(tokyu).mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "白馬",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "bell(tokyu).mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "白馬",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "bell(tokyu).mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "信濃森上",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "bell(tokyu).mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "信濃森上",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "bell(tokyu).mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "明科",
+      "direction": "未対応",
+      "platform": "",
+      "file": "",
+      "status": "音源未確認：長野2番",
+      "embedded": false
+    },
+    {
+      "station": "石和温泉",
+      "direction": "未対応",
+      "platform": "",
+      "file": "",
+      "status": "音源未確認：武田節 B（上り）",
+      "embedded": false
+    },
+    {
+      "station": "塩尻",
+      "direction": "未対応",
+      "platform": "",
+      "file": "",
+      "status": "音源未確認：首都圏39-4番（4番線）",
+      "embedded": false
+    }
+  ]
+}

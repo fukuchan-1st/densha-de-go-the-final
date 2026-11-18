@@ -20,7 +20,7 @@ export const MAX_STOP_CORRECTION_M=5;
 export function correctStoppedOverrun(state,target,blueTolerance=3){
  const error=state.s-target;
  if(!Number.isFinite(state.s)||!Number.isFinite(target)||!Number.isFinite(state.v)||state.doors||state.finished||Math.abs(state.v)>STOPPED_SPEED||error<=blueTolerance+1e-9||error>blueTolerance+2+1e-9)return null;
- Object.assign(state,{s:target,v:0,acceleration:0,stopWait:0,assistBraking:false,correctedStopError:error});
+ Object.assign(state,{s:target,v:0,acceleration:0,stopWait:0,assistBraking:false,correctedStopError:error,correctedStopTarget:target});
  return error;
 }
 
@@ -47,4 +47,12 @@ export function advanceDoorSequence(state,target,dt){
  if(state.doorPhase==='announcement'&&state.announcementDone){state.doorPhase='closing';return 'close';}
  if(state.doorPhase==='closing'&&state.doorCloseDone)return 'closed';
  return null;
+}
+
+// Latch the real stopped position before any 0 cm recovery moves the train.
+export function detectStoppedOverrun(state,target,blueTolerance=3){
+ const error=state.s-target;
+ if(state.finished||state.doors||!Number.isFinite(error)||!Number.isFinite(state.v)||Math.abs(state.v)>STOPPED_SPEED||error<=blueTolerance+1e-9)return null;
+ if(state.stoppedOverrun?.target===target)return null;
+ state.stoppedOverrun={target,error};return state.stoppedOverrun;
 }

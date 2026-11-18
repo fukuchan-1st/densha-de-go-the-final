@@ -1,7 +1,8 @@
+import {stationDepartureCue} from './station-broadcast.js?v=91';
 import {TrainPassbyAudio} from './train-passby-audio.js?v=85';
 import {timingVoiceRefs,timingPreloadRefs,restrictionVoiceRefs} from './station-timing.js?v=84';
 import {stationCueRefs,stationVoiceBank} from './station-voice.js?v=84';
-import {createMixGains,voiceCategory} from './audio-mix.js?v=keys61fix';
+import {createMixGains,voiceCategory} from './audio-mix.js?v=91';
 import {interpolateColumn} from './final-vehicle.js?v=85';
 import {runPitch} from './assets/audio/run-pitch.js';
 import {HeldHorn} from './assets/audio/held-horn.js?v=85';
@@ -90,6 +91,11 @@ export class LocalTrainAudio {
  }
  callDriver(...names){
   return this.queueDriverCalls(names.map(name=>this.driverCallRef(name)));
+ }
+ async playStationDeparture(station,isCurrent=()=>true){
+  const cue=stationDepartureCue(this.driverRoute,station);if(!cue)return false;
+  for(const ref of cue.refs){if(!isCurrent())return false;if(!await this.playRef(ref))return false;}
+  return true;
  }
  callDepartureFrom(stationIndex){
   return this.callRouteCue('departure',stationIndex);

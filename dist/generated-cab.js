@@ -10,7 +10,7 @@ export const generatedCab=new URLSearchParams(location.search).get('cab')==='gen
 export class GeneratedCab {
  static async load(canvas,id){
   const image=new Image();
-  image.src=new URL('./assets/generated-cabs/'+id+'.png',import.meta.url);
+  image.src=new URL('./assets/generated-cabs/'+id+'.webp',import.meta.url);
   await image.decode();
   return new GeneratedCab(canvas,id,image);
  }
