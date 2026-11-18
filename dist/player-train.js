@@ -2,7 +2,7 @@ import {stationDoorMode} from './door-policy.js?v=89';
 import {panoramaAtFront} from './train-formation.js?v=89';
 import {prepareCarDoors,applyCarDoors,platformDoorSide} from './train-doors.js?v=89';
 import {setRailPose} from './rail-pose.js?v=80';
-import {RailfanCamera} from './railfan-camera.js?v=85';
+import {RailfanCamera} from './railfan-camera.js?v=90';
 import {OuterCamera} from './outer-camera.js?v=73';
 import * as T from './assets/vendor/three.module.js';
 import {ImportedTrafficModels} from './opposing-models.js?v=89';

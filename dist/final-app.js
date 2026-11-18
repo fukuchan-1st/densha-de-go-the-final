@@ -1,6 +1,6 @@
 import {updateDoorVisual} from './train-doors.js?v=89';
 import {scheduledBoardingDelay} from './published-schedules.js?v=86';
-import {loadRoadAsset} from './road-assets.js?v=79';
+import {loadRoadAsset} from './road-assets.js?v=90';
 import {CrossingAudio} from './crossings.js?v=85';
 import {VIEW_LABELS,normalizedView,replayViewMode} from './view-modes.js?v=79';
 import {yaganPlanningSpec,yaganBoardingReady,yaganBoardingDelay} from './yagan-timetable.js?v=75';
@@ -20,11 +20,11 @@ import {beginTerminalOpening,advanceTerminalOpening} from './terminal-arrival.js
 import {vehiclePhoto} from './vehicle-photos.js?v=88';
 import {mountTrainDetails} from './train-details.js?v=85';
 import {mountWheelPicker} from './wheel-picker.js?v=85';
-import {routePlanningSpec,mountScoring,checkpointMarks,scoringStations,buildScoreTimetable,resolveScoreSchedule,scoreHazards,hornMarks,currentScoreRestriction,signalRestriction} from './scoring.js?v=86';
+import {routePlanningSpec,mountScoring,checkpointMarks,scoringStations,buildScoreTimetable,resolveScoreSchedule,scoreHazards,hornMarks,currentScoreRestriction,signalRestriction} from './scoring.js?v=90';
 import {mountDrivingOverlay} from './driving-overlay.js?v=72';import {mountLookahead,changesFromSections,stationMarks} from './lookahead.js?v=evaluation59';
-import {serviceChoices,makeServiceRoute} from './train-selection.js?v=89';
+import {serviceChoices,makeServiceRoute} from './train-selection.js?v=90';
 import {GeneratedCab,generatedCab} from './generated-cab.js';
-import {FinalWorld} from './final-world.js?v=89';
+import {FinalWorld} from './final-world.js?v=90';
 import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=82';
 import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=88';
 import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,routeLimitAt,stopPosition,finishStop,beginDoorClosing,isDoorClosing,takeDepartureCall} from './final-model.js?v=72';

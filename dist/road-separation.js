@@ -15,24 +15,20 @@ export class RoadSeparation{
  nearest(x,z){let best={distance:Infinity};const gx=Math.floor(x/100),gz=Math.floor(z/100);for(let a=gx-1;a<=gx+1;a++)for(let b=gz-1;b<=gz+1;b++)for(const i of this.grid.get(a+':'+b)??[]){const rail=this.segments[i],dx=rail.b.x-rail.a.x,dz=rail.b.z-rail.a.z,f=clamp(((x-rail.a.x)*dx+(z-rail.a.z)*dz)/Math.max(.001,dx*dx+dz*dz)),distance=Math.hypot(x-rail.a.x-f*dx,z-rail.a.z-f*dz);if(distance<best.distance)best={distance,s:rail.s+f*20,y:rail.a.y+(rail.b.y-rail.a.y)*f,x:rail.a.x+f*dx,z:rail.a.z+f*dz,dx,dz};}return best;}
  separateParallel(points,width=6){
   return points.map((original,i)=>{let p=[...original];const a=points[Math.max(0,i-1)],b=points[Math.min(points.length-1,i+1)],dx=b[0]-a[0],dz=-(b[1]-a[1]);
-   for(let step=0;step<8;step++){const rail=this.nearest(p[0],-p[1]);if(!Number.isFinite(rail.x))break;const parallel=Math.abs(dx*rail.dx+dz*rail.dz)/Math.max(.001,Math.hypot(dx,dz)*Math.hypot(rail.dx,rail.dz)),earth=(this.world.route??this.world.roadRailRoute)?.roadUnderpasses?.length?(this.world.deckHeight?.(rail.s)??0)*1.6:0,clearance=width/2+(earth?3.6:2.8)+earth;if(parallel<.85||rail.distance>=clearance-.001)break;
+   for(let step=0;step<8;step++){const rail=this.nearest(p[0],-p[1]);if(!Number.isFinite(rail.x))break;const parallel=Math.abs(dx*rail.dx+dz*rail.dz)/Math.max(.001,Math.hypot(dx,dz)*Math.hypot(rail.dx,rail.dz)),clearance=width/2+2.8;if(parallel<.85||rail.distance>=clearance-.001)break;
     const n=Math.hypot(rail.dx,rail.dz)||1,nx=-rail.dz/n,nz=rail.dx/n,side=Math.sign((p[0]-rail.x)*nx+(-p[1]-rail.z)*nz)||1;p=[p[0]+nx*side*(clearance-rail.distance),p[1]-nz*side*(clearance-rail.distance)];
    }return p;
   });
  }
- profile(row,path,crossings){
-  const world=this.world,terrain=world.terrainHeightAt?.(row.s)??(world.point?.(row.s)??world.frame(row.s).p).y;
-  // Mapped roads stay on the ground. Rail/road intersections are handled by
-  // the rail embankment, rather than lifting long stretches of parallel road.
-  const bridge=!!row.bridge&&!!row.explicitRoadBridge;
-  const base=terrain+(bridge?6:-.1),spans=[];
-  // Preserve working level crossings when a nearby underpass raises the railway.
-  // Only the short crossing approach climbs; parallel roads remain at ground level.
-  for(const c of crossings??[]){const cs=c.sOrigin??(c.sStart+c.sEnd)/2,height=world.deckHeight?.(cs)??0;if(height<.1||!path.points)continue;
-   const f=world.frame(cs,world.driveOffset?.(cs)??0).p;let best={distance:Infinity};
-   for(let i=1;i<path.points.length;i++){const a=path.points[i-1],b=path.points[i],dx=b[0]-a[0],dz=b[1]-a[1],t=clamp(((f.x-a[0])*dx+(-f.z-a[1])*dz)/Math.max(.001,dx*dx+dz*dz)),distance=Math.hypot(f.x-a[0]-t*dx,-f.z-a[1]-t*dz);if(distance<best.distance)best={distance,along:path.distances[i-1]+t*(path.distances[i]-path.distances[i-1]),sine:Math.abs(dx)/Math.max(.001,Math.hypot(dx,dz))};}
-   if(best.distance<(row.width??6)/2+1)spans.push({start:best.along-14,end:best.along+14,height:f.y+(world.frameIncludesDeck?0:height)+.06});
+ profile(row,path,crossings){const world=this.world,terrain=(world.point?.(row.s)??world.frame(row.s).p).y,base=terrain+(row.bridge&&(world.deckHeight?.(row.s)??0)<1.3?6:-.1),spans=[];
+  if(!path.points?.length)return {base,terrain,spans,length:path.length};
+  let i=1;for(let d=0;d<=path.length;d+=5){while(i<path.distances.length-1&&path.distances[i]<d)i++;const a=path.points[i-1],b=path.points[i],f=clamp((d-path.distances[i-1])/Math.max(.001,path.distances[i]-path.distances[i-1])),x=a[0]+(b[0]-a[0])*f,z=-(a[1]+(b[1]-a[1])*f),rail=this.nearest(x,z);
+   if(rail.distance>(row.width??6)/2+2.1||rail.y-base>=3.8)continue;
+   if(crossings.some(c=>Math.abs((c.sOrigin??(c.sStart+c.sEnd)/2)-rail.s)<22))continue;
+   // Carry the road above the train and overhead contact wire. Short gaps stay
+   // on one continuous deck; the approaches ease into the ground smoothly.
+   spans.push({start:d-10,end:d+10,height:Math.max(base,rail.y+8)});
   }
-  return {base,terrain,spans,length:path.length};
+  return {base,terrain,spans:mergeRoadSpans(spans),length:path.length};
  }
 }

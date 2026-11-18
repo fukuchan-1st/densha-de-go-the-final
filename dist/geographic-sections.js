@@ -15,7 +15,7 @@ export function releaseMatsumotoExpressLimit(route,vehicle,service){
  if(!(['e353','383','681'].includes(vehicle)||(service??'').includes('特急')))return route;
  const stations=route.sceneryStations??route.stations??[],a=stations.find(x=>x.name==='塩尻'),b=stations.find(x=>x.name==='松本');if(!a||!b)return route;
  const start=Math.min(a.s,b.s),end=Math.max(a.s,b.s),limits=[];
- for(const row of route.limits??[]){if(row.kmh!==110||row.sEnd<=start||row.sStart>=end){limits.push(row);continue;}if(row.sStart<start)limits.push({...row,sEnd:start});if(row.sEnd>end)limits.push({...row,sStart:end});}
+ for(const row of route.limits??[]){if(![110,120].includes(row.kmh)||row.sEnd<=start||row.sStart>=end){limits.push(row);continue;}if(row.sStart<start)limits.push({...row,sEnd:start});if(row.sEnd>end)limits.push({...row,sStart:end});}
  return {...route,limits,unrestrictedSections:[...(route.unrestrictedSections??[]),{sStart:start,sEnd:end}]};
 }
 

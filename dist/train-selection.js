@@ -1,12 +1,12 @@
 import {applyPublishedSchedule} from './published-schedules.js?v=86';
-import {releaseMatsumotoExpressLimit} from './geographic-sections.js?v=82';
+import {releaseMatsumotoExpressLimit} from './geographic-sections.js?v=90';
 import {prepareLeftTraffic} from './route-traffic.js?v=85';
 import {selectTokaidoServiceTrack} from './tokaido-service-track.js?v=services63';
 import {serviceChoices,STOP_PATTERNS} from './service-catalog.js?v=89';
 import {sliceRoute,reverseRoute} from './service-routes.js?v=85';
 export {serviceChoices};
 function makeDefaultServiceRoute(route,vehicle,service){
- route=selectTokaidoServiceTrack(route,service);
+ route={...selectTokaidoServiceTrack(route,service),vehicle,service};
  route={...route,sceneryStations:route.sceneryStations??route.stations,limits:route.limitsByVehicle?.[vehicle]??route.limits};
  route=releaseMatsumotoExpressLimit(route,vehicle,service);
  // Yagan service: 70 km/h across ordinary sections; keep lower station/point limits.

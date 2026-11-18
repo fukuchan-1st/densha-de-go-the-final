@@ -1,3 +1,4 @@
+import {stationPlatforms,platformBoundsAt,stoppingStationSpot} from './station-space.js?v=90';
 import {tunnelFilmingPlan,tunnelRanges,filmingTracks} from './railfan-tunnel.js?v=81';
 import * as T from './assets/vendor/three.module.js';
 import {crossingCenter} from './crossings.js?v=85';
@@ -16,24 +17,37 @@ export class RailfanCamera{
  setNear(near){if(this.world.camera.near!==near){this.world.camera.near=near;this.world.camera.updateProjectionMatrix();}}
  nextSpot(s){const nearby=this.spots.find(x=>x.s>s+65&&x.s<s+800);if(nearby)return nearby;const tunnels=tunnelRanges(this.world);for(const distance of[100,60,160,30,-50,-100]){const at=Math.max(5,Math.min(this.world.length-5,s+distance));if(!tunnels.some(t=>at>t.sStart-20&&at<t.sEnd+20))return {s:at,kind:'line',name:'沿線'};}return {s:Math.max(5,Math.min(this.world.length-5,s)),kind:'line',name:'沿線'};}
  prepare(s){
-  const length=this.world.playerTrain?.count*20||40,plan=tunnelFilmingPlan(this.world,s,length,this.tunnelPlan);
+  const length=this.world.playerTrain?.count*20||40,station=stoppingStationSpot(this.world,s,length);
+  if(station){if(!this.spot?.stopping||this.spot.station.s!==station.station.s){this.spot=station;this.pendingOutdoor=true;this.position=null;this.rotation=null;this.passAt=null;}this.tunnelPlan=null;this.setNear(this.normalNear);return this.spot.s;}
+  if(this.spot?.stopping){this.spot=null;this.position=null;this.pendingOutdoor=true;}
+  const plan=tunnelFilmingPlan(this.world,s,length,this.tunnelPlan);
   if(plan){const changed=this.tunnelPlan?.tunnelKey!==plan.tunnelKey||this.tunnelPlan?.s!==plan.s||this.tunnelPlan?.double!==plan.double;this.tunnelPlan=plan;this.spot=plan;this.pendingOutdoor=false;if(changed){this.rotation=null;this.passAt=null;this.elapsed=0;}this.position=this.world.frame(plan.s,plan.offset).p.clone();this.position.y+=(this.world.deckHeight?.(plan.s)??0)+plan.eye;this.sideDistance=Math.abs(plan.offset-(this.world.driveOffset?.(plan.s)??0));this.setNear(plan.double?.1:.04);return plan.s;}
   if(this.tunnelPlan){this.reset();}
   const seek=this.lastS!=null&&(s<this.lastS-10||Math.abs(s-this.lastS)>200);if(!this.spot||seek||trainHasCleared(s,this.spot.s,length)){this.spot=this.nextSpot(s);this.pendingOutdoor=true;}
   this.setNear(this.normalNear);return this.spot.s;
  }
- choose(s,length){this.spot=this.nextSpot(s);this.passAt=null;this.position=null;this.rotation=null;this.elapsed=0;this.pendingOutdoor=false;
-  const {world,spot}=this,f=this.frame(spot.s),drive=world.driveOffset?.(spot.s)??0;let offsets=[drive-10,drive+10,drive-14,drive+14];let platform=false;
-  const layout=spot.station&&world.route?.stationLayouts?.[spot.station.name];if(layout?.platforms?.length){const edge=layout.platforms[0].edges?.[0];if(edge){offsets=[(edge[1]+edge[2])/2,...offsets];platform=true;}}
-  const rails=filmingTracks(world,spot.s);
-  offsets=[...(platform?[offsets[0]]:[]),Math.min(...rails)-5.5,Math.max(...rails)+5.5,...offsets];
+ choose(s,length){this.spot??=this.nextSpot(s);this.passAt=null;this.position=null;this.rotation=null;this.elapsed=0;this.pendingOutdoor=false;
+  const {world,spot}=this,drive=world.driveOffset?.(spot.s)??0,rails=filmingTracks(world,spot.s),candidates=[];
+  if(spot.station){
+   const platforms=stationPlatforms(world,spot.station).sort((a,b)=>Number(b.platform.boarding??false)-Number(a.platform.boarding??false));
+   for(const item of platforms)for(const shift of[0,-12,12,-24,24]){
+    const at=Math.max(item.start+1.5,Math.min(item.end-1.5,spot.s+shift)),[left,right]=platformBoundsAt(world,item,at);if(right-left<.8)continue;
+    for(const x of[(left+right)/2,left+.5,right-.5])if(x>left+.3&&x<right-.3)candidates.push({s:at,x,height:1+(item.platform.height??0),platform:true});
+   }
+  }
+  if(!spot.stopping||!candidates.length)for(const x of[Math.min(...rails)-5.5,Math.max(...rails)+5.5,drive-10,drive+10,drive-14,drive+14])candidates.push({s:spot.s,x,height:0,platform:false});
   const target=this.frame(spot.s-10).p.clone();target.y+=2;
   world.scene.updateMatrixWorld(true);const obstacles=world.scene.children.filter(x=>x!==this.train&&x!==world.camera&&x.visible),grounds=[];world.scene.traverse(o=>{if(o.isMesh&&['textured-grass','textured-forest'].includes(o.material?.name))grounds.push(o);});
-  for(let i=0;i<offsets.length;i++){
-   const x=offsets[i];if(rails.some(r=>Math.abs(r-x)<3.3))continue;const p=world.frame(spot.s,x).p.clone();let floor=p.y+(platform&&i===0?1+(world.deckHeight?.(spot.s)??0):0);this.ray.set(new T.Vector3(p.x,p.y+30,p.z),new T.Vector3(0,-1,0));this.ray.near=0;this.ray.far=100;const ground=this.ray.intersectObjects(grounds,false)[0];if(ground)floor=Math.max(floor,ground.point.y);p.y=floor+RAILFAN_EYE_HEIGHT;
-   const delta=target.clone().sub(p);this.ray.set(p,delta.clone().normalize());this.ray.near=.2;this.ray.far=Math.max(.3,delta.length()-.5);const blocked=this.ray.intersectObjects(obstacles,true).filter(h=>!grounds.includes(h.object));if(!blocked.length||i===offsets.length-1){this.position=p;this.sideDistance=Math.abs(x-drive);break;}
+  let safe=null;
+  for(const candidate of candidates){const {x,s:at,height,platform}=candidate;if(filmingTracks(world,at).some(r=>Math.abs(r-x)<(platform?1.8:3.3)))continue;
+   const p=world.frame(at,x).p.clone();let floor=p.y+(world.frameIncludesDeck?0:world.deckHeight?.(at)??0)+height;
+   if(!platform){this.ray.set(new T.Vector3(p.x,floor+30,p.z),new T.Vector3(0,-1,0));this.ray.near=0;this.ray.far=100;const ground=this.ray.intersectObjects(grounds,false)[0];if(ground)floor=Math.max(floor,ground.point.y);}
+   p.y=floor+RAILFAN_EYE_HEIGHT;safe??={p,x,at};
+   const delta=target.clone().sub(p);this.ray.set(p,delta.clone().normalize());this.ray.near=.2;this.ray.far=Math.max(.3,delta.length()-.5);
+   if(!this.ray.intersectObjects(obstacles,true).some(h=>!grounds.includes(h.object))){safe={p,x,at};break;}
   }
-  if(!this.position){this.position=world.frame(spot.s,Math.min(...rails)-8).p.clone();this.position.y+=RAILFAN_EYE_HEIGHT;this.sideDistance=8;}
+  if(safe){this.position=safe.p;this.spot={...spot,s:safe.at};this.sideDistance=Math.abs(safe.x-drive);}
+  else{this.position=world.frame(spot.s,Math.min(...rails)-8).p.clone();this.position.y+=(world.deckHeight?.(spot.s)??0)+RAILFAN_EYE_HEIGHT;this.sideDistance=8;}
  }
  update(s,speed,dt,time=0){const length=this.world.playerTrain?.count*20||40;this.prepare(s);if(this.pendingOutdoor||!this.position)this.choose(s,length);this.elapsed+=dt;
 

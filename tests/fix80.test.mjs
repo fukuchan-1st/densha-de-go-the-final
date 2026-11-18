@@ -15,8 +15,8 @@ test('opposing pools match geographical sections in either direction, including 
 });
 function flatWorld(deck=0,crossings=[]){return {length:1000,route:{structures:crossings,neighborTracks:[]},point:s=>new T.Vector3(0,0,-s),frame:(s,x=0)=>({p:new T.Vector3(x,0,-s)}),driveOffset:()=>0,deckHeight:()=>deck};}
 const path={points:[[-120,500],[120,500]],distances:[0,240],length:240};
-test('roads stay on the ground; mapped crossings and existing underpasses remain',()=>{
- const separation=new RoadSeparation(flatWorld()),profile=separation.profile({s:500,width:6},path,[]);assert.equal(profile.spans.length,0);assert.equal(roadElevation(profile,120),-.1);assert.equal(roadElevation(profile,50),roadElevation(profile,110));
+test('ground railway crossings use road bridges; mapped crossings and existing underpasses remain',()=>{
+ const separation=new RoadSeparation(flatWorld()),profile=separation.profile({s:500,width:6},path,[]);assert.ok(profile.spans.length>0);assert.ok(roadElevation(profile,120)>=8);assert.ok(roadElevation(profile,50)<roadElevation(profile,110));
  const elevated=new RoadSeparation(flatWorld(4.8));assert.equal(elevated.profile({s:500,width:6},path,[]).spans.length,0);
  const crossings=[{sOrigin:500}];assert.equal(separation.profile({s:500,width:6},path,crossings).spans.length,0);
  assert.deepEqual(mergeRoadSpans([{start:0,end:20,height:8},{start:119,end:140,height:9}]),[{start:0,end:140,height:9}]);assert.equal(mergeRoadSpans([{start:0,end:20,height:8},{start:120,end:140,height:9}]).length,2);

@@ -1,15 +1,14 @@
 import {StationCharacters} from './station-characters.js?v=88';
-import {prepareRailUnderpasses,addRailEmbankment} from './rail-embankment.js?v=88';
 import {sceneryDensity} from './scenery-profile.js?v=84';
 import {platformExtent} from './station-platform-length.js?v=87b';
 import {BasinScenery,addBasinFields} from './basin-scenery.js?v=84';
 import {basinDensity,basinAnchors,basinTerrainAreas,basinTerrainAt} from './basin-profile.js?v=84';
 import {TohoLandmarks} from './toho-landmarks.js?v=84';
-import {isToho,villageAt,woodMaterial,addTohoHouses} from './toho-scenery.js?v=84';
+import {isToho,villageAt,woodMaterial,addTohoHouses} from './toho-scenery.js?v=90';
 import {filmingChunkIndices} from './railfan-tunnel.js?v=81';
-import {chuoScenery,mountainArea} from './geographic-sections.js?v=84';
+import {chuoScenery,mountainArea} from './geographic-sections.js?v=90';
 import {prepareUrbanViaduct} from './urban-viaduct.js?v=79';
-import {RoadScenery} from './road-scenery.js?v=88';
+import {RoadScenery} from './road-scenery.js?v=90';
 import {BallastDetail} from './ballast-detail.js?v=88';
 import {whiteRailPost,tactileMaterial,safePlatformBounds,platformStripClear} from './platform-details.js?v=79';
 import {LevelCrossings} from './crossings.js?v=88';
@@ -33,7 +32,7 @@ const clamp=T.MathUtils.clamp;
 // Original streamed scenery. Track coordinates come from the route JSON; buildings and platforms are approximate.
 export class FinalWorld {
  constructor(container,route,{quality='standard',drawDistance=1500}={}){
-  route=prepareRailUnderpasses(prepareUrbanViaduct(prepareLeftTraffic(prepareCorridorScenery(route))));
+  route=prepareUrbanViaduct(prepareLeftTraffic(prepareCorridorScenery(route)));
   this.quality=quality;this.route=route;this.sceneryStations=route.sceneryStations??route.stations;this.points=route.points;this.length=route.stations.at(-1).s;this.chunks=new Map();this.suspension=new CabSuspension();this.materials=new Map();this.rural=['toho','toho-village','toho-center','tatsuno','tatsuno-nagano','yagan','shinonoi','oito','chuo-shinshu','chuo-kofu','chuo-system','ome','itsukaichi','chuo-itsukaichi','ome-okutama','chuo-ome','chuo-oito','suwa-nagano','chuo-extended','shinonoi-extended','chuo'].includes(route.id);
   this.chuoCorridor=['chuo','chuo-extended','chuo-ome','chuo-oito'].includes(route.id);
   this.mountainStart=this.chuoCorridor?(this.sceneryStations.find(st=>st.name==='高尾')?.s??Infinity):-Infinity;
@@ -168,7 +167,6 @@ export class FinalWorld {
    const offsets=tracks.filter(rail=>s>=rail.start&&s<=rail.end).map(rail=>rail.offset(s));
    return [Math.min(...offsets),Math.max(...offsets)];
   };
-  addRailEmbankment(this,group,start,end,trackEnvelope);
   const structures=(this.route.structures??[]).filter(item=>item.sStart<end&&item.sEnd>start);
   let seed=(index*1297+this.route.id.length*701)>>>0;
   const random=()=>{seed=(1664525*seed+1013904223)>>>0;return seed/4294967296;};
@@ -183,7 +181,6 @@ export class FinalWorld {
    for(let s=Math.ceil(start/28)*28;s<end;s+=28){
     const height=this.deckHeight(s);
     if(height<1.3||this.route.roadsBelow?.some(road=>Math.abs(road.s-s)<road.width))continue;
-    if(this.route.roadUnderpasses?.some(span=>span.passages.some(p=>s>p.start-2&&s<p.end+2)))continue;
     const [min,max]=trackEnvelope(s);
     for(const x of [min-1.8,max+1.8])this.cube(group,s,x,0,1.15,height-.8,1.3,'#a5a69b');
    }
@@ -244,7 +241,7 @@ export class FinalWorld {
    if(urban)for(const row of(this.quality==='light'?[1]:[1,2])){if(inBasin&&random()>.65)continue;const xx=edge+side*(row===1?43+random()*12:77+random()*18),height=inBasin?7+random()*20:18+random()*(row===1?44:65);const ww=14+random()*13,dd=18+random()*7;if(this.roadScenery.buildingClear(s,xx,ww,dd))buildings.push({s,x:xx,y:0,w:ww,h:height,d:dd});}
    if(inBasin&&!urban)for(const row of [65,100,145]){if(random()>density.building/100)continue;const xx=edge+side*(row+random()*9);if(this.roadScenery.buildingClear(s,xx,w,d)){buildings.push({s,x:xx,y:0,w,h,d});roofs.push({s,x:xx,y:h,w:w+.5,h:.8,d:d+.5});}}
    if(!urban&&!frontageClear)continue;
-   if(!urban){roofs.push({s,x,y:h,w:w+.5,h:this.route.id==='tokaido'?1.7:.3,d:d+.5});if(this.route.id==='tokaido'){const x2=x+side*18;buildings.push({s:s+8,x:x2,y:0,w:w*.9,h:h*.9,d});roofs.push({s:s+8,x:x2,y:h*.9,w:w*.9+.5,h:1.7,d:d+.5});}}
+   if(!urban){roofs.push({s,x,y:h,w:w+.5,h:this.route.id==='tokaido'?1.7:.3,d:d+.5});if(this.route.id==='tokaido'){const x2=x+side*18;if(this.roadScenery.buildingClear(s+8,x2,w*.9+.5,d+.5)){buildings.push({s:s+8,x:x2,y:0,w:w*.9,h:h*.9,d});roofs.push({s:s+8,x:x2,y:h*.9,w:w*.9+.5,h:1.7,d:d+.5});}}}
    if(frontageClear&&this.quality!=='light')for(let y=2.5;y<h-1;y+=3)windows.push({s:s-d/2-.03,x,y,w:w*.65,h:1.1,d:.05});
 
   }

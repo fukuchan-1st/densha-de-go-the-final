@@ -1,3 +1,4 @@
+import {retimeMatsumotoLocals} from './matsumoto-timetable.js?v=90';
 import {resolvePublishedSchedule} from './published-schedules.js?v=86';
 import {routePlanningSpec,operatingBand,operatingCap} from './planning-profile.js?v=82';
 export {routePlanningSpec};
@@ -54,7 +55,7 @@ export function formatScoreTime(value,current=false){const seconds=timeSeconds(v
 
 export function resolveScoreSchedule(route,startS,spec={}){
  spec=routePlanningSpec(route,yaganPlanningSpec(route,osakaPlanningSpec(route,spec)));
- if(route.publishedSchedule)return resolvePublishedSchedule(route,startS,spec,sectionSpeedPlan);
+ if(route.publishedSchedule)return retimeMatsumotoLocals(resolvePublishedSchedule(route,startS,spec,sectionSpeedPlan),route,startS,sectionSpeedPlan);
  const raw=scoringStations(route).map(st=>({...st}));let elapsed=0,carry=0;for(let i=0;i<raw.length;i++){if(i===0){raw[i].time=0;continue;}const plan=sectionSpeedPlan({...raw[i-1],time:elapsed},{...raw[i],time:null},route.limits??[],spec,carry);elapsed=plan.departure+plan.duration;carry=plan.speeds.at(-1);raw[i].time=elapsed;}const sources=[...(route.sceneryStations??[]),...route.stations];
  const sourceAt=s=>sources.filter(st=>Math.abs(st.s-s)<.5).reduce((a,b)=>({...a,...b}),{});
  const anchors=[];let last=-Infinity;
@@ -68,7 +69,7 @@ export function resolveScoreSchedule(route,startS,spec={}){
  if(spec.operatingBands?.length)repairOperatingTimetable(timetable,route.limits??[],spec);
  const source=sourceAt(startS),selected=timetable.find(st=>Math.abs(st.s-startS)<.5),explicit=timeSeconds(source.startTime)??((timeSeconds(source.departure)??NaN)-30);
  const clockStart=selected?.time??(Number.isFinite(explicit)?explicit:map(0));
- timetable.planningSpec=spec;return {clockStart,timetable,planningSpec:spec,anchored:anchors.length>0};
+ timetable.planningSpec=spec;return retimeMatsumotoLocals({clockStart,timetable,planningSpec:spec,anchored:anchors.length>0},route,startS,sectionSpeedPlan);
 }
 
 export function sectionSpeedPlan(a,b,limits,spec={},initialSpeed=0){

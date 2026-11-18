@@ -1,6 +1,6 @@
-import {prepareRailUnderpasses,addRailEmbankment} from './rail-embankment.js?v=88';
+import {stationBuildingClear} from './station-space.js?v=90';
 import {sceneryDensity} from './scenery-profile.js?v=84';
-import {RoadScenery} from './road-scenery.js?v=88';
+import {RoadScenery} from './road-scenery.js?v=90';
 import {BallastDetail} from './ballast-detail.js?v=88';
 import {LevelCrossings} from './crossings.js?v=88';
 import {createBuildingMaterial,buildingVariant,buildingPalette} from './terrain-materials.js?v=79';
@@ -32,14 +32,12 @@ export class RailWorld {
   this.renderer=new T.WebGLRenderer({antialias:quality!=='light',powerPreference:'high-performance'});this.renderer.setPixelRatio(Math.min(devicePixelRatio,quality==='light'?1:1.5));this.renderer.setSize(DISPLAY_WIDTH,DISPLAY_HEIGHT);this.renderer.outputColorSpace=T.SRGBColorSpace;this.renderer.toneMapping=T.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1.18;container.append(this.renderer.domElement);
   this.camera=new T.PerspectiveCamera(60,16/9,.15,2200);
   this.skyLight=new T.HemisphereLight('#e6f0ff','#57583b',1.4);this.scene.add(this.skyLight);const sun=new T.DirectionalLight('#fff0d7',2.2);sun.position.set(-400,600,200);this.scene.add(sun);this.sun=sun;
-  this.roadRailRoute=prepareRailUnderpasses({id:'tohoku',length:this.length,points:this.points.map(([s,x,z])=>[s,x,z,profile.elevationAt(s)]),stations,roads,structures:structures.structures??[],drivingTrack:this.trackLayout.tracks.find(t=>t.id==='player').knots,neighborTracks:this.trackLayout.tracks.filter(t=>t.id!=='player')});this.frameIncludesDeck=true;
   this.traffic=new OpposingTrains(this);this.materials={}; this.box=new T.BoxGeometry(1,1,1); this.build();this.routeStructures=addStructures(this,structures);this.crossings=new LevelCrossings(this);for(const c of structures.structures??[])if(c.kind==='crossing')this.crossings.add(this.scene,c);
   for(const signal of signals)addTrackSignal(T,this,this.scene,signal);
   this.atmosphere=new SceneAtmosphere(this);this.atmosphere.prepare(this.scene);this.ballastDetail=new BallastDetail(this);this.roadScenery=new RoadScenery(this);
   addEventListener('resize',()=>{this.renderer.setSize(DISPLAY_WIDTH,DISPLAY_HEIGHT);this.camera.aspect=16/9;this.camera.updateProjectionMatrix();});
  }
  setQuality(quality){this.atmosphere.setQuality(quality);}
- cube(group,s,x,y,w,h,d,color){const f=this.frame(s,x),m=new T.Mesh(this.box,this.mat(color));m.position.copy(f.p);m.position.y=this.terrainHeightAt(s)+y+h/2;m.rotation.y=f.angle;m.scale.set(w,h,d);m.userData.shadowCaster=true;group.add(m);return m;}
  raw(s){const p=this.points;if(s<=0){const a=p[0],b=p[1],t=s/(b[0]-a[0]);return new T.Vector3(a[1]+(b[1]-a[1])*t,0,-a[2]-(b[2]-a[2])*t);}if(s>=this.length){const a=p.at(-2),b=p.at(-1),t=(s-a[0])/(b[0]-a[0]);return new T.Vector3(a[1]+(b[1]-a[1])*t,0,-a[2]-(b[2]-a[2])*t);}let lo=0,hi=p.length-1;while(hi-lo>1){const m=(lo+hi)>>1;if(p[m][0]<=s)lo=m;else hi=m;}const a=p[lo],b=p[hi],t=(s-a[0])/(b[0]-a[0]);return new T.Vector3(T.MathUtils.lerp(a[1],b[1],t),0,-T.MathUtils.lerp(a[2],b[2],t));}
  horizontalPoint(s){
   const p=this.points;if(s<=0||s>=this.length)return this.raw(s);
@@ -52,19 +50,18 @@ export class RailWorld {
  }
  point(s){const p=this.horizontalPoint(s);p.y=this.profile.elevationAt(s);return p;}
  terrainHeightAt(s){return this.profile.elevationAt(s);}
- deckHeight(s){return this.roadRailRoute?.elevatedTrack?interpolateKnots(this.roadRailRoute.elevatedTrack,s):0;}
- frame(s,offset=0){const p=this.point(s),a=this.point(s-5),b=this.point(s+5),tracks=this.trackLayout.activeAt(s),xs=tracks.map(t=>t.x),inside=offset>=Math.min(...xs)-4&&offset<=Math.max(...xs)+4;if(inside){p.y+=this.deckHeight(s);a.y+=this.deckHeight(s-5);b.y+=this.deckHeight(s+5);}const dir=b.sub(a).normalize(),right=new T.Vector3(-dir.z,0,dir.x).normalize();p.addScaledVector(right,offset);return {p,dir,right,angle:Math.atan2(-dir.x,-dir.z)};}
+ frame(s,offset=0){const p=this.point(s),dir=this.point(s+5).sub(this.point(s-5)).normalize(),right=new T.Vector3(-dir.z,0,dir.x).normalize();p.addScaledVector(right,offset);return {p,dir,right,angle:Math.atan2(-dir.x,-dir.z)};}
  driveOffset(s){return interpolateKnots(this.trackLayout.tracks.find(t=>t.id==='player').knots,s);}
  curvature(s){const a=this.frame(s-20).dir.setY(0).normalize(),b=this.frame(s+20).dir.setY(0).normalize();return Math.atan2(a.x*b.z-a.z*b.x,a.dot(b))/40;}
  mat(color){const id=color.startsWith('facade:')?Number(color.split(':')[2]):null;return this.materials[color]??=(id!==null?createBuildingMaterial(buildingPalette(id,true),true,id):['#bfb6a3','#d1c4a9'].includes(color)?createBuildingMaterial(color,true):new T.MeshStandardMaterial({color,roughness:.9}));}
  mesh(w,h,d,color,s,offset=0,y=0){const f=this.frame(s,offset),m=new T.Mesh(this.box,this.mat(color));m.scale.set(w,h,d);m.userData.shadowCaster=h>.5;m.position.copy(f.p);m.position.y=f.p.y+y+h/2;m.rotation.order='YXZ';m.rotation.y=f.angle;m.rotation.x=Math.asin(f.dir.y);this.scene.add(m);return m;}
  instances(geo,color,items,override=null){const group=new T.Group(),material=override??this.mat(color),o=new T.Object3D();for(let base=0;base<items.length;base+=1200){const part=items.slice(base,base+1200),m=new T.InstancedMesh(geo,material,part.length);part.forEach((a,i)=>{o.position.set(a.x,a.y,a.z);o.rotation.order='YXZ';o.rotation.set(a.pitch??0,a.r??0,0);o.scale.set(a.w,a.h,a.d);o.updateMatrix();m.setMatrixAt(i,o.matrix);});m.computeBoundingSphere();m.userData.shadowCaster=items.some(a=>a.h>.5);group.add(m);}this.scene.add(group);return group;}
- ribbon(offset,width,y,color,kind=null){const pos=[],uv=[],idx=[],tile=kind==='ballast'?3:kind==='ground'?6:5;for(let s=-200,i=0;s<=this.length+400;s+=5,i++){const f=this.frame(s,offset);if(kind==='ground')f.p.y=this.terrainHeightAt(s);for(const a of [-width/2,width/2]){pos.push(f.p.x+f.right.x*a,f.p.y+y,f.p.z+f.right.z*a);uv.push((a+width/2)/tile,s/tile);}if(i>0&&!((kind==='ground'||kind==='ballast')&&this.ranges.groundGaps.some(x=>segmentIntersects(s-5,s,x)))){const k=i*2;idx.push(k-2,k-1,k,k-1,k+1,k);}}const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setIndex(idx);g.computeVertexNormals();const mat=kind?createSurfaceMaterial(kind):new T.MeshStandardMaterial({color,roughness:.95,side:T.DoubleSide});mat.side=T.DoubleSide;this.scene.add(new T.Mesh(g,mat));}
+ ribbon(offset,width,y,color,kind=null){const pos=[],uv=[],idx=[],tile=kind==='ballast'?3:kind==='ground'?6:5;for(let s=-200,i=0;s<=this.length+400;s+=5,i++){const f=this.frame(s,offset);for(const a of [-width/2,width/2]){pos.push(f.p.x+f.right.x*a,f.p.y+y,f.p.z+f.right.z*a);uv.push((a+width/2)/tile,s/tile);}if(i>0&&!((kind==='ground'||kind==='ballast')&&this.ranges.groundGaps.some(x=>segmentIntersects(s-5,s,x)))){const k=i*2;idx.push(k-2,k-1,k,k-1,k+1,k);}}const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setIndex(idx);g.computeVertexNormals();const mat=kind?createSurfaceMaterial(kind):new T.MeshStandardMaterial({color,roughness:.95,side:T.DoubleSide});mat.side=T.DoubleSide;this.scene.add(new T.Mesh(g,mat));}
  build(){
   let seed=701;const rand=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
   const middle=this.point(this.length/2),ground=new T.Mesh(new T.PlaneGeometry(260000,260000),this.mat('#7a8b50'));ground.rotation.x=-Math.PI/2;ground.position.set(middle.x,-25,middle.z);this.scene.add(ground);
   this.ribbon(2,450,-.12,'#76844d','ground');
-  addRailEmbankment(this,this.scene,0,this.length,s=>{const tracks=this.trackLayout.activeAt(s).map(t=>t.x);return [Math.min(...tracks),Math.max(...tracks)];});this.railwayStats=buildRailways(this);addTurnouts(this,this.scene,this.turnouts,this.trackLayout.tracks);
+  this.railwayStats=buildRailways(this);addTurnouts(this,this.scene,this.turnouts,this.trackLayout.tracks);
   const poles=[],arms=[],houses=[],roofs=[],fields=[],wire=[];
   for(let s=-200;s<this.length+350;s+=40){
    if(this.ranges.tunnels.some(x=>segmentIntersects(s,s+40,x,4)))continue;
@@ -76,7 +73,7 @@ export class RailWorld {
   }
   for(const tunnel of this.ranges.tunnels)for(let s=tunnel.sStart;s<tunnel.sEnd;s+=8){const a=this.frame(s).p,b=this.frame(Math.min(s+8,tunnel.sEnd)).p;wire.push(a.x,a.y+4.45,a.z,b.x,b.y+4.45,b.z);}
   this.instances(this.box,'#8c9290',poles);this.instances(this.box,'#656b6a',arms);const wg=new T.BufferGeometry();wg.setAttribute('position',new T.Float32BufferAttribute(wire,3));this.scene.add(new T.LineSegments(wg,new T.LineBasicMaterial({color:'#414c51',transparent:true,opacity:.7})));
-  for(let s=-150;s<this.length+500;s+=55)for(const side of [-1,1]){const urban=sceneryDensity(this.sceneryRoute,s).building/100;if(rand()<urban){const offset=side*((urban>.6?16:35)+rand()*65);if(this.isStructureCorridor(s,offset))continue;const f=this.frame(s,offset),h=3+rand()*(3+urban*10);houses.push({x:f.p.x,y:f.p.y+h/2,z:f.p.z,w:6+rand()*4,h,d:7,r:f.angle});roofs.push({x:f.p.x,y:f.p.y+h+.25,z:f.p.z,w:8,h:.5,d:9,r:f.angle});}}
+  for(let s=-150;s<this.length+500;s+=55)for(const side of [-1,1]){const urban=sceneryDensity(this.sceneryRoute,s).building/100;if(rand()<urban){const offset=side*((urban>.6?16:35)+rand()*65);if(this.isStructureCorridor(s,offset)||!stationBuildingClear(this,s,offset,11,10))continue;const f=this.frame(s,offset),h=3+rand()*(3+urban*10);houses.push({x:f.p.x,y:f.p.y+h/2,z:f.p.z,w:6+rand()*4,h,d:7,r:f.angle});roofs.push({x:f.p.x,y:f.p.y+h+.25,z:f.p.z,w:8,h:.5,d:9,r:f.angle});}}
   for(let variant=0;variant<30;variant++)this.instances(this.box,'facade:house:'+variant,houses.filter(a=>buildingVariant(a.x,a.z)===variant));this.instances(this.box,'#5c625d',roofs);
   addVegetation(this);
   for(let s=-100;s<this.length+400;s+=120)for(const side of [-1,1]){if(this.isStructureCorridor(s,side*65)||sceneryDensity(this.sceneryRoute,s).green<40)continue;const f=this.frame(s,side*65);fields.push({x:f.p.x,y:f.p.y-.04,z:f.p.z,w:85,h:.04,d:100,r:f.angle,pitch:Math.asin(f.dir.y)});}const fieldMat=createSurfaceMaterial('field');fieldMat.map.repeat.set(16,18);this.instances(this.box,'#b3b377',fields,fieldMat);

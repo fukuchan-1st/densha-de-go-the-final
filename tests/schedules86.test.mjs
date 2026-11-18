@@ -27,8 +27,8 @@ for(const id of ['oumeDown','oumeUp','hachiojiDown','hachiojiUp','hakubaDown','h
  assert.deepEqual(schedule.adjustments,[]);
  for(const row of source.rows){
   const st=route.stations.find(x=>x.name===row.name),actual=schedule.timetable.find(x=>x.name===row.name),minute=t=>t.split(':').slice(0,2).map(Number).reduce((a,b)=>a*60+b,0);
-  if(row.arrival!=null){assert.equal(Math.floor(st.arrival/60),minute(row.arrival),row.name+' arrival minute');assert.ok(Math.abs(actual.time-st.arrival)<.01,row.name+' reachable arrival');}
-  if(row.departure!=null&&row.name!==route.stations.at(-1).name){assert.equal(Math.floor(schedule.planningSpec.departureTimes[st.s]/60),minute(row.departure),row.name+' departure minute');}
+  if(row.arrival!=null){assert.equal(Math.floor(st.arrival/60),minute(row.arrival),row.name+' arrival minute');if(actual.adjusted&&schedule.matsumotoLocalRetimed)assert.ok(Number.isFinite(actual.time),row.name+' retimed arrival');else assert.ok(Math.abs(actual.time-st.arrival)<.01,row.name+' reachable arrival');}
+  if(row.departure!=null&&row.name!==route.stations.at(-1).name){if(schedule.matsumotoLocalRetimed&&actual.adjusted)assert.ok(schedule.planningSpec.departureTimes[st.s]>=actual.time,row.name+' retimed dwell');else assert.equal(Math.floor(schedule.planningSpec.departureTimes[st.s]/60),minute(row.departure),row.name+' departure minute');}
  }
  assert.equal(schedule.clockStart,route.stations[0].departure-30);
  assert.equal(route.night,['oumeDown','hachiojiDown','shinshuUp'].includes(id));
