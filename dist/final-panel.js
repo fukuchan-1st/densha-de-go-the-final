@@ -1,3 +1,4 @@
+import {drawCabSheen} from './cab-sheen.js?v=93';
 import {loadPanelImage} from './panel-image.js?v=panel-repair1';
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 // PNG alpha/tRNS already carries transparency. Black is also real dashboard ink.
@@ -86,7 +87,7 @@ export class LocalCabPanel {
    ctx.fillStyle=inTunnel?'#a1b4c8':'#d5dce6';
    ctx.fillText(String(Math.round(speed)),2429,2326);
   }
-  ctx.restore();
+  ctx.restore();drawCabSheen(ctx,Number(inTunnel));
  }
  dispose(){this.images.clear();this.ctx.clearRect(0,0,1600,900);}
 }

@@ -28,7 +28,14 @@ const missing={};
 const central='東京 神田 御茶ノ水 四ツ谷 新宿 中野 高円寺 阿佐ケ谷 荻窪 西荻窪 吉祥寺 三鷹 武蔵境 東小金井 武蔵小金井 国分寺 西国分寺 国立 立川 日野 豊田 八王子 西八王子 高尾 相模湖 藤野 上野原 四方津 梁川 鳥沢 猿橋 大月 初狩 笹子 甲斐大和 勝沼ぶどう郷 塩山 東山梨 山梨市 春日居町 石和温泉 酒折 甲府 竜王 塩崎 韮崎 新府 穴山 日野春 長坂 小淵沢 信濃境 富士見 すずらんの里 青柳 茅野 上諏訪 下諏訪 岡谷 みどり湖 塩尻 広丘 村井 平田 南松本 松本 田沢 明科 西条 坂北 聖高原 冠着 姨捨 稲荷山 篠ノ井 今井 川中島 安茂里 長野'.split(' ');
 const oito='松本 北松本 島内 島高松 梓橋 一日市場 中萱 南豊科 豊科 柏矢町 穂高 有明 安曇追分 細野 北細野 信濃松川 安曇沓掛 信濃常盤 南大町 信濃大町 北大町 信濃木崎 稲尾 海ノ口 簗場 ヤナバ前 南神城 神城 飯森 白馬 信濃森上 白馬大池 千国 南小谷'.split(' ');
 export const STATION_BROADCAST_ROWS=rows;export const MISSING_STATION_MELODIES=missing;
+const yamanoteRows={};
+for(const n of '東京 有楽町 新橋 浜松町 田町 品川 大崎 五反田 目黒 渋谷 原宿 代々木 新宿 新大久保 目白 大塚 巣鴨 駒込 田端 西日暮里 日暮里 鶯谷 上野 御徒町 秋葉原 神田 池袋 高田馬場 恵比寿 高輪ゲートウェイ'.split(' '))yamanoteRows[n]={outer:'ikst010-02',inner:'ikst010-01'};
+for(const [n,a,b]of [['神田','mondamin_a','mondamin_b'],['鶯谷','seseragi','haru_tremolo'],['田端','seseragi','ikst010-01'],['日暮里','seseragi','ikst010-01'],['駒込','sakurasakura_a','sakurasakura_b'],['池袋','bigcamera_b','bigcamera_d'],['高田馬場','tetsuwanatom_a','tetsuwanatom_b'],['恵比寿','thirdman_e','thirdman_f'],['高輪ゲートウェイ','glorious_gateway_b','glorious_gateway_a']])yamanoteRows[n]={outer:a,inner:b};
+yamanoteRows['大崎'].platforms={1:'ikst010-01',2:'ikst010-03',3:'ikst010-02',4:'ikst010-05'};yamanoteRows['池袋'].platforms={5:'bigcamera_a',6:'bigcamera_b',7:'bigcamera_c',8:'bigcamera_d'};
+export const YAMANOTE_BROADCAST_ROWS=yamanoteRows;
+function yamanoteCue(route,station){const row=yamanoteRows[station.name];if(!row)return null;const dir=route.reverseDirection?'inner':'outer',platform=Number(station.departurePlatform??station.platformNumber??station.platform),file=(row.platforms?.[platform]??row[dir])+'.mp3';return {file,station:station.name,direction:dir,embeddedAnnouncement:false,refs:[{entryIndex:'station-broadcast:yamanote:'+file,driverVoiceFile:'./assets/station-broadcast/east/yamanote/'+file,mixCategory:'se'},{entryIndex:'station-broadcast:sample',driverVoiceFile:'./assets/station-broadcast/east/voice/sample.mp3',mixCategory:'voice'}]};}
 export function stationDepartureCue(route,station){
+ if(route?.id==='yamanote')return yamanoteCue(route,station);
  if(!/^(chuo|shinonoi|oito|tatsuno|suwa-nagano)/.test(route?.id??''))return null;
  const all=route.sceneryStations??route.stations??[],at=all.findIndex(st=>Math.abs(st.s-station.s)<1),adjacent=[all[at-1]?.name,all[at+1]?.name],isOito=route.id==='oito'||adjacent.some(n=>oito.includes(n)&&n!=='松本'),order=isOito?oito:central,rank=order.indexOf(station.name);
  let down=!route.reverseDirection;const next=all.slice(at+1).find(st=>order.includes(st.name)),prev=all.slice(0,Math.max(0,at)).findLast(st=>order.includes(st.name));if(rank>=0&&next)down=order.indexOf(next.name)>rank;else if(rank>=0&&prev)down=rank>order.indexOf(prev.name);

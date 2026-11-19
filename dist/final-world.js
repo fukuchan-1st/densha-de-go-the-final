@@ -1,5 +1,6 @@
+import {tamaTown} from './tama-scenery.js?v=93';
 import {StationCharacters} from './station-characters.js?v=88';
-import {sceneryDensity} from './scenery-profile.js?v=84';
+import {sceneryDensity} from './scenery-profile.js?v=93';
 import {platformExtent} from './station-platform-length.js?v=87b';
 import {BasinScenery,addBasinFields} from './basin-scenery.js?v=84';
 import {basinDensity,basinAnchors,basinTerrainAreas,basinTerrainAt} from './basin-profile.js?v=84';
@@ -7,16 +8,16 @@ import {TohoLandmarks} from './toho-landmarks.js?v=84';
 import {isToho,villageAt,woodMaterial,addTohoHouses} from './toho-scenery.js?v=90';
 import {filmingChunkIndices} from './railfan-tunnel.js?v=81';
 import {chuoScenery,mountainArea} from './geographic-sections.js?v=90';
-import {prepareUrbanViaduct} from './urban-viaduct.js?v=92';
-import {RoadScenery} from './road-scenery.js?v=90';
+import {prepareUrbanViaduct} from './urban-viaduct.js?v=93';
+import {RoadScenery} from './road-scenery.js?v=93';
 import {BallastDetail} from './ballast-detail.js?v=88';
 import {whiteRailPost,tactileMaterial,safePlatformBounds,platformStripClear} from './platform-details.js?v=79';
 import {LevelCrossings} from './crossings.js?v=88';
 import {createTerrainMaterial,createBuildingMaterial,terrainKind,terrainShade,buildingVariant,buildingPalette} from './terrain-materials.js?v=79';
-import {SceneAtmosphere} from './scene-atmosphere.js?v=87';
+import {SceneAtmosphere} from './scene-atmosphere.js?v=93';
 import {RealTrees,treeVariant} from './real-trees.js?v=87';
-import {PlayerTrain} from './player-train.js?v=89';
-import {prepareLeftTraffic} from './route-traffic.js?v=92';
+import {PlayerTrain} from './player-train.js?v=93';
+import {prepareLeftTraffic} from './route-traffic.js?v=93';
 import {prepareCorridorScenery,corridorSceneryType} from './corridor-scenery.js?v=controls55';
 import {sampleRouteCurve} from './route-curve.js?v=39';
 import {prepareTurnoutLayout} from './turnout-layout.js?v=92';
@@ -25,7 +26,7 @@ import {OpposingTrains} from './opposing-trains.js?v=89';
 import * as T from './assets/vendor/three.module.js';
 import {CabSuspension} from './cab-motion.js?v=24';
 import {addTrackSignal} from './track-signal.js?v=32';
-import {addStoppingMarker} from './stop-scene.js?v=81';
+import {addStoppingMarker} from './stop-scene.js?v=93';
 import {interpolateKnots} from './track-layout.js?v=79';
 import {addYaganHillsides,addYaganTunnel} from './yagan-scenery.js?v=84';
 const clamp=T.MathUtils.clamp;
@@ -83,9 +84,9 @@ export class FinalWorld {
   return {p,dir,right:new T.Vector3(-dir.z,0,dir.x).normalize()};
  }
  curvature(s){const a=this.driveFrame(s-20).dir.setY(0).normalize(),b=this.driveFrame(s+20).dir.setY(0).normalize();return Math.atan2(a.x*b.z-a.z*b.x,a.dot(b))/40;}
- grade(s){return clamp((this.point(s+10).y-this.point(s-10).y)/20*1000,-40,40);}
+ grade(s){return clamp((this.drivePoint(s+10).y-this.drivePoint(s-10).y)/20*1000,-40,40);}
  structureAt(s,kind){return this.route.structures?.find(item=>(!kind||item.kind===kind)&&s>=item.sStart&&s<=item.sEnd);}
- sceneryTypeAt(s){if(isToho(this.route))return villageAt(this.route,s)?'suburban':'mountain';const density=sceneryDensity(this.route,s);if(density.source==='osm-600m'||Number.isFinite(density.urban))return density.building>=70?'city':density.forest>.45&&density.green>55?'mountain':'suburban';if(['itsukaichi','chuo-itsukaichi'].includes(this.route.id)){const end=this.sceneryStations.find(st=>st.name==='武蔵増戸')?.s??this.length;return this.route.reverseDirection?(s>end?'suburban':'mountain'):(s<end?'suburban':'mountain');}const chuo=chuoScenery(this.route,s);if(chuo)return chuo;const corridor=corridorSceneryType(this.route,s);if(corridor)return corridor;if(this.chuoCorridor)return s<this.cityEnd?'city':s<this.mountainStart?'suburban':'mountain';return this.rural?'mountain':(['yamanote','osaka'].includes(this.route.id)||this.stationNear(s).d<900?'city':'suburban');}
+ sceneryTypeAt(s){if(tamaTown(this.route,s)?.weight>.4)return 'suburban';if(isToho(this.route))return villageAt(this.route,s)?'suburban':'mountain';const density=sceneryDensity(this.route,s);if(density.source==='osm-600m'||Number.isFinite(density.urban))return density.building>=70?'city':density.forest>.45&&density.green>55?'mountain':'suburban';if(['itsukaichi','chuo-itsukaichi'].includes(this.route.id)){const end=this.sceneryStations.find(st=>st.name==='武蔵増戸')?.s??this.length;return this.route.reverseDirection?(s>end?'suburban':'mountain'):(s<end?'suburban':'mountain');}const chuo=chuoScenery(this.route,s);if(chuo)return chuo;const corridor=corridorSceneryType(this.route,s);if(corridor)return corridor;if(this.chuoCorridor)return s<this.cityEnd?'city':s<this.mountainStart?'suburban':'mountain';return this.rural?'mountain':(['yamanote','osaka'].includes(this.route.id)||this.stationNear(s).d<900?'city':'suburban');}
  stationNear(s){let nearest=null,d=Infinity;for(const st of this.sceneryStations??this.route.stations){const dd=Math.abs(st.s-s);if(dd<d){nearest=st;d=dd;}}return {st:nearest,d};}
  platformLength(){return clamp((this.route.carCount??10)*20+20,180,280);}
  oppositeOffset(s){
@@ -125,15 +126,16 @@ export class FinalWorld {
   const from=Math.max(start,st.s+platformFrom);
   const to=Math.min(end,st.s+platformTo);
   if(to<=from)return;
-  const bounds=s=>this.platformBounds(st,platform,s,tracks);
+  const sameLevel=tracks.filter(t=>Math.abs((t.height??0)-(platform.height??0))<.3).map(t=>({...t,height:0}));
+  const bounds=s=>this.platformBounds(st,{...platform,height:0},s,sameLevel);
   const level=s=>(platform.height??0)+this.deckHeight(s);
   const center=s=>{const [l,r]=bounds(s);return (l+r)/2;};
   const width=s=>{const [l,r]=bounds(s);return r-l;};
-  this.ribbon(group,from,to,center,width,s=>level(s)+1,'#a8aaa1',2,(a,b)=>platformStripClear(a,b,bounds,tracks));
+  this.ribbon(group,from,to,center,width,s=>level(s)+1,'#a8aaa1',2,(a,b)=>platformStripClear(a,b,bounds,sameLevel));
   for(let a=from;a<to;a+=12){const d=Math.min(12,to-a),s=a+d/2;if(this.deckHeight(s)>1.3&&width(s)>1){this.cube(group,s,center(s),level(s)-.6,width(s),.6,d,'#929991');if(Math.floor(a/12)%3===0)this.cube(group,s,center(s),0,.65,Math.max(.2,level(s)-.6),.9,'#a6aaa2');}}
   for(const edge of [0,1]){
    const inset=edge===0?.28:-.28;
-   this.ribbon(group,from,to,s=>bounds(s)[edge]+inset,s=>Math.min(.3,width(s)),s=>level(s)+1.015,'#e3ce67',2,(a,b)=>platformStripClear(a,b,bounds,tracks,edge));
+   this.ribbon(group,from,to,s=>bounds(s)[edge]+inset,s=>Math.min(.3,width(s)),s=>level(s)+1.015,'#e3ce67',2,(a,b)=>platformStripClear(a,b,bounds,sameLevel,edge));
    for(let a=from;a<to;a+=5){
     const d=Math.min(5,to-a),s=a+d/2;
     if(width(s)>.65)this.cube(group,s,bounds(s)[edge]+inset/3,level(s),.1,1,d,'#7d837c');
@@ -175,8 +177,7 @@ export class FinalWorld {
    for(let a=start;a<end;a+=6){
     const depth=Math.min(6,end-a),s=a+depth/2,height=this.deckHeight(s);
     if(height<.25)continue;
-    const [min,max]=trackEnvelope(s);
-    this.cube(group,s,(min+max)/2,height-.85,max-min+8,.85,depth+.08,'#92948b');
+    const layers=new Map();for(const rail of tracks){if(s<rail.start||s>rail.end)continue;const delta=rail.heightKnots?.length?interpolateKnots(rail.heightKnots,s):(rail.height??0),key=Math.round(delta*10)/10,layer=layers.get(key)??[];layer.push(rail.offset(s));layers.set(key,layer);}for(const [delta,offsets]of layers){const min=Math.min(...offsets),max=Math.max(...offsets);this.cube(group,s,(min+max)/2,height+delta-.85,max-min+7,.85,depth+.08,'#92948b');}
    }
    for(let s=Math.ceil(start/28)*28;s<end;s+=28){
     const height=this.deckHeight(s);
@@ -233,24 +234,27 @@ export class FinalWorld {
    if(density&&random()>density.building/100)continue;
    if(isToho(this.route))continue;
    if(this.structureAt(s,'tunnel')||(kind==='mountain'&&density.building<35&&(near.d>260||random()>.38)))continue;
-   const urban=inBasin?density.building>=80&&near.d<600:kind==='city',[min,max]=trackEnvelope(s),edge=side<0?min:max;
-   const h=urban?14+random()*(inBasin?15:42):3.2+random()*2.8,w=urban?8+random()*15:5.5+random()*3,d=urban?10+random()*12:6+random()*3;
+   const tama=tamaTown(this.route,s),urban=tama?random()>tama.houseShare:(inBasin?density.building>=80&&near.d<600:kind==='city'),[min,max]=trackEnvelope(s),edge=side<0?min:max;
+   const h=urban?(tama?7+random()*11:14+random()*(inBasin?15:42)):3.2+random()*2.8,w=urban?8+random()*15:5.5+random()*3,d=urban?10+random()*12:6+random()*3;
    const x=edge+side*(urban?8+w/2+random()*7:13+random()*30);
    if((this.route.structures??[]).some(c=>c.kind==='crossing'&&Math.abs((c.sOrigin??c.sStart)-s)<d/2+9))continue;
    const frontageClear=this.roadScenery.buildingClear(s,x,w,d);if(frontageClear)buildings.push({s,x,y:0,w,h,d});
-   if(urban)for(const row of(this.quality==='light'?[1]:[1,2])){if(inBasin&&random()>.65)continue;const xx=edge+side*(row===1?43+random()*12:77+random()*18),height=inBasin?7+random()*20:18+random()*(row===1?44:65);const ww=14+random()*13,dd=18+random()*7;if(this.roadScenery.buildingClear(s,xx,ww,dd))buildings.push({s,x:xx,y:0,w:ww,h:height,d:dd});}
-   if(inBasin&&!urban)for(const row of [65,100,145]){if(random()>density.building/100)continue;const xx=edge+side*(row+random()*9);if(this.roadScenery.buildingClear(s,xx,w,d)){buildings.push({s,x:xx,y:0,w,h,d});roofs.push({s,x:xx,y:h,w:w+.5,h:.8,d:d+.5});}}
+   if(urban&&!tama)for(const row of(this.quality==='light'?[1]:[1,2])){if(inBasin&&random()>.65)continue;const xx=edge+side*(row===1?43+random()*12:77+random()*18),height=inBasin?7+random()*20:18+random()*(row===1?44:65);const ww=14+random()*13,dd=18+random()*7;if(this.roadScenery.buildingClear(s,xx,ww,dd))buildings.push({s,x:xx,y:0,w:ww,h:height,d:dd});}
+   if((inBasin||tama)&&!urban)for(const row of (tama?[42,68,100]:[65,100,145])){if(random()>density.building/100)continue;const xx=edge+side*(row+random()*9);if(this.roadScenery.buildingClear(s,xx,w,d)){buildings.push({s,x:xx,y:0,w,h,d});roofs.push({s,x:xx,y:h,w:w+.5,h:.8,d:d+.5});}}
    if(!urban&&!frontageClear)continue;
    if(!urban){roofs.push({s,x,y:h,w:w+.5,h:this.route.id==='tokaido'?1.7:.3,d:d+.5});if(this.route.id==='tokaido'){const x2=x+side*18;if(this.roadScenery.buildingClear(s+8,x2,w*.9+.5,d+.5)){buildings.push({s:s+8,x:x2,y:0,w:w*.9,h:h*.9,d});roofs.push({s:s+8,x:x2,y:h*.9,w:w*.9+.5,h:1.7,d:d+.5});}}}
    if(frontageClear&&this.quality!=='light')for(let y=2.5;y<h-1;y+=3)windows.push({s:s-d/2-.03,x,y,w:w*.65,h:1.1,d:.05});
 
   }
   for(let s=Math.ceil(start/14)*14;s<end;s+=14){
-   const kind=this.sceneryTypeAt(s),near=this.stationNear(s),density=sceneryDensity(this.route,s);if(density&&random()>density.green/100)continue;if(kind==='mountain'||this.structureAt(s,'tunnel')||near.d<200)continue;
+   const kind=this.sceneryTypeAt(s),near=this.stationNear(s),density=sceneryDensity(this.route,s);if(density&&random()>Math.max(density.green,tamaTown(this.route,s)?.green??0)/100)continue;if(kind==='mountain'||this.structureAt(s,'tunnel')||near.d<200)continue;
    const [min,max]=trackEnvelope(s);for(const side of [-1,1])for(const row of (kind==='city'?[15]:[16,33])){
     if(kind==='city'&&random()>.3)continue;trees.push({s:s+(random()-.5)*8,x:(side<0?min:max)+side*(row+random()*6),y:0,h:(kind==='city'?4:5)+random()*4});
    }
   }
+  // Fill the city depth with blocks, while retaining the Tama house/green mix.
+  const occupied=(s,x,w,d)=>buildings.some(b=>Math.abs(b.s-s)<(b.d+d)/2+2&&Math.abs(b.x-x)<(b.w+w)/2+2);
+  for(let s=Math.ceil(start/32)*32;s<end;s+=32){const density=sceneryDensity(this.route,s),tama=tamaTown(this.route,s),city=this.sceneryTypeAt(s)==='city';if(isToho(this.route)||this.structureAt(s,'tunnel')||(!city&&!tama&&density.building<70))continue;const [min,max]=trackEnvelope(s),rows=city?(this.quality==='light'?[110,155]:[105,145,190,240,300]):(this.quality==='light'?[70,110]:[55,80,110,145]);for(const side of [-1,1])for(const row of rows){const w=city?20+random()*10:6+random()*3,d=city?21+random()*7:7+random()*3,h=city?13+random()*45:3.5+random()*3,x=(side<0?min:max)+side*(row+(random()-.5)*8);if(occupied(s,x,w,d)||!this.roadScenery.buildingClear(s,x,w,d))continue;buildings.push({s,x,y:0,w,h,d});if(!city)roofs.push({s,x,y:h,w:w+.5,h:1,d:d+.5});}}
   addBasinFields(this,group,start,end,trackEnvelope,random);
   this.instances(group,roofs,'#616b71',this.route.id==='tokaido'?this.houseRoof:this.box);
   for(let variant=0;variant<30;variant++){this.instances(group,buildings.filter(a=>a.h>9&&buildingVariant(a.s,a.x)===variant),'facade:office:'+variant);this.instances(group,buildings.filter(a=>a.h<=9&&buildingVariant(a.s,a.x)===variant),'facade:house:'+variant);}this.instances(group,windows,'#405d68');this.trees.add(group,trees.map(a=>({...a,y:0,variant:treeVariant(random()),rotation:random()*Math.PI*2}))); 

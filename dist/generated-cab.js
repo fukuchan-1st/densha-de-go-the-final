@@ -1,3 +1,4 @@
+import {drawCabSheen} from './cab-sheen.js?v=93';
 const layouts={
  '701':{windows:[[[55,45],[1587,24],[1622,49],[1580,463],[1548,485],[150,485],[137,278],[61,278]]],dials:[[693,644,59,'speed',140,'km/h'],[934,644,59,'pressure',1000,'kPa']]},
  e233:{dials:[[467,602,44,'speed',160,'km/h'],[355,599,30,'pressure',1000,'kPa']],digital:[515,651]},
@@ -45,7 +46,7 @@ export class GeneratedCab {
    ctx.strokeStyle=kind==='pressure'?'#bb332a':'#222a30';ctx.lineWidth=Math.max(2,r*.047);ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(Math.cos(a)*r*.76,Math.sin(a)*r*.76);ctx.stroke();ctx.fillStyle='#30363a';ctx.beginPath();ctx.arc(0,0,r*.09,0,Math.PI*2);ctx.fill();ctx.restore();
   }
   if(this.layout.digital){ctx.fillStyle='#cff1df';ctx.font='bold 19px monospace';ctx.fillText(Math.round(speed)+' km/h',...this.layout.digital);}
-  ctx.restore();
+  ctx.restore();drawCabSheen(ctx,Number(inTunnel));
  }
  dispose(){this.ctx.clearRect(0,0,1600,900);}
 }

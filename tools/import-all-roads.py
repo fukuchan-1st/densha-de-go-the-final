@@ -93,7 +93,7 @@ if __name__=='__main__':
   for way in ways.values():
    tags=way.get('tags',{});part=[];chain=[]
    def finish():
-    if len(part)>1:roads.append(dict(osmWayId=way['id'],s=round(sum(chain)/len(chain),1),points=part.copy(),width=5 if tags.get('highway') in ['service','living_street'] else 6 if tags.get('highway')=='residential' else 10,bridge=tags.get('bridge')=='yes',source='OpenStreetMap'))
+    if len(part)>1:roads.append(dict(osmWayId=way['id'],s=round(sum(chain)/len(chain),1),points=part.copy(),width=5 if tags.get('highway') in ['service','living_street'] else 6 if tags.get('highway')=='residential' else 10,bridge=tags.get('bridge','no') not in ['no','false','0',''],osmBridge=tags.get('bridge','no'),osmLayer=tags.get('layer','0'),osmTunnel=tags.get('tunnel','no'),osmLevelVerified=True,source='OpenStreetMap'))
    dense=[]
    for u,v in zip(way['geometry'],way['geometry'][1:]):
     count=max(1,math.ceil(math.hypot((v['lat']-u['lat'])*111200,(v['lon']-u['lon'])*90000)/40))

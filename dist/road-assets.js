@@ -1,4 +1,4 @@
-import {loadStationWiring} from './station-wiring.js?v=92';
+import {loadStationWiring} from './station-wiring.js?v=93';
 // Keep the complete road corridors compact on disk and share each download.
 const pending=new Map();let parallelPending;
 async function parallelRails(id){
@@ -11,7 +11,7 @@ export async function loadRoadAsset(route){
  if(!route.roadAsset)return route;
  const url=route.roadAsset;
  if(!pending.has(url))pending.set(url,(async()=>{
-  const response=await fetch(url+'?v=79');
+  const response=await fetch(url+'?v=93');
   if(!response.ok)throw new Error('沿線道路データを読み込めません');
   const bytes=new Uint8Array(await response.arrayBuffer());
   // A host may already have decompressed a Content-Encoding: gzip response.

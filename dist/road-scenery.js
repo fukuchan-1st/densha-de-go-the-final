@@ -1,5 +1,6 @@
+import {tunnelPillarClear} from './tunnel-effects.js?v=93';
 import {stationBuildingClear} from './station-space.js?v=90';
-import {RoadSeparation,roadElevation} from './road-separation.js?v=90';
+import {RoadSeparation,roadElevation} from './road-separation.js?v=93';
 import * as T from './assets/vendor/three.module.js';import {crossingActive,crossingCenter} from './crossings.js?v=88';
 export function segmentHitsFootprint(a,b,width,depth){let lo=0,hi=1;for(const [index,half]of[[0,width/2],[1,depth/2]]){const d=b[index]-a[index];if(Math.abs(d)<1e-8){if(Math.abs(a[index])<half)continue;return false;}let x=(-half-a[index])/d,y=(half-a[index])/d;if(x>y)[x,y]=[y,x];lo=Math.max(lo,x);hi=Math.min(hi,y);if(lo>hi)return false;}return true;}
 export function roadHeightOffset(bridge,railDeck=0){return bridge&&railDeck<1.3?6:-.1;}
@@ -30,7 +31,7 @@ export class RoadScenery{
  addBridge(group,path,profile,width){
   for(let d=4;d<path.length;d+=8){const p=sampleRoad(path,d),height=roadElevation(profile,d)-profile.terrain;if(height<1.4)continue;const a=sampleRoad(path,Math.max(0,d-4)),b=sampleRoad(path,Math.min(path.length,d+4)),ya=roadElevation(profile,d-4),yb=roadElevation(profile,d+4),beam=new T.Mesh(this.box,this.mat('#8d9699'));beam.position.set(p.x,(ya+yb)/2-.27,-p.z);beam.rotation.order='YXZ';beam.rotation.set(-Math.atan2(yb-ya,8),Math.atan2(p.dx,-p.dz),0);beam.scale.set(width,.5,8.1);beam.userData.shadowCaster=true;beam.userData.roadBridge=true;group.add(beam);
    for(const side of[-1,1]){const rail=new T.Mesh(this.box,this.mat('#b3bdc0'));rail.position.set(p.x-p.dz*width*.48*side,(ya+yb)/2+.6,-p.z-p.dx*width*.48*side);rail.rotation.copy(beam.rotation);rail.scale.set(.12,.55,8.1);rail.userData.roadBridge=true;group.add(rail);}
-   if(Math.round(d/8)%3)continue;for(const side of[-1,1]){const x=p.x-p.dz*width*.42*side,z=-p.z-p.dx*width*.42*side;if(this.separation.nearest(x,z).distance<3)continue;const pillar=new T.Mesh(this.box,this.mat('#a1a8a7'));pillar.position.set(x,profile.terrain+(height-.5)/2,z);pillar.scale.set(.8,Math.max(.1,height-.5),.8);pillar.userData.shadowCaster=true;pillar.userData.roadBridge=true;group.add(pillar);}
+   if(Math.round(d/8)%3)continue;for(const side of[-1,1]){const x=p.x-p.dz*width*.42*side,z=-p.z-p.dx*width*.42*side;if(!tunnelPillarClear(this.world,x,z)||this.separation.nearest(x,z).distance<3)continue;const pillar=new T.Mesh(this.box,this.mat('#a1a8a7'));pillar.position.set(x,profile.terrain+(height-.5)/2,z);pillar.scale.set(.8,Math.max(.1,height-.5),.8);pillar.userData.shadowCaster=true;pillar.userData.roadBridge=true;group.add(pillar);}
   }
  }
  buildingClear(s,x,width,depth){if(!stationBuildingClear(this.world,s,x,width,depth))return false;const f=this.world.frame(s,x);for(const k of[-2,-1,0,1,2])for(const road of this.roadBuckets.get(Math.floor(s/240)+k)??[]){if(Math.abs(road.s-s)>450)continue;const points=road.points.map(([px,pz])=>{const dx=px-f.p.x,dz=-pz-f.p.z;return [dx*f.right.x+dz*f.right.z,dx*f.dir.x+dz*f.dir.z];});for(let i=1;i<points.length;i++)if(segmentHitsFootprint(points[i-1],points[i],width+(road.width??6)+1,depth+(road.width??6)+1))return false;}return true;}

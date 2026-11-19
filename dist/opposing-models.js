@@ -1,5 +1,5 @@
 import {tint6050Bogies} from './vehicle-details.js?v=89';
-import {carVariant} from './train-formation.js?v=89';
+import {carVariant} from './train-formation.js?v=93';
 import {decodeVertices,decodeIndices} from './model-format.js?v=88';
 import {repair701Body} from './701-body-repair.js?v=76';
 import * as T from './assets/vendor/three.module.js';
@@ -37,7 +37,7 @@ export class ImportedTrafficModels{
   const promise=this.loadModel(id);this.loading.set(id,promise);return promise;
  }
  async loadModel(id){
-  this.manifest??=fetch(new URL('./assets/opposing/manifest.json?v=89',import.meta.url)).then(response=>{if(!response.ok)throw Error('対向列車データを取得できません');return response.json();});
+  this.manifest??=fetch(new URL('./assets/opposing/manifest.json?v=93',import.meta.url)).then(response=>{if(!response.ok)throw Error('対向列車データを取得できません');return response.json();});
   const definition=(await this.manifest).models[id];if(!definition)throw Error('対向列車 '+id+' がありません');
   const variants={};
   for(const [role,part]of Object.entries(definition.variants)){

@@ -1,6 +1,6 @@
 import {inflateSync} from './assets/vendor/fflate.module.js';
 
-export async function loadVehicleRecipes(){const r=await fetch(new URL('./assets/final/vehicle-recipes.json?v=88',import.meta.url));if(!r.ok)throw Error('車両設定を読み込めません');return r.json();}
+export async function loadVehicleRecipes(){const r=await fetch(new URL('./assets/final/vehicle-recipes.json?v=93',import.meta.url));if(!r.ok)throw Error('車両設定を読み込めません');return r.json();}
 
 class BundledTrainPack {
  constructor(id,assets){
@@ -95,5 +95,5 @@ export function interpolateColumn(table,column,speed,defaultValue=0){
  }
  return points.at(-1)[1];
 }
-export {LocalCabPanel} from './final-panel.js?v=82';
-export {LocalTrainAudio} from './final-audio.js?v=91';
+export {LocalCabPanel} from './final-panel.js?v=93';
+export {LocalTrainAudio} from './final-audio.js?v=93';

@@ -1,3 +1,4 @@
+import {prepareTokyoStation} from './tokyo-station.js?v=93';
 import {interpolateKnots} from './track-layout.js?v=79';
 const keyName=s=>s?.replaceAll('ヶ','ケ').replaceAll('ノ','ノ').replace('ヤナバ前','ヤナバスキー場前');
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -75,5 +76,5 @@ export function applyStationWiring(route,source=route){
   layouts[st.name]={...layouts[st.name],platforms,diagramSource:{document:rec.document,page:rec.page,family},diagramTopology:true};
   audit.push({name:st.name,sourceDocument:rec.document,sourcePage:rec.page,platforms:platforms.length,segments:generated.length,lo,hi});
  }
- return {...route,stations:route.stations.map(st=>doors.has(st.name)?{...st,doorSide:doors.get(st.name)}:st),sceneryStations:stations.map(st=>doors.has(st.name)?{...st,doorSide:doors.get(st.name)}:st),neighborTracks:rails,stationLayouts:layouts,diagramLayoutKey:key,stationWiringAudit:audit};
+ return prepareTokyoStation({...route,stations:route.stations.map(st=>doors.has(st.name)?{...st,doorSide:doors.get(st.name)}:st),sceneryStations:stations.map(st=>doors.has(st.name)?{...st,doorSide:doors.get(st.name)}:st),neighborTracks:rails,stationLayouts:layouts,diagramLayoutKey:key,stationWiringAudit:audit});
 }

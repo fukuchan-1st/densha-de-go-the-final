@@ -31,5 +31,7 @@ export class CabPanel {
   const elements=this.config.elements.filter(e=>e.useInPrototype&&e.role!=='background-tile').slice().sort((a,b)=>a.layer-b.layer);
   for(const e of elements)this.drawElement(e,state,this.night>.5);
   ctx.restore();
+  // Behind the panel pixels: reflection is visible only through transparent windows.
+  ctx.save();ctx.globalCompositeOperation='destination-over';const sheen=ctx.createLinearGradient(80,0,1450,650),strength=.065*(1-this.night*.78);sheen.addColorStop(0,'rgba(205,230,245,0)');sheen.addColorStop(.30,`rgba(225,240,255,${strength})`);sheen.addColorStop(.38,'rgba(225,240,255,0)');sheen.addColorStop(.72,`rgba(235,245,255,${strength*.55})`);sheen.addColorStop(1,'rgba(205,230,245,0)');ctx.fillStyle=sheen;ctx.fillRect(0,0,1600,900);ctx.restore();
  }
 }

@@ -9,7 +9,7 @@ const routes=await loadServiceRoutes(),recipes=JSON.parse(await readFile(new URL
 const services=serviceChoices.chuo.map(choice=>({choice,route:makeServiceRoute(routes.get(choice[0]),...choice.slice(1))}));
 const find=id=>services.find(x=>x.route.publishedSchedule?.id===id);
 test('Chuo uses the old numbers for eight deletions and places E233 first',()=>{
- assert.equal(serviceChoices.chuo.length,60);assert.equal(serviceChoices.chuo[0][1],'e233');assert.equal(serviceChoices.chuo[0][2],'快速');
+ assert.equal(serviceChoices.chuo.length,62);assert.equal(serviceChoices.chuo[0][1],'e233');assert.equal(serviceChoices.chuo[0][2],'快速');
  assert.equal(serviceChoices.chuo.some(x=>x[0]==='shinonoi'&&x[1]==='383'),false);
  assert.equal(serviceChoices.chuo.some(x=>x[0]==='tatsuno'),false);
  assert.equal(serviceChoices.chuo.some(x=>x[2]==='普通みすず'&&x[3].reverse),false);

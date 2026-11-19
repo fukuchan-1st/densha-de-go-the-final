@@ -1,3 +1,4 @@
+import {tunnelAdaptation} from './tunnel-effects.js?v=93';
 import * as T from './assets/vendor/three.module.js';
 import {graphicsProfile,HighQualityRenderer} from './graphics-quality.js?v=87b';
 export function lightingProfile(quality='standard',night=false){
@@ -79,13 +80,14 @@ export class SceneAtmosphere{
   this.cover=T.MathUtils.lerp(this.cover,cover,1-Math.exp(-Math.max(dt,.001)*1.4));
   const day=lightingProfile(this.quality,false),warm=1-T.MathUtils.clamp(solar.direction.y/.5,0,1);
   this.sky.color.set('#6c81bb').lerp(new T.Color('#c7e3ff'),solar.daylight);this.sky.groundColor.set('#303342').lerp(new T.Color('#62563e'),solar.daylight);this.sun.color.set('#fff0d2').lerp(new T.Color('#ff9a53'),warm);
-  this.sky.intensity=(.18+(day.sky-.18)*solar.daylight)*(1-inside*.65);this.sun.intensity=day.sun*solar.daylight*(1-this.cover*.48)*(1-inside*.88);world.renderer.toneMappingExposure=profile.exposure*(1-inside*.32);
-  const skyColor=new T.Color('#0b1528').lerp(new T.Color('#8bbde0').lerp(new T.Color('#e5b59d'),warm*.45),solar.daylight);world.scene.background.copy(skyColor);world.scene.fog?.color.copy(new T.Color('#111c2d').lerp(new T.Color('#b3cbd9').lerp(new T.Color('#e1b7a3'),warm*.5),solar.daylight));
+  this.sky.intensity=(.18+(day.sky-.18)*solar.daylight)*(1-inside*.65);this.sun.intensity=day.sun*solar.daylight*(1-this.cover*.48)*(1-inside*.88);this.tunnelEye=tunnelAdaptation(this.tunnelEye,inside>.5,dt,solar.daylight);world.renderer.toneMappingExposure=profile.exposure*this.tunnelEye.exposure;
+  const skyColor=new T.Color('#0b1528').lerp(new T.Color('#8bbde0').lerp(new T.Color('#e5b59d'),warm*.45),solar.daylight);world.scene.background.copy(skyColor).lerp(new T.Color('#080b10'),inside*.98);world.scene.fog?.color.copy(new T.Color('#111c2d').lerp(new T.Color('#b3cbd9').lerp(new T.Color('#e1b7a3'),warm*.5),solar.daylight));
   if(this.cloudMaterial){this.cloudMaterial.color.set('#68748f').lerp(new T.Color('#ffffff').lerp(new T.Color('#f6c8ac'),warm*.35),solar.daylight);this.cloudMaterial.opacity=.42+solar.daylight*.52;}
   this.sunSprite.visible=solar.direction.y>-.025;this.sunSprite.position.copy(point).addScaledVector(solar.direction,1400);this.sunSpriteMaterial.color.copy(this.sun.color);world.headlight.intensity=(1-solar.daylight)*750+inside*450;
   if(world.externalView){world.scene.add(world.headlight,world.headlight.target);const nose=world.drivePoint?.(s)??world.frame(s,world.driveOffset?.(s)??0).p,ahead=world.drivePoint?.(s+75)??world.frame(s+75,world.driveOffset?.(s+75)??0).p;world.headlight.position.copy(nose);world.headlight.position.y+=2.2;world.headlight.target.position.copy(ahead);world.headlight.target.position.y+=.3;}
   else if(world.headlight.parent!==world.camera){world.camera.add(world.headlight,world.headlight.target);world.headlight.position.set(0,-.8,-.4);world.headlight.target.position.set(0,-1.6,-35);}
   for(const material of (world.materials instanceof Map?world.materials.values():Object.values(world.materials??{})))if(material.userData.windowLight)material.emissiveIntensity=(1-solar.daylight)*1.1;
+  world.scene.fog?.color.lerp(new T.Color('#080b10'),inside*.94);
   followSunShadow(this.sun,point,solar.direction);
   this.shadowClock+=dt;if(profile.shadows&&(moving||this.shadowClock>.12||!this.lastShadowPosition||point.distanceTo(this.lastShadowPosition)>3||Math.abs(time-(this.lastShadowTime??time))>1)){
    world.renderer.shadowMap.needsUpdate=true;this.shadowClock=0;this.lastShadowPosition=point.clone();this.lastShadowTime=time;
