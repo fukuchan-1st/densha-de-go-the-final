@@ -1,6 +1,6 @@
 import {panoramaAtFront} from './train-formation.js?v=93';
 import {setRailPose} from './rail-pose.js?v=80';
-import {ImportedTrafficModels,opposingVehicle,opposingVehicles,opposingCarCount} from './opposing-models.js?v=93';
+import {ImportedTrafficModels,opposingVehicle,opposingVehicles,opposingCarCount} from './opposing-models.js?v=95';
 import * as T from './assets/vendor/three.module.js';
 import {interpolateKnots} from './track-layout.js?v=79';
 

@@ -1,0 +1,2 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {fadeCabLight} from '../dist/cab-light.js';
+test('cab light fades gradually at portals, holds while paused and is frame-rate independent',()=>{let a=0,b=0;assert.ok(fadeCabLight(0,1,1/60)>0&&fadeCabLight(0,1,1/60)<.1);for(let i=0;i<60;i++)a=fadeCabLight(a,1,1/60);for(let i=0;i<30;i++)b=fadeCabLight(b,1,1/30);assert.ok(Math.abs(a-b)<1e-10);assert.ok(a>.9&&a<1);assert.equal(fadeCabLight(a,0,0),a);assert.ok(fadeCabLight(1,0,1/60)>.95);assert.equal(fadeCabLight(undefined,1,1/60),1);});

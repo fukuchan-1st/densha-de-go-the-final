@@ -1,4 +1,5 @@
-import {drawCabSheen} from './cab-sheen.js?v=94';
+import {fadeCabLight,mixCabColor} from './cab-light.js?v=95';
+import {drawCabSheen} from './cab-sheen.js?v=95';
 import {loadPanelImage} from './panel-image.js?v=panel-repair1';
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 // PNG alpha/tRNS already carries transparency. Black is also real dashboard ink.
@@ -62,7 +63,7 @@ export class LocalCabPanel {
  isSpeedDigit(e){return e.type==='digitalnumber'&&(!!this.recipe.panel.speedDigits?.[e.subject]||speedDigits[this.recipe.id]?.includes(e.subject));}
  supported(e){return !!this.recipe.panel.pressureSprites?.[e.subject]||['mrHundreds','mrTens','bcHundreds','bcTens','speedHundreds','speedTens','speedOnes','speedGaugeAngleEncodedShadow'].includes(this.semantic(e))||!!this.recipe.panel.calibratedNeedles?.[e.subject]||this.isSpeedDigit(e)||e.type==='background'||e.subject==='true'||['always','doorClosed','speedKmh','mainReservoirKpa','brakeCylinderKpa','brakeStraightAirPipeKpa','brakePipeKpa','absoluteMotorCurrent','motorCurrent','speedGaugeAngleEncoded','brakeIndex','powerIndex','hour','minute','second','controlVoltage','lineVoltage'].includes(this.semantic(e));}
  setVisible(visible){this.visible=visible;this.canvas.hidden=!visible;}
- render(state,dt=1/60,inTunnel=false){const ctx=this.ctx;ctx.clearRect(0,0,1600,900);if(!this.visible)return;const r=this.recipe.playableSpecs,bIndex=state.notch<0?Math.min(r.brakeNotches+1,-state.notch):0;
+ render(state,dt=1/60,inTunnel=false){this.night=fadeCabLight(this.night,inTunnel,dt);const ctx=this.ctx;ctx.clearRect(0,0,1600,900);if(!this.visible)return;const r=this.recipe.playableSpecs,bIndex=state.notch<0?Math.min(r.brakeNotches+1,-state.notch):0;
   const brake=r.brakeSystem;
   const response=Math.min(1,dt*4);
   const pressureRate=brake?.pressureRates?.[Math.min(bIndex,(brake.pressureRates?.length??1)-1)]??bIndex/(r.brakeNotches+1);
@@ -74,20 +75,20 @@ export class LocalCabPanel {
   const reservoir=brake?((brake.reservoirLowerKpa??780)+(brake.reservoirUpperKpa??880))/2:820;
   const seconds=(state.clockStart??8*3600)+(state.elapsed??0),speed=state.speedKmh??(state.v??0)*3.6,values={always:1,doorClosed:!state.doors,speedKmh:speed,mainReservoirKpa:reservoir-this.bc*.08,brakeCylinderKpa:this.bc,brakeStraightAirPipeKpa:this.sap,brakePipeKpa:this.bp,absoluteMotorCurrent:state.notch>0?state.notch*40:0,motorCurrent:state.notch*35,brakeIndex:bIndex,powerIndex:Math.max(0,state.notch),hour:seconds/3600%12,minute:seconds/60%60,second:seconds%60,controlVoltage:100,lineVoltage:1500};ctx.save();ctx.scale(1600/this.crop.width,900/this.crop.height);ctx.translate(-this.crop.x,-this.crop.y);
   const sideFill=this.recipe.panel.sideFill;if(sideFill){ctx.fillStyle=sideFill.color;ctx.fillRect(this.crop.x,sideFill.top,this.crop.width,Math.max(0,this.crop.y+this.crop.height-sideFill.top));}
-  for(const e of this.recipe.panel.elements){if(!this.supported(e))continue;const ref=inTunnel&&e.nightImage?e.nightImage:e.image,image=ref&&this.images.get(this.key(ref));const semantic=this.semantic(e),value=values[semantic],loc=e.location??[0,0];if(e.type==='digitalgauge'){if(!Number.isFinite(value))continue;const a=(e.initialangle-90)*Math.PI/180,b=(localNeedleAngle(e,value)-90)*Math.PI/180;ctx.beginPath();ctx.strokeStyle='#'+(e.color??'dce8db').replace('#','');ctx.lineWidth=6;ctx.arc(loc[0],loc[1],e.radius,a,b);ctx.stroke();continue;}if(!image)continue;if(e.type==='needle'){
+  for(const e of this.recipe.panel.elements){if(!this.supported(e))continue;const ref=e.image??e.nightImage,image=ref&&this.images.get(this.key(ref));const nightImage=e.nightImage&&this.images.get(this.key(e.nightImage)),draw=(...args)=>{ctx.drawImage(image.surface,...args);if(nightImage&&e.image&&this.night>0){ctx.save();ctx.globalAlpha=this.night;ctx.drawImage(nightImage.surface,...args);ctx.restore();}};const semantic=this.semantic(e),value=values[semantic],loc=e.location??[0,0];if(e.type==='digitalgauge'){if(!Number.isFinite(value))continue;const a=(e.initialangle-90)*Math.PI/180,b=(localNeedleAngle(e,value)-90)*Math.PI/180;ctx.beginPath();ctx.strokeStyle='#'+(e.color??'dce8db').replace('#','');ctx.lineWidth=6;ctx.arc(loc[0],loc[1],e.radius,a,b);ctx.stroke();continue;}if(!image)continue;if(e.type==='needle'){
     let angle;const calibration=this.recipe.panel.calibratedNeedles?.[e.subject];if(calibration)angle=calibratedSpeedAngle(calibration.angleKnots,speed);else if(['speedGaugeAngleEncoded','speedGaugeAngleEncodedShadow'].includes(semantic))angle=calibratedSpeedAngle(this.recipe.panel.speedGaugeCalibration.angleKnots,speed);else if(Number.isFinite(value))angle=localNeedleAngle(e,value);else continue;
-    ctx.save();ctx.translate(...loc);ctx.rotate(angle*Math.PI/180);const factor=e.radius/(e.origin?.[1]||1);ctx.scale(factor,factor);ctx.drawImage(image.surface,-e.origin[0],-e.origin[1],image.width,image.height);ctx.restore();
-   }else if(e.type==='digitalnumber'){const digit=this.recipe.panel.pressureSprites?.[e.subject]?pressureSpriteFrame(this.recipe.panel.pressureSprites,e.subject,values[semantic]):this.isSpeedDigit(e)?(this.recipe.panel.speedDigits?.[e.subject]?Math.floor(Math.round(speed)/this.recipe.panel.speedDigits[e.subject].place)%10:panelSpeedDigit(this.recipe.id,e.subject,speed)):({mrHundreds:Math.floor(values.mainReservoirKpa/100)%10,mrTens:Math.floor(values.mainReservoirKpa/10)%10,bcHundreds:Math.floor(this.bc/100)%10,bcTens:Math.floor(this.bc/10)%10}[semantic]??value);if(digit===null||!Number.isFinite(digit)||!e.interval)continue;const frame=clamp(Math.floor(digit),0,Math.floor(image.height/e.interval)-1);ctx.drawImage(image.surface,0,frame*e.interval*image.scaleY,image.surface.width,e.interval*image.scaleY,...loc,image.width,e.interval);
-   }else if(e.type==='background'||value||e.subject==='true')ctx.drawImage(image.surface,...loc,image.width,image.height);
+    ctx.save();ctx.translate(...loc);ctx.rotate(angle*Math.PI/180);const factor=e.radius/(e.origin?.[1]||1);ctx.scale(factor,factor);draw(-e.origin[0],-e.origin[1],image.width,image.height);ctx.restore();
+   }else if(e.type==='digitalnumber'){const digit=this.recipe.panel.pressureSprites?.[e.subject]?pressureSpriteFrame(this.recipe.panel.pressureSprites,e.subject,values[semantic]):this.isSpeedDigit(e)?(this.recipe.panel.speedDigits?.[e.subject]?Math.floor(Math.round(speed)/this.recipe.panel.speedDigits[e.subject].place)%10:panelSpeedDigit(this.recipe.id,e.subject,speed)):({mrHundreds:Math.floor(values.mainReservoirKpa/100)%10,mrTens:Math.floor(values.mainReservoirKpa/10)%10,bcHundreds:Math.floor(this.bc/100)%10,bcTens:Math.floor(this.bc/10)%10}[semantic]??value);if(digit===null||!Number.isFinite(digit)||!e.interval)continue;const frame=clamp(Math.floor(digit),0,Math.floor(image.height/e.interval)-1);draw(0,frame*e.interval*image.scaleY,image.surface.width,e.interval*image.scaleY,...loc,image.width,e.interval);
+   }else if(e.type==='background'||value||e.subject==='true')draw(...loc,image.width,image.height);
   }
   if(this.recipe.id==='323'){
    ctx.textAlign='right';
    ctx.textBaseline='alphabetic';
    ctx.font='500 29px Arial, sans-serif';
-   ctx.fillStyle=inTunnel?'#a1b4c8':'#d5dce6';
+   ctx.fillStyle=mixCabColor('#d5dce6','#a1b4c8',this.night);
    ctx.fillText(String(Math.round(speed)),2429,2326);
   }
-  ctx.restore();drawCabSheen(ctx,Number(inTunnel));
+  ctx.restore();drawCabSheen(ctx,this.night);
  }
  dispose(){this.images.clear();this.ctx.clearRect(0,0,1600,900);}
 }

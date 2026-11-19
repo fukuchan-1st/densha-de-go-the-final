@@ -1,3 +1,4 @@
+import {addTrainWindowReflections} from './train-window-reflections.js?v=95';
 import {tint6050Bogies} from './vehicle-details.js?v=89';
 import {carVariant} from './train-formation.js?v=93';
 import {decodeVertices,decodeIndices} from './model-format.js?v=88';
@@ -58,6 +59,6 @@ export class ImportedTrafficModels{
   if(id==='6050')for(const body of Object.values(variants))tint6050Bogies(body,this);
   const model={...definition,variants};if(!this.disposed)this.models.set(id,model);else this.dispose();return model;
  }
- car(id,index,count,options){const model=this.models.get(id);if(!model)return null;const spec=carVariant(model,id,index,count,options),car=new T.Group(),body=model.variants[spec.role].clone(true);body.rotation.y=spec.rotation;body.userData.variant=spec.role;car.add(body);return car;}
+ car(id,index,count,options){const model=this.models.get(id);if(!model)return null;const spec=carVariant(model,id,index,count,options),car=new T.Group(),body=model.variants[spec.role].clone(true);addTrainWindowReflections(body,this);body.rotation.y=spec.rotation;body.userData.variant=spec.role;car.add(body);return car;}
  dispose(){this.disposed=true;for(const geometry of this.geometries)geometry.dispose();for(const material of this.materials.values())material.dispose();for(const texture of this.textures.values())texture.then(value=>value.dispose()).catch(()=>{});this.geometries.clear();this.materials.clear();this.models.clear();}
 }

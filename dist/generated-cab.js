@@ -1,4 +1,5 @@
-import {drawCabSheen} from './cab-sheen.js?v=94';
+import {fadeCabLight,mixCabColor} from './cab-light.js?v=95';
+import {drawCabSheen} from './cab-sheen.js?v=95';
 const layouts={
  '701':{windows:[[[55,45],[1587,24],[1622,49],[1580,463],[1548,485],[150,485],[137,278],[61,278]]],dials:[[693,644,59,'speed',140,'km/h'],[934,644,59,'pressure',1000,'kPa']]},
  e233:{dials:[[467,602,44,'speed',160,'km/h'],[355,599,30,'pressure',1000,'kPa']],digital:[515,651]},
@@ -28,13 +29,13 @@ export class GeneratedCab {
  }
  setVisible(visible){this.canvas.hidden=!visible;}
  render(state,dt=1/60,inTunnel=false){
-  const ctx=this.ctx,speed=(state.v??0)*3.6;
+  this.night=fadeCabLight(this.night,inTunnel,dt);const ctx=this.ctx,speed=(state.v??0)*3.6;
   this.pressure+=(Math.min(380,Math.max(0,-state.notch)*47.5)-this.pressure)*Math.min(1,dt*4);
   ctx.clearRect(0,0,1600,900);ctx.save();ctx.scale(1600/1672,900/941);
-  ctx.filter=inTunnel?'brightness(.52)':'none';ctx.drawImage(this.backing,0,0);ctx.filter='none';
+  ctx.filter=`brightness(${1-this.night*.48})`;ctx.drawImage(this.backing,0,0);ctx.filter='none';
   const values={speed,pressure:this.pressure,current:Math.max(0,state.notch)*45};
   for(const [x,y,r,kind,max,unit] of this.layout.dials){
-   ctx.save();ctx.translate(x,y);ctx.fillStyle=inTunnel?'#a6cbc2':'#e9e5d3';ctx.beginPath();ctx.arc(0,0,r,0,Math.PI*2);ctx.fill();
+   ctx.save();ctx.translate(x,y);ctx.fillStyle=mixCabColor('#e9e5d3','#a6cbc2',this.night);ctx.beginPath();ctx.arc(0,0,r,0,Math.PI*2);ctx.fill();
    ctx.strokeStyle='#283138';ctx.fillStyle='#283138';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font=r*.18+'px sans-serif';
    for(let i=0;i<=8;i++){
     const a=(-225+i*270/8)*Math.PI/180,c=Math.cos(a),s=Math.sin(a);
@@ -46,7 +47,7 @@ export class GeneratedCab {
    ctx.strokeStyle=kind==='pressure'?'#bb332a':'#222a30';ctx.lineWidth=Math.max(2,r*.047);ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(Math.cos(a)*r*.76,Math.sin(a)*r*.76);ctx.stroke();ctx.fillStyle='#30363a';ctx.beginPath();ctx.arc(0,0,r*.09,0,Math.PI*2);ctx.fill();ctx.restore();
   }
   if(this.layout.digital){ctx.fillStyle='#cff1df';ctx.font='bold 19px monospace';ctx.fillText(Math.round(speed)+' km/h',...this.layout.digital);}
-  ctx.restore();drawCabSheen(ctx,Number(inTunnel));
+  ctx.restore();drawCabSheen(ctx,this.night);
  }
  dispose(){this.ctx.clearRect(0,0,1600,900);}
 }
