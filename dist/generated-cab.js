@@ -1,4 +1,4 @@
-import {drawCabSheen} from './cab-sheen.js?v=93';
+import {drawCabSheen} from './cab-sheen.js?v=94';
 const layouts={
  '701':{windows:[[[55,45],[1587,24],[1622,49],[1580,463],[1548,485],[150,485],[137,278],[61,278]]],dials:[[693,644,59,'speed',140,'km/h'],[934,644,59,'pressure',1000,'kPa']]},
  e233:{dials:[[467,602,44,'speed',160,'km/h'],[355,599,30,'pressure',1000,'kPa']],digital:[515,651]},

@@ -1,4 +1,4 @@
-import {drawCabSheen} from './cab-sheen.js?v=93';
+import {drawCabSheen} from './cab-sheen.js?v=94';
 import {loadPanelImage} from './panel-image.js?v=panel-repair1';
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 // PNG alpha/tRNS already carries transparency. Black is also real dashboard ink.
