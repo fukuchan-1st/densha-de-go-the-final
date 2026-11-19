@@ -1,3 +1,4 @@
+import {applyStationWiring} from './station-wiring.js?v=92';
 import {prepareSpecialStations} from './special-station-layouts.js?v=85';
 import {widenBoardingClearance,mergePlatformSurfaces} from './platform-details.js?v=79';
 import {yamanoteParallel} from './yamanote-parallel.js?v=79';
@@ -42,7 +43,7 @@ const lanes=(tracks,reverse)=>tracks===4?(reverse?[-16,-8,0,8]:[-8,0,8,16]):trac
 const ownLane=(tracks,reverse,outer)=>tracks===1?0:tracks===2?(reverse?-4.2:0):reverse?(outer?-16:-8):(outer?-8:0);
 
 export function prepareLeftTraffic(source){
- source=yamanoteParallel(source);if(source.leftTrafficVersion===5)return source;
+ source=yamanoteParallel(source);if(source.leftTrafficVersion===5)return applyStationWiring(source);
  const sections=inferTrafficSections(source),reverse=!!source.reverseDirection,outer=source.id==='tokaido'&&source.serviceTrack==='outer',L=source.length??source.stations.at(-1).s;
  const base=s=>ownLane(trafficSectionAt({...source,trafficSections:sections},s).tracks,reverse,outer);
  // Continuous driver path through a change from four tracks to two or one.
@@ -85,5 +86,5 @@ export function prepareLeftTraffic(source){
   if(trafficSectionAt({...source,trafficSections:sections},st.s).tracks===4){const opposing=reverse?[0,8]:[8,16],l=opposing[0]+1.55,r=opposing[1]-1.55;if(!platforms.some(p=>p.edges[0][1]<=l&&p.edges[0][2]>=r))platforms.push(make(l,r));}
   layouts[st.name]={...layout,platforms:mergePlatformSurfaces(platforms.filter(p=>p===boarding||p.edges[0][2]-p.edges[0][1]>=2.5))};
  }
- return prepareSpecialStations({...source,trafficSide:'left',leftTrafficVersion:5,trafficSections:sections,drivingTrack:driving,neighborTracks:neighbors,stationLayouts:layouts,corridorSceneryPrepared:true});
+ return applyStationWiring(prepareSpecialStations({...source,trafficSide:'left',leftTrafficVersion:5,trafficSections:sections,drivingTrack:driving,neighborTracks:neighbors,stationLayouts:layouts,corridorSceneryPrepared:true}),source);
 }

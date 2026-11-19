@@ -1,6 +1,6 @@
 import {updateDoorVisual} from './train-doors.js?v=89';
 import {scheduledBoardingDelay} from './published-schedules.js?v=86';
-import {loadRoadAsset} from './road-assets.js?v=90';
+import {loadRoadAsset} from './road-assets.js?v=92';
 import {CrossingAudio} from './crossings.js?v=85';
 import {VIEW_LABELS,normalizedView,replayViewMode} from './view-modes.js?v=79';
 import {yaganPlanningSpec,yaganBoardingReady,yaganBoardingDelay} from './yagan-timetable.js?v=75';

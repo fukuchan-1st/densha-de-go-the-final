@@ -1,3 +1,4 @@
+import {loadStationWiring} from './station-wiring.js?v=92';
 // Keep the complete road corridors compact on disk and share each download.
 const pending=new Map();let parallelPending;
 async function parallelRails(id){
@@ -5,6 +6,7 @@ async function parallelRails(id){
  return (await parallelPending).routes[id]??[];
 }
 export async function loadRoadAsset(route){
+ route=await loadStationWiring(route);
  if(route.id&&!route.osmParallelVersion&&!route.id.startsWith('toho-')&&route.id!=='toho'){route.neighborTracks=[...(route.neighborTracks??[]),...await parallelRails(route.id)];route.osmParallelVersion=90;}
  if(!route.roadAsset)return route;
  const url=route.roadAsset;

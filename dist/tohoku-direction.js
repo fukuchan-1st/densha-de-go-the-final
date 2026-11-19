@@ -1,4 +1,4 @@
-import {prepareLeftTraffic} from './route-traffic.js?v=85';
+import {prepareLeftTraffic} from './route-traffic.js?v=92';
 import {interpolateKnots} from './track-layout.js?v=79';
 import {reverseSteps} from './service-routes.js?v=85';
 export function reverseLegacyProfile(base,length){
@@ -12,6 +12,6 @@ export function reverseLegacyLayout(data,length){const reversed={...data,tracks:
 export function normalizeLegacyLayout(data,length,reverse=false){
  const stations=data.stations.map(st=>({...st,platforms:st.platforms}));
  const stationLayouts=Object.fromEntries(stations.map(st=>[st.name,{platforms:st.platforms.map(p=>({...p,edges:p.edges.map(([s,l,r])=>[s-st.s,l,r])}))}]));
- const r=prepareLeftTraffic({id:'tohoku',length,reverseDirection:reverse,stations,stationLayouts,neighborTracks:data.tracks.filter(t=>t.id!=='player').map(t=>({...t,height:t.knots[0][2]??0})),trafficSections:[{sStart:-300,sEnd:length+300,tracks:2}]});
+ const r=prepareLeftTraffic({id:'tohoku',diagramWiring:data.diagramWiring,length,reverseDirection:reverse,stations,stationLayouts,neighborTracks:data.tracks.filter(t=>t.id!=='player').map(t=>({...t,height:t.knots[0][2]??0})),trafficSections:[{sStart:-300,sEnd:length+300,tracks:2}]});
  return {...data,tracks:[{id:'player',direction:'same',knots:r.drivingTrack.map(([s,x])=>[s,x,0])},...r.neighborTracks.map((t,i)=>({...t,id:'traffic-'+i,knots:t.knots.map(([s,x])=>[s,x,t.height??0])}))],stations:stations.map(st=>({...st,platforms:r.stationLayouts[st.name].platforms.map(p=>({...p,start:st.s+p.edges[0][0],end:st.s+p.edges.at(-1)[0],edges:p.edges.map(([s,l,r])=>[s+st.s,l,r])}))}))};
 }

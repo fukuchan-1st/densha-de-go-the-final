@@ -249,8 +249,10 @@ export function prepareTurnoutLayout(inputTracks, {length = Infinity, stations =
     usedIds.add(id);
     return {...track, id, knots: track.knots.map(([s, x, y = 0]) => [s, x, y])};
   });
-  const nearby = trackIndex(tracks);
-  const endpoints = freeEndpoints(tracks, nearby, length);
+  // User diagram crossings must not acquire guessed connections.
+  const inferable = tracks.filter(track => !track.diagramTrack);
+  const nearby = trackIndex(inferable);
+  const endpoints = freeEndpoints(inferable, nearby, length);
   const platforms = platformsFrom(stations);
   const candidates = [...gapCandidates(endpoints), ...convergingCandidates(endpoints, nearby, length)]
     .sort((a, b) => a.score - b.score);
