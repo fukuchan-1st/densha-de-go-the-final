@@ -1,13 +1,13 @@
 import {tamaTown} from './tama-scenery.js?v=93';
 import {StationCharacters} from './station-characters.js?v=88';
-import {sceneryDensity} from './scenery-profile.js?v=93';
+import {sceneryDensity} from './scenery-profile.js?v=97final';
 import {platformExtent} from './station-platform-length.js?v=87b';
 import {BasinScenery,addBasinFields} from './basin-scenery.js?v=84';
-import {basinDensity,basinAnchors,basinTerrainAreas,basinTerrainAt} from './basin-profile.js?v=84';
+import {basinDensity,basinAnchors,basinTerrainAreas,basinTerrainAt} from './basin-profile.js?v=97final';
 import {TohoLandmarks} from './toho-landmarks.js?v=84';
 import {isToho,villageAt,woodMaterial,addTohoHouses} from './toho-scenery.js?v=90';
 import {filmingChunkIndices} from './railfan-tunnel.js?v=81';
-import {chuoScenery,mountainArea} from './geographic-sections.js?v=90';
+import {chuoScenery,mountainArea} from './geographic-sections.js?v=97final';
 import {prepareUrbanViaduct} from './urban-viaduct.js?v=93';
 import {RoadScenery} from './road-scenery.js?v=93';
 import {BallastDetail} from './ballast-detail.js?v=88';
@@ -34,7 +34,7 @@ const clamp=T.MathUtils.clamp;
 export class FinalWorld {
  constructor(container,route,{quality='standard',drawDistance=1500}={}){
   route=prepareUrbanViaduct(prepareLeftTraffic(prepareCorridorScenery(route)));
-  this.quality=quality;this.route=route;this.sceneryStations=route.sceneryStations??route.stations;this.points=route.points;this.length=route.stations.at(-1).s;this.chunks=new Map();this.suspension=new CabSuspension();this.materials=new Map();this.rural=['toho','toho-village','toho-center','tatsuno','tatsuno-nagano','yagan','shinonoi','oito','chuo-shinshu','chuo-kofu','chuo-system','ome','itsukaichi','chuo-itsukaichi','ome-okutama','chuo-ome','chuo-oito','suwa-nagano','chuo-extended','shinonoi-extended','chuo'].includes(route.id);
+  this.quality=quality;this.route=route;this.sceneryStations=route.sceneryStations??route.stations;this.points=route.points;this.length=route.stations.at(-1).s;this.chunks=new Map();this.suspension=new CabSuspension();this.materials=new Map();this.rural=['yamagata','toho','toho-village','toho-center','tatsuno','tatsuno-nagano','yagan','shinonoi','oito','chuo-shinshu','chuo-kofu','chuo-system','ome','itsukaichi','chuo-itsukaichi','ome-okutama','chuo-ome','chuo-oito','suwa-nagano','chuo-extended','shinonoi-extended','chuo'].includes(route.id);
   this.chuoCorridor=['chuo','chuo-extended','chuo-ome','chuo-oito'].includes(route.id);
   this.mountainStart=this.chuoCorridor?(this.sceneryStations.find(st=>st.name==='高尾')?.s??Infinity):-Infinity;
   this.cityEnd=this.chuoCorridor?(this.sceneryStations.find(st=>st.name==='中野')?.s??0):0;
@@ -199,8 +199,8 @@ export class FinalWorld {
    const {start:a,end:b,offset,height=0,heightKnots}=rail;
    const level=s=>this.deckHeight(s)+(heightKnots?.length?interpolateKnots(heightKnots,s):height);
    this.ribbon(group,a,b,offset,3.15,s=>level(s)+.02,'#74746b');
-   for(const dx of[-.5335,.5335])this.ribbon(group,a,b,s=>offset(s)+dx,.07,s=>level(s)+.19,'#b7c3c3',2);
-   for(let s=Math.ceil(a/1.1)*1.1;s<b;s+=1.1)ties.push({s,x:offset(s),y:level(s)+.06,w:2.05,h:.1,d:.18});
+   for(const dx of[-(this.route.gaugeM??1.067)/2,(this.route.gaugeM??1.067)/2])this.ribbon(group,a,b,s=>offset(s)+dx,.07,s=>level(s)+.19,'#b7c3c3',2);
+   for(let s=Math.ceil(a/1.1)*1.1;s<b;s+=1.1)ties.push({s,x:offset(s),y:level(s)+.06,w:this.route.gaugeM===1.435?2.4:2.05,h:.1,d:.18});
    if(height>0){
     for(let s=a;s<b;s+=10){
      const d=Math.min(10,b-s),mid=s+d/2;

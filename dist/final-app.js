@@ -1,5 +1,6 @@
+import {mountRoutePages} from './route-pages.js?v=97final';
 import {gradeLabel} from './tunnel-effects.js?v=93';
-import {updateDoorVisual} from './train-doors.js?v=93';
+import {updateDoorVisual} from './train-doors.js?v=97final';
 import {scheduledBoardingDelay} from './published-schedules.js?v=86';
 import {loadRoadAsset} from './road-assets.js?v=93';
 import {CrossingAudio} from './crossings.js?v=85';
@@ -8,26 +9,26 @@ import {yaganPlanningSpec,yaganBoardingReady,yaganBoardingDelay} from './yagan-t
 import {progress,serviceKey} from './scenario-progress.js?v=85';
 import {scenarioRanges} from './scenario-ranges.js?v=72';
 import {installCheats,jumpToStation} from './game-cheats.js?v=85';
-import {mountGameShell} from './game-shell.js?v=89';
+import {mountGameShell} from './game-shell.js?v=97final';
 import {DutyRecorder,replayStateAt,recordReplayAudio} from './replay-store.js?v=89';
 import {osakaPlanningSpec} from './osaka-timetable.js?v=72';
 import {collectStationReports,collectRestrictionReports,pauseWhenSpeechEnds} from './station-timing.js?v=84';
-import {buildConnectingRoutes} from './service-catalog.js?v=96';
+import {buildConnectingRoutes} from './service-catalog.js?v=97final';
 import {loadAudioMix,audioMixMarkup,bindAudioMix} from './audio-mix.js?v=91';
-import {bindRouteKeys,bindScreenKeys} from './screen-keys.js?v=72';
+import {bindRouteKeys,bindScreenKeys} from './screen-keys.js?v=97final';
 import {sharedEffects} from './buffered-effects.js?v=phone58fix';
 import {bindTrainSelectionKeys} from './selection-keys.js?v=keys61fix';
 import {beginTerminalOpening,advanceTerminalOpening} from './terminal-arrival.js?v=score13';
-import {vehiclePhoto} from './vehicle-photos.js?v=88';
+import {vehiclePhoto} from './vehicle-photos.js?v=97final';
 import {mountTrainDetails} from './train-details.js?v=85';
 import {mountWheelPicker} from './wheel-picker.js?v=85';
 import {routePlanningSpec,mountScoring,checkpointMarks,scoringStations,buildScoreTimetable,resolveScoreSchedule,scoreHazards,hornMarks,currentScoreRestriction,signalRestriction} from './scoring.js?v=90';
 import {mountDrivingOverlay} from './driving-overlay.js?v=72';import {mountLookahead,changesFromSections,stationMarks} from './lookahead.js?v=evaluation59';
 import {serviceChoices,makeServiceRoute} from './train-selection.js?v=96';
 import {GeneratedCab,generatedCab} from './generated-cab.js?v=95';
-import {FinalWorld} from './final-world.js?v=96';
-import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=82';
-import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=95';
+import {FinalWorld} from './final-world.js?v=97final';
+import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=97final';
+import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=97final';
 import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,routeLimitAt,stopPosition,finishStop,beginDoorClosing,isDoorClosing,takeDepartureCall} from './final-model.js?v=72';
 import {STATIONS as TOHOKU_STATIONS} from './route-data.js?v=41';
 import {FINAL_SCENARIOS,scenarioJourney} from './final-scenarios.js?v=41';
@@ -42,11 +43,12 @@ const $=id=>document.getElementById(id),META=[
  {id:'tokaido',name:'東海道線',english:'TOKAIDO LINE',vehicle:'207',color:'#5caddb',summary:'京都 → 神戸 · 各駅停車',train:'207系2000番台',short:'207'},
  {id:'tohoku',name:'東北本線',english:'TOHOKU MAIN LINE',vehicle:'701',color:'#78b888',summary:'黒磯 → 福島 · 各駅停車',train:'701系1500番台',short:'701',legacy:true},
  {id:'yagan',name:'野岩鉄道',english:'AIZU KINUGAWA LINE',vehicle:'6050',color:'#d7b991',trainColor:'#a53037',bodyColor:'#f2e4c7',summary:'新藤原 → 会津高原尾瀬口 · 各駅停車',train:'6050型',short:'6050',series:'型',card:'yagan-route-button.svg'},
- {id:'toho',name:'東方鉄道線',english:'TOHO RAILWAY',vehicle:'6050',color:'#cda86f',summary:'東方本線・人里線・センター支線',train:'6050型 / 211系',short:'6050',series:'型',card:'toho-route-button.svg'}
+ {id:'toho',name:'東方鉄道線',english:'TOHO RAILWAY',vehicle:'6050',color:'#cda86f',summary:'東方本線・人里線・センター支線',train:'6050型 / 211系',short:'6050',series:'型',card:'toho-route-button.svg'},
+ {id:'yamagata',name:'奥羽本線（山形線）',english:'YAMAGATA LINE',vehicle:'719-5000',color:'#e9a34b',summary:'福島〜米沢 / 米沢〜新庄 · 各駅停車',train:'719系5000番台',short:'719',card:'../vehicle-photos/719-5000.webp'}
 ];
 const preferredRoute=new URLSearchParams(location.search).get('route');
 let selected=Math.max(0,META.findIndex(meta=>meta.id===preferredRoute)),recipes,routes=[],world,panel,sound,run,mode='menu',paused=false,assist=false,panorama=false,viewMode=0,token=0,loading=false,toastText='',toastUntil=0,modalPaused=false;
-let chosenOption;
+let chosenOption,routePages;
 let packs=new Map(),activeRoute,chosenVehicle=null,chosenRoute=null,chosenService='普通',trainSelectionOpen=false;
 let trainDetails,detailEndIndex=null;
 const extraRoutes=new Map();
@@ -69,7 +71,7 @@ function playMenuSound(name,{waitForEnd=false}={}){
 }
 const menuMusic=mountMenuMusic(()=>audioMix.bgm,{active:false});
 let shellActive=true;
-const gameShell=mountGameShell({stage:$('stage'),settings,mix:audioMix,onSound:playMenuSound,onPage:page=>menuMusic.setMenu(page!=='title'),onTitleStart:()=>{menuEffects?.playSequence([new URL('./assets/title-start.wav',location.href).href],audioMix.se);},onActive:active=>{shellActive=active;if(!active&&mode==='drive')menuMusic.setMenu(false);$('menuScreen').inert=active;$('menuControls').inert=active;},onDrive:()=>{setMode('menu');document.querySelector('#routeCards button')?.focus();},onReplay:playSavedReplay,onSettings:kind=>{if(kind==='scenery')world?.refreshScenery?.();saveSettings();sound?.setMix(audioMix);menuMusic.setVolume();world?.setDrawDistance?.(settings.drawDistance);world?.setQuality?.(settings.quality);if(kind==='close'&&mode==='drive'){paused=false;pauseAudio(false);}}});
+const gameShell=mountGameShell({stage:$('stage'),settings,mix:audioMix,onSound:playMenuSound,onPage:page=>menuMusic.setMenu(page!=='title'),onTitleStart:()=>{menuEffects?.playSequence([new URL('./assets/title-start.wav',location.href).href],audioMix.se);},onActive:active=>{shellActive=active;if(!active&&mode==='drive')menuMusic.setMenu(false);$('menuScreen').inert=active;$('menuControls').inert=active;},onDrive:()=>{setMode('menu');document.querySelector('#routeCards [data-route="'+selected+'"]')?.focus();},onReplay:playSavedReplay,onSettings:kind=>{if(kind==='scenery')world?.refreshScenery?.();saveSettings();sound?.setMix(audioMix);menuMusic.setVolume();world?.setDrawDistance?.(settings.drawDistance);world?.setQuality?.(settings.quality);if(kind==='close'&&mode==='drive'){paused=false;pauseAudio(false);}}});
 if(new URLSearchParams(location.search).get('menu')==='main')gameShell.showMain();
 const routeMain=document.createElement('button');routeMain.id='routeMainMenu';routeMain.textContent='Esc　メインメニューへ';$('menuScreen').append(routeMain);routeMain.onclick=()=>gameShell.showMain();
 
@@ -100,7 +102,7 @@ function displayScenario(){
 $('scenarioSelect').onchange=()=>{playMenuSound('cursor');displayScenario();};
 $('startStation').onchange=()=>playMenuSound('cursor');
 function toast(text,seconds=5){toastText=text;toastUntil=(run?.elapsed??0)+seconds;}
-function displayMenu(){const meta=META[selected],r=routes[selected],train=recipe();document.documentElement.style.setProperty('--accent',meta.color);$('trainRoute').textContent=meta.english;$('trainName').innerHTML=`${meta.short}<span>${meta.series??'系'}</span>`;$('formation').textContent=`${train.playableSpecs.carCount}両編成 · 各駅停車`;$('compactRoute').value=String(selected);document.querySelectorAll('.route-card').forEach((el,i)=>{el.classList.toggle('active',i===selected);el.setAttribute('aria-pressed',String(i===selected));});$('startStation').innerHTML=r.stations.slice(0,-1).map((st,i)=>`<option value="${i}">${st.name}</option>`).join('');const scenarios=FINAL_SCENARIOS[meta.id]??[];$('scenarioControl').hidden=!scenarios.length;$('scenarioSelect').replaceChildren(new Option('自由運転',''),...scenarios.map(([id,from,to],i)=>new Option(`#${id} ${from} → ${to}`,String(i))));displayScenario();setMenuPhoto(meta.id);refreshClears();}
+function displayMenu(){const meta=META[selected],r=routes[selected],train=recipe();document.documentElement.style.setProperty('--accent',meta.color);$('trainRoute').textContent=meta.english;$('trainName').innerHTML=`${meta.short}<span>${meta.series??'系'}</span>`;$('formation').textContent=`${train.playableSpecs.carCount}両編成 · 各駅停車`;$('compactRoute').value=String(selected);document.querySelectorAll('.route-card').forEach((el,i)=>{el.classList.toggle('active',i===selected);el.setAttribute('aria-pressed',String(i===selected));});$('startStation').innerHTML=r.stations.slice(0,-1).map((st,i)=>`<option value="${i}">${st.name}</option>`).join('');const scenarios=FINAL_SCENARIOS[meta.id]??[];$('scenarioControl').hidden=!scenarios.length;$('scenarioSelect').replaceChildren(new Option('自由運転',''),...scenarios.map(([id,from,to],i)=>new Option(`#${id} ${from} → ${to}`,String(i))));displayScenario();setMenuPhoto(meta.id);refreshClears();routePages?.sync();}
 function choose(i){
  if(loading)return;
  const next=(i+META.length)%META.length;
@@ -117,8 +119,7 @@ function closeModal(){if(mode==='menu')playMenuSound('cancel');$('modal').close(
 $('closeModal').onclick=closeModal;$('modal').addEventListener('cancel',e=>{e.preventDefault();closeModal();});
 function settingsDialog(){if(mode==='drive'){paused=true;pauseAudio(true);}gameShell.showOptions(mode==='drive'?'drive':'main');}
 function helpDialog(){showModal(`<p class="eyebrow">DRIVING GUIDE</p><h2>一駅ずつ、確実に。</h2><p><kbd>S / ↓</kbd> P側へ　<kbd>W / ↑</kbd> EB側へ<br><kbd>←</kbd> 惰行　<kbd>Space</kbd> 非常ブレーキ<br><kbd>Enter 長押し</kbd> 警笛　<kbd>Esc</kbd> 一時停止</p><p>扉は自動です。停止位置±3m以内で3秒停止すると戸開、15秒乗降後に合図音→戸閉音の順に再生し、最後まで鳴ってから戸閉灯が点きます。最初の駅は戸開で開始します。</p><p>停止位置±10mで右端のひし形が上から下へ動きます。残り5m以内はcm表示。5m以上行き過ぎて停止すると、停止位置の0cmに補正します。</p><p>運転士音声は駅の手前300mで「駅名、停車。停止位置と両数」、戸閉灯の点灯後に「戸閉、点」「出発進行」が順に鳴り、発車すると「出発駅名、定発」が続きます。出発の喚呼はこの試作での発車扱いに合わせています。</p><small>停車アシストはブレーキを補助します。通常のドア開閉ではノッチは変わりません。207系はP6、323系は抑速を備えます。</small>`);}
-function dataDialog(){showModal(`<p class="eyebrow">ROUTE & VEHICLE</p><h2>7路線の運転乗務。</h2><p>山手線 / E235系 · 中央線 / E233系0番台<br>大阪環状線 / 323系 · 東海道線 / 207系2000番台<br>東北本線 / 701系1500番台 · 野岩鉄道 / 6050型<br>東方鉄道線 / 6050型・211系（提供地図と駅間距離から作成した架空路線）</p><p>東方鉄道線は提供地図と駅間距離から作成した架空路線です。東方本線・人里線・センター支線で6050型と211系を選べます。</p><p>野岩鉄道は提供BVEデータの新藤原〜会津高原尾瀬口を再現。線形、勾配、ホーム、トンネル・橋、明示された速度制限、車内放送を読み込みます。山や林は景観用の近似です。</p><p>線路の曲がり方はOpenStreetMap、駅間距離は公開駅一覧を使用。4路線のホーム・並走線は地図やJRの構内図を参照し、電車でGO！FINALの映像で見え方を照合しました。建物・停止目標は試作上の概略です。シナリオの運転区間はFINALの公開プレイ記録を参照し、現在の車両で各駅に停まります。</p><p>中央線・大阪環状線は位置を確認できた信号機を描画します。FINALを参考にした4路線の速度上限は車両性能の設定です。ゲームの実データとは区別しています。</p><p>E235系は提供データの15両設定を参考に、山手線用の11両・起動加速度3.0km/h/sを試作設定。E233系は提供12両、323系8両、207系7両です。力行は提供の速度別引張力表を補間し、常用制動・抵抗は簡易モデルです。</p><p>E235系は提供データの起動時モーター音、E233系は三菱IGBTの力行・制動モーター音を使用します。発車合図には東北本線と共通のホイッスルを使います。4路線の運転士喚呼にはFINALの路線別音声を使います。</p><small class="credits-note"><a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors / ODbL</a> · <a href="./assets/final/route-data-notes.md" target="_blank">路線の出典・検証</a> · <a href="./assets/final/scenario-notes.md" target="_blank">シナリオの出典</a> · <a href="./assets/final/expansion-v82-notes.md" target="_blank">追加路線・ダイヤの出典</a></small>`);}
-$('settingsButton').onclick=()=>{playMenuSound('confirm');settingsDialog();};
+function dataDialog(){showModal(`<p class="eyebrow">ROUTE & VEHICLE</p><h2>8路線の運転乗務。</h2><p>奥羽本線（山形線）福島〜新庄：福島〜米沢は提供BVE、米沢〜新庄はOpenStreetMap。719系5000番台の提供運転台・走行音・性能表を使用。外観は提供0番台の構造を流用しています。</p><p>山手線 / E235系 · 中央線 / E233系0番台<br>大阪環状線 / 323系 · 東海道線 / 207系2000番台<br>東北本線 / 701系1500番台 · 野岩鉄道 / 6050型<br>東方鉄道線 / 6050型・211系（提供地図と駅間距離から作成した架空路線）</p><p>東方鉄道線は提供地図と駅間距離から作成した架空路線です。東方本線・人里線・センター支線で6050型と211系を選べます。</p><p>野岩鉄道は提供BVEデータの新藤原〜会津高原尾瀬口を再現。線形、勾配、ホーム、トンネル・橋、明示された速度制限、車内放送を読み込みます。山や林は景観用の近似です。</p><p>線路の曲がり方はOpenStreetMap、駅間距離は公開駅一覧を使用。4路線のホーム・並走線は地図やJRの構内図を参照し、電車でGO！FINALの映像で見え方を照合しました。建物・停止目標は試作上の概略です。シナリオの運転区間はFINALの公開プレイ記録を参照し、現在の車両で各駅に停まります。</p><p>中央線・大阪環状線は位置を確認できた信号機を描画します。FINALを参考にした4路線の速度上限は車両性能の設定です。ゲームの実データとは区別しています。</p><p>E235系は提供データの15両設定を参考に、山手線用の11両・起動加速度3.0km/h/sを試作設定。E233系は提供12両、323系8両、207系7両です。力行は提供の速度別引張力表を補間し、常用制動・抵抗は簡易モデルです。</p><p>E235系は提供データの起動時モーター音、E233系は三菱IGBTの力行・制動モーター音を使用します。発車合図には東北本線と共通のホイッスルを使います。4路線の運転士喚呼にはFINALの路線別音声を使います。</p><small class="credits-note"><a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors / ODbL</a> · <a href="./assets/final/route-data-notes.md" target="_blank">路線の出典・検証</a> · <a href="./assets/final/scenario-notes.md" target="_blank">シナリオの出典</a> · <a href="./assets/final/expansion-v82-notes.md" target="_blank">追加路線・ダイヤの出典</a></small>`);}
 $('driveSettings').onclick=settingsDialog;
 function setNotch(n){if(replaySession)return;if(mode!=='drive'||paused||run.finished)return;const c=controlsFor(recipe());run.notch=clamp(n,c.min,c.max);}
 $('brakeButton').onclick=()=>setNotch(run.notch-1);$('powerButton').onclick=()=>setNotch(run.notch+1);$('neutralButton').onclick=()=>setNotch(0);$('ebButton').onclick=()=>setNotch(controlsFor(recipe()).min);bindHornButton($('hornButton'),pressed=>sound?.setHorn(pressed&&!paused&&!run?.finished));
@@ -306,7 +307,7 @@ function advance(dt){
   run.assistBraking=false;
  }
 }
-bindRouteKeys(document,{active:()=>!shellActive&&!!recipes&&mode==='menu'&&!trainSelectionOpen&&!$('modal').open&&!loading,choose,current:()=>selected,focusRoute:()=>document.querySelector('#routeCards [data-route="'+selected+'"]').focus({preventScroll:true}),settings:()=>{$('settingsButton').click();},focusSettings:()=>$('settingsButton').focus({preventScroll:true}),open:openTrainSelection});
+bindRouteKeys(document,{active:()=>!shellActive&&!!recipes&&mode==='menu'&&!trainSelectionOpen&&!$('modal').open&&!loading,choose,current:()=>selected,focusRoute:()=>document.querySelector('#routeCards [data-route="'+selected+'"]').focus({preventScroll:true}),open:openTrainSelection});
 bindScreenKeys(document,{root:()=>trainDetails?.root,active:()=>trainSelectionOpen&&$('trainSelection').dataset.view==='details'&&!$('modal').open&&!loading,onBack:showTrainList,onSound:playMenuSound});
 bindScreenKeys(document,{root:()=>$('modal'),active:()=>$('modal').open,onBack:closeModal,onSound:playMenuSound});
 document.addEventListener('keydown',e=>{if(shellActive)return;if(replaySession){if(e.code==='KeyV'){e.preventDefault();cycleReplayView();}if(e.code==='Escape'){e.preventDefault();$('pauseButton').click();}return;}if(mode==='menu'&&!trainSelectionOpen&&e.code==='Escape'){e.preventDefault();gameShell.showMain();return;}if((e.target.matches('input,select,textarea')&&e.target.id!=='notchSlider')||$('modal').open)return;if(mode==='menu'){if(trainSelectionOpen&&['ArrowUp','ArrowDown'].includes(e.code))return;if(e.code==='Escape'&&trainSelectionOpen){e.preventDefault();closeTrainSelection();return;}if(e.code==='ArrowUp'||e.code==='ArrowDown'){e.preventDefault();if(recipes)choose(selected+(e.code==='ArrowDown'?1:-1));}else if(e.code==='Enter'){if(e.target.closest('button,a')&&!e.target.closest('.route-card'))return;e.preventDefault();if(trainSelectionOpen){if($('trainSelection').dataset.view==='details')start();else showTrainDetails();}else openTrainSelection();}return;}if(e.code==='KeyV'){e.preventDefault();$('viewButton').click();return;}if(e.code==='Escape'){e.preventDefault();$('pauseButton').click();return;}if(e.code==='Enter'){e.preventDefault();if(!paused&&!e.repeat&&!run.finished)sound.setHorn(true);return;}if(paused||e.repeat)return;if(['KeyW','ArrowUp','KeyS','ArrowDown','ArrowLeft','Space'].includes(e.code))e.preventDefault();if(['KeyW','ArrowUp'].includes(e.code))setNotch(run.notch-1);else if(['KeyS','ArrowDown'].includes(e.code))setNotch(run.notch+1);else if(e.code==='ArrowLeft')setNotch(0);else if(e.code==='Space')setNotch(controlsFor(recipe()).min);else if(e.code==='KeyJ')effect('hornSecondary').catch(()=>{});});
@@ -348,17 +349,18 @@ requestAnimationFrame(frame);
 try {
  const routeLoads=META.map(async meta=>{
   if(meta.legacy)return {id:meta.id,name:meta.name,length:TOHOKU_STATIONS.at(-1).s,stations:TOHOKU_STATIONS};
-  const response=await fetch(`./assets/final/${meta.id}-route.json?v=85`);
+  const response=await fetch(`./assets/final/${meta.id}-route.json?v=97final`);
   if(!response.ok)throw Error('路線データを読み込めません');
   return loadRoadAsset(await response.json());
  });
  [recipes,packs,...routes]=await Promise.all([loadVehicleRecipes(),loadBundledTrainPacks(),...routeLoads]);
- $('routeCards').innerHTML=META.map((m,i)=>`<button class="route-card${m.card?' yagan-card':m.legacy?' tohoku-card':''}" data-route="${i}" style="--i:${i};--route-color:${m.color};--card-image:url(./assets/final/${m.card??m.id+'-route-button-v25.png'})" aria-pressed="false"><span class="route-copy"><strong>${m.name}</strong><small>${m.english}</small><em>普通　${m.train}</em></span><span class="sun" aria-hidden="true">☀</span></button>`).join('');
+ $('routeCards').innerHTML=META.map((m,i)=>`<button class="route-card${m.card?' yagan-card':m.legacy?' tohoku-card':''}" data-route="${i}" data-line="${m.id}" style="--i:${i};--route-color:${m.color};--card-image:url(./assets/final/${m.card??m.id+'-route-button-v25.webp'})" aria-pressed="false"><span class="route-copy"><strong>${m.name}</strong><small>${m.english}</small><em>普通　${m.train}</em></span><span class="sun" aria-hidden="true">☀</span></button>`).join('');
  $('routeCards').querySelectorAll('button').forEach(button=>button.onclick=()=>{choose(Number(button.dataset.route));openTrainSelection();});
+ routePages=mountRoutePages($('routeCards'),{choose,current:()=>selected,active:()=>!shellActive&&mode==='menu'&&!trainSelectionOpen&&!$('modal').open&&!loading});
  $('compactRoute').innerHTML=META.map((m,i)=>`<option value="${i}">${m.name} · ${m.train}</option>`).join('');
  $('compactRoute').onchange=event=>{choose(Number(event.target.value));openTrainSelection();};
  const additions=await Promise.all(['chuo-extended','shinonoi-extended','chuo-kofu','chuo-shinshu','shinonoi','oito','ome','ome-okutama','itsukaichi','tatsuno','toho-village','toho-center'].map(async id=>{
- const response=await fetch('./assets/final/'+id+'-route.json?v=85');
+ const response=await fetch('./assets/final/'+id+'-route.json?v=97final');
  if(response.ok)extraRoutes.set(id,await loadRoadAsset(await response.json()));
 }));
  for(const [id,r] of buildConnectingRoutes(extraRoutes))extraRoutes.set(id,r);
@@ -383,7 +385,6 @@ function setupTrainSelection(){
  bindTrainSelectionKeys(document,{active:()=>trainSelectionOpen&&!loading&&$('trainSelection').dataset.view==='list'&&!$('modal').open,previous:()=>$('trainChoice').wheel.step(-1),next:()=>$('trainChoice').wheel.step(1),previousLine:()=>switchSelectionLine(-1),nextLine:()=>switchSelectionLine(1),details:showTrainDetails,back:closeTrainSelection});
  for(const id of ['startStation','scenarioSelect']){$(id).dataset.wheel='true';const previous=$(id).nextElementSibling;if(previous?.classList.contains('game-select'))previous.remove();$(id).wheel=mountWheelPicker($(id));}
  overlay.addEventListener('keydown',event=>{if(event.code==='Escape'){event.preventDefault();event.stopPropagation();if(!trainDetails.root.hidden)showTrainList();else closeTrainSelection();}else if(trainDetails.root.hidden&&['ArrowLeft','ArrowRight'].includes(event.code)){event.preventDefault();event.stopPropagation();switchSelectionLine(event.code==='ArrowLeft'?-1:1);}});
- $('menuScreen').append($('settingsButton'));$('settingsButton').textContent='O　音量・設定';
  $('selectionBack').onclick=closeTrainSelection;
  $('trainChoice').onchange=()=>{playMenuSound('cursor');applyTrainChoice();};
 }
@@ -417,7 +418,7 @@ function closeTrainSelection(){
  playMenuSound('cancel');document.body.dataset.mode='menu';$('menuScreen').hidden=false;$('menuControls').hidden=false;trainSelectionOpen=false;$('menuScreen').inert=false;$('menuControls').inert=false;$('trainSelection').hidden=true;chosenVehicle=null;chosenRoute=null;displayMenu();fit();
 }
 
-function rNote(r){return r.geometrySections?'BVE収録区間を地図の線路で接続した運転コースです。':r.id.startsWith('shinonoi')?'この運転コースでは姨捨の通過線を走ります。':'';}
+function rNote(r){if(r.id==='yamagata')return '福島〜米沢：提供BVE / 米沢〜新庄：OSM。719系5000番台の運転台・音・性能は提供データ、外観は0番台モデルによる近似です。';return r.geometrySections?'BVE収録区間を地図の線路で接続した運転コースです。':r.id.startsWith('shinonoi')?'この運転コースでは姨捨の通過線を走ります。':'';}
 
 function switchSelectionLine(delta){choose((selected+delta+META.length)%META.length);openTrainSelection();}
 function showTrainList(){if(!trainDetails)return;trainDetails.hide();$('trainSelection').dataset.view='list';detailEndIndex=null;$('trainChoice')?.wheel?.focus();}

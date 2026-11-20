@@ -1,7 +1,7 @@
 import {BASIN_ELEVATION} from './basin-elevation-data.js?v=84';
-import {sceneryDensity,sceneryProfiles} from './scenery-profile.js?v=93';
+import {sceneryDensity,sceneryProfiles} from './scenery-profile.js?v=97final';
 import * as T from './assets/vendor/three.module.js';
-import {basinAnchors,basinDensity,basinRelief,basinTerrainAreas,basinTerrainAt} from './basin-profile.js?v=84';
+import {basinAnchors,basinDensity,basinRelief,basinTerrainAreas,basinTerrainAt} from './basin-profile.js?v=97final';
 // GSI DEM backdrop, geographically aligned to station anchors. The immediate
 // rail corridor is cleared without changing track elevation or train physics.
 export class BasinScenery{

@@ -1,4 +1,4 @@
-import {SCENERY_PROFILES} from './scenery-profile-data.js?v=84';
+import {SCENERY_PROFILES} from './scenery-profile-data.js?v=97final';
 // Scenery design indices, not surveyed land-cover percentages. Station names keep
 // this profile aligned when a service reverses, starts halfway, or joins routes.
 export const BASIN_PROFILE=[
@@ -44,6 +44,8 @@ export function basinTerrainAreas(route){
  if(terrainAreas.has(route))return terrainAreas.get(route);
  const stations=route.sceneryStations??route.stations??[],areas=[];
  for(const [kind,names,center,factor]of [
+  ['yonezawa','関根 米沢 置賜 高畠 赤湯'.split(' '),'米沢',.65],
+  ['yamagata','かみのやま温泉 茂吉記念館前 蔵王 山形 北山形 羽前千歳 南出羽 漆山 高擶 天童南 天童 乱川 神町 さくらんぼ東根 東根 村山'.split(' '),'天童',.7],
   ['kofu',BASIN_PROFILE.map(r=>r.name),'甲府',1],
   ['matsumoto','塩尻 広丘 村井 平田 南松本 松本'.split(' '),'松本',.55],
   ['nagano','篠ノ井 今井 川中島 安茂里 長野'.split(' '),'長野',.6]

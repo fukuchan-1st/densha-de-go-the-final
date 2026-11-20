@@ -1,4 +1,4 @@
-import {sceneryDensity} from './scenery-profile.js?v=93';
+import {sceneryDensity} from './scenery-profile.js?v=97final';
 import {districtAt} from './toho-biomes.js?v=83';
 import * as T from './assets/vendor/three.module.js';
 export const isToho=route=>route.id?.startsWith('toho');

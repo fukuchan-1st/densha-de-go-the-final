@@ -1,4 +1,4 @@
-import {basinDensity,basinTerrainAt} from './basin-profile.js?v=84';
+import {basinDensity,basinTerrainAt} from './basin-profile.js?v=97final';
 const city=new Set('東京 神田 御茶ノ水 四ツ谷 新宿 中野'.split(' '));
 const tokyo=new Set('東京 神田 御茶ノ水 四ツ谷 新宿 中野 高円寺 阿佐ケ谷 荻窪 西荻窪 吉祥寺 三鷹 武蔵境 東小金井 武蔵小金井 国分寺 西国分寺 国立 立川 日野 豊田 八王子 西八王子 高尾'.split(' '));
 export function stationLeg(route,s){const stations=route.sceneryStations??route.stations??[];let i=1;while(i<stations.length-1&&stations[i].s<s)i++;return [stations[Math.max(0,i-1)],stations[i]??stations[0]].filter(Boolean);}
@@ -20,4 +20,4 @@ export function releaseMatsumotoExpressLimit(route,vehicle,service){
 }
 
 const basin=new Set('松本 南松本 平田 村井 広丘 塩尻'.split(' '));
-export function valleyWidth(route,s){const density=basinDensity(route,s);if(density)return density.width;if(basinTerrainAt(route,s))return 1200;if(route.id?.startsWith('toho'))return 85;const leg=stationLeg(route,s),m=(route.sceneryStations??route.stations??[]).find(st=>st.name==='松本');return (leg.length===2&&leg.every(st=>basin.has(st.name)))||(m&&Math.abs(s-m.s)<1600)?90:10;}
+export function valleyWidth(route,s){if(route.id==='yamagata'){const st=route.sceneryStations??route.stations,at=n=>st.find(x=>x.name===n)?.s,a=at('庭坂'),b=at('関根');return a!=null&&b!=null&&s>Math.min(a,b)&&s<Math.max(a,b)?45:1200;}const density=basinDensity(route,s);if(density)return density.width;if(basinTerrainAt(route,s))return 1200;if(route.id?.startsWith('toho'))return 85;const leg=stationLeg(route,s),m=(route.sceneryStations??route.stations??[]).find(st=>st.name==='松本');return (leg.length===2&&leg.every(st=>basin.has(st.name)))||(m&&Math.abs(s-m.s)<1600)?90:10;}

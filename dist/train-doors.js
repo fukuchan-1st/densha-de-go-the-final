@@ -4,6 +4,7 @@ import {interpolateKnots} from './track-layout.js?v=79';
 // Local car coordinates, measured from the centre of the body. Passenger doors
 // only: cab access doors and gangways remain fixed.
 export const DOOR_LAYOUTS={
+ '719-5000':{centres:[-6.71,-.19,6.34],width:1.3,bottom:1.10,top:3.08,variants:{tail:{centres:[-6.44,.09,6.61]}}},
  '207':{centres:[-7.1,-2.4,2.4,7.1]},'223-1000':{centres:[-6.8,0,6.8]},e233:{centres:[-5.9,-2.3,2.55,7.4],width:1.23,bottom:1.23,top:3.04,variants:{tail:{centres:[-7.1,-2.25,2.6,6.25]},middle:{centres:[-7.2,-2.4,2.4,7.2]}}},e235:{centres:[-7.52,-2.49,2.45,6.12],width:1.23,bottom:1.06,top:3.12,variants:{tail:{centres:[-6.14,-2.51,2.47,7.47]},middle:{centres:[-7.5,-2.5,2.5,7.5]}}},
  '323':{centres:[-7.2,-.13,6.9],width:1.24,bottom:1.10,top:2.98,variants:{tail:{centres:[-6.93,.13,7.18],top:2.94},middle:{centres:[-7.05,0,7.05]}}},'211':{centres:[-6.75,-.15,6.45],width:1.3,bottom:1.14,top:3.12,variants:{tail:{centres:[-6.45,.12,6.75]},middle:{centres:[-6.65,0,6.65]}}},
  '221':{centres:[-6.9,.1,7.1],width:1.24,bottom:1.03,top:2.94,variants:{middle:{centres:[-7,0,7]}}},'223':{centres:[-6.8,.1,7.1],width:1.25,bottom:1.08,top:3.0,variants:{tail:{centres:[-7.15,-.05,6.95],bottom:1.01,top:2.93}}},'223-0':{centres:[-6.8,0,6.8]},

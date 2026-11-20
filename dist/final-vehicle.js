@@ -1,6 +1,6 @@
-import {inflateSync} from './assets/vendor/fflate.module.js';
+import {inflateSync,gunzipSync} from './assets/vendor/fflate.module.js';
 
-export async function loadVehicleRecipes(){const r=await fetch(new URL('./assets/final/vehicle-recipes.json?v=93',import.meta.url));if(!r.ok)throw Error('車両設定を読み込めません');return r.json();}
+export async function loadVehicleRecipes(){const r=await fetch(new URL('./assets/final/vehicle-recipes.json?v=97final',import.meta.url));if(!r.ok)throw Error('車両設定を読み込めません');return r.json();}
 
 class BundledTrainPack {
  constructor(id,assets){
@@ -16,12 +16,12 @@ class BundledTrainPack {
  async bytes(ref){
   const response=await fetch(this.objectURL(ref));
   if(!response.ok)throw Error('アプリ内の音源を読み込めません');
-  return new Uint8Array(await response.arrayBuffer());
+  const bytes=new Uint8Array(await response.arrayBuffer());return bytes[0]===31&&bytes[1]===139?gunzipSync(bytes):bytes;
  }
 }
 
 export async function loadBundledTrainPacks(){
- const response=await fetch(new URL('./assets/final/vehicles/manifest.json?v=88',import.meta.url));
+ const response=await fetch(new URL('./assets/final/vehicles/manifest.json?v=97final',import.meta.url));
  if(!response.ok)throw Error('アプリ内の車両一覧を読み込めません');
  const {trains}=await response.json();
  return new Map(Object.entries(trains).map(([id,assets])=>[id,new BundledTrainPack(id,assets)]));

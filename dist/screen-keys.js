@@ -18,8 +18,8 @@ export function bindScreenKeys(document,{root,active,onBack,onSound=()=>{}}){
 export function bindRouteKeys(document,{active,choose,current,focusRoute,settings,focusSettings,open}){
  let option=false;document.addEventListener('keydown',event=>{if(!active()||event.altKey||event.ctrlKey||event.metaKey)return;
  const code=event.code;if(!['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Enter','KeyO','F1','Escape'].includes(code))return;event.preventDefault();event.stopImmediatePropagation();
- if(code==='KeyO'||code==='F1'){settings();return;}
- if(code==='ArrowLeft'||code==='ArrowRight'){option=event.target.id!=='settingsButton';option?focusSettings():focusRoute();return;}
+ if(code==='KeyO'||code==='F1'){settings?.();return;}
+ if(code==='ArrowLeft'||code==='ArrowRight'){if(!focusSettings){choose(current()+(code==='ArrowRight'?4:-4));focusRoute();return;}option=event.target.id!=='settingsButton';option?focusSettings():focusRoute();return;}
  if(code==='ArrowUp'||code==='ArrowDown'){option=false;choose(current()+(code==='ArrowDown'?1:-1));focusRoute();return;}
  if(code==='Escape'){option=false;document.getElementById('routeMainMenu')?.click();return;}if(code==='Enter'){if(event.repeat)return;if(event.target.id==='settingsButton')settings();else open();}
  },true);

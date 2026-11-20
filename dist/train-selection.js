@@ -1,8 +1,9 @@
+import {withYamagataEra} from './yamagata-era.js?v=97final';
 import {applyPublishedSchedule} from './published-schedules.js?v=86';
-import {releaseMatsumotoExpressLimit} from './geographic-sections.js?v=90';
+import {releaseMatsumotoExpressLimit} from './geographic-sections.js?v=97final';
 import {prepareLeftTraffic} from './route-traffic.js?v=96';
 import {selectTokaidoServiceTrack} from './tokaido-service-track.js?v=services63';
-import {serviceChoices,STOP_PATTERNS} from './service-catalog.js?v=96';
+import {serviceChoices,STOP_PATTERNS} from './service-catalog.js?v=97final';
 import {sliceRoute,reverseRoute} from './service-routes.js?v=96';
 export {serviceChoices};
 function makeDefaultServiceRoute(route,vehicle,service){
@@ -24,6 +25,7 @@ function makeDefaultServiceRoute(route,vehicle,service){
 
 export function makeServiceRoute(route,vehicle,service,option){
  if(!option)return applyPublishedSchedule(makeDefaultServiceRoute(route,vehicle,service),vehicle,service);
+ route=withYamagataEra(route,option.era);
  let r=selectTokaidoServiceTrack(route,service.includes('しなの')?'特急':service);r={...r,sceneryStations:r.sceneryStations??r.stations,limits:r.limitsByVehicle?.[vehicle]??r.limits};
  r=releaseMatsumotoExpressLimit(r,vehicle,service);
  if(r.id==='yagan')r=makeDefaultServiceRoute(r,vehicle,'普通');

@@ -1,5 +1,5 @@
 import {stationBuildingClear} from './station-space.js?v=90';
-import {sceneryDensity} from './scenery-profile.js?v=93';
+import {sceneryDensity} from './scenery-profile.js?v=97final';
 import {RoadScenery} from './road-scenery.js?v=93';
 import {BallastDetail} from './ballast-detail.js?v=88';
 import {LevelCrossings} from './crossings.js?v=88';

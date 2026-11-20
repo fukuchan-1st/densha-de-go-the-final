@@ -1,5 +1,5 @@
 import {applyProgressFrame} from './scenario-progress.js?v=85';
-import {vehiclePhoto} from './vehicle-photos.js?v=corridor1';
+import {vehiclePhoto} from './vehicle-photos.js?v=97final';
 const svgNS='http://www.w3.org/2000/svg';
 export function normalizeRange(count,start,end){start=Math.max(0,Math.min(count-2,start));end=Math.max(start+1,Math.min(count-1,end));return {start,end};}
 export function mountTrainDetails(parent,{onBack,onRange,onSound=()=>{}}){

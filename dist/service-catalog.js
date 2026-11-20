@@ -31,6 +31,7 @@ const base={
  item('chuo-oito','e353','特急あずさ','新宿','南小谷',{pattern:'大糸特急'}),item('chuo-oito','e353','特急あずさ','松本','白馬',{pattern:'大糸特急'}),item('chuo-oito','383','特急しなの','塩尻','白馬',{pattern:'しなの',carCount:4})],
  osaka:[item('osaka','323','普通'),item('osaka','223','関空・紀州路快速'),item('osaka','221','大和路快速')],
  tokaido:[item('tokaido','207','普通'),item('tokaido','223-1000','新快速'),item('tokaido','681','特急'),item('tokaido','221','快速'),item('tokaido','221','普通'),item('tokaido','383','特急しなの','京都','大阪',{pattern:'しなの',night:true,startTime:'18:49:30'})],
+ yamagata:[item('yamagata','719-5000','普通（赤岩廃止後）','福島','米沢',{era:'closed',startTime:'08:07:30'}),...([['米沢','新庄'],['米沢','山形'],['山形','新庄']].map(([from,to])=>item('yamagata','719-5000','普通（赤岩廃止後）',from,to,{era:'closed',startTime:'10:00:00'}))),item('yamagata','719-5000','普通（赤岩停車・休止前）','福島','米沢',{era:'active',startTime:'08:07:30'}),item('yamagata','719-5000','普通（赤岩通過・休止中）','庭坂','板谷',{era:'suspended',startTime:'08:16:30'})],
  tohoku:[item('tohoku','701','普通')],yagan:[item('yagan','6050','普通')],toho:['toho','toho-village','toho-center'].flatMap(id=>['6050','211'].map(v=>item(id,v,'普通',undefined,undefined,{pattern:'all',startTime:'09:00:00'})))
 };
 // These numbers refer to the original catalog, before removal or display sorting.

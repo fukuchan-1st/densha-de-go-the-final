@@ -1,5 +1,5 @@
-import {SCENERY_PROFILES} from './scenery-profile-data.js?v=84';
-import {basinDensity,basinProfile} from './basin-profile.js?v=84';
+import {SCENERY_PROFILES} from './scenery-profile-data.js?v=97final';
+import {basinDensity,basinProfile} from './basin-profile.js?v=97final';
 // Read-only indices are regenerated from geographical land use, not user sliders.
 export function sceneryProfiles(){return [{id:'kofu',name:'甲府盆地',rows:basinProfile()},...SCENERY_PROFILES];}
 const aliases={chuo:'chuo','chuo-extended':'chuo','chuo-kofu':'chuo','chuo-system':'chuo','chuo-oito':'chuo','chuo-shinshu':'chuo','chuo-osm-gap':'chuo',shinonoi:'shinonoi','shinonoi-extended':'shinonoi','shinonoi-approach':'shinonoi','suwa-nagano':'shinonoi','tatsuno-nagano':'tatsuno','chuo-ome':'ome','chuo-itsukaichi':'itsukaichi','ome-okutama':'okutama'};
@@ -8,7 +8,7 @@ const profilesCache=sceneryProfiles();
 export function sceneryDensity(route={},s=0){
  const basin=basinDensity(route,s);if(basin)return basin;
  let entry=cache.get(route);
- if(!entry){const list=profilesCache,primary=list.find(p=>p.id===(aliases[route.id]??route.id));
+ if(!entry){const list=profilesCache,primary=list.find(p=>p.id===(aliases[route.id]??route.id))??(route.sceneryProfile?{rows:route.sceneryProfile}:null);
   const rows=(route.sceneryStations??route.stations??[]).map(st=>{const p=primary?.rows.find(r=>r.name===st.name)??list.filter(p=>p.id!=='kofu').flatMap(p=>p.rows).find(r=>r.name===st.name);return p?{s:st.s,...p}:null;}).filter(Boolean).sort((a,b)=>a.s-b.s);
   entry={rows};cache.set(route,entry);
  }
