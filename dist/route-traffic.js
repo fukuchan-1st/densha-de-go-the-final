@@ -1,4 +1,4 @@
-import {applyStationWiring} from './station-wiring.js?v=93';
+import {applyStationWiring} from './station-wiring.js?v=96';
 import {prepareSpecialStations} from './special-station-layouts.js?v=85';
 import {widenBoardingClearance,mergePlatformSurfaces} from './platform-details.js?v=79';
 import {yamanoteParallel} from './yamanote-parallel.js?v=79';
@@ -86,5 +86,5 @@ export function prepareLeftTraffic(source){
   if(trafficSectionAt({...source,trafficSections:sections},st.s).tracks===4){const opposing=reverse?[0,8]:[8,16],l=opposing[0]+1.55,r=opposing[1]-1.55;if(!platforms.some(p=>p.edges[0][1]<=l&&p.edges[0][2]>=r))platforms.push(make(l,r));}
   layouts[st.name]={...layout,platforms:mergePlatformSurfaces(platforms.filter(p=>p===boarding||p.edges[0][2]-p.edges[0][1]>=2.5))};
  }
- return applyStationWiring(prepareSpecialStations({...source,trafficSide:'left',leftTrafficVersion:5,trafficSections:sections,drivingTrack:driving,neighborTracks:neighbors,stationLayouts:layouts,corridorSceneryPrepared:true}),source);
+ return applyStationWiring(prepareSpecialStations({...source,trafficSide:'left',leftTrafficVersion:5,trafficSections:sections,tokyoBaseDrivingTrack:undefined,drivingTrack:driving,neighborTracks:neighbors,stationLayouts:layouts,corridorSceneryPrepared:true}),source);
 }

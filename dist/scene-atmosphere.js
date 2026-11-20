@@ -1,4 +1,4 @@
-import {TrainWindowEnvironment} from './train-window-reflections.js?v=95';
+import {TrainWindowEnvironment,updateTrainWindowLighting} from './train-window-reflections.js?v=96';
 import {tunnelAdaptation} from './tunnel-effects.js?v=93';
 import * as T from './assets/vendor/three.module.js';
 import {graphicsProfile,HighQualityRenderer} from './graphics-quality.js?v=87b';
@@ -89,7 +89,7 @@ export class SceneAtmosphere{
   else if(world.headlight.parent!==world.camera){world.camera.add(world.headlight,world.headlight.target);world.headlight.position.set(0,-.8,-.4);world.headlight.target.position.set(0,-1.6,-35);}
   for(const material of (world.materials instanceof Map?world.materials.values():Object.values(world.materials??{})))if(material.userData.windowLight)material.emissiveIntensity=(1-solar.daylight)*1.1;
   world.scene.fog?.color.lerp(new T.Color('#080b10'),inside*.94);
-  this.windowEnvironment??=new TrainWindowEnvironment(world);this.windowEnvironment.update(dt,point);
+  this.windowEnvironment??=new TrainWindowEnvironment(world);this.windowEnvironment.update(dt,point);updateTrainWindowLighting(world.scene,solar.daylight,inside);
   followSunShadow(this.sun,point,solar.direction);
   this.shadowClock+=dt;if(profile.shadows&&(moving||this.shadowClock>.12||!this.lastShadowPosition||point.distanceTo(this.lastShadowPosition)>3||Math.abs(time-(this.lastShadowTime??time))>1)){
    world.renderer.shadowMap.needsUpdate=true;this.shadowClock=0;this.lastShadowPosition=point.clone();this.lastShadowTime=time;

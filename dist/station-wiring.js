@@ -1,4 +1,4 @@
-import {prepareTokyoStation} from './tokyo-station.js?v=93';
+import {prepareTokyoStation} from './tokyo-station.js?v=96';
 import {interpolateKnots} from './track-layout.js?v=79';
 const keyName=s=>s?.replaceAll('ヶ','ケ').replaceAll('ノ','ノ').replace('ヤナバ前','ヤナバスキー場前');
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
