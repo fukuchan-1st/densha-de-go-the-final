@@ -1,4 +1,5 @@
-import {SCENERY_PROFILES} from './scenery-profile-data.js?v=97final';
+import {yamagataMountainDensity} from './yamagata-mountain.js?v=99';
+import {SCENERY_PROFILES} from './scenery-profile-data.js?v=99';
 import {basinDensity,basinProfile} from './basin-profile.js?v=97final';
 // Read-only indices are regenerated from geographical land use, not user sliders.
 export function sceneryProfiles(){return [{id:'kofu',name:'甲府盆地',rows:basinProfile()},...SCENERY_PROFILES];}
@@ -6,6 +7,7 @@ const aliases={chuo:'chuo','chuo-extended':'chuo','chuo-kofu':'chuo','chuo-syste
 const cache=new WeakMap();
 const profilesCache=sceneryProfiles();
 export function sceneryDensity(route={},s=0){
+ const mountain=yamagataMountainDensity(route,s);if(mountain)return mountain;
  const basin=basinDensity(route,s);if(basin)return basin;
  let entry=cache.get(route);
  if(!entry){const list=profilesCache,primary=list.find(p=>p.id===(aliases[route.id]??route.id))??(route.sceneryProfile?{rows:route.sceneryProfile}:null);

@@ -1,4 +1,4 @@
-import {sceneryDensity} from './scenery-profile.js?v=97final';
+import {sceneryDensity} from './scenery-profile.js?v=99';
 import * as T from './assets/vendor/three.module.js';
 import {districtAt,fixedMoodAt,DISTRICTS} from './toho-biomes.js?v=83';
 import {treeVariant} from './real-trees.js?v=83';

@@ -9,7 +9,7 @@ import {yaganPlanningSpec,yaganBoardingReady,yaganBoardingDelay} from './yagan-t
 import {progress,serviceKey} from './scenario-progress.js?v=85';
 import {scenarioRanges} from './scenario-ranges.js?v=72';
 import {installCheats,jumpToStation} from './game-cheats.js?v=85';
-import {mountGameShell} from './game-shell.js?v=97final';
+import {mountGameShell} from './game-shell.js?v=99';
 import {DutyRecorder,replayStateAt,recordReplayAudio} from './replay-store.js?v=89';
 import {osakaPlanningSpec} from './osaka-timetable.js?v=72';
 import {collectStationReports,collectRestrictionReports,pauseWhenSpeechEnds} from './station-timing.js?v=84';
@@ -26,7 +26,7 @@ import {routePlanningSpec,mountScoring,checkpointMarks,scoringStations,buildScor
 import {mountDrivingOverlay} from './driving-overlay.js?v=72';import {mountLookahead,changesFromSections,stationMarks} from './lookahead.js?v=evaluation59';
 import {serviceChoices,makeServiceRoute} from './train-selection.js?v=98';
 import {GeneratedCab,generatedCab} from './generated-cab.js?v=95';
-import {FinalWorld} from './final-world.js?v=98';
+import {FinalWorld} from './final-world.js?v=99';
 import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=97final';
 import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=97final';
 import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,routeLimitAt,stopPosition,finishStop,beginDoorClosing,isDoorClosing,takeDepartureCall} from './final-model.js?v=72';
@@ -349,7 +349,7 @@ requestAnimationFrame(frame);
 try {
  const routeLoads=META.map(async meta=>{
   if(meta.legacy)return {id:meta.id,name:meta.name,length:TOHOKU_STATIONS.at(-1).s,stations:TOHOKU_STATIONS};
-  const response=await fetch(`./assets/final/${meta.id}-route.json?v=98`);
+  const response=await fetch(`./assets/final/${meta.id}-route.json?v=99`);
   if(!response.ok)throw Error('路線データを読み込めません');
   return loadRoadAsset(await response.json());
  });
@@ -360,7 +360,7 @@ try {
  $('compactRoute').innerHTML=META.map((m,i)=>`<option value="${i}">${m.name} · ${m.train}</option>`).join('');
  $('compactRoute').onchange=event=>{choose(Number(event.target.value));openTrainSelection();};
  const additions=await Promise.all(['chuo-extended','shinonoi-extended','chuo-kofu','chuo-shinshu','shinonoi','oito','ome','ome-okutama','itsukaichi','tatsuno','toho-village','toho-center'].map(async id=>{
- const response=await fetch('./assets/final/'+id+'-route.json?v=98');
+ const response=await fetch('./assets/final/'+id+'-route.json?v=99');
  if(response.ok)extraRoutes.set(id,await loadRoadAsset(await response.json()));
 }));
  for(const [id,r] of buildConnectingRoutes(extraRoutes))extraRoutes.set(id,r);

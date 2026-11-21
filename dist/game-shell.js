@@ -1,6 +1,6 @@
 import {graphicsComparisonMarkup} from './graphics-previews.js?v=87';
 import {confirmHighGraphics} from './graphics-warning.js?v=87';
-import {mountBasinEditor} from './basin-editor.js?v=84';
+import {mountBasinEditor} from './basin-editor.js?v=99';
 import {startTitleIntro} from './title-intro.js?v=72';
 import {audioMixMarkup,bindAudioMix} from './audio-mix.js?v=91';
 import {loadReplay} from './replay-store.js?v=89';
