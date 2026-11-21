@@ -37,6 +37,9 @@ export function makeServiceRoute(route,vehicle,service,option){
  else if(pattern==='holiday')stops=r.stations.filter(x=>!x.passOnly&&!['高円寺','阿佐ケ谷','西荻窪'].includes(x.name));
  else if(STOP_PATTERNS[pattern])stops=r.stations.filter((x,i)=>i===0||i===r.stations.length-1||(!x.passOnly&&(STOP_PATTERNS[pattern].includes(x.name)||(boundary!=null&&x.s>=boundary))));
  else stops=makeDefaultServiceRoute(r,vehicle,service).stations;
+ // The supplied Oito recordings announce every local stop, including stations
+ // the rapid passes. Use the service's actual station-name driver calls instead.
+ if(r.id==='oito'&&pattern==='大糸快速')r={...r,soundEvents:[],announcementPolicy:'service-stop-calls'};
  r={...r,sceneryStations:all,stations:stops,service,vehicle,serviceOption:option};if(option.reverse)r=reverseRoute(r);
  if(option.startTime){r={...r,night:!!option.night,stations:r.stations.map(x=>{const st={...x};for(const k of ['arrival','departure','time','passTime','startTime'])delete st[k];return st;}),sceneryStations:r.sceneryStations.map(x=>{const st={...x};for(const k of ['arrival','departure','time','passTime','startTime'])delete st[k];return st;})};r.stations[0].startTime=option.startTime??'20:00:00';}
  return applyPublishedSchedule(r,vehicle,service);

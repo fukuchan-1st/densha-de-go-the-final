@@ -3,7 +3,7 @@ import {TrainPassbyAudio} from './train-passby-audio.js?v=85';
 import {timingVoiceRefs,timingPreloadRefs,restrictionVoiceRefs} from './station-timing.js?v=84';
 import {stationCueRefs,stationVoiceBank} from './station-voice.js?v=97final';
 import {createMixGains,voiceCategory} from './audio-mix.js?v=91';
-import {interpolateColumn} from './final-vehicle.js?v=100final';
+import {interpolateColumn} from './final-vehicle.js?v=103';
 import {runPitch} from './assets/audio/run-pitch.js';
 import {HeldHorn} from './assets/audio/held-horn.js?v=85';
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -111,18 +111,18 @@ export class LocalTrainAudio {
  routeAnnouncementRef(routeId,key){
   return {entryIndex:`${routeId}-announcement-${key}`,driverVoiceFile:`./assets/final/${routeId}-announcements/${key}.mp3`};
  }
- callRouteAnnouncement(routeId,key){return this.queueDriverCalls([this.routeAnnouncementRef(routeId,key)]);}
+ callRouteAnnouncement(routeId,key){return this.queueDriverCalls([this.routeAnnouncementRef(routeId,key)],'announcementQueue');}
  playRouteAnnouncement(routeId,key){return this.playRef(this.routeAnnouncementRef(routeId,key));}
- queueDriverCalls(refs){
+ queueDriverCalls(refs,queue='driverQueue'){
   const generation=this.generation;
-  const previous=this.driverQueue??Promise.resolve();
-  this.driverQueue=previous.then(async()=>{
+  const previous=this[queue]??Promise.resolve();
+  this[queue]=previous.then(async()=>{
    for(const ref of refs){
     if(this.stopped||generation!==this.generation)return;
     await this.playRef(ref).catch(()=>false);
    }
   });
-  return this.driverQueue;
+  return this[queue];
  }
  effectRef(name){
   const {door,horn,mastercontroller,brakehandle,pilotlamp,brake}=this.recipe.sounds;
@@ -233,6 +233,6 @@ export class LocalTrainAudio {
  async setPaused(paused){this.paused=paused;this.master.gain.value=paused?0:this.volume;if(paused){this.horn?.end(true);await this.context.suspend();}else await this.context.resume();}
  pause(){return this.setPaused(true);}
  resume(){return this.setPaused(false);}
- stop(){this.horn?.end(true);this.passby.reset();this.stopped=true;this.lastNotch=undefined;this.generation++;this.driverQueue=null;for(const source of this.sources){try{source.stop();}catch{}}this.sources.clear();this.loops.clear();}
+ stop(){this.horn?.end(true);this.passby.reset();this.stopped=true;this.lastNotch=undefined;this.generation++;this.driverQueue=null;this.announcementQueue=null;for(const source of this.sources){try{source.stop();}catch{}}this.sources.clear();this.loops.clear();}
  async dispose(){this.stop();this.passby.dispose();this.buffers.clear();this.master.disconnect();for(const node of Object.values(this.mix.gains))node.disconnect();if(this.ownsContext)await this.context.close();}
 }
