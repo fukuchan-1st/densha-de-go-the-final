@@ -1,5 +1,5 @@
 import {mountRoutePages} from './route-pages.js?v=97final';
-import {WEATHER,weatherType,updateWeatherStatus} from './weather.js?v=100final';
+import {WEATHER,weatherType,updateWeatherStatus} from './weather.js?v=101';
 import {gradeLabel} from './tunnel-effects.js?v=93';
 import {updateDoorVisual} from './train-doors.js?v=97final';
 import {scheduledBoardingDelay} from './published-schedules.js?v=86';
@@ -10,8 +10,8 @@ import {yaganPlanningSpec,yaganBoardingReady,yaganBoardingDelay} from './yagan-t
 import {progress,serviceKey} from './scenario-progress.js?v=85';
 import {scenarioRanges} from './scenario-ranges.js?v=72';
 import {installCheats,jumpToStation} from './game-cheats.js?v=85';
-import {mountGameShell} from './game-shell.js?v=100final';
-import {DutyRecorder,replayStateAt,recordReplayAudio} from './replay-store.js?v=100final';
+import {mountGameShell} from './game-shell.js?v=101';
+import {DutyRecorder,replayStateAt,recordReplayAudio} from './replay-store.js?v=101';
 import {osakaPlanningSpec} from './osaka-timetable.js?v=72';
 import {collectStationReports,collectRestrictionReports,pauseWhenSpeechEnds} from './station-timing.js?v=84';
 import {buildConnectingRoutes} from './service-catalog.js?v=97final';
@@ -27,10 +27,10 @@ import {routePlanningSpec,mountScoring,checkpointMarks,scoringStations,buildScor
 import {mountDrivingOverlay} from './driving-overlay.js?v=72';import {mountLookahead,changesFromSections,stationMarks} from './lookahead.js?v=evaluation59';
 import {serviceChoices,makeServiceRoute} from './train-selection.js?v=98';
 import {GeneratedCab,generatedCab} from './generated-cab.js?v=95';
-import {FinalWorld} from './final-world.js?v=100final';
+import {FinalWorld} from './final-world.js?v=101';
 import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=97final';
 import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=100final';
-import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,routeLimitAt,stopPosition,finishStop,beginDoorClosing,isDoorClosing,takeDepartureCall} from './final-model.js?v=100final';
+import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,routeLimitAt,stopPosition,finishStop,beginDoorClosing,isDoorClosing,takeDepartureCall} from './final-model.js?v=101';
 import {STATIONS as TOHOKU_STATIONS} from './route-data.js?v=41';
 import {FINAL_SCENARIOS,scenarioJourney} from './final-scenarios.js?v=41';
 import {detectStoppedOverrun,correctStoppedOverrun,nextSignalCall} from './train-operations.js?v=91';
@@ -322,7 +322,7 @@ function frame(now){
  last=now;
  if(mode==='drive'&&world&&run){
   const r=route();
-  if(!replaySession&&run.weather!==settings.weather){run.weather=weatherType(settings.weather);run.wheelSlip=false;run.wheelExcess=0;run.wheelSpeed=run.v;}
+  if(!replaySession&&run.weather!==settings.weather){run.weather=weatherType(settings.weather);run.wheelSlip=false;run.wheelSlide=false;run.wheelExcess=0;run.wheelDeficit=0;run.wheelSpeed=run.v;}
   if(replaySession){updateReplay(dt);}
   else if(!paused){
    cheats.speedStep(run,dt);

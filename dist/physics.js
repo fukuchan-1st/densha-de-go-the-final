@@ -1,5 +1,5 @@
 // Distances: RailLab transport/39. Performance: user supplied 701-series article.
-import {adhesionStep} from './weather.js?v=100final';
+import {adhesionStep,brakeAdhesionStep} from './weather.js?v=101';
 import {STATIONS} from './route-data.js?v=23';
 export {STATIONS};
 export const NOTCH_MIN=-9,NOTCH_MAX=5;
@@ -24,9 +24,11 @@ export function step(state,dt,gradePerMille=0) {
     if(dt>0){const regenerative=Math.min(SPECS.serviceBrake/3.6,Math.max(0,a-(state.holdSpeed-old)/dt));a-=regenerative;state.holdBraking=regenerative>.001;}
   }else state.holdSpeed=null;
   if(state.notch>0&&!state.doors){const demand=(2.1/3.6)*(state.notch/5)*Math.min(1,45/Math.max(old*3.6,1));a+=adhesionStep(state,demand,dt)-demand;}else adhesionStep(state,0,dt);
+  const fraction=state.doors?0:serviceBrakeFraction(state.notch),brakeDemand=fraction*SPECS.serviceBrake/3.6;
+  a+=brakeDemand-brakeAdhesionStep(state,brakeDemand,dt,fraction);
   state.previousNotch=state.notch;
    state.v=Math.max(0,Math.min((state.cheatSpeedOverride?160:110)/3.6,old+a*dt));
-  state.wheelSpeed=state.v+(state.wheelExcess??0);state.s+=(old+state.v)*.5*dt; state.elapsed+=dt;
+  state.wheelSpeed=Math.max(0,state.v+(state.wheelExcess??0)-(state.wheelDeficit??0));state.s+=(old+state.v)*.5*dt; state.elapsed+=dt;
   return a;
 }
 export function stoppingDistance(kmh,brake=4,gradePerMille=0){return (kmh/3.6)**2/(2*Math.max(.05,Math.min(7,Math.max(0,brake))/7+9.80665*gradePerMille/1000));}

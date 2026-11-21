@@ -1,5 +1,6 @@
 export const WEATHER={clear:{name:'晴れ',traction:Infinity},rain:{name:'雨',traction:.32},snow:{name:'雪',traction:.20}};
 export const weatherType=value=>Object.hasOwn(WEATHER,value)?value:'clear';
+export const SLIP_EFFORT_RATIO=.8;
 // Gameplay adhesion approximation, not a measured vehicle/rail friction model.
 // Contact force still accelerates the train during wheelspin; the excess torque
 // raises wheel RPM separately. Neutral removes powered force immediately.
@@ -14,10 +15,21 @@ export function adhesionStep(state,demand,dt){
  state.wheelSlip=slipping;
  state.wheelSpeed=Math.max(0,(state.v??0)+state.wheelExcess);
  state.adhesionLimit=limit;
- return slipping?limit*.82:demand;
+ if(demand>0)state.wheelDeficit=0;
+ return slipping?demand*SLIP_EFFORT_RATIO:demand;
+}
+// Strong braking (70% of service range and above, including EB) can cause
+// wheel slide. Reduce braking effort to 80%; actual train speed never freezes.
+export function brakeAdhesionStep(state,demand,dt,fraction=0){
+ const wet=weatherType(state.weather)!=='clear',step=Math.max(0,Math.min(.1,dt));
+ const sliding=wet&&fraction>=.7&&demand>0&&state.v>.1;
+ state.wheelSlide=sliding;
+ if(demand>0)state.wheelExcess=0;
+ state.wheelDeficit=wet?Math.max(0,Math.min(Math.max(0,state.v)*.7,(state.wheelDeficit??0)+(sliding?demand*5:-6)*step)):0;
+ return sliding?demand*SLIP_EFFORT_RATIO:demand;
 }
 export function weatherMarkup(selected='clear'){
- return '<fieldset class="weather-controls"><legend>天候</legend><div>'+Object.entries(WEATHER).map(([id,{name}])=>`<button type="button" data-weather="${id}" aria-pressed="${id===weatherType(selected)}">${name}</button>`).join('')+'</div><p>雨・雪では強い力行で空転しやすくなります。<br>空転したらノッチを戻し、弱い力行から再加速してください。<br>滑りやすさ：晴れ ＜ 雨 ＜ 雪</p></fieldset>';
+ return '<fieldset class="weather-controls"><legend>天候</legend><div>'+Object.entries(WEATHER).map(([id,{name}])=>`<button type="button" data-weather="${id}" aria-pressed="${id===weatherType(selected)}">${name}</button>`).join('')+'</div><p>雨・雪では強い力行で空転しやすくなります。<br>空転したらノッチを戻し、弱い力行から再加速してください。<br>滑りやすさ：晴れ ＜ 雨 ＜ 雪<br>空転時の加速・強いブレーキで滑走した時の減速は通常の80％</p></fieldset>';
 }
 export function bindWeather(root,settings,onChange){
  const update=()=>root.querySelectorAll('[data-weather]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.weather===weatherType(settings.weather))));
@@ -26,6 +38,6 @@ export function bindWeather(root,settings,onChange){
 export function updateWeatherStatus(container,state){
  let status=container.querySelector('.weather-status');
  if(!status){status=document.createElement('div');status.className='weather-status';status.setAttribute('role','status');container.append(status);}
- const slip=Boolean(state.wheelSlip),text=WEATHER[weatherType(state.weather)].name+(slip?' · 滑り　力行を弱めてください':'');
+ const slip=Boolean(state.wheelSlip||state.wheelSlide),text=WEATHER[weatherType(state.weather)].name+(state.wheelSlide?' · 滑走　ブレーキを弱めてください':state.wheelSlip?' · 空転　力行を弱めてください':'');
  status.classList.toggle('slipping',slip);if(status.textContent!==text)status.textContent=text;
 }

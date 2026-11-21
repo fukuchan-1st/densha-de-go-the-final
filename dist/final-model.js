@@ -1,4 +1,4 @@
-import {adhesionStep} from './weather.js?v=100final';
+import {adhesionStep,brakeAdhesionStep} from './weather.js?v=101';
 export const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 export function interpolateTable(rows,speed,column=1){
  const points=rows.filter(r=>Number.isFinite(r[0])&&Number.isFinite(r[column]));
@@ -11,10 +11,11 @@ export function notchLabel(recipe,n){const c=controlsFor(recipe);return c.labels
 export function createJourney(route,recipe,startIndex=0,endIndex=route.stations.length-1){return {s:route.stations[startIndex].s,v:0,notch:0,elapsed:0,next:startIndex+1,startIndex,endIndex,served:0,missed:0,errors:[],doors:true,doorPhase:'boarding',startingDeparture:true,dwell:0,stopWait:0,finished:false,acceleration:0};}
 export function driveStep(state,recipe,dt,grade=0){
  const c=controlsFor(recipe),label=notchLabel(recipe,state.notch),spec=recipe.playableSpecs,old=state.v,kmh=old*3.6;
+ const fraction=label==='EB'?1:/^B/.test(label)?Number(label.slice(1))/c.brakeMax:0,brakeDemand=label==='EB'?(recipe.emergencyBrakeKmhPerSecond??4.14)/3.6:fraction*(recipe.serviceBrakeKmhPerSecond??3.6)/3.6;
+ const brake=brakeAdhesionStep(state,state.doors?0:brakeDemand,dt,fraction);
  let a=-9.80665*grade/1000;
  if(state.doors)a=old>0?-1:0;
- else if(label==='EB')a-=(recipe.emergencyBrakeKmhPerSecond??4.14)/3.6;
- else if(/^B/.test(label))a-=(Number(label.slice(1))/c.brakeMax)*(recipe.serviceBrakeKmhPerSecond??3.6)/3.6;
+ else if(brakeDemand>0)a-=brake;
  else {
   if(state.notch>0){const rows=recipe.performance?.power?.force?.rows??[],reference=interpolateTable(rows,3,c.max),force=interpolateTable(rows,kmh,state.notch),base=(spec.startingAccelerationKmhPerSecondApprox??2.8)/3.6;
    const demand=reference>0&&force!==null?base*force/reference:base*(state.notch/c.max)*Math.min(1,45/Math.max(1,kmh));a+=adhesionStep(state,demand,dt);}
@@ -23,7 +24,7 @@ export function driveStep(state,recipe,dt,grade=0){
  }
  if(state.doors||state.notch<=0)adhesionStep(state,0,dt);
  state.previousNotch=state.notch;
- state.v=clamp(old+a*dt,0,(state.cheatSpeedOverride?160:spec.maxSpeedKmh)/3.6);state.wheelSpeed=state.v+(state.wheelExcess??0);state.s+=(old+state.v)*dt/2;state.elapsed+=dt;state.acceleration=dt?(state.v-old)/dt:0;return state.acceleration;
+ state.v=clamp(old+a*dt,0,(state.cheatSpeedOverride?160:spec.maxSpeedKmh)/3.6);state.wheelSpeed=Math.max(0,state.v+(state.wheelExcess??0)-(state.wheelDeficit??0));state.s+=(old+state.v)*dt/2;state.elapsed+=dt;state.acceleration=dt?(state.v-old)/dt:0;return state.acceleration;
 }
 export function brakeAssist(state,route,recipe){
  const distance=route.stations[state.next].s-state.s,c=controlsFor(recipe);
