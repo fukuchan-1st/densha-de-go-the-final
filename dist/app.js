@@ -1,4 +1,4 @@
-import {weatherType,weatherMarkup,bindWeather,updateWeatherStatus} from './weather.js?v=101';
+import {weatherType,weatherMarkup,bindWeather,updateWeatherStatus} from './weather.js?v=102';
 import {gradeLabel} from './tunnel-effects.js?v=93';
 import {updateDoorVisual} from './train-doors.js?v=97final';
 import {graphicsComparisonMarkup} from './graphics-previews.js?v=87';
@@ -19,14 +19,14 @@ import {beginTerminalOpening,advanceTerminalOpening} from './terminal-arrival.js
 import {mountScoring,checkpointMarks,buildScoreTimetable,resolveScoreSchedule,scoreHazards,hornMarks,currentScoreRestriction,signalRestriction} from './scoring.js?v=90';
 import {mountLookahead,changesFromSteps,stationMarks} from './lookahead.js?v=evaluation59';const lookahead=mountLookahead(document.getElementById('drive'));
 import {GeneratedCab,generatedCab} from './generated-cab.js?v=95';
-import {mountResponsiveUI} from './responsive-ui.js?v=101';
+import {mountResponsiveUI} from './responsive-ui.js?v=102';
 import {CabPanel} from './cab-panel.js?v=95';
 import {detectStoppedOverrun,correctStoppedOverrun,nextSignalCall,advanceDoorSequence,beginStartingBoarding,completeDoorSequence,OPEN_DELAY_SECONDS,BOARDING_WAIT_SECONDS} from './train-operations.js?v=91';
 import {LAST_STATION_INDEX as FULL_LAST_STATION_INDEX,BVE_END} from './route-data.js?v=23';
 import {mountDisplay,stoppingMarker,formatStopDistance} from './display.js?v=41';
-import {STATIONS as ALL_STATIONS,SPECS,step,newRun,stoppingDistance,assistBrake,notchDeltaForKey,NOTCH_MIN,NOTCH_LABELS,clampNotch} from './physics.js?v=101';
+import {STATIONS as ALL_STATIONS,SPECS,step,newRun,stoppingDistance,assistBrake,notchDeltaForKey,NOTCH_MIN,NOTCH_LABELS,clampNotch} from './physics.js?v=102';
 import {RouteProfile} from './route-profile.js?v=23';
-import {RailWorld} from './scene.js?v=101';
+import {RailWorld} from './scene.js?v=102';
 import {SoundEngine} from './assets/audio/sound-engine.js?v=100final';
 const rangeQuery=new URLSearchParams(location.search),requestedEnd=Number(rangeQuery.get('end')),requestedStart=Number(rangeQuery.get('station')??0);
 const reverseDirection=rangeQuery.get('direction')==='reverse',fullLength=ALL_STATIONS.at(-1).s,DIRECTION_STATIONS=reverseDirection?ALL_STATIONS.map(x=>({...x,s:fullLength-x.s})).reverse():ALL_STATIONS;

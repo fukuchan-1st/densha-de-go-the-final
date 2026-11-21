@@ -38,6 +38,7 @@ export function bindWeather(root,settings,onChange){
 export function updateWeatherStatus(container,state){
  let status=container.querySelector('.weather-status');
  if(!status){status=document.createElement('div');status.className='weather-status';status.setAttribute('role','status');container.append(status);}
- const slip=Boolean(state.wheelSlip||state.wheelSlide),text=WEATHER[weatherType(state.weather)].name+(state.wheelSlide?' · 滑走　ブレーキを弱めてください':state.wheelSlip?' · 空転　力行を弱めてください':'');
+ const slip=Boolean(state.wheelSlip||state.wheelSlide),text=state.wheelSlide?'滑走　ブレーキを弱めてください':state.wheelSlip?'空転　力行を弱めてください':'';
+ status.hidden=!slip;
  status.classList.toggle('slipping',slip);if(status.textContent!==text)status.textContent=text;
 }

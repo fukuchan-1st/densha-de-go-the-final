@@ -1,4 +1,4 @@
-import {WEATHER,weatherType,weatherMarkup,bindWeather} from './weather.js?v=101';
+import {WEATHER,weatherType,weatherMarkup,bindWeather} from './weather.js?v=102';
 import {graphicsComparisonMarkup} from './graphics-previews.js?v=87';
 import {confirmHighGraphics} from './graphics-warning.js?v=87';
 import {mountBasinEditor} from './basin-editor.js?v=99';

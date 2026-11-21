@@ -1,5 +1,5 @@
-import {WeatherScene} from './weather-scene.js?v=101';
-import {weatherType} from './weather.js?v=101';
+import {WeatherScene} from './weather-scene.js?v=102';
+import {weatherType} from './weather.js?v=102';
 import {TrainWindowEnvironment,updateTrainWindowLighting} from './train-window-reflections.js?v=96';
 import {tunnelAdaptation} from './tunnel-effects.js?v=93';
 import * as T from './assets/vendor/three.module.js';

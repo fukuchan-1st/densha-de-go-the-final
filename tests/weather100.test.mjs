@@ -49,7 +49,7 @@ test('rain and snow render separately, respect tunnels, pause and lightweight co
  weather.update(.02,{type:'rain'});assert.equal(weather.rain.visible,true);assert.equal(weather.snow.visible,false);assert.equal(weather.rainGeometry.drawRange.count,600);
  assert.ok([...weather.rainPositions].every(Number.isFinite));
  const time=weather.clock;weather.update(0,{type:'rain'});assert.equal(weather.clock,time);
- weather.update(.02,{type:'snow'});assert.equal(weather.rain.visible,false);assert.equal(weather.snow.visible,true);assert.equal(weather.snowGeometry.drawRange.count,650);
+ weather.update(.02,{type:'snow'});assert.equal(weather.rain.visible,false);assert.equal(weather.snow.visible,true);assert.equal(weather.snowGeometry.drawRange.count,3250);
  weather.update(.02,{type:'snow',tunnel:1});assert.equal(weather.group.visible,false);
  weather.update(.02,{type:'clear'});assert.equal(weather.group.visible,false);weather.dispose();assert.equal(world.scene.children.length,0);
 });

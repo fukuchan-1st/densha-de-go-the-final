@@ -1,5 +1,5 @@
 // Distances: RailLab transport/39. Performance: user supplied 701-series article.
-import {adhesionStep,brakeAdhesionStep} from './weather.js?v=101';
+import {adhesionStep,brakeAdhesionStep} from './weather.js?v=102';
 import {STATIONS} from './route-data.js?v=23';
 export {STATIONS};
 export const NOTCH_MIN=-9,NOTCH_MAX=5;
