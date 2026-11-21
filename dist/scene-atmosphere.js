@@ -1,3 +1,5 @@
+import {WeatherScene} from './weather-scene.js?v=100';
+import {weatherType} from './weather.js?v=100';
 import {TrainWindowEnvironment,updateTrainWindowLighting} from './train-window-reflections.js?v=96';
 import {tunnelAdaptation} from './tunnel-effects.js?v=93';
 import * as T from './assets/vendor/three.module.js';
@@ -90,11 +92,14 @@ export class SceneAtmosphere{
   for(const material of (world.materials instanceof Map?world.materials.values():Object.values(world.materials??{})))if(material.userData.windowLight)material.emissiveIntensity=(1-solar.daylight)*1.1;
   world.scene.fog?.color.lerp(new T.Color('#080b10'),inside*.94);
   this.windowEnvironment??=new TrainWindowEnvironment(world);this.windowEnvironment.update(dt,point);updateTrainWindowLighting(world.scene,solar.daylight,inside);
+  const wet=weatherType(world.weather)!=='clear';
+  if(wet){this.sun.intensity*=.22;this.sky.intensity*=.82;this.sunSprite.visible=false;const grey=new T.Color('#101820').lerp(new T.Color('#7d8892'),solar.daylight);world.scene.background.lerp(grey,1-inside);world.scene.fog?.color.lerp(grey,.9*(1-inside));this.sky.color.lerp(new T.Color('#96a0a8'),.85);if(this.cloudMaterial){this.cloudMaterial.color.copy(grey);this.cloudMaterial.opacity=.98;}}
+  this.weatherScene??=new WeatherScene(world);this.weatherScene.update(dt,{type:world.weather,tunnel:inside,daylight:solar.daylight});
   followSunShadow(this.sun,point,solar.direction);
   this.shadowClock+=dt;if(profile.shadows&&(moving||this.shadowClock>.12||!this.lastShadowPosition||point.distanceTo(this.lastShadowPosition)>3||Math.abs(time-(this.lastShadowTime??time))>1)){
    world.renderer.shadowMap.needsUpdate=true;this.shadowClock=0;this.lastShadowPosition=point.clone();this.lastShadowTime=time;
   }
  }
  render(){if(this.highRenderer)this.highRenderer.render(this.world.scene,this.world.camera);else this.world.renderer.render(this.world.scene,this.world.camera);}
- dispose(){this.windowEnvironment?.dispose();this.highRenderer?.dispose();this.sun.shadow.mapPass?.dispose();this.world.scene.remove(this.sun.target,this.sunSprite);if(this.clouds)this.world.scene.remove(this.clouds);this.map?.dispose();this.cloudGeometry?.dispose();this.cloudMaterial?.dispose();this.cloudDepth?.dispose();this.sunMap.dispose();this.sunSpriteMaterial.dispose();this.sun.shadow.map?.dispose();}
+ dispose(){this.weatherScene?.dispose();this.windowEnvironment?.dispose();this.highRenderer?.dispose();this.sun.shadow.mapPass?.dispose();this.world.scene.remove(this.sun.target,this.sunSprite);if(this.clouds)this.world.scene.remove(this.clouds);this.map?.dispose();this.cloudGeometry?.dispose();this.cloudMaterial?.dispose();this.cloudDepth?.dispose();this.sunMap.dispose();this.sunSpriteMaterial.dispose();this.sun.shadow.map?.dispose();}
 }

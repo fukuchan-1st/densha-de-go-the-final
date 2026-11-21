@@ -101,7 +101,7 @@ export class SoundEngine {
     const t=this.ctx.currentTime;
     this.activeTracks=[];
     for (const node of this.nodes) {
-      const {pitch,volume}=trackValues(node.track,speed,motorNotch,this.fade/5);
+      const {pitch,volume}=trackValues(node.track,environment.motorSpeed??speed,motorNotch,this.fade/5);
       if (volume>0) {
         if (!node.source) {
           node.source=this.ctx.createBufferSource();

@@ -1,3 +1,4 @@
+import {adhesionStep} from './weather.js?v=100';
 export const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 export function interpolateTable(rows,speed,column=1){
  const points=rows.filter(r=>Number.isFinite(r[0])&&Number.isFinite(r[column]));
@@ -16,11 +17,14 @@ export function driveStep(state,recipe,dt,grade=0){
  else if(/^B/.test(label))a-=(Number(label.slice(1))/c.brakeMax)*(recipe.serviceBrakeKmhPerSecond??3.6)/3.6;
  else {
   if(state.notch>0){const rows=recipe.performance?.power?.force?.rows??[],reference=interpolateTable(rows,3,c.max),force=interpolateTable(rows,kmh,state.notch),base=(spec.startingAccelerationKmhPerSecondApprox??2.8)/3.6;
-   a+=reference>0&&force!==null?base*force/reference:base*(state.notch/c.max)*Math.min(1,45/Math.max(1,kmh));}
+   const demand=reference>0&&force!==null?base*force/reference:base*(state.notch/c.max)*Math.min(1,45/Math.max(1,kmh));a+=adhesionStep(state,demand,dt);}
   if(old>0)a-=.004+.0018*old+.000018*old*old;
   if(label==='抑速'){if(state.previousNotch!==state.notch)state.holdSpeed=old;a=Math.min(a,Math.max(-1,(state.holdSpeed-old)/Math.max(dt,.001)));}
  }
- state.previousNotch=state.notch;state.v=clamp(old+a*dt,0,(state.cheatSpeedOverride?160:spec.maxSpeedKmh)/3.6);state.s+=(old+state.v)*dt/2;state.elapsed+=dt;state.acceleration=dt?(state.v-old)/dt:0;return state.acceleration;
+ if(state.doors||state.notch<=0)adhesionStep(state,0,dt);
+ state.previousNotch=state.notch;
+ // Powered wheelspin holds train speed; the independent wheel speed drives motor RPM.
+ state.v=state.wheelSlip?old:clamp(old+a*dt,0,(state.cheatSpeedOverride?160:spec.maxSpeedKmh)/3.6);state.wheelSpeed=state.v+(state.wheelExcess??0);state.s+=(old+state.v)*dt/2;state.elapsed+=dt;state.acceleration=dt?(state.v-old)/dt:0;return state.acceleration;
 }
 export function brakeAssist(state,route,recipe){
  const distance=route.stations[state.next].s-state.s,c=controlsFor(recipe);

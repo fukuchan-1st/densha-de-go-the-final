@@ -1,4 +1,5 @@
 import {mountRoutePages} from './route-pages.js?v=97final';
+import {WEATHER,weatherType,updateWeatherStatus} from './weather.js?v=100';
 import {gradeLabel} from './tunnel-effects.js?v=93';
 import {updateDoorVisual} from './train-doors.js?v=97final';
 import {scheduledBoardingDelay} from './published-schedules.js?v=86';
@@ -9,8 +10,8 @@ import {yaganPlanningSpec,yaganBoardingReady,yaganBoardingDelay} from './yagan-t
 import {progress,serviceKey} from './scenario-progress.js?v=85';
 import {scenarioRanges} from './scenario-ranges.js?v=72';
 import {installCheats,jumpToStation} from './game-cheats.js?v=85';
-import {mountGameShell} from './game-shell.js?v=99';
-import {DutyRecorder,replayStateAt,recordReplayAudio} from './replay-store.js?v=89';
+import {mountGameShell} from './game-shell.js?v=100';
+import {DutyRecorder,replayStateAt,recordReplayAudio} from './replay-store.js?v=100';
 import {osakaPlanningSpec} from './osaka-timetable.js?v=72';
 import {collectStationReports,collectRestrictionReports,pauseWhenSpeechEnds} from './station-timing.js?v=84';
 import {buildConnectingRoutes} from './service-catalog.js?v=97final';
@@ -26,10 +27,10 @@ import {routePlanningSpec,mountScoring,checkpointMarks,scoringStations,buildScor
 import {mountDrivingOverlay} from './driving-overlay.js?v=72';import {mountLookahead,changesFromSections,stationMarks} from './lookahead.js?v=evaluation59';
 import {serviceChoices,makeServiceRoute} from './train-selection.js?v=98';
 import {GeneratedCab,generatedCab} from './generated-cab.js?v=95';
-import {FinalWorld} from './final-world.js?v=99';
+import {FinalWorld} from './final-world.js?v=100';
 import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=97final';
-import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=97final';
-import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,routeLimitAt,stopPosition,finishStop,beginDoorClosing,isDoorClosing,takeDepartureCall} from './final-model.js?v=72';
+import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=100';
+import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,routeLimitAt,stopPosition,finishStop,beginDoorClosing,isDoorClosing,takeDepartureCall} from './final-model.js?v=100';
 import {STATIONS as TOHOKU_STATIONS} from './route-data.js?v=41';
 import {FINAL_SCENARIOS,scenarioJourney} from './final-scenarios.js?v=41';
 import {detectStoppedOverrun,correctStoppedOverrun,nextSignalCall} from './train-operations.js?v=91';
@@ -53,8 +54,8 @@ let packs=new Map(),activeRoute,chosenVehicle=null,chosenRoute=null,chosenServic
 let trainDetails,detailEndIndex=null;
 const extraRoutes=new Map();
 let recorder=null,replaySession=null,crossingAudio=null;
-const settings={volume:.65,shake:1,drawDistance:1500,quality:matchMedia('(pointer:coarse)').matches?'light':'standard'};
-try{const saved=JSON.parse(localStorage.getItem('railway-drive-settings')??'{}');if(Number.isFinite(saved.volume))settings.volume=clamp(saved.volume,0,1);if(Number.isFinite(saved.shake))settings.shake=clamp(saved.shake,0,1);if(Number.isFinite(saved.drawDistance))settings.drawDistance=clamp(saved.drawDistance,500,2000);if(['light','standard','high'].includes(saved.quality))settings.quality=saved.quality;}catch{}
+const settings={weather:'clear',volume:.65,shake:1,drawDistance:1500,quality:matchMedia('(pointer:coarse)').matches?'light':'standard'};
+try{const saved=JSON.parse(localStorage.getItem('railway-drive-settings')??'{}');settings.weather=weatherType(saved.weather);if(Number.isFinite(saved.volume))settings.volume=clamp(saved.volume,0,1);if(Number.isFinite(saved.shake))settings.shake=clamp(saved.shake,0,1);if(Number.isFinite(saved.drawDistance))settings.drawDistance=clamp(saved.drawDistance,500,2000);if(['light','standard','high'].includes(saved.quality))settings.quality=saved.quality;}catch{}
 const audioMix=loadAudioMix(localStorage,settings.volume);
 const cheats=installCheats({getState:()=>run,active:()=>mode==='drive'&&!replaySession,paused:()=>paused||!run||run.finished,onMessage:text=>toast(text,8)});
 const saveSettings=()=>{try{localStorage.setItem('railway-drive-settings',JSON.stringify(settings));}catch{}};
@@ -71,10 +72,11 @@ function playMenuSound(name,{waitForEnd=false}={}){
 }
 const menuMusic=mountMenuMusic(()=>audioMix.bgm,{active:false});
 let shellActive=true;
-const gameShell=mountGameShell({stage:$('stage'),settings,mix:audioMix,onSound:playMenuSound,onPage:page=>menuMusic.setMenu(page!=='title'),onTitleStart:()=>{menuEffects?.playSequence([new URL('./assets/title-start.wav',location.href).href],audioMix.se);},onActive:active=>{shellActive=active;if(!active&&mode==='drive')menuMusic.setMenu(false);$('menuScreen').inert=active;$('menuControls').inert=active;},onDrive:()=>{setMode('menu');document.querySelector('#routeCards [data-route="'+selected+'"]')?.focus();},onReplay:playSavedReplay,onSettings:kind=>{if(kind==='scenery')world?.refreshScenery?.();saveSettings();sound?.setMix(audioMix);menuMusic.setVolume();world?.setDrawDistance?.(settings.drawDistance);world?.setQuality?.(settings.quality);if(kind==='close'&&mode==='drive'){paused=false;pauseAudio(false);}}});
+const gameShell=mountGameShell({stage:$('stage'),settings,mix:audioMix,onSound:playMenuSound,onPage:page=>menuMusic.setMenu(page!=='title'),onTitleStart:()=>{menuEffects?.playSequence([new URL('./assets/title-start.wav',location.href).href],audioMix.se);},onActive:active=>{shellActive=active;if(!active&&mode==='drive')menuMusic.setMenu(false);$('menuScreen').inert=active;$('menuControls').inert=active;},onDrive:()=>{setMode('menu');document.querySelector('#routeCards [data-route="'+selected+'"]')?.focus();},onReplay:playSavedReplay,onSettings:kind=>{updateMenuWeather();if(kind==='scenery')world?.refreshScenery?.();saveSettings();sound?.setMix(audioMix);menuMusic.setVolume();world?.setDrawDistance?.(settings.drawDistance);world?.setQuality?.(settings.quality);if(kind==='close'&&mode==='drive'){paused=false;pauseAudio(false);}}});
 if(new URLSearchParams(location.search).get('menu')==='main')gameShell.showMain();
 const routeMain=document.createElement('button');routeMain.id='routeMainMenu';routeMain.textContent='Esc　メインメニューへ';$('menuScreen').append(routeMain);routeMain.onclick=()=>gameShell.showMain();
 
+function updateMenuWeather(){const type=weatherType(settings.weather),icon={clear:'☀',rain:'☂',snow:'❄'}[type];const label=document.querySelector('.menu-bottom>.sun');if(label)label.textContent=icon+' '+WEATHER[type].name;document.querySelectorAll('.route-card>.sun').forEach(el=>el.textContent=icon);}
 function fit(){const r=$('stageArea').getBoundingClientRect(),scale=Math.min(r.width/1600,r.height/900);document.documentElement.style.setProperty('--overlay-ui-scale',Math.max(1,Math.min(3.5,44/(54*scale))));$('stage').style.left='50%';$('stage').style.top='50%';$('stage').style.transform=`translate(-50%,-50%) scale(${scale})`;}
 addEventListener('resize',fit);visualViewport?.addEventListener('resize',fit);new ResizeObserver(fit).observe($('stageArea'));fit();
 function recipe(){const train=META[selected].legacy?TOHOKU_TRAIN:recipes.trains.find(t=>t.id===(chosenVehicle??META[selected].vehicle));return chosenVehicle&&chosenOption?.carCount?{...train,playableSpecs:{...train.playableSpecs,carCount:chosenOption.carCount}}:train;}
@@ -102,7 +104,7 @@ function displayScenario(){
 $('scenarioSelect').onchange=()=>{playMenuSound('cursor');displayScenario();};
 $('startStation').onchange=()=>playMenuSound('cursor');
 function toast(text,seconds=5){toastText=text;toastUntil=(run?.elapsed??0)+seconds;}
-function displayMenu(){const meta=META[selected],r=routes[selected],train=recipe();document.documentElement.style.setProperty('--accent',meta.color);$('trainRoute').textContent=meta.english;$('trainName').innerHTML=`${meta.short}<span>${meta.series??'系'}</span>`;$('formation').textContent=`${train.playableSpecs.carCount}両編成 · 各駅停車`;$('compactRoute').value=String(selected);document.querySelectorAll('.route-card').forEach((el,i)=>{el.classList.toggle('active',i===selected);el.setAttribute('aria-pressed',String(i===selected));});$('startStation').innerHTML=r.stations.slice(0,-1).map((st,i)=>`<option value="${i}">${st.name}</option>`).join('');const scenarios=FINAL_SCENARIOS[meta.id]??[];$('scenarioControl').hidden=!scenarios.length;$('scenarioSelect').replaceChildren(new Option('自由運転',''),...scenarios.map(([id,from,to],i)=>new Option(`#${id} ${from} → ${to}`,String(i))));displayScenario();setMenuPhoto(meta.id);refreshClears();routePages?.sync();}
+function displayMenu(){updateMenuWeather();const meta=META[selected],r=routes[selected],train=recipe();document.documentElement.style.setProperty('--accent',meta.color);$('trainRoute').textContent=meta.english;$('trainName').innerHTML=`${meta.short}<span>${meta.series??'系'}</span>`;$('formation').textContent=`${train.playableSpecs.carCount}両編成 · 各駅停車`;$('compactRoute').value=String(selected);document.querySelectorAll('.route-card').forEach((el,i)=>{el.classList.toggle('active',i===selected);el.setAttribute('aria-pressed',String(i===selected));});$('startStation').innerHTML=r.stations.slice(0,-1).map((st,i)=>`<option value="${i}">${st.name}</option>`).join('');const scenarios=FINAL_SCENARIOS[meta.id]??[];$('scenarioControl').hidden=!scenarios.length;$('scenarioSelect').replaceChildren(new Option('自由運転',''),...scenarios.map(([id,from,to],i)=>new Option(`#${id} ${from} → ${to}`,String(i))));displayScenario();setMenuPhoto(meta.id);refreshClears();routePages?.sync();}
 function choose(i){
  if(loading)return;
  const next=(i+META.length)%META.length;
@@ -223,7 +225,7 @@ async function start(startIndex){
   const [loadedPanel]=await Promise.all([generatedCab&&['e235','e233','323','207','6050'].includes(train.id)?GeneratedCab.load($('cab'),train.id):LocalCabPanel.load($('cab'),train,pack),sound.prepare(),audioEnabled]);
   panel=loadedPanel;
   crossingAudio=new CrossingAudio(sound);await crossingAudio.ready;
-  run=createJourney(r,train,startIndex,trip.endIndex);run.dutyKey=currentDutyKey();run.requiredStops=trip.endIndex-startIndex;cheats.reset();score.reset(run);score.bindHorn(sound,()=>run,()=>scoreHazards(route()));
+  run=createJourney(r,train,startIndex,trip.endIndex);run.weather=weatherType(settings.weather);run.dutyKey=currentDutyKey();run.requiredStops=trip.endIndex-startIndex;cheats.reset();score.reset(run);score.bindHorn(sound,()=>run,()=>scoreHazards(route()));
   if(r.soundEvents?.length){
    const first=r.soundEvents.findIndex(event=>event.s>=run.s);
    run.soundCursor=first<0?r.soundEvents.length:first;
@@ -272,7 +274,7 @@ async function start(startIndex){
 }
 $('startDrive').onclick=()=>start();$('retryButton').onclick=()=>{const index=Math.max(run.startIndex,run.next-1);toggleExtras(false);start(index);};
 function showResults(){if(!replaySession){progress.complete(run.dutyKey,route().stations[run.startIndex].s,route().stations[run.endIndex].s,run);refreshClears();}recorder?.capture(run,score.engine.points,score.engine.chain);recorder?.flush();const errors=run.errors.map(x=>Math.abs(x)),mean=errors.length?errors.reduce((a,b)=>a+b,0)/errors.length:0;showModal(`<p class="eyebrow">DRIVER'S WORK COMPLETE</p><h2>乗務、おつかれさま。</h2><p>${score.engine.points} points · ${score.engine.chain} chain<br>${META[selected].name} · ${recipe().name}<br>停車 ${run.served}駅 / 通過 ${run.missed}駅<br>平均停止誤差 ${distanceLabel(mean)}</p><div class="dialog-buttons"><button id="resultMenu" class="start-button">路線選択へ</button></div>`,{pause:false});$('resultMenu').onclick=returnMenu;}
-function hud(){{const lr=route(),end=lr.stations[run.endIndex]?.s??Infinity;lookahead.update(run.s,changesFromSections(lr.limits),lr.signals??[],[...stationMarks(lr.stations,lr.sceneryStations),...checkpointMarks(run.scoreCheckpoints,run),...hornMarks(scoreHazards(lr),score.engine.done)].filter(x=>x.s<=end+1&&(!x.stop||x.s>=(lr.stations[Math.min(run.next,run.endIndex)]?.s??0)-2)));}const r=route(),next=r.stations[Math.min(run.next,run.endIndex)],d=next.s-run.s,notch=notchLabel(recipe(),run.notch),speed=Math.round(run.v*3.6),door=run.doorPhase==='closing'?'戸閉中':run.doors?'戸開':'戸閉';$('hudNext').textContent=next.name;if(recipe().id==='e131')$('hudNextKind').textContent=`次の停車駅 · ${recipe().playableSpecs.carCount===6?6:3}両停止位置`;$('hudDistance').textContent=run.finished?'運転完了':`${d<0?'超過 ':'あと '}${distanceLabel(d)}`;$('hudSpeed').textContent=speed;$('nativeSpeed').textContent=speed;$('hudNotch').textContent=notch;$('hudNotch').parentElement.dataset.kind=notch==='EB'?'eb':run.notch<0?'brake':run.notch>0?'power':'neutral';$('nativeNotch').textContent=notch;$('hudDoors').textContent=door;$('hudGrade').textContent=gradeLabel(world.grade(run.s));$('nativeDoor').textContent=door;$('nativeNext').textContent=next.name;$('nativeDistance').textContent=(d<0?'超過 ':'')+distanceLabel(d);$('closedLamp').classList.toggle('lit',!run.doors);const t=run.clockStart+Math.floor(run.elapsed);$('hudTime').textContent=[Math.floor(t/3600)%24,Math.floor(t/60)%60,t%60].map(x=>String(x).padStart(2,'0')).join(':');$('hudScore').textContent=`停車 ${run.served} / ${run.endIndex-run.startIndex}`;$('speedBar').style.setProperty('--speed',speed/recipe().playableSpecs.maxSpeedKmh*100);const marker=stopPosition(d);$('stopDiamond').hidden=!marker.visible;$('stopGauge').classList.toggle('far',Math.abs(d)>150);$('stopDiamond').style.top=marker.percent+'%';$('stopGauge').setAttribute('aria-label',`停止位置±10メートルマーカー ${marker.text}`);$('notchStrip').querySelectorAll('button').forEach(b=>b.classList.toggle('active',Number(b.dataset.notch)===run.notch));
+function hud(){updateWeatherStatus($('driveScreen'),run);{const lr=route(),end=lr.stations[run.endIndex]?.s??Infinity;lookahead.update(run.s,changesFromSections(lr.limits),lr.signals??[],[...stationMarks(lr.stations,lr.sceneryStations),...checkpointMarks(run.scoreCheckpoints,run),...hornMarks(scoreHazards(lr),score.engine.done)].filter(x=>x.s<=end+1&&(!x.stop||x.s>=(lr.stations[Math.min(run.next,run.endIndex)]?.s??0)-2)));}const r=route(),next=r.stations[Math.min(run.next,run.endIndex)],d=next.s-run.s,notch=notchLabel(recipe(),run.notch),speed=Math.round(run.v*3.6),door=run.doorPhase==='closing'?'戸閉中':run.doors?'戸開':'戸閉';$('hudNext').textContent=next.name;if(recipe().id==='e131')$('hudNextKind').textContent=`次の停車駅 · ${recipe().playableSpecs.carCount===6?6:3}両停止位置`;$('hudDistance').textContent=run.finished?'運転完了':`${d<0?'超過 ':'あと '}${distanceLabel(d)}`;$('hudSpeed').textContent=speed;$('nativeSpeed').textContent=speed;$('hudNotch').textContent=notch;$('hudNotch').parentElement.dataset.kind=notch==='EB'?'eb':run.notch<0?'brake':run.notch>0?'power':'neutral';$('nativeNotch').textContent=notch;$('hudDoors').textContent=door;$('hudGrade').textContent=gradeLabel(world.grade(run.s));$('nativeDoor').textContent=door;$('nativeNext').textContent=next.name;$('nativeDistance').textContent=(d<0?'超過 ':'')+distanceLabel(d);$('closedLamp').classList.toggle('lit',!run.doors);const t=run.clockStart+Math.floor(run.elapsed);$('hudTime').textContent=[Math.floor(t/3600)%24,Math.floor(t/60)%60,t%60].map(x=>String(x).padStart(2,'0')).join(':');$('hudScore').textContent=`停車 ${run.served} / ${run.endIndex-run.startIndex}`;$('speedBar').style.setProperty('--speed',speed/recipe().playableSpecs.maxSpeedKmh*100);const marker=stopPosition(d);$('stopDiamond').hidden=!marker.visible;$('stopGauge').classList.toggle('far',Math.abs(d)>150);$('stopDiamond').style.top=marker.percent+'%';$('stopGauge').setAttribute('aria-label',`停止位置±10メートルマーカー ${marker.text}`);$('notchStrip').querySelectorAll('button').forEach(b=>b.classList.toggle('active',Number(b.dataset.notch)===run.notch));
  const upcoming=Math.abs(d)<=3?next:(r.sceneryStations??r.stations).find(station=>station.s>run.s+2);
  if(upcoming&&!run.finished){
   const stops=r.stations.some(station=>Math.abs(station.s-upcoming.s)<.5);
@@ -320,6 +322,7 @@ function frame(now){
  last=now;
  if(mode==='drive'&&world&&run){
   const r=route();
+  if(!replaySession&&run.weather!==settings.weather){run.weather=weatherType(settings.weather);run.wheelSlip=false;run.wheelExcess=0;run.wheelSpeed=run.v;}
   if(replaySession){updateReplay(dt);}
   else if(!paused){
    cheats.speedStep(run,dt);
@@ -334,13 +337,13 @@ function frame(now){
     updateDriverCalls();
     const surface=world.structureAt(run.s,'tunnel')?'tunnel':world.structureAt(run.s,'bridge')?'bridge':'long';
     const rollingIndex=r.rollingNoise?.findLast(change=>change.s<=run.s)?.index;
-    sound.update(run.v*3.6,run.notch,dt,{doors:run.doors,surface,rollingIndex});
+    sound.update(run.v*3.6,run.notch,dt,{doors:run.doors,surface,rollingIndex,motorSpeed:(run.wheelSpeed??run.v)*3.6});
    }
   }
   if(!replaySession||!Number.isFinite(run.doorVisual))updateDoorVisual(run,paused?0:dt);world.doorVisual=run.doorVisual;world.doorState=run;if(!replaySession){run.viewMode=viewMode;recorder?.capture(run,score.engine.points,score.engine.chain);}
   hud();
   if(replaySession)replayHud();
-  world.render(run.s,run.v,paused?0:dt,{acceleration:run.acceleration,shake:settings.shake,panorama,outer:viewMode>=2,railfan:viewMode===3,clock:run.clockStart+run.elapsed});sound?.updatePassby(world,run.s,run.v,viewMode,paused);crossingAudio?.update(world,run.s,run.v,viewMode,paused,(world.playerTrain?.count??2)*20);
+  world.weather=weatherType(run.weather);world.render(run.s,run.v,paused?0:dt,{acceleration:run.acceleration,shake:settings.shake,panorama,outer:viewMode>=2,railfan:viewMode===3,clock:run.clockStart+run.elapsed});sound?.updatePassby(world,run.s,run.v,viewMode,paused);crossingAudio?.update(world,run.s,run.v,viewMode,paused,(world.playerTrain?.count??2)*20);
   if(!panorama)panel?.render(run,paused?0:dt,Boolean(world.structureAt(run.s,'tunnel'))||Boolean(r.night));
  }
  requestAnimationFrame(frame);
@@ -444,7 +447,7 @@ async function playSavedReplay(data){
   bar.querySelector('[data-replay-view]').onclick=cycleReplayView;bar.querySelector('[data-replay-pause]').onclick=()=>{paused=!paused;pauseAudio(paused);bar.querySelector('[data-replay-pause]').textContent=paused?'再生':'一時停止';};bar.querySelector('[data-replay-speed]').onclick=e=>{replaySession.speed=replaySession.speed===1?2:replaySession.speed===2?.5:1;e.target.textContent='×'+replaySession.speed;};bar.querySelector('[data-replay-exit]').onclick=async()=>{await returnMenu();gameShell.showMain();};bar.querySelector('input').oninput=e=>{replaySession.time=Number(e.target.value);replaySession.eventCursor=(replaySession.data.events??[]).findIndex(event=>event.time>=replaySession.time);if(replaySession.eventCursor<0)replaySession.eventCursor=(replaySession.data.events??[]).length;sound.setHorn(false);updateReplay(0);};
  }catch(error){await returnMenu();gameShell.showMain();showModal('<h2>リプレイを再生できませんでした</h2><p id="replayError"></p>');$('replayError').textContent=error.message;}
 }
-function updateReplay(dt){const r=replaySession;if(!r)return;if(!paused)r.time=Math.min(r.data.samples.at(-1).elapsed,r.time+dt*r.speed);if(!paused&&dt>0){const events=r.data.events??[];while(r.eventCursor<events.length&&events[r.eventCursor].time<=r.time){const event=events[r.eventCursor++];const fn=sound[event.method];if(typeof fn==='function')Promise.resolve(fn.apply(sound,event.args)).catch(()=>{});}}const timetable=run.scoreTimetable;Object.assign(run,replayStateAt(r.data.samples,r.time));run.scoreTimetable=timetable;setViewMode(replayViewMode(run,r.viewOverride));sound.update(run.v*3.6,run.notch,paused?0:dt,{doors:run.doors,surface:world.structureAt(run.s,'tunnel')?'tunnel':'long'});const slider=document.querySelector('.replay-controls input');if(slider)slider.value=String(r.time);if(r.time>=r.data.samples.at(-1).elapsed){if(!paused)pauseAudio(true);paused=true;document.querySelector('[data-replay-pause]').textContent='再生終了';}}
+function updateReplay(dt){const r=replaySession;if(!r)return;if(!paused)r.time=Math.min(r.data.samples.at(-1).elapsed,r.time+dt*r.speed);if(!paused&&dt>0){const events=r.data.events??[];while(r.eventCursor<events.length&&events[r.eventCursor].time<=r.time){const event=events[r.eventCursor++];const fn=sound[event.method];if(typeof fn==='function')Promise.resolve(fn.apply(sound,event.args)).catch(()=>{});}}const timetable=run.scoreTimetable;Object.assign(run,replayStateAt(r.data.samples,r.time));run.scoreTimetable=timetable;setViewMode(replayViewMode(run,r.viewOverride));sound.update(run.v*3.6,run.notch,paused?0:dt,{doors:run.doors,motorSpeed:(run.wheelSpeed??run.v)*3.6,surface:world.structureAt(run.s,'tunnel')?'tunnel':'long'});const slider=document.querySelector('.replay-controls input');if(slider)slider.value=String(r.time);if(r.time>=r.data.samples.at(-1).elapsed){if(!paused)pauseAudio(true);paused=true;document.querySelector('[data-replay-pause]').textContent='再生終了';}}
 function replayHud(){const badge=document.querySelector('.score-hud');badge.querySelector('.points-number').textContent=run.points;badge.querySelector('.chain-number').textContent=run.chain;const format=n=>[Math.floor(n/3600)%24,Math.floor(n/60)%60,Math.floor(n)%60].map(x=>String(x).padStart(2,'0')).join(':');document.querySelector('.score-clock-now b').textContent=format(run.clockStart+run.elapsed);const st=run.scoreTimetable?.find(st=>st.s>run.s),row=document.querySelector('.score-clock-next');row.querySelector('small').textContent=st?.stop?'停車予定':'通過予定';row.querySelector('span').textContent=st?.name??'';row.querySelector('b').textContent=st?format(st.time):'—';}
 
 function currentDutyKey(){return serviceKey(META[selected].id,serviceChoices[META[selected].id][Number($('trainChoice')?.value??0)]);}

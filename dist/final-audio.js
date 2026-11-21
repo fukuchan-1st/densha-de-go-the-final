@@ -3,7 +3,7 @@ import {TrainPassbyAudio} from './train-passby-audio.js?v=85';
 import {timingVoiceRefs,timingPreloadRefs,restrictionVoiceRefs} from './station-timing.js?v=84';
 import {stationCueRefs,stationVoiceBank} from './station-voice.js?v=97final';
 import {createMixGains,voiceCategory} from './audio-mix.js?v=91';
-import {interpolateColumn} from './final-vehicle.js?v=97final';
+import {interpolateColumn} from './final-vehicle.js?v=100';
 import {runPitch} from './assets/audio/run-pitch.js';
 import {HeldHorn} from './assets/audio/held-horn.js?v=85';
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -205,7 +205,7 @@ export class LocalTrainAudio {
   loop.gain?.gain.setTargetAtTime(0,time,.008);
   loop.source?.stop(time+.035);
  }
- update(speed,notch,dt=1/60,{surface='long',doors=false,rollingIndex}={}){if(this.paused)return;this.stopped=false;
+ update(speed,notch,dt=1/60,{surface='long',doors=false,rollingIndex,motorSpeed=speed}={}){if(this.paused)return;this.stopped=false;
   if(this.lastNotch!==undefined&&this.lastNotch!==notch)this.playNotch(this.lastNotch,notch).catch(()=>{});
   this.lastNotch=notch;
   const s=this.recipe.sounds,run=this.runRef(surface,rollingIndex),runKey='run'+run?.entryIndex;
@@ -221,8 +221,8 @@ export class LocalTrainAudio {
   const tables=phase&&this.recipe.motorNoise?.[phase];
   for(const [index,ref] of Object.entries(s.motor??{})){
    const key='motor'+index;
-   const volume=interpolateColumn(tables?.volume,index,speed);
-   const pitch=motorPitch(tables?.frequency,index,speed);
+   const volume=interpolateColumn(tables?.volume,index,motorSpeed);
+   const pitch=motorPitch(tables?.frequency,index,motorSpeed);
    if(volume>0&&pitch>0)this.tuneLoop(key,ref,volume*.55,pitch);
    else this.releaseLoop(key);
   }

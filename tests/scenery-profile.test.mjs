@@ -17,7 +17,7 @@ test('all seven lines and all supplied branches have valid, direction-independen
 });
 test('real lines use OSM classifications and fictional lines use district land use',()=>{
  for(const profile of sceneryProfiles())for(const row of profile.rows){
-  assert.ok(['osm-600m','interpolated-osm','fictional-landuse'].includes(row.source));
+  assert.ok(['osm-600m','osm-corridor-600m','interpolated-osm','fictional-landuse'].includes(row.source));
   assert.ok(Number.isFinite(row.coverage)&&row.coverage>=0&&row.coverage<=1);
  }
  const rural=sceneryDensity({id:'yagan',stations:[{name:'新藤原',s:0},{name:'川治温泉',s:5000}]},1000);
