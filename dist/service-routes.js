@@ -1,4 +1,4 @@
-import {prepareLeftTraffic,trafficSectionAt,inferTrafficSections} from './route-traffic.js?v=96';
+import {prepareLeftTraffic,trafficSectionAt,inferTrafficSections} from './route-traffic.js?v=98';
 import {interpolateKnots} from './track-layout.js?v=79';
 const finite=Number.isFinite;
 export function samplePoint(points,s){if(!points?.length)return [0,0,0];let i=0,j=points.length-1;while(j-i>1){const m=(i+j)>>1;if(points[m][0]<=s)i=m;else j=m;}const a=points[i],b=points[j],t=(s-a[0])/Math.max(.001,b[0]-a[0]);return [1,2,3].map(c=>(a[c]??0)+((b[c]??0)-(a[c]??0))*t);}

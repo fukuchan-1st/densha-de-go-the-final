@@ -61,7 +61,7 @@ for a in range(0,math.ceil(route['length']),400):
     b=min(route['length'],a+400);n=2 if sum(count(min(route['length']-1,max(1,s)))==2 for s in [a+40,(a+b)/2,b-40])>=2 else 1
     if sections and sections[-1]['tracks']==n:sections[-1]['sEnd']=b
     else:sections.append(dict(sStart=a,sEnd=b,tracks=n,source='OSM parallel 1435 mm main rails; boundaries approximated at 400 m resolution'))
-route['trafficSections']=sections
+route['trafficSections']=[dict(sStart=-300,sEnd=route['length']+300,tracks=2,source='User-requested continuous double-track simulator arrangement')]
 route['trafficSections'][0]['sStart']=-300
 route['trafficSections'][-1]['sEnd']=route['length']+300
 

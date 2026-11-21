@@ -1,4 +1,4 @@
-import {applyStationWiring} from './station-wiring.js?v=96';
+import {applyStationWiring} from './station-wiring.js?v=98';
 import {prepareSpecialStations} from './special-station-layouts.js?v=85';
 import {widenBoardingClearance,mergePlatformSurfaces} from './platform-details.js?v=79';
 import {yamanoteParallel} from './yamanote-parallel.js?v=79';
@@ -7,6 +7,7 @@ import {interpolateKnots} from './track-layout.js?v=79';
 // All offsets are measured to the driver's right. A direction belongs to a
 // rail, rather than being guessed from its distance to the player's train.
 export function inferTrafficSections(route){
+ if(route.id==='yamagata')return [{sStart:-300,sEnd:(route.length??route.stations.at(-1).s)+300,tracks:2,source:'User-requested continuous double-track simulator arrangement'}];
  if(route.trafficSections?.length)return ensureShiojiriMatsumoto(route,route.trafficSections);
  const stations=route.sceneryStations??route.stations,L=route.length??stations.at(-1).s;
  const at=name=>stations.find(st=>st.name===name)?.s;

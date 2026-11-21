@@ -17,7 +17,7 @@ import {createTerrainMaterial,createBuildingMaterial,terrainKind,terrainShade,bu
 import {SceneAtmosphere} from './scene-atmosphere.js?v=96';
 import {RealTrees,treeVariant} from './real-trees.js?v=87';
 import {PlayerTrain} from './player-train.js?v=96';
-import {prepareLeftTraffic} from './route-traffic.js?v=96';
+import {prepareLeftTraffic} from './route-traffic.js?v=98';
 import {prepareCorridorScenery,corridorSceneryType} from './corridor-scenery.js?v=controls55';
 import {sampleRouteCurve} from './route-curve.js?v=39';
 import {prepareTurnoutLayout} from './turnout-layout.js?v=92';
