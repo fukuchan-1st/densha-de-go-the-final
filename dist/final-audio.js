@@ -3,7 +3,7 @@ import {TrainPassbyAudio} from './train-passby-audio.js?v=85';
 import {timingVoiceRefs,timingPreloadRefs,restrictionVoiceRefs} from './station-timing.js?v=84';
 import {stationCueRefs,stationVoiceBank} from './station-voice.js?v=97final';
 import {createMixGains,voiceCategory} from './audio-mix.js?v=91';
-import {interpolateColumn} from './final-vehicle.js?v=100';
+import {interpolateColumn} from './final-vehicle.js?v=100final';
 import {runPitch} from './assets/audio/run-pitch.js';
 import {HeldHorn} from './assets/audio/held-horn.js?v=85';
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));

@@ -4,17 +4,17 @@ import {weatherType,adhesionStep} from '../dist/weather.js';import {sampleState,
 import {WeatherScene} from '../dist/weather-scene.js';import * as T from '../dist/assets/vendor/three.module.js';
 const recipes=JSON.parse(await readFile(new URL('../dist/assets/final/vehicle-recipes.json',import.meta.url),'utf8')).trains;
 const initial=(weather,notch)=>({s:100,v:0,elapsed:0,doors:false,notch,weather});
-test('all playable trains hold actual speed during powered wheelspin in rain and snow, including the legacy 701',()=>{
+test('all playable trains accelerate under adhesion limits while wheel RPM rises faster in rain and snow, including the legacy 701',()=>{
  for(const train of recipes){
   if(!train.notchLabels?.includes('P1'))continue;
   const runs=['clear','rain','snow'].map(w=>initial(w,controlsFor(train).max));
   for(let i=0;i<200;i++)for(const state of runs)driveStep(state,train,.02);
-  assert.ok(runs[0].v>runs[1].v&&runs[1].v===0&&runs[2].v===0,train.id);
+  assert.ok(runs[0].v>runs[1].v&&runs[1].v>runs[2].v&&runs[2].v>0,train.id);
   assert.equal(runs[0].wheelSlip,false);assert.ok(runs[1].wheelSlip&&runs[2].wheelSlip,train.id);
   assert.ok(runs[2].wheelSpeed>runs[2].v);assert.ok(runs[2].adhesionLimit<runs[1].adhesionLimit);assert.ok(runs.every(s=>Number.isFinite(s.v)&&s.v>=0));
  }
  const runs=['clear','rain','snow'].map(w=>initial(w,5));for(let i=0;i<100;i++)for(const state of runs)step(state,.02);
- assert.ok(runs[0].v>runs[1].v&&runs[1].v===0&&runs[2].v===0);assert.ok(runs[2].wheelSlip);
+ assert.ok(runs[0].v>runs[1].v&&runs[1].v>runs[2].v&&runs[2].v>0);assert.ok(runs[2].wheelSlip);
 });
 test('cutting power restores adhesion and gentle traction can avoid slip; braking and gradients stay independent',()=>{
  const state=initial('snow',5);for(let i=0;i<100;i++)adhesionStep(state,.8,.02);assert.ok(state.wheelExcess>1);
@@ -24,7 +24,7 @@ test('cutting power restores adhesion and gentle traction can avoid slip; brakin
  for(const grade of [-30,0,30]){
   const a={...initial('clear',-3),v:15},b={...initial('snow',-3),v:15};driveStep(a,train,.02,grade);driveStep(b,train,.02,grade);assert.equal(a.v,b.v);
  }
- const spinning={...initial('snow',controlsFor(train).max),v:10};for(let i=0;i<100;i++)driveStep(spinning,train,.02,20);assert.equal(spinning.v,10);assert.ok(spinning.wheelSpeed>10);spinning.notch=1;driveStep(spinning,train,.02);assert.equal(spinning.wheelSlip,false);
+ const spinning={...initial('snow',controlsFor(train).max),v:10};for(let i=0;i<100;i++)driveStep(spinning,train,.02,20);assert.ok(spinning.v>0);assert.ok(spinning.wheelSpeed>spinning.v);spinning.notch=1;driveStep(spinning,train,.02);assert.equal(spinning.wheelSlip,false);
  const closed={...initial('snow',5),doors:true};driveStep(closed,train,.02);assert.equal(closed.v,0);assert.equal(closed.wheelSlip,false);
  assert.equal(weatherType('bad-value'),'clear');
 });
@@ -33,6 +33,16 @@ test('dry or missing weather preserves existing motion exactly and replay preser
  for(let i=0;i<100;i++){driveStep(a,train,.02,10);driveStep(b,train,.02,10);}assert.equal(a.v,b.v);assert.equal(a.s,b.s);assert.equal(a.wheelSpeed,a.v);
  const snow={...initial('snow',5),wheelSlip:true,wheelSpeed:10,wheelExcess:5,elapsed:1};
  const sample=sampleState(snow);const replay=replayStateAt([sample,{...sample,elapsed:2}],1.5);assert.equal(replay.weather,'snow');assert.equal(replay.wheelSlip,true);assert.equal(replay.wheelSpeed,10);
+});
+test('neutral immediately removes powered acceleration without stopping the moving train',()=>{
+ const train=recipes.find(t=>t.id==='e233');
+ for(const legacy of [false,true]){
+  const state={...initial('snow',5),v:5};const advance=legacy?(s,dt)=>step(s,dt):(s,dt)=>driveStep(s,train,dt);
+  for(let i=0;i<50;i++)advance(state,.02);
+  const poweredSpeed=state.v;assert.ok(poweredSpeed>5);assert.ok(state.wheelSlip);assert.ok(state.wheelSpeed>state.v+1);
+  state.notch=0;const acceleration=advance(state,.02);
+  assert.ok(acceleration<=0);assert.ok(state.v>poweredSpeed-.02);assert.ok(state.v<=poweredSpeed);assert.equal(state.wheelSlip,false);
+ }
 });
 test('rain and snow render separately, respect tunnels, pause and lightweight counts, and dispose cleanly',()=>{
  const world={scene:new T.Scene(),camera:new T.PerspectiveCamera(),quality:'light'},weather=new WeatherScene(world);

@@ -1,4 +1,4 @@
-import {adhesionStep} from './weather.js?v=100';
+import {adhesionStep} from './weather.js?v=100final';
 export const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 export function interpolateTable(rows,speed,column=1){
  const points=rows.filter(r=>Number.isFinite(r[0])&&Number.isFinite(r[column]));
@@ -23,8 +23,7 @@ export function driveStep(state,recipe,dt,grade=0){
  }
  if(state.doors||state.notch<=0)adhesionStep(state,0,dt);
  state.previousNotch=state.notch;
- // Powered wheelspin holds train speed; the independent wheel speed drives motor RPM.
- state.v=state.wheelSlip?old:clamp(old+a*dt,0,(state.cheatSpeedOverride?160:spec.maxSpeedKmh)/3.6);state.wheelSpeed=state.v+(state.wheelExcess??0);state.s+=(old+state.v)*dt/2;state.elapsed+=dt;state.acceleration=dt?(state.v-old)/dt:0;return state.acceleration;
+ state.v=clamp(old+a*dt,0,(state.cheatSpeedOverride?160:spec.maxSpeedKmh)/3.6);state.wheelSpeed=state.v+(state.wheelExcess??0);state.s+=(old+state.v)*dt/2;state.elapsed+=dt;state.acceleration=dt?(state.v-old)/dt:0;return state.acceleration;
 }
 export function brakeAssist(state,route,recipe){
  const distance=route.stations[state.next].s-state.s,c=controlsFor(recipe);

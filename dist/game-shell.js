@@ -1,10 +1,10 @@
-import {WEATHER,weatherType,weatherMarkup,bindWeather} from './weather.js?v=100';
+import {WEATHER,weatherType,weatherMarkup,bindWeather} from './weather.js?v=100final';
 import {graphicsComparisonMarkup} from './graphics-previews.js?v=87';
 import {confirmHighGraphics} from './graphics-warning.js?v=87';
 import {mountBasinEditor} from './basin-editor.js?v=99';
 import {startTitleIntro} from './title-intro.js?v=72';
 import {audioMixMarkup,bindAudioMix} from './audio-mix.js?v=91';
-import {loadReplay} from './replay-store.js?v=100';
+import {loadReplay} from './replay-store.js?v=100final';
 import {MuseumViewer} from './museum.js?v=89';
 export const MAIN_MENU=[
  ['drive','運転乗務','運転乗務は、電車の運転をするゲームです。乗務完了後には、自分の運転をリプレイメニューから見ることもできます。'],

@@ -1,7 +1,8 @@
 export const WEATHER={clear:{name:'晴れ',traction:Infinity},rain:{name:'雨',traction:.32},snow:{name:'雪',traction:.20}};
 export const weatherType=value=>Object.hasOwn(WEATHER,value)?value:'clear';
 // Gameplay adhesion approximation, not a measured vehicle/rail friction model.
-// During powered slip the caller holds train speed, per the requested gameplay.
+// Contact force still accelerates the train during wheelspin; the excess torque
+// raises wheel RPM separately. Neutral removes powered force immediately.
 // Braking is independent. Smooth position patches avoid per-frame RNG.
 export function adhesionStep(state,demand,dt){
  const type=weatherType(state.weather),step=Math.max(0,Math.min(.1,dt));
@@ -13,7 +14,7 @@ export function adhesionStep(state,demand,dt){
  state.wheelSlip=slipping;
  state.wheelSpeed=Math.max(0,(state.v??0)+state.wheelExcess);
  state.adhesionLimit=limit;
- return slipping?0:demand;
+ return slipping?limit*.82:demand;
 }
 export function weatherMarkup(selected='clear'){
  return '<fieldset class="weather-controls"><legend>天候</legend><div>'+Object.entries(WEATHER).map(([id,{name}])=>`<button type="button" data-weather="${id}" aria-pressed="${id===weatherType(selected)}">${name}</button>`).join('')+'</div><p>雨・雪では強い力行で空転しやすくなります。<br>空転したらノッチを戻し、弱い力行から再加速してください。<br>滑りやすさ：晴れ ＜ 雨 ＜ 雪</p></fieldset>';
