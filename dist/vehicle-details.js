@@ -1,4 +1,4 @@
-import * as T from './assets/vendor/three.module.js?v=106';
+import * as T from './assets/vendor/three.module.js?v=107';
 export function tint6050Bogies(body,owner){
  const key='6050-brown-bogies';if(!owner.materials.has(key))owner.materials.set(key,new T.MeshStandardMaterial({color:'#70533d',metalness:.25,roughness:.85,side:T.DoubleSide}));
  for(const mesh of [...body.children]){if(!mesh.isMesh)continue;const g=mesh.geometry,p=g.getAttribute('position'),fixed=[],bogie=[],end=Math.min(g.index?.count??p.count,g.drawRange.start+g.drawRange.count);

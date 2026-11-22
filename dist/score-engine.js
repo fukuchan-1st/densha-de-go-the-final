@@ -33,11 +33,11 @@ export class ScoreEngine{
     actual=clock;
    }else if(st.stop&&prev&&prev.v>.01&&v<=.01&&Math.abs(s-st.s)<=150){const error=state.correctedStopError??s-st.s;this.once('position:'+st.id,Math.abs(error)<=this.cfg.blueTolerance?'〇':'×',Math.abs(error)<=this.cfg.blueTolerance?'停止位置よし':'停止位置が青い範囲外',100);actual=clock;}
    if(target!==null&&!this.done.has(key)){
-    if(actual!==null){const grade=timingGrade(actual-target,st.stop);this.done.add(key);if(grade)this.award(grade,st.name+(st.stop?' 停車時刻':' 通過時刻'),100);}
-    else if(clock-target>=(st.stop?15:10)&&s<st.s+200){this.once(key,'×',st.name+' 到着・通過遅延',100);}
+    if(actual!==null){const grade=timingGrade(actual-target,st.stop);this.done.add(key);if(grade&&!(grade==='×'&&state.typhoonTimingExempt))this.award(grade,st.name+(st.stop?' 停車時刻':' 通過時刻'),100);}
+    else if(!state.typhoonTimingExempt&&clock-target>=(st.stop?15:10)&&s<st.s+200){this.once(key,'×',st.name+' 到着・通過遅延',100);}
    }
   }
-  if(prev)for(const point of context.checkpoints??[]){if(prev.s<point.s&&s>=point.s&&!this.done.has('point:'+point.id)){this.done.add('point:'+point.id);const f=(point.s-prev.s)/Math.max(.00001,s-prev.s),actual=point.kind==='speed'?(prev.v+(v-prev.v)*f)*3.6:(state.clockStart??28800)+prev.t+(t-prev.t)*f,grade=checkpointGrade(point.kind,actual,point.target);this.lastCheckpoint={...point,actual,error:actual-point.target,grade,time:t};if(grade)this.award(grade,point.kind==='speed'?'定速ポイント':'定通ポイント');}}
+  if(prev)for(const point of context.checkpoints??[]){if(prev.s<point.s&&s>=point.s&&!this.done.has('point:'+point.id)){this.done.add('point:'+point.id);const f=(point.s-prev.s)/Math.max(.00001,s-prev.s),actual=point.kind==='speed'?(prev.v+(v-prev.v)*f)*3.6:(state.clockStart??28800)+prev.t+(t-prev.t)*f,grade=checkpointGrade(point.kind,actual,point.target);this.lastCheckpoint={...point,actual,error:actual-point.target,grade,time:t};if(grade&&!(grade==='×'&&point.kind==='time'&&state.typhoonTimingExempt))this.award(grade,point.kind==='speed'?'定速ポイント':'定通ポイント');}}
   this.previous={s,v,t};
  }
 }

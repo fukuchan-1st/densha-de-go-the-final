@@ -1,6 +1,6 @@
-import {RouteProfile} from './route-profile.js?v=106';
-import {STATIONS} from './route-data.js?v=106';
-import {loadRoadAsset} from './road-assets.js?v=106';
+import {RouteProfile} from './route-profile.js?v=107';
+import {STATIONS} from './route-data.js?v=107';
+import {loadRoadAsset} from './road-assets.js?v=107';
 export const TOHOKU_TRAIN={id:'701',name:'701系1500番台',notchLabels:['EB','B7','B6','B5','B4','B3','B2','B1','抑速','N','P1','P2','P3','P4','P5'],serviceBrakeKmhPerSecond:3.6,emergencyBrakeKmhPerSecond:3.6,playableSpecs:{carCount:2,maxSpeedKmh:110,startingAccelerationKmhPerSecondApprox:2.1,gauge:1.067,viewpoint:{x:0,y:3.1,z:0}}};
 export function buildTohokuRoute(geometry,profileData,layout,structures,extension,crossings,signals){
  const profile=new RouteProfile(profileData),length=STATIONS.at(-1).s;
@@ -15,4 +15,4 @@ export function buildTohokuRoute(geometry,profileData,layout,structures,extensio
   roadAsset:'./assets/roads/tohoku.json.gz',geometryQuality:'黒磯〜新白河は提供BVE、以北は地図による試作線形',sourceDirectionNote:'701系の提供運転台・収録音を共通運転画面で使用。新白河以北の勾配・上限速度は従来の試作設定を継承。',unifiedVersion:106};
  return route;
 }
-export async function loadTohokuRoute(){const files=['route-geometry','bve-profile','station-layouts','bve-structures','osm-extension-structures','level-crossings-tohoku','bve-signals'];const data=await Promise.all(files.map(async file=>{const r=await fetch(`./assets/${file}.json?v=106`);if(!r.ok)throw Error('東北本線の路線データを読み込めません：'+file);return r.json();}));return loadRoadAsset(buildTohokuRoute(...data));}
+export async function loadTohokuRoute(){const files=['route-geometry','bve-profile','station-layouts','bve-structures','osm-extension-structures','level-crossings-tohoku','bve-signals'];const data=await Promise.all(files.map(async file=>{const r=await fetch(`./assets/${file}.json?v=107`);if(!r.ok)throw Error('東北本線の路線データを読み込めません：'+file);return r.json();}));return loadRoadAsset(buildTohokuRoute(...data));}

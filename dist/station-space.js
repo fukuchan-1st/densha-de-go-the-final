@@ -1,5 +1,5 @@
-import {interpolateKnots} from './track-layout.js?v=106';
-import {platformExtent} from './station-platform-length.js?v=106';
+import {interpolateKnots} from './track-layout.js?v=107';
+import {platformExtent} from './station-platform-length.js?v=107';
 export function stationPlatforms(world,station){
  const legacy=world.trackLayout?.stations?.find(st=>Math.abs(st.s-station.s)<1);
  if(legacy)return (legacy.platforms??[]).map(p=>({station:legacy,platform:p,start:p.start,end:p.end,legacy:true}));

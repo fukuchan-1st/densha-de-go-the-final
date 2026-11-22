@@ -1,10 +1,10 @@
-import {withYamagataEra} from './yamagata-era.js?v=106';
-import {applyPublishedSchedule} from './published-schedules.js?v=106';
-import {releaseMatsumotoExpressLimit} from './geographic-sections.js?v=106';
-import {prepareLeftTraffic} from './route-traffic.js?v=106';
-import {selectTokaidoServiceTrack} from './tokaido-service-track.js?v=106';
-import {serviceChoices,STOP_PATTERNS} from './service-catalog.js?v=106';
-import {sliceRoute,reverseRoute} from './service-routes.js?v=106';
+import {withYamagataEra} from './yamagata-era.js?v=107';
+import {applyPublishedSchedule} from './published-schedules.js?v=107';
+import {releaseMatsumotoExpressLimit} from './geographic-sections.js?v=107';
+import {prepareLeftTraffic} from './route-traffic.js?v=107';
+import {selectTokaidoServiceTrack} from './tokaido-service-track.js?v=107';
+import {serviceChoices,STOP_PATTERNS} from './service-catalog.js?v=107';
+import {sliceRoute,reverseRoute} from './service-routes.js?v=107';
 export {serviceChoices};
 function makeDefaultServiceRoute(route,vehicle,service){
  route={...selectTokaidoServiceTrack(route,service),vehicle,service};

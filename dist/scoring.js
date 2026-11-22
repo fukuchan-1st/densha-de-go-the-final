@@ -1,12 +1,12 @@
-import {retimeMatsumotoLocals} from './matsumoto-timetable.js?v=106';
-import {resolvePublishedSchedule} from './published-schedules.js?v=106';
-import {routePlanningSpec,operatingBand,operatingCap} from './planning-profile.js?v=106';
+import {retimeMatsumotoLocals} from './matsumoto-timetable.js?v=107';
+import {resolvePublishedSchedule} from './published-schedules.js?v=107';
+import {routePlanningSpec,operatingBand,operatingCap} from './planning-profile.js?v=107';
 export {routePlanningSpec};
-import {yaganPlanningSpec,rebuildYaganTimetable,planningGrade} from './yagan-timetable.js?v=106';
-import {osakaPlanningSpec,rebuildOsakaTimetable} from './osaka-timetable.js?v=106';
-import {ScoreAudio} from './score-audio.js?v=106';
-import {ScoreEngine,timeSeconds} from './score-engine.js?v=106';
-import {restrictionSigns} from './restriction-signs.js?v=106';
+import {yaganPlanningSpec,rebuildYaganTimetable,planningGrade} from './yagan-timetable.js?v=107';
+import {osakaPlanningSpec,rebuildOsakaTimetable} from './osaka-timetable.js?v=107';
+import {ScoreAudio} from './score-audio.js?v=107';
+import {ScoreEngine,timeSeconds} from './score-engine.js?v=107';
+import {restrictionSigns} from './restriction-signs.js?v=107';
 export function mountScoring(parent,{badge,volume=()=>.65,blueTolerance=3}={}){
  const hud=document.createElement('div');hud.className='score-hud';hud.innerHTML='<small><b class="chain-number">0</b> chain</small><strong><b class="points-number">0</b> points</strong>';
  if(badge){[...badge.children].forEach(c=>c.hidden=true);badge.append(hud);badge.classList.add('scoring-badge');}else parent.append(hud);

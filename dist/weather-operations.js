@@ -1,4 +1,4 @@
-import {sceneryDensity} from './scenery-profile.js?v=106';
+import {sceneryDensity} from './scenery-profile.js?v=107';
 export function snowCover(route,s,type){
  if(!['snow','heavySnow','settledSnow'].includes(type))return 0;
  const d=sceneryDensity(route,s),urban=Math.max(d.building/100,d.urban??0),forest=Math.max(d.forest??0,d.green/100*.65);
@@ -11,7 +11,7 @@ export function typhoonSection(state,route){
  const from=state.s??0,end=route.stations?.[state.endIndex]?.s??route.length??route.stations?.at(-1)?.s??from+3000,remaining=end-from;
  if(remaining<30)return null;
  const lead=Math.min(Math.max(remaining*.18,180),950,remaining*.4),start=from+lead;
- return state.typhoonSection={sStart:start,sEnd:Math.min(end-5,start+Math.min(800,remaining*.32)),kmh:40,weather:true};
+ state.typhoonTimingExempt=true;return state.typhoonSection={sStart:start,sEnd:Math.min(end-5,start+Math.min(800,remaining*.32)),kmh:40,weather:true};
 }
 const effectiveRoutes=new WeakMap();
 export function weatherRoute(state,base){

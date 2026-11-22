@@ -1,45 +1,46 @@
-import {TOHOKU_TRAIN,loadTohokuRoute} from './tohoku-integration.js?v=106';
-import {TohokuAudio} from './tohoku-audio.js?v=106';
-import {CabPanel} from './cab-panel.js?v=106';
-import {fitStationName} from './station-name-layout.js?v=106';
-import {weatherRoute,weatherLimits,weatherLimitAt,reportTyphoon} from './weather-operations.js?v=106';
-import {mountRoutePages} from './route-pages.js?v=106';
-import {WEATHER,weatherType,updateWeatherStatus} from './weather.js?v=106';
-import {gradeLabel} from './tunnel-effects.js?v=106';
-import {updateDoorVisual} from './train-doors.js?v=106';
-import {scheduledBoardingDelay} from './published-schedules.js?v=106';
-import {loadRoadAsset} from './road-assets.js?v=106';
-import {CrossingAudio} from './crossings.js?v=106';
-import {VIEW_LABELS,normalizedView,replayViewMode} from './view-modes.js?v=106';
-import {yaganPlanningSpec,yaganBoardingReady,yaganBoardingDelay} from './yagan-timetable.js?v=106';
-import {progress,serviceKey} from './scenario-progress.js?v=106';
-import {scenarioRanges} from './scenario-ranges.js?v=106';
-import {installCheats,jumpToStation} from './game-cheats.js?v=106';
-import {mountGameShell} from './game-shell.js?v=106';
-import {DutyRecorder,replayStateAt,recordReplayAudio} from './replay-store.js?v=106';
-import {osakaPlanningSpec} from './osaka-timetable.js?v=106';
-import {collectStationReports,collectRestrictionReports,pauseWhenSpeechEnds} from './station-timing.js?v=106';
-import {buildConnectingRoutes} from './service-catalog.js?v=106';
-import {loadAudioMix,audioMixMarkup,bindAudioMix} from './audio-mix.js?v=106';
-import {bindRouteKeys,bindScreenKeys} from './screen-keys.js?v=106';
-import {sharedEffects} from './buffered-effects.js?v=106';
-import {bindTrainSelectionKeys} from './selection-keys.js?v=106';
-import {beginTerminalOpening,advanceTerminalOpening} from './terminal-arrival.js?v=106';
-import {vehiclePhoto} from './vehicle-photos.js?v=106';
-import {mountTrainDetails} from './train-details.js?v=106';
-import {mountWheelPicker} from './wheel-picker.js?v=106';
-import {routePlanningSpec,mountScoring,checkpointMarks,scoringStations,buildScoreTimetable,resolveScoreSchedule,scoreHazards,hornMarks,currentScoreRestriction,signalRestriction} from './scoring.js?v=106';
-import {mountDrivingOverlay} from './driving-overlay.js?v=106';import {mountLookahead,changesFromSections,stationMarks} from './lookahead.js?v=106';
-import {serviceChoices,makeServiceRoute} from './train-selection.js?v=106';
-import {GeneratedCab,generatedCab} from './generated-cab.js?v=106';
-import {FinalWorld} from './final-world.js?v=106';
-import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=106';
-import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=106';
-import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,routeLimitAt,stopPosition,finishStop,beginDoorClosing,isDoorClosing,takeDepartureCall} from './final-model.js?v=106';
-import {STATIONS as TOHOKU_STATIONS} from './route-data.js?v=106';
-import {FINAL_SCENARIOS,scenarioJourney} from './final-scenarios.js?v=106';
-import {detectStoppedOverrun,correctStoppedOverrun,nextSignalCall} from './train-operations.js?v=106';
-import {bindHornButton} from './assets/audio/held-horn.js?v=106';
+import {wallet,SCENARIO_PRICE} from './scenario-wallet.js?v=107';
+import {TOHOKU_TRAIN,loadTohokuRoute} from './tohoku-integration.js?v=107';
+import {TohokuAudio} from './tohoku-audio.js?v=107';
+import {CabPanel} from './cab-panel.js?v=107';
+import {fitStationName} from './station-name-layout.js?v=107';
+import {weatherRoute,weatherLimits,weatherLimitAt,reportTyphoon} from './weather-operations.js?v=107';
+import {mountRoutePages} from './route-pages.js?v=107';
+import {WEATHER,weatherType,updateWeatherStatus} from './weather.js?v=107';
+import {gradeLabel} from './tunnel-effects.js?v=107';
+import {updateDoorVisual} from './train-doors.js?v=107';
+import {scheduledBoardingDelay} from './published-schedules.js?v=107';
+import {loadRoadAsset} from './road-assets.js?v=107';
+import {CrossingAudio} from './crossings.js?v=107';
+import {VIEW_LABELS,normalizedView,replayViewMode} from './view-modes.js?v=107';
+import {yaganPlanningSpec,yaganBoardingReady,yaganBoardingDelay} from './yagan-timetable.js?v=107';
+import {progress,serviceKey} from './scenario-progress.js?v=107';
+import {scenarioRanges} from './scenario-ranges.js?v=107';
+import {installCheats,jumpToStation} from './game-cheats.js?v=107';
+import {mountGameShell} from './game-shell.js?v=107';
+import {DutyRecorder,replayStateAt,recordReplayAudio} from './replay-store.js?v=107';
+import {osakaPlanningSpec} from './osaka-timetable.js?v=107';
+import {collectStationReports,collectRestrictionReports,pauseWhenSpeechEnds} from './station-timing.js?v=107';
+import {buildConnectingRoutes} from './service-catalog.js?v=107';
+import {loadAudioMix,audioMixMarkup,bindAudioMix} from './audio-mix.js?v=107';
+import {bindRouteKeys,bindScreenKeys} from './screen-keys.js?v=107';
+import {sharedEffects} from './buffered-effects.js?v=107';
+import {bindTrainSelectionKeys} from './selection-keys.js?v=107';
+import {beginTerminalOpening,advanceTerminalOpening} from './terminal-arrival.js?v=107';
+import {vehiclePhoto} from './vehicle-photos.js?v=107';
+import {mountTrainDetails} from './train-details.js?v=107';
+import {mountWheelPicker} from './wheel-picker.js?v=107';
+import {routePlanningSpec,mountScoring,checkpointMarks,scoringStations,buildScoreTimetable,resolveScoreSchedule,scoreHazards,hornMarks,currentScoreRestriction,signalRestriction} from './scoring.js?v=107';
+import {mountDrivingOverlay} from './driving-overlay.js?v=107';import {mountLookahead,changesFromSections,stationMarks} from './lookahead.js?v=107';
+import {serviceChoices,makeServiceRoute} from './train-selection.js?v=107';
+import {GeneratedCab,generatedCab} from './generated-cab.js?v=107';
+import {FinalWorld} from './final-world.js?v=107';
+import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=107';
+import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=107';
+import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,routeLimitAt,stopPosition,finishStop,beginDoorClosing,isDoorClosing,takeDepartureCall} from './final-model.js?v=107';
+import {STATIONS as TOHOKU_STATIONS} from './route-data.js?v=107';
+import {FINAL_SCENARIOS,scenarioJourney} from './final-scenarios.js?v=107';
+import {detectStoppedOverrun,correctStoppedOverrun,nextSignalCall} from './train-operations.js?v=107';
+import {bindHornButton} from './assets/audio/held-horn.js?v=107';
 
 
 const $=id=>document.getElementById(id),META=[
@@ -62,7 +63,7 @@ let recorder=null,replaySession=null,crossingAudio=null;
 const settings={weather:'clear',volume:.65,shake:1,drawDistance:1500,quality:matchMedia('(pointer:coarse)').matches?'light':'standard'};
 try{const saved=JSON.parse(localStorage.getItem('railway-drive-settings')??'{}');settings.weather=weatherType(saved.weather);if(Number.isFinite(saved.volume))settings.volume=clamp(saved.volume,0,1);if(Number.isFinite(saved.shake))settings.shake=clamp(saved.shake,0,1);if(Number.isFinite(saved.drawDistance))settings.drawDistance=clamp(saved.drawDistance,500,2000);if(['light','standard','high'].includes(saved.quality))settings.quality=saved.quality;}catch{}
 const audioMix=loadAudioMix(localStorage,settings.volume);
-const cheats=installCheats({getState:()=>run,active:()=>mode==='drive'&&!replaySession,paused:()=>paused||!run||run.finished,onMessage:text=>toast(text,8)});
+const cheats=installCheats({getState:()=>run,active:()=>mode==='drive'&&!replaySession,paused:()=>paused||!run||run.finished,onChange:()=>{try{if(sessionStorage.getItem('trackfinity-admin')==='1')wallet.unlockAll();}catch{}refreshScenarioAccess();},onMessage:text=>toast(text,8)});
 const saveSettings=()=>{try{localStorage.setItem('railway-drive-settings',JSON.stringify(settings));}catch{}};
 const overlayControls=mountDrivingOverlay($('driveScreen'),{onChange:n=>setNotch(n),actions:[$('hornButton'),$('pauseButton'),$('moreButton')],instructionElement:$('eventText')});$('driveScreen').append($('extras'));const lookahead=mountLookahead($('driveScreen'));
 const score=mountScoring($('driveScreen'),{badge:document.querySelector('.hud-route'),volume:()=>audioMix.se});
@@ -109,7 +110,7 @@ function displayScenario(){
 $('scenarioSelect').onchange=()=>{playMenuSound('cursor');displayScenario();};
 $('startStation').onchange=()=>playMenuSound('cursor');
 function toast(text,seconds=5){toastText=text;toastUntil=(run?.elapsed??0)+seconds;}
-function displayMenu(){updateMenuWeather();const meta=META[selected],r=routes[selected],train=recipe();document.documentElement.style.setProperty('--accent',meta.color);$('trainRoute').textContent=meta.english;$('trainName').innerHTML=`${meta.short}<span>${meta.series??'系'}</span>`;$('formation').textContent=`${train.playableSpecs.carCount}両編成 · 各駅停車`;$('compactRoute').value=String(selected);document.querySelectorAll('.route-card').forEach((el,i)=>{el.classList.toggle('active',i===selected);el.setAttribute('aria-pressed',String(i===selected));});$('startStation').innerHTML=r.stations.slice(0,-1).map((st,i)=>`<option value="${i}">${st.name}</option>`).join('');const scenarios=FINAL_SCENARIOS[meta.id]??[];$('scenarioControl').hidden=!scenarios.length;$('scenarioSelect').replaceChildren(new Option('自由運転',''),...scenarios.map(([id,from,to],i)=>new Option(`#${id} ${from} → ${to}`,String(i))));displayScenario();setMenuPhoto(meta.id);refreshClears();routePages?.sync();}
+function displayMenu(){updateMenuWeather();const meta=META[selected],r=routes[selected],train=recipe();document.documentElement.style.setProperty('--accent',meta.color);$('trainRoute').textContent=meta.english;$('trainName').innerHTML=`${meta.short}<span>${meta.series??'系'}</span>`;$('formation').textContent=`${train.playableSpecs.carCount}両編成 · 各駅停車`;$('compactRoute').value=String(selected);document.querySelectorAll('.route-card').forEach((el,i)=>{el.classList.toggle('active',i===selected);el.setAttribute('aria-pressed',String(i===selected));});$('startStation').innerHTML=r.stations.slice(0,-1).map((st,i)=>`<option value="${i}">${st.name}</option>`).join('');const scenarios=FINAL_SCENARIOS[meta.id]??[];$('scenarioControl').hidden=!scenarios.length;$('scenarioSelect').replaceChildren(new Option('自由運転',''),...scenarios.map(([id,from,to],i)=>new Option(`#${id} ${from} → ${to}`,String(i))));displayScenario();setMenuPhoto(meta.id);refreshClears();refreshScenarioAccess();routePages?.sync();}
 function choose(i){
  if(loading)return;
  const next=(i+META.length)%META.length;
@@ -151,7 +152,7 @@ async function cleanup(){await recorder?.flush();recorder=null;replaySession=nul
  sound=null;
  activeRoute=null;
 }
-async function returnMenu(){playMenuSound('cancel');if($('modal').open)$('modal').close();modalPaused=false;paused=true;setMode('menu');toggleExtras(false);await cleanup();run=null;chosenVehicle=null;chosenRoute=null;displayMenu();}
+async function returnMenu(){settlePoints();playMenuSound('cancel');if($('modal').open)$('modal').close();modalPaused=false;paused=true;setMode('menu');toggleExtras(false);await cleanup();run=null;chosenVehicle=null;chosenRoute=null;displayMenu();}
 $('menuButton').onclick=returnMenu;
 async function effect(name){return sound?.playEffect(name)??false;}
 async function closeSequence(generation){
@@ -199,6 +200,7 @@ $('audioRetry').onclick=()=>{$('audioRetry').hidden=true;closeSequence(token);};
 function updateDoors(dt){if(advanceTerminalOpening(run,route().stations[run.endIndex].s,dt)){paused=true;pauseAfterArrivalVoice();showResults();return;}if(run.doorPhase==='opening-terminal')return;if(run.finished||run.doorPhase==='audio-error')return;const st=route().stations[run.next];if(!run.doors){if(run.v<=.01&&Math.abs(st.s-run.s)<=3){run.stopWait+=dt;run.doorPhase='waiting-open';if(run.stopWait>=3){run.v=0;run.doors=true;if(!replaySession)progress.recordStop(run.dutyKey,route().stations[run.startIndex].s,st.s,run);run.doorPhase='boarding';run.dwell=0;const opening=effect('open');if(run.next===run.endIndex)beginTerminalOpening(run,opening);else opening.catch(()=>{});effect('relayOff').catch(()=>{});}}else{run.stopWait=0;run.doorPhase=null;}}else if(run.doorPhase==='boarding'){run.dwell+=dt;if(run.dwell>=15&&yaganBoardingReady(run,route())&&scheduledBoardingDelay(run,route())<=0)closeSequence(token);}}
 async function start(startIndex){
  if(loading||!recipes)return;
+ if(cheats.admin)wallet.unlockAll();if(!wallet.isUnlocked(currentDutyKey())){showScenarioPurchase();return;}
  const meta=META[selected];
  const scenario=selectedScenario();
  const freeStart=Number($('startStation').value);
@@ -224,7 +226,7 @@ async function start(startIndex){
   const [loadedPanel]=await Promise.all([generatedCab&&['e235','e233','323','207','6050','701'].includes(train.id)?GeneratedCab.load($('cab'),train.id):train.id==='701'?CabPanel.load($('cab')):LocalCabPanel.load($('cab'),train,pack),sound.prepare(),audioEnabled]);
   panel=loadedPanel;
   crossingAudio=new CrossingAudio(sound);await crossingAudio.ready;
-  run=createJourney(r,train,startIndex,trip.endIndex);run.weather=weatherType(settings.weather);run.dutyKey=currentDutyKey();run.requiredStops=trip.endIndex-startIndex;cheats.reset();score.reset(run);score.bindHorn(sound,()=>run,()=>scoreHazards(route()));
+  run=createJourney(r,train,startIndex,trip.endIndex);run.rewardId=globalThis.crypto?.randomUUID?.()??Date.now()+':'+Math.random();run.weather=weatherType(settings.weather);run.dutyKey=currentDutyKey();run.requiredStops=trip.endIndex-startIndex;cheats.reset();score.reset(run);score.bindHorn(sound,()=>run,()=>scoreHazards(route()));
   if(r.soundEvents?.length){
    const first=r.soundEvents.findIndex(event=>event.s>=run.s);
    run.soundCursor=first<0?r.soundEvents.length:first;
@@ -272,7 +274,7 @@ async function start(startIndex){
  }
 }
 $('startDrive').onclick=()=>start();$('retryButton').onclick=()=>{const index=Math.max(run.startIndex,run.next-1);toggleExtras(false);start(index);};
-function showResults(){if(!replaySession){progress.complete(run.dutyKey,route().stations[run.startIndex].s,route().stations[run.endIndex].s,run);refreshClears();}recorder?.capture(run,score.engine.points,score.engine.chain);recorder?.flush();const errors=run.errors.map(x=>Math.abs(x)),mean=errors.length?errors.reduce((a,b)=>a+b,0)/errors.length:0;showModal(`<p class="eyebrow">DRIVER'S WORK COMPLETE</p><h2>乗務、おつかれさま。</h2><p>${score.engine.points} points · ${score.engine.chain} chain<br>${META[selected].name} · ${recipe().name}<br>停車 ${run.served}駅 / 通過 ${run.missed}駅<br>平均停止誤差 ${distanceLabel(mean)}</p><div class="dialog-buttons"><button id="resultMenu" class="start-button">路線選択へ</button></div>`,{pause:false});$('resultMenu').onclick=returnMenu;}
+function showResults(){const credit=settlePoints();if(!replaySession){progress.complete(run.dutyKey,route().stations[run.startIndex].s,route().stations[run.endIndex].s,run);refreshClears();}recorder?.capture(run,score.engine.points,score.engine.chain);recorder?.flush();const errors=run.errors.map(x=>Math.abs(x)),mean=errors.length?errors.reduce((a,b)=>a+b,0)/errors.length:0;showModal(`<p class="eyebrow">DRIVER'S WORK COMPLETE</p><h2>乗務、おつかれさま。</h2><p>${score.engine.points} points · ${score.engine.chain} chain<br>獲得 +${credit} points · 所持 ${wallet.balance} points<br>${META[selected].name} · ${recipe().name}<br>停車 ${run.served}駅 / 通過 ${run.missed}駅<br>平均停止誤差 ${distanceLabel(mean)}</p><div class="dialog-buttons"><button id="resultMenu" class="start-button">路線選択へ</button></div>`,{pause:false});$('resultMenu').onclick=returnMenu;}
 function hud(){updateWeatherStatus($('driveScreen'),run);{const lr=route(),end=lr.stations[run.endIndex]?.s??Infinity;lookahead.update(run.s,changesFromSections(lr.limits),lr.signals??[],[...stationMarks(lr.stations,lr.sceneryStations),...checkpointMarks(run.scoreCheckpoints,run),...hornMarks(scoreHazards(lr),score.engine.done)].filter(x=>x.s<=end+1&&(!x.stop||x.s>=(lr.stations[Math.min(run.next,run.endIndex)]?.s??0)-2)));}const r=route(),next=r.stations[Math.min(run.next,run.endIndex)],d=next.s-run.s,notch=notchLabel(recipe(),run.notch),speed=Math.round(run.v*3.6),door=run.doorPhase==='closing'?'戸閉中':run.doors?'戸開':'戸閉';fitStationName($('hudNext'),next.name);if(recipe().id==='e131')$('hudNextKind').textContent=`次の停車駅 · ${recipe().playableSpecs.carCount===6?6:3}両停止位置`;$('hudDistance').textContent=run.finished?'運転完了':`${d<0?'超過 ':'あと '}${distanceLabel(d)}`;$('hudSpeed').textContent=speed;$('nativeSpeed').textContent=speed;$('hudNotch').textContent=notch;$('hudNotch').parentElement.dataset.kind=notch==='EB'?'eb':run.notch<0?'brake':run.notch>0?'power':'neutral';$('nativeNotch').textContent=notch;$('hudDoors').textContent=door;$('hudGrade').textContent=gradeLabel(world.grade(run.s));$('nativeDoor').textContent=door;$('nativeNext').textContent=next.name;$('nativeDistance').textContent=(d<0?'超過 ':'')+distanceLabel(d);$('closedLamp').classList.toggle('lit',!run.doors);const t=run.clockStart+Math.floor(run.elapsed);$('hudTime').textContent=[Math.floor(t/3600)%24,Math.floor(t/60)%60,t%60].map(x=>String(x).padStart(2,'0')).join(':');$('hudScore').textContent=`停車 ${run.served} / ${run.endIndex-run.startIndex}`;$('speedBar').style.setProperty('--speed',speed/recipe().playableSpecs.maxSpeedKmh*100);const marker=stopPosition(d);$('stopDiamond').hidden=!marker.visible;$('stopGauge').classList.toggle('far',Math.abs(d)>150);$('stopDiamond').style.top=marker.percent+'%';$('stopGauge').setAttribute('aria-label',`停止位置±10メートルマーカー ${marker.text}`);$('notchStrip').querySelectorAll('button').forEach(b=>b.classList.toggle('active',Number(b.dataset.notch)===run.notch));
  const upcoming=Math.abs(d)<=3?next:(r.sceneryStations??r.stations).find(station=>station.s>run.s+2);
  if(upcoming&&!run.finished){
@@ -293,7 +295,7 @@ function advance(dt){
  if(run.finished)return;
  const r=route(),train=recipe(),station=r.stations[run.next],previous={s:run.s,v:run.v,elapsed:run.elapsed};
  if(assist&&!run.doors)brakeAssist(run,r,train);
- driveStep(run,train,dt,world.grade(run.s));cheats.clockStep(run,dt);
+ run.inTunnel=Boolean(world.structureAt(run.s,'tunnel'));driveStep(run,train,dt,world.grade(run.s));cheats.clockStep(run,dt);
  const overrun=detectStoppedOverrun(run,station.s,score.engine.cfg.blueTolerance);if(overrun)toast(`${station.name} オーバーラン ＋${distanceLabel(overrun.error)}`,8);
  score.update(run,{eb:controlsFor(train).min,...currentScoreRestriction(r,run.s),hazards:scoreHazards(r),vehicleSpec:run.scoreVehicleSpec??train.playableSpecs,routeLimits:r.limits,stations:run.scoreTimetable??scoringStations(r)},dt);
  const corrected=correctStoppedOverrun(run,station.s,score.engine.cfg.blueTolerance);
@@ -337,7 +339,7 @@ function frame(now){
     updateDriverCalls();
     const surface=world.structureAt(run.s,'tunnel')?'tunnel':world.structureAt(run.s,'bridge')?'bridge':'long';
     const rollingIndex=r.rollingNoise?.findLast(change=>change.s<=run.s)?.index;
-    sound.update(run.v*3.6,run.notch,dt,{doors:run.doors,surface,rollingIndex,motorSpeed:(run.wheelSpeed??run.v)*3.6});
+    sound.update(run.v*3.6,run.notch,dt,{doors:run.doors,surface,rollingIndex,motorSpeed:(run.wheelSpeed??run.v)*3.6,inTunnel:run.inTunnel});
    }
   }
   if(!replaySession||!Number.isFinite(run.doorVisual))updateDoorVisual(run,paused?0:dt);world.doorVisual=run.doorVisual;world.doorState=run;if(!replaySession){run.viewMode=viewMode;recorder?.capture(run,score.engine.points,score.engine.chain);}
@@ -413,7 +415,7 @@ function openTrainSelection(){
  $('trainChoice').replaceChildren(...choices.map(([routeId,vehicle,service,option],index)=>{
   const train=vehicle==='701'?TOHOKU_TRAIN:recipes.trains.find(t=>t.id===vehicle);
   const r=makeServiceRoute(extraRoutes.get(routeId)??routes[selected],vehicle,service,option);
-  const element=new Option((train?.name??vehicle)+' · '+service+' · '+r.name+' · '+r.stations[0].name+' → '+r.stations.at(-1).name,String(index));Object.assign(element.dataset,{train:train?.name??vehicle,service:service+(option.carCount?` · ${option.carCount}両`:'')+(option.reverse?' / 逆方向':' / 順方向')+(option.night?'・夜':''),range:r.stations[0].name+' → '+r.stations.at(-1).name,photo:vehiclePhoto(vehicle,META[selected].id),index:String(index+1),progress:String(progress.fraction(serviceKey(META[selected].id,choices[index]),r.stations[0].s,r.stations.at(-1).s)),cleared:String(progress.cleared(serviceKey(META[selected].id,choices[index]),r.stations[0].s,r.stations.at(-1).s))});return element;
+  const element=new Option((train?.name??vehicle)+' · '+service+' · '+r.name+' · '+r.stations[0].name+' → '+r.stations.at(-1).name,String(index));Object.assign(element.dataset,{train:train?.name??vehicle,service:(!wallet.isUnlocked(serviceKey(META[selected].id,choices[index]))?'🔒 1000points · ':'')+service+(option.carCount?` · ${option.carCount}両`:'')+(option.reverse?' / 逆方向':' / 順方向')+(option.night?'・夜':''),range:r.stations[0].name+' → '+r.stations.at(-1).name,photo:vehiclePhoto(vehicle,META[selected].id),index:String(index+1),locked:String(!wallet.isUnlocked(serviceKey(META[selected].id,choices[index]))),progress:String(progress.fraction(serviceKey(META[selected].id,choices[index]),r.stations[0].s,r.stations.at(-1).s)),cleared:String(progress.cleared(serviceKey(META[selected].id,choices[index]),r.stations[0].s,r.stations.at(-1).s))});return element;
  }));
  showTrainList();trainSelectionOpen=true;$('menuScreen').hidden=true;$('menuControls').hidden=true;$('menuScreen').inert=true;$('menuControls').inert=true;document.body.dataset.mode='selection';applyTrainChoice();$('trainSelection').hidden=false;fit();$('trainChoice').wheel.sync();$('trainChoice').wheel.focus();
 }
@@ -428,7 +430,7 @@ function switchSelectionLine(delta){choose((selected+delta+META.length)%META.len
 function showTrainList(){if(!trainDetails)return;trainDetails.hide();$('trainSelection').dataset.view='list';detailEndIndex=null;$('trainChoice')?.wheel?.focus();}
 function showTrainDetails(){
  if(loading||!recipes)return;playMenuSound('confirm');const base=makeServiceRoute(selectedRoute(),recipe().id,chosenService,chosenOption),ranges=scenarioRanges(META[selected].id,base,chosenOption?.reverse).map(range=>({...range,progress:progress.fraction(currentDutyKey(),base.stations[range.start].s,base.stations[range.end].s),cleared:progress.cleared(currentDutyKey(),base.stations[range.start].s,base.stations[range.end].s)}));
- $('trainSelection').dataset.view='details';trainDetails.show({route:base,train:recipe(),service:chosenService,line:META[selected].id,ranges,fraction:(a,b)=>progress.fraction(currentDutyKey(),base.stations[a].s,base.stations[b].s),isCleared:(a,b)=>progress.cleared(currentDutyKey(),base.stations[a].s,base.stations[b].s),start:Number($('startStation').value),end:detailEndIndex??base.stations.length-1});
+ $('trainSelection').dataset.view='details';trainDetails.show({route:base,train:recipe(),service:chosenService,line:META[selected].id,ranges,fraction:(a,b)=>progress.fraction(currentDutyKey(),base.stations[a].s,base.stations[b].s),isCleared:(a,b)=>progress.cleared(currentDutyKey(),base.stations[a].s,base.stations[b].s),start:Number($('startStation').value),end:detailEndIndex??base.stations.length-1});refreshScenarioAccess();
 }
 
 addEventListener('pagehide',()=>recorder?.flush());
@@ -448,11 +450,15 @@ async function playSavedReplay(data){
   bar.querySelector('[data-replay-view]').onclick=cycleReplayView;bar.querySelector('[data-replay-pause]').onclick=()=>{paused=!paused;pauseAudio(paused);bar.querySelector('[data-replay-pause]').textContent=paused?'再生':'一時停止';};bar.querySelector('[data-replay-speed]').onclick=e=>{replaySession.speed=replaySession.speed===1?2:replaySession.speed===2?.5:1;e.target.textContent='×'+replaySession.speed;};bar.querySelector('[data-replay-exit]').onclick=async()=>{await returnMenu();gameShell.showMain();};bar.querySelector('input').oninput=e=>{replaySession.time=Number(e.target.value);replaySession.eventCursor=(replaySession.data.events??[]).findIndex(event=>event.time>=replaySession.time);if(replaySession.eventCursor<0)replaySession.eventCursor=(replaySession.data.events??[]).length;sound.setHorn(false);updateReplay(0);};
  }catch(error){await returnMenu();gameShell.showMain();showModal('<h2>リプレイを再生できませんでした</h2><p id="replayError"></p>');$('replayError').textContent=error.message;}
 }
-function updateReplay(dt){const r=replaySession;if(!r)return;if(!paused)r.time=Math.min(r.data.samples.at(-1).elapsed,r.time+dt*r.speed);if(!paused&&dt>0){const events=r.data.events??[];while(r.eventCursor<events.length&&events[r.eventCursor].time<=r.time){const event=events[r.eventCursor++];const fn=sound[event.method];if(typeof fn==='function')Promise.resolve(fn.apply(sound,event.args)).catch(()=>{});}}const timetable=run.scoreTimetable;Object.assign(run,replayStateAt(r.data.samples,r.time));run.scoreTimetable=timetable;setViewMode(replayViewMode(run,r.viewOverride));sound.update(run.v*3.6,run.notch,paused?0:dt,{doors:run.doors,motorSpeed:(run.wheelSpeed??run.v)*3.6,surface:world.structureAt(run.s,'tunnel')?'tunnel':'long'});const slider=document.querySelector('.replay-controls input');if(slider)slider.value=String(r.time);if(r.time>=r.data.samples.at(-1).elapsed){if(!paused)pauseAudio(true);paused=true;document.querySelector('[data-replay-pause]').textContent='再生終了';}}
+function updateReplay(dt){const r=replaySession;if(!r)return;if(!paused)r.time=Math.min(r.data.samples.at(-1).elapsed,r.time+dt*r.speed);if(!paused&&dt>0){const events=r.data.events??[];while(r.eventCursor<events.length&&events[r.eventCursor].time<=r.time){const event=events[r.eventCursor++];const fn=sound[event.method];if(typeof fn==='function')Promise.resolve(fn.apply(sound,event.args)).catch(()=>{});}}const timetable=run.scoreTimetable;Object.assign(run,replayStateAt(r.data.samples,r.time));run.scoreTimetable=timetable;setViewMode(replayViewMode(run,r.viewOverride));sound.update(run.v*3.6,run.notch,paused?0:dt,{doors:run.doors,motorSpeed:(run.wheelSpeed??run.v)*3.6,inTunnel:run.inTunnel,surface:world.structureAt(run.s,'tunnel')?'tunnel':'long'});const slider=document.querySelector('.replay-controls input');if(slider)slider.value=String(r.time);if(r.time>=r.data.samples.at(-1).elapsed){if(!paused)pauseAudio(true);paused=true;document.querySelector('[data-replay-pause]').textContent='再生終了';}}
 function replayHud(){const badge=document.querySelector('.score-hud');badge.querySelector('.points-number').textContent=run.points;badge.querySelector('.chain-number').textContent=run.chain;const format=n=>[Math.floor(n/3600)%24,Math.floor(n/60)%60,Math.floor(n)%60].map(x=>String(x).padStart(2,'0')).join(':');document.querySelector('.score-clock-now b').textContent=format(run.clockStart+run.elapsed);const st=run.scoreTimetable?.find(st=>st.s>run.s),row=document.querySelector('.score-clock-next');row.querySelector('small').textContent=st?.stop?'停車予定':'通過予定';row.querySelector('span').textContent=st?.name??'';row.querySelector('b').textContent=st?format(st.time):'—';}
 
 function currentDutyKey(){return serviceKey(META[selected].id,serviceChoices[META[selected].id][Number($('trainChoice')?.value??0)]);}
-function registerProgressCatalog(){const entries=[];for(const [line,choices]of Object.entries(serviceChoices))for(const choice of choices){const raw=extraRoutes.get(choice[0])??routes[META.findIndex(x=>x.id===choice[0])];if(!raw)continue;const r=makeServiceRoute(raw,...choice.slice(1));for(const range of scenarioRanges(line,r,choice[3]?.reverse))entries.push({key:serviceKey(line,choice),from:r.stations[range.start].s,to:r.stations[range.end].s,line,label:choice[2]+' '+range.label});}progress.register(entries);}
+function registerProgressCatalog(){const entries=[];for(const [line,choices]of Object.entries(serviceChoices))for(const choice of choices){const raw=extraRoutes.get(choice[0])??routes[META.findIndex(x=>x.id===choice[0])];if(!raw)continue;const r=makeServiceRoute(raw,...choice.slice(1));for(const range of scenarioRanges(line,r,choice[3]?.reverse))entries.push({key:serviceKey(line,choice),from:r.stations[range.start].s,to:r.stations[range.end].s,line,label:choice[2]+' '+range.label});}progress.register(entries);wallet.register(Object.entries(serviceChoices).map(([line,choices])=>serviceKey(line,choices[0])),entries.map(e=>e.key));if(cheats.admin)wallet.unlockAll();}
 function refreshClears(){if(!recipes)return;document.querySelectorAll('#routeCards button').forEach((button,i)=>{const entries=progress.catalog.filter(e=>e.line===META[i].id);button.classList.toggle('scenario-cleared',entries.length>0&&entries.every(e=>progress.cleared(e.key,e.from,e.to)));});}
 function showPause(force=false){if(paused&&!force)return;const available=cheats.available&&!replaySession;showModal('<p class="eyebrow">PAUSED</p><h2>ひと休み。</h2><p>運転と音声を一時停止しています。</p><div class="dialog-buttons"><button id="resumeButton" class="start-button">運転を再開</button><button id="pauseMenuButton">路線選択へ</button>'+(available?'<button id="cheatToggle">チート '+(cheats.enabled?'ON':'OFF')+'</button><button id="jumpStationButton" '+(!cheats.enabled?'disabled':'')+'>駅を選んで移動</button>':'')+'</div>'+(available?'<p>W：速度アップ　S：速度ダウン<br>T：時刻停止　R：時刻を遅くする<br>チートを使った乗務はクリア記録の対象外です。</p>':'<small>シナリオクリア '+progress.count+' / '+progress.catalog.length+'</small>'));$('resumeButton').onclick=closeModal;$('pauseMenuButton').onclick=returnMenu;if(available){$('cheatToggle').onclick=()=>{cheats.toggle();showPause(true);};$('jumpStationButton').onclick=showStationJump;}}
 function showStationJump(){if(!cheats.enabled)return;const stations=run.scoreTimetable.filter(st=>st.s>=route().stations[run.startIndex].s&&st.s<=route().stations[run.endIndex].s);showModal('<h2>駅を選んで移動</h2><div class="station-jump-list">'+stations.map((st,i)=>'<button data-jump="'+i+'">'+st.name+'　'+(st.stop?'停車':'通過')+'</button>').join('')+'</div><button id="jumpBack">ひと休みに戻る</button>');$('jumpBack').onclick=()=>showPause(true);$('modalContent').querySelectorAll('[data-jump]').forEach(button=>button.onclick=()=>{const target=stations[Number(button.dataset.jump)];token++;sound.stop();jumpToStation(run,target,route().stations,routeLimitAt(route(),target.s),recipe().playableSpecs.maxSpeedKmh);run.soundCursor=(route().soundEvents??[]).findIndex(event=>event.s>=run.s);if(run.soundCursor<0)run.soundCursor=(route().soundEvents??[]).length;world.suspension.reset?.();const points=score.engine.points,chain=score.engine.chain;score.reset(run);score.engine.points=points;score.engine.chain=chain;closeModal();toast(target.name+'へ移動しました。',5);});}
+
+function settlePoints(){if(!run||replaySession)return 0;return wallet.settle(run.rewardId,score.engine.points,!run.cheatUsed&&!cheats.enabled);}
+function refreshScenarioAccess(){if(!recipes)return;const unlocked=wallet.isUnlocked(currentDutyKey());const button=$('startDrive');if(button&&!loading)button.textContent=unlocked?'▶ 運転をはじめる':'🔒 1000pointsで解放';let badge=$('walletBalance');if(!badge&&$('trainSelection')){badge=document.createElement('div');badge.id='walletBalance';badge.style.cssText='position:absolute;right:55px;top:80px;color:#ffe167;font-size:24px;z-index:10';$('trainSelection').append(badge);}const options=$('trainChoice')?.options;if(options){for(const [index,option]of Array.from(options).entries()){const key=serviceKey(META[selected].id,serviceChoices[META[selected].id][index]);if(wallet.isUnlocked(key)){option.dataset.service=option.dataset.service?.replace('🔒 1000points · ','')??'';option.dataset.locked='false';}}$('trainChoice').wheel?.sync();}if(badge)badge.textContent='所持 '+wallet.balance+' points'+(cheats.admin?' · 全解放':'');}
+function showScenarioPurchase(){const key=currentDutyKey(),enough=wallet.balance>=SCENARIO_PRICE;showModal('<h2>シナリオを解放</h2><p>'+recipe().name+' · '+chosenService+'</p><p>1000pointsで解放すると、以後いつでも運転できます。<br>所持 '+wallet.balance+' points</p>'+(enough?'':'<p>各路線のシナリオ1は無料です。乗務でpointsを貯めてください。</p>')+'<div class="dialog-buttons"><button id="buyScenario" '+(enough?'':'disabled')+'>1000pointsで解放</button><button id="cancelPurchase">戻る</button></div>');$('cancelPurchase').onclick=closeModal;$('buyScenario').onclick=()=>{if(wallet.purchase(key)){closeModal();refreshScenarioAccess();playMenuSound('confirm');}};}

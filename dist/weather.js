@@ -7,7 +7,7 @@ export const SLIP_EFFORT_RATIO=.8;
 // Braking is independent. Smooth position patches avoid per-frame RNG.
 export function adhesionStep(state,demand,dt){
  const type=weatherType(state.weather),step=Math.max(0,Math.min(.1,dt));
- if(type==='clear'){state.wheelSlip=false;state.wheelExcess=0;state.wheelSpeed=state.v;return demand;}
+ if(type==='clear'||state.inTunnel){state.wheelSlip=false;state.wheelExcess=0;state.wheelSpeed=state.v;return demand;}
  const patch=.83+.12*Math.sin((state.s??0)/37)+.05*Math.sin((state.s??0)/11+1.7);
  const limit=WEATHER[type].traction*patch*(1+.18*Math.min(1,(state.v??0)/22));
  const slipping=demand>limit+.012;
@@ -21,7 +21,7 @@ export function adhesionStep(state,demand,dt){
 // Strong braking (70% of service range and above, including EB) can cause
 // wheel slide. Reduce braking effort to 80%; actual train speed never freezes.
 export function brakeAdhesionStep(state,demand,dt,fraction=0){
- const wet=weatherType(state.weather)!=='clear',step=Math.max(0,Math.min(.1,dt));
+ const wet=!state.inTunnel&&weatherType(state.weather)!=='clear',step=Math.max(0,Math.min(.1,dt));
  const sliding=wet&&fraction>=.7&&demand>0&&state.v>.1;
  state.wheelSlide=sliding;
  if(demand>0)state.wheelExcess=0;
@@ -29,7 +29,7 @@ export function brakeAdhesionStep(state,demand,dt,fraction=0){
  return sliding?demand*SLIP_EFFORT_RATIO:demand;
 }
 export function weatherMarkup(selected='clear'){
- return '<fieldset class="weather-controls"><legend>天候</legend><div>'+Object.entries(WEATHER).map(([id,{name}])=>`<button type="button" data-weather="${id}" aria-pressed="${id===weatherType(selected)}">${name}</button>`).join('')+'</div><p>雨・雪では強い力行で空転しやすくなります。<br>空転したらノッチを戻し、弱い力行から再加速してください。<br>大雪・積雪は山間部ほど積もります。台風では臨時40km/h徐行区間を設けます。<br>空転時の加速・強いブレーキで滑走した時の減速は通常の80％</p></fieldset>';
+ return '<fieldset class="weather-controls"><legend>天候</legend><div>'+Object.entries(WEATHER).map(([id,{name}])=>`<button type="button" data-weather="${id}" aria-pressed="${id===weatherType(selected)}">${name}</button>`).join('')+'</div><p>雨・雪では強い力行で空転しやすくなります。<br>空転したらノッチを戻し、弱い力行から再加速してください。<br>大雪・積雪は山間部ほど積もります。台風では臨時40km/h徐行区間を設け、時刻の減点を免除します。<br>空転時の加速・強いブレーキで滑走した時の減速は通常の80％</p></fieldset>';
 }
 export function bindWeather(root,settings,onChange){
  const update=()=>root.querySelectorAll('[data-weather]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.weather===weatherType(settings.weather))));

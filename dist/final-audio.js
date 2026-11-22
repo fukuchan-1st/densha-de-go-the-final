@@ -1,13 +1,13 @@
-import {motorVolumeReference,SlipPitchController} from './motor-pitch.js?v=106';
-import {AmbientAudio} from './ambient-audio.js?v=106';
-import {stationDepartureCue} from './station-broadcast.js?v=106';
-import {TrainPassbyAudio} from './train-passby-audio.js?v=106';
-import {timingVoiceRefs,timingPreloadRefs,restrictionVoiceRefs} from './station-timing.js?v=106';
-import {stationCueRefs,stationVoiceBank} from './station-voice.js?v=106';
-import {createMixGains,voiceCategory} from './audio-mix.js?v=106';
-import {interpolateColumn} from './final-vehicle.js?v=106';
-import {runPitch} from './assets/audio/run-pitch.js?v=106';
-import {HeldHorn} from './assets/audio/held-horn.js?v=106';
+import {motorVolumeReference,SlipPitchController,fixedCurveValue} from './motor-pitch.js?v=107';
+import {AmbientAudio} from './ambient-audio.js?v=107';
+import {stationDepartureCue} from './station-broadcast.js?v=107';
+import {TrainPassbyAudio} from './train-passby-audio.js?v=107';
+import {timingVoiceRefs,timingPreloadRefs,restrictionVoiceRefs} from './station-timing.js?v=107';
+import {stationCueRefs,stationVoiceBank} from './station-voice.js?v=107';
+import {createMixGains,voiceCategory} from './audio-mix.js?v=107';
+import {interpolateColumn} from './final-vehicle.js?v=107';
+import {runPitch} from './assets/audio/run-pitch.js?v=107';
+import {HeldHorn} from './assets/audio/held-horn.js?v=107';
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const whistle={entryIndex:'departure-whistle'};
 const voiceBanks={e235:['kanko0','uta'],e233:['kanko1','utb'],323:['kanko2','utd'],207:['kanko3','ute']};
@@ -15,7 +15,7 @@ const driverCallNumbers={doorsClosed:'001',departure:'003',stationStop:'065'};
 const surfaces=['long','bridge','tunnel'];
 const frequencyEndpoints=new WeakMap();
 
-export function motorPitch(table,column,speed,slipping=false){
+export function motorPitch(table,column,speed,slipping=false,actualSpeed=speed){
  const pitch=interpolateColumn(table,column,speed,1);
  if(!table?.rows)return pitch;
  if(!frequencyEndpoints.has(table))frequencyEndpoints.set(table,new Map());
@@ -31,14 +31,15 @@ export function motorPitch(table,column,speed,slipping=false){
     if(Number.isFinite(row[0])&&Number.isFinite(value))points.set(row[0],value);
    }
   }
-  channels.set(channel,[...points].sort(([a],[b])=>a-b).slice(-2));
+  channels.set(channel,[...points].sort(([a],[b])=>a-b));
  }
- const endpoints=channels.get(channel);
+ const curve=channels.get(channel),fixed=fixedCurveValue(curve,actualSpeed);if(fixed!==null)return fixed;
+ const endpoints=curve.slice(-2);
  if(endpoints.length<2||speed<=endpoints[1][0])return pitch;
  const [[a,x],[b,y]]=endpoints;
  // Frequency tables often end at the sample's 1x reference speed. Continue
  // that slope above the reference, while volume keeps its endpoint behavior.
- return y+(speed-b)*((y-x)/(b-a)>0?(y-x)/(b-a):slipping?y/Math.max(1,b):0);
+ return y+(speed-b)*Math.max(0,(y-x)/(b-a));
 }
 
 export class LocalTrainAudio {
@@ -208,9 +209,9 @@ export class LocalTrainAudio {
   loop.gain?.gain.setTargetAtTime(0,time,.008);
   loop.source?.stop(time+.035);
  }
- update(speed,notch,dt=1/60,{surface='long',doors=false,rollingIndex,motorSpeed=speed}={}){if(this.paused)return;this.stopped=false;
+ update(speed,notch,dt=1/60,{surface='long',doors=false,rollingIndex,motorSpeed=speed,inTunnel=false}={}){if(this.paused)return;this.stopped=false;
   if(this.lastNotch!==undefined&&this.lastNotch!==notch)this.playNotch(this.lastNotch,notch).catch(()=>{});
-  this.lastNotch=notch;this.slipPitch??=new SlipPitchController();motorSpeed=this.slipPitch.update(speed,motorSpeed,notch,dt);
+  this.lastNotch=notch;this.slipPitch??=new SlipPitchController();if(inTunnel)this.slipPitch.reset();motorSpeed=this.slipPitch.update(speed,motorSpeed,notch,dt);
   const s=this.recipe.sounds,run=this.runRef(surface,rollingIndex),runKey='run'+run?.entryIndex;
   const runIndex=Object.keys(s.run??{}).find(index=>s.run[index]===run);
   const rollingBase=this.recipe.rollingBaseSpeedKmh;
@@ -225,7 +226,7 @@ export class LocalTrainAudio {
   for(const [index,ref] of Object.entries(s.motor??{})){
    const key='motor'+index;
    const volume=interpolateColumn(tables?.volume,index,motorVolumeReference(tables?.volume,speed,motorSpeed));
-   const pitch=motorPitch(tables?.frequency,index,motorSpeed,motorSpeed>speed+.01);
+   const pitch=motorPitch(tables?.frequency,index,motorSpeed,motorSpeed>speed+.01,speed);
    if(volume>0&&pitch>0)this.tuneLoop(key,ref,volume*.55,pitch);
    else this.releaseLoop(key);
   }

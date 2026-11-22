@@ -1,14 +1,14 @@
-import {extrapolatedPitch,SlipPitchController} from '../../motor-pitch.js?v=106';
-import {AmbientAudio} from '../../ambient-audio.js?v=106';
-import {TrainPassbyAudio} from '../../train-passby-audio.js?v=106';
-import {stationCueRefs,driverWordRefs,stationVoiceBank} from '../../station-voice.js?v=106';
-import {timingVoiceRefs,timingPreloadRefs,restrictionVoiceRefs} from '../../station-timing.js?v=106';
-import {STATIONS} from '../../route-data.js?v=106';
-import {createMixGains} from '../../audio-mix.js?v=106';
-import {sharedEffects} from '../../buffered-effects.js?v=106';
-import {departureFilesFor,STATION_DEPARTURE_AUDIO} from '../../train-operations.js?v=106';
-import {runPitch} from './run-pitch.js?v=106';
-import {HeldHorn} from './held-horn.js?v=106';
+import {extrapolatedPitch,SlipPitchController} from '../../motor-pitch.js?v=107';
+import {AmbientAudio} from '../../ambient-audio.js?v=107';
+import {TrainPassbyAudio} from '../../train-passby-audio.js?v=107';
+import {stationCueRefs,driverWordRefs,stationVoiceBank} from '../../station-voice.js?v=107';
+import {timingVoiceRefs,timingPreloadRefs,restrictionVoiceRefs} from '../../station-timing.js?v=107';
+import {STATIONS} from '../../route-data.js?v=107';
+import {createMixGains} from '../../audio-mix.js?v=107';
+import {sharedEffects} from '../../buffered-effects.js?v=107';
+import {departureFilesFor,STATION_DEPARTURE_AUDIO} from '../../train-operations.js?v=107';
+import {runPitch} from './run-pitch.js?v=107';
+import {HeldHorn} from './held-horn.js?v=107';
 // Browser port of the supplied RTM RSM2 sound_701.js. Speed input is km/h.
 export function interpolate(points, speed) {
   if (points.length === 1) return 0;
@@ -19,8 +19,8 @@ export function interpolate(points, speed) {
   }
   return points[points.length-1][1];
 }
-export function trackValues(track, speed, notch, fade, volumeSpeed=speed) {
-  const pitch = Math.max(.01,extrapolatedPitch(track.pitch,speed));
+export function trackValues(track, speed, notch, fade, volumeSpeed=speed, actualSpeed=volumeSpeed) {
+  const pitch = Math.max(.01,extrapolatedPitch(track.pitch,speed,1,actualSpeed));
   let volume = volumeSpeed > track.volume.at(-1)[0] ? 0 : Math.min(1, Math.max(0, interpolate(track.volume, volumeSpeed)));
   let mix;
   const p=track.isNotchPower, o=track.isNotchOff, b=track.isNotchBrake;
@@ -102,9 +102,9 @@ export class SoundEngine {
     }
     const t=this.ctx.currentTime;
     this.activeTracks=[];
-    this.slipPitch??=new SlipPitchController();const motorSpeed=this.slipPitch.update(speed,environment.motorSpeed??speed,motorNotch,dt),slipping=motorSpeed>speed+.01,active=this.nodes.filter(n=>motorNotch>0?n.track.isNotchPower:motorNotch<0?n.track.isNotchBrake:n.track.isNotchOff),top=Math.max(0,...active.flatMap(n=>n.track.volume.filter(x=>x[1]>0).map(x=>x[0]))),volumeSpeed=slipping?Math.min(speed,top):motorSpeed;
+    this.slipPitch??=new SlipPitchController();if(environment.inTunnel)this.slipPitch.reset();const motorSpeed=this.slipPitch.update(speed,environment.motorSpeed??speed,motorNotch,dt),slipping=motorSpeed>speed+.01,active=this.nodes.filter(n=>motorNotch>0?n.track.isNotchPower:motorNotch<0?n.track.isNotchBrake:n.track.isNotchOff),top=Math.max(0,...active.flatMap(n=>n.track.volume.filter(x=>x[1]>0).map(x=>x[0]))),volumeSpeed=slipping?Math.min(speed,top):motorSpeed;
     for (const node of this.nodes) {
-      const {pitch,volume}=trackValues(node.track,motorSpeed,motorNotch,this.fade/5,volumeSpeed);
+      const {pitch,volume}=trackValues(node.track,motorSpeed,motorNotch,this.fade/5,volumeSpeed,speed);
       if (volume>0) {
         if (!node.source) {
           node.source=this.ctx.createBufferSource();
