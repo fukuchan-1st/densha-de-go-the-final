@@ -1,8 +1,8 @@
-import {panoramaAtFront} from './train-formation.js?v=105';
-import {setRailPose} from './rail-pose.js?v=105';
-import {ImportedTrafficModels,opposingVehicle,opposingVehicles,opposingCarCount} from './opposing-models.js?v=105';
-import * as T from './assets/vendor/three.module.js?v=105';
-import {interpolateKnots} from './track-layout.js?v=105';
+import {panoramaAtFront} from './train-formation.js?v=106';
+import {setRailPose} from './rail-pose.js?v=106';
+import {ImportedTrafficModels,opposingVehicle,opposingVehicles,opposingCarCount} from './opposing-models.js?v=106';
+import * as T from './assets/vendor/three.module.js?v=106';
+import {interpolateKnots} from './track-layout.js?v=106';
 
 export function trafficInterval(type){return type==='city'?60:300;}
 export function adjacentTracks(world,s){

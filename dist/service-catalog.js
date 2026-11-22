@@ -1,4 +1,4 @@
-import {joinRoutes,sliceRoute,reverseRoute} from './service-routes.js?v=105';
+import {joinRoutes,sliceRoute,reverseRoute} from './service-routes.js?v=106';
 const item=(route,vehicle,service,from,to,extra={})=>[route,vehicle,service,{from,to,...extra}];
 const special=['東京','神田','御茶ノ水','四ツ谷','新宿','中野','三鷹','国分寺','立川'];
 export const STOP_PATTERNS={

@@ -11,7 +11,7 @@ export function adhesionStep(state,demand,dt){
  const patch=.83+.12*Math.sin((state.s??0)/37)+.05*Math.sin((state.s??0)/11+1.7);
  const limit=WEATHER[type].traction*patch*(1+.18*Math.min(1,(state.v??0)/22));
  const slipping=demand>limit+.012;
- state.wheelExcess=Math.max(0,Math.min(9,(state.wheelExcess??0)+(slipping?(demand-limit)*9:-4.5)*step));
+ state.wheelExcess=Math.max(0,(state.wheelExcess??0)+(slipping?(demand-limit)*9:-4.5)*step);
  state.wheelSlip=slipping;
  state.wheelSpeed=Math.max(0,(state.v??0)+state.wheelExcess);
  state.adhesionLimit=limit;

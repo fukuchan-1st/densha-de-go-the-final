@@ -1,8 +1,8 @@
-import * as T from './assets/vendor/three.module.js?v=105';
-import {weatherType} from './weather.js?v=105';
-import {WEATHER} from './weather.js?v=105';
-import {snowCover} from './weather-operations.js?v=105';
-import {SnowBanks} from './snow-banks.js?v=105';
+import * as T from './assets/vendor/three.module.js?v=106';
+import {weatherType} from './weather.js?v=106';
+import {WEATHER} from './weather.js?v=106';
+import {snowCover} from './weather-operations.js?v=106';
+import {SnowBanks} from './snow-banks.js?v=106';
 const fraction=x=>x-Math.floor(x),seed=(i,k)=>fraction(Math.sin(i*127.1+k*311.7)*43758.5453);
 export class WeatherScene{
  constructor(world){

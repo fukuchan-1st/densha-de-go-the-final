@@ -1,5 +1,5 @@
-import {yamagataSourcePosition} from './yamagata-mountain.js?v=105';
-import {basinDensity,basinTerrainAt} from './basin-profile.js?v=105';
+import {yamagataSourcePosition} from './yamagata-mountain.js?v=106';
+import {basinDensity,basinTerrainAt} from './basin-profile.js?v=106';
 const city=new Set('東京 神田 御茶ノ水 四ツ谷 新宿 中野'.split(' '));
 const tokyo=new Set('東京 神田 御茶ノ水 四ツ谷 新宿 中野 高円寺 阿佐ケ谷 荻窪 西荻窪 吉祥寺 三鷹 武蔵境 東小金井 武蔵小金井 国分寺 西国分寺 国立 立川 日野 豊田 八王子 西八王子 高尾'.split(' '));
 export function stationLeg(route,s){const stations=route.sceneryStations??route.stations??[];let i=1;while(i<stations.length-1&&stations[i].s<s)i++;return [stations[Math.max(0,i-1)],stations[i]??stations[0]].filter(Boolean);}

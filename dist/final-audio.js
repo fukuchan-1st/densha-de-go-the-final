@@ -1,12 +1,13 @@
-import {AmbientAudio} from './ambient-audio.js?v=105';
-import {stationDepartureCue} from './station-broadcast.js?v=105';
-import {TrainPassbyAudio} from './train-passby-audio.js?v=105';
-import {timingVoiceRefs,timingPreloadRefs,restrictionVoiceRefs} from './station-timing.js?v=105';
-import {stationCueRefs,stationVoiceBank} from './station-voice.js?v=105';
-import {createMixGains,voiceCategory} from './audio-mix.js?v=105';
-import {interpolateColumn} from './final-vehicle.js?v=105';
-import {runPitch} from './assets/audio/run-pitch.js?v=105';
-import {HeldHorn} from './assets/audio/held-horn.js?v=105';
+import {motorVolumeReference,SlipPitchController} from './motor-pitch.js?v=106';
+import {AmbientAudio} from './ambient-audio.js?v=106';
+import {stationDepartureCue} from './station-broadcast.js?v=106';
+import {TrainPassbyAudio} from './train-passby-audio.js?v=106';
+import {timingVoiceRefs,timingPreloadRefs,restrictionVoiceRefs} from './station-timing.js?v=106';
+import {stationCueRefs,stationVoiceBank} from './station-voice.js?v=106';
+import {createMixGains,voiceCategory} from './audio-mix.js?v=106';
+import {interpolateColumn} from './final-vehicle.js?v=106';
+import {runPitch} from './assets/audio/run-pitch.js?v=106';
+import {HeldHorn} from './assets/audio/held-horn.js?v=106';
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const whistle={entryIndex:'departure-whistle'};
 const voiceBanks={e235:['kanko0','uta'],e233:['kanko1','utb'],323:['kanko2','utd'],207:['kanko3','ute']};
@@ -14,7 +15,7 @@ const driverCallNumbers={doorsClosed:'001',departure:'003',stationStop:'065'};
 const surfaces=['long','bridge','tunnel'];
 const frequencyEndpoints=new WeakMap();
 
-export function motorPitch(table,column,speed){
+export function motorPitch(table,column,speed,slipping=false){
  const pitch=interpolateColumn(table,column,speed,1);
  if(!table?.rows)return pitch;
  if(!frequencyEndpoints.has(table))frequencyEndpoints.set(table,new Map());
@@ -37,7 +38,7 @@ export function motorPitch(table,column,speed){
  const [[a,x],[b,y]]=endpoints;
  // Frequency tables often end at the sample's 1x reference speed. Continue
  // that slope above the reference, while volume keeps its endpoint behavior.
- return y+(y-x)*(speed-b)/(b-a);
+ return y+(speed-b)*((y-x)/(b-a)>0?(y-x)/(b-a):slipping?y/Math.max(1,b):0);
 }
 
 export class LocalTrainAudio {
@@ -76,7 +77,7 @@ export class LocalTrainAudio {
  configureDriverRoute(route,line){this.driverRoute=route;this.driverRouteLine=stationVoiceBank(line)?line:null;}
  stationRefs(kind,station){return stationCueRefs(this.driverRouteLine,station,kind,this.recipe.playableSpecs?.carCount);}
  callStation(kind,station){return this.queueDriverCalls(this.stationRefs(kind,station));}
- callSlowRestriction(kmh){const ref={entryIndex:'weather-slow',driverVoiceFile:'./assets/audio/ambient/jyoko.ogg'};return this.queueDriverCalls([ref,...restrictionVoiceRefs(this.driverRouteLine,kmh)]);}
+ callSlowRestriction(kmh){const bank=stationVoiceBank(this.driverRouteLine)?.[0]??'kanko1',ref={entryIndex:'weather-slow:'+bank,driverVoiceFile:`./assets/audio/ambient/${bank}-slow40.ogg`},call=this.queueDriverCalls([ref]);if(!this.weatherWarningPlayed){this.weatherWarningPlayed=true;const generation=this.generation;call.then(()=>{if(!this.stopped&&this.generation===generation)this.playRef({entryIndex:'weather-warning',driverVoiceFile:'./assets/audio/ambient/slow-warning.ogg',mixCategory:'se'}).catch(()=>false);});}return call;}
  callRestriction(kmh){return this.queueDriverCalls(restrictionVoiceRefs(this.driverRouteLine,kmh));}
  callStationTiming(kind,station,error){return this.queueDriverCalls(timingVoiceRefs(this.driverRouteLine,station,kind,error));}
  async prepare(){
@@ -209,7 +210,7 @@ export class LocalTrainAudio {
  }
  update(speed,notch,dt=1/60,{surface='long',doors=false,rollingIndex,motorSpeed=speed}={}){if(this.paused)return;this.stopped=false;
   if(this.lastNotch!==undefined&&this.lastNotch!==notch)this.playNotch(this.lastNotch,notch).catch(()=>{});
-  this.lastNotch=notch;
+  this.lastNotch=notch;this.slipPitch??=new SlipPitchController();motorSpeed=this.slipPitch.update(speed,motorSpeed,notch,dt);
   const s=this.recipe.sounds,run=this.runRef(surface,rollingIndex),runKey='run'+run?.entryIndex;
   const runIndex=Object.keys(s.run??{}).find(index=>s.run[index]===run);
   const rollingBase=this.recipe.rollingBaseSpeedKmh;
@@ -223,8 +224,8 @@ export class LocalTrainAudio {
   const tables=phase&&this.recipe.motorNoise?.[phase];
   for(const [index,ref] of Object.entries(s.motor??{})){
    const key='motor'+index;
-   const volume=interpolateColumn(tables?.volume,index,motorSpeed);
-   const pitch=motorPitch(tables?.frequency,index,motorSpeed);
+   const volume=interpolateColumn(tables?.volume,index,motorVolumeReference(tables?.volume,speed,motorSpeed));
+   const pitch=motorPitch(tables?.frequency,index,motorSpeed,motorSpeed>speed+.01);
    if(volume>0&&pitch>0)this.tuneLoop(key,ref,volume*.55,pitch);
    else this.releaseLoop(key);
   }
@@ -235,6 +236,6 @@ export class LocalTrainAudio {
  async setPaused(paused){this.paused=paused;this.master.gain.value=paused?0:this.volume;if(paused){this.horn?.end(true);await this.context.suspend();}else await this.context.resume();}
  pause(){return this.setPaused(true);}
  resume(){return this.setPaused(false);}
- stop(){this.ambient?.stop();this.horn?.end(true);this.passby.reset();this.stopped=true;this.lastNotch=undefined;this.generation++;this.driverQueue=null;this.announcementQueue=null;for(const source of this.sources){try{source.stop();}catch{}}this.sources.clear();this.loops.clear();}
+ stop(){this.slipPitch?.reset();this.ambient?.stop();this.horn?.end(true);this.passby.reset();this.stopped=true;this.lastNotch=undefined;this.generation++;this.driverQueue=null;this.announcementQueue=null;for(const source of this.sources){try{source.stop();}catch{}}this.sources.clear();this.loops.clear();}
  async dispose(){this.stop();this.passby.dispose();this.buffers.clear();this.master.disconnect();for(const node of Object.values(this.mix.gains))node.disconnect();if(this.ownsContext)await this.context.close();}
 }

@@ -1,13 +1,14 @@
-import {AmbientAudio} from '../../ambient-audio.js?v=105';
-import {TrainPassbyAudio} from '../../train-passby-audio.js?v=105';
-import {stationCueRefs,driverWordRefs} from '../../station-voice.js?v=105';
-import {timingVoiceRefs,timingPreloadRefs,restrictionVoiceRefs} from '../../station-timing.js?v=105';
-import {STATIONS} from '../../route-data.js?v=105';
-import {createMixGains} from '../../audio-mix.js?v=105';
-import {sharedEffects} from '../../buffered-effects.js?v=105';
-import {departureFilesFor,STATION_DEPARTURE_AUDIO} from '../../train-operations.js?v=105';
-import {runPitch} from './run-pitch.js?v=105';
-import {HeldHorn} from './held-horn.js?v=105';
+import {extrapolatedPitch,SlipPitchController} from '../../motor-pitch.js?v=106';
+import {AmbientAudio} from '../../ambient-audio.js?v=106';
+import {TrainPassbyAudio} from '../../train-passby-audio.js?v=106';
+import {stationCueRefs,driverWordRefs,stationVoiceBank} from '../../station-voice.js?v=106';
+import {timingVoiceRefs,timingPreloadRefs,restrictionVoiceRefs} from '../../station-timing.js?v=106';
+import {STATIONS} from '../../route-data.js?v=106';
+import {createMixGains} from '../../audio-mix.js?v=106';
+import {sharedEffects} from '../../buffered-effects.js?v=106';
+import {departureFilesFor,STATION_DEPARTURE_AUDIO} from '../../train-operations.js?v=106';
+import {runPitch} from './run-pitch.js?v=106';
+import {HeldHorn} from './held-horn.js?v=106';
 // Browser port of the supplied RTM RSM2 sound_701.js. Speed input is km/h.
 export function interpolate(points, speed) {
   if (points.length === 1) return 0;
@@ -18,9 +19,9 @@ export function interpolate(points, speed) {
   }
   return points[points.length-1][1];
 }
-export function trackValues(track, speed, notch, fade) {
-  const pitch = Math.min(2, Math.max(.5, interpolate(track.pitch, speed)));
-  let volume = speed > track.volume.at(-1)[0] ? 0 : Math.min(1, Math.max(0, interpolate(track.volume, speed)));
+export function trackValues(track, speed, notch, fade, volumeSpeed=speed) {
+  const pitch = Math.max(.01,extrapolatedPitch(track.pitch,speed));
+  let volume = volumeSpeed > track.volume.at(-1)[0] ? 0 : Math.min(1, Math.max(0, interpolate(track.volume, volumeSpeed)));
   let mix;
   const p=track.isNotchPower, o=track.isNotchOff, b=track.isNotchBrake;
   if (track.isFadeMixer && (o !== p || o !== b)) {
@@ -101,8 +102,9 @@ export class SoundEngine {
     }
     const t=this.ctx.currentTime;
     this.activeTracks=[];
+    this.slipPitch??=new SlipPitchController();const motorSpeed=this.slipPitch.update(speed,environment.motorSpeed??speed,motorNotch,dt),slipping=motorSpeed>speed+.01,active=this.nodes.filter(n=>motorNotch>0?n.track.isNotchPower:motorNotch<0?n.track.isNotchBrake:n.track.isNotchOff),top=Math.max(0,...active.flatMap(n=>n.track.volume.filter(x=>x[1]>0).map(x=>x[0]))),volumeSpeed=slipping?Math.min(speed,top):motorSpeed;
     for (const node of this.nodes) {
-      const {pitch,volume}=trackValues(node.track,environment.motorSpeed??speed,motorNotch,this.fade/5);
+      const {pitch,volume}=trackValues(node.track,motorSpeed,motorNotch,this.fade/5,volumeSpeed);
       if (volume>0) {
         if (!node.source) {
           node.source=this.ctx.createBufferSource();
@@ -147,7 +149,7 @@ export class SoundEngine {
     this.horn.setPlaybackRate(this.passby.horn.pitch);
     this.horn.press(this.effects[name],this.effects[release]);
   }
-  callSlowRestriction(kmh){return this.callVoiceRefs([{entryIndex:'weather-slow',driverVoiceFile:'./assets/audio/ambient/jyoko.ogg'},...restrictionVoiceRefs('tohoku',kmh)]);}
+  callSlowRestriction(kmh){const bank=stationVoiceBank('tohoku')?.[0]??'kanko2',call=this.callVoiceRefs([{entryIndex:'weather-slow:'+bank,driverVoiceFile:`./assets/audio/ambient/${bank}-slow40.ogg`}]);if(!this.weatherWarningPlayed){this.weatherWarningPlayed=true;const generation=this.routeCueGeneration;call.then(async()=>{if(generation!==this.routeCueGeneration||!this.ready)return;const buffer=await this.routeCueBuffer(new URL('../../assets/audio/ambient/slow-warning.ogg',import.meta.url).href);if(generation===this.routeCueGeneration)this.playEffectBuffer(buffer,'se');}).catch(()=>{});}return call;}
   callRestriction(kmh){return this.callVoiceRefs(restrictionVoiceRefs('tohoku',kmh));}
   callStation(kind,station){return this.callVoiceRefs(stationCueRefs('tohoku',station,kind,2));}
   callStationTiming(kind,station,error){return this.callVoiceRefs(timingVoiceRefs('tohoku',station,kind,error));}
@@ -213,7 +215,7 @@ export class SoundEngine {
     const active=this.departure;if(!active)return;
     this.departure=null;active.source.onended=null;active.source.stop();active.source.disconnect();active.finish(false);
   }
-  stop() {this.ambient?.stop();
+  stop() {this.slipPitch?.reset();this.ambient?.stop();
     this.passby?.reset();
     this.horn?.end(true);
     this.routeCueGeneration=(this.routeCueGeneration??0)+1;

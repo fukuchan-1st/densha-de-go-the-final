@@ -1,5 +1,5 @@
-import {RailJointAudio} from './rail-joints.js?v=105';
-import * as T from './assets/vendor/three.module.js?v=105';
+import {RailJointAudio} from './rail-joints.js?v=106';
+import * as T from './assets/vendor/three.module.js?v=106';
 export function crossingCenter(c){return c.sOrigin??((c.sStart+c.sEnd)/2);}
 export function crossingActive(c,s,speed,length=40){const x=crossingCenter(c);return s>=x-Math.max(320,speed*20)&&s-length<=x+25;}
 export function crossingDoppler(s,speed,crossing,lateral=6){const delta=crossing-s,radial=speed*delta/Math.hypot(delta,lateral);return Math.max(.7,Math.min(1.3,(343+radial)/343));}

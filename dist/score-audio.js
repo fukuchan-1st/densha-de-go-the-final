@@ -1,4 +1,4 @@
-import {sharedEffects} from './buffered-effects.js?v=105';
+import {sharedEffects} from './buffered-effects.js?v=106';
 export class ScoreAudio {
  constructor({volume=()=>.65,createAudio,bus}={}){this.volume=volume;this.bus=bus??(createAudio?null:sharedEffects());this.createAudio=createAudio??(url=>new Audio(url));this.active=new Set();this.generation=0;}
  play(url){if(!url)return;const audio=this.createAudio(url);audio.volume=this.volume();this.active.add(audio);const done=()=>this.active.delete(audio);audio.onended=done;audio.onerror=done;audio.play().catch(done);return audio;}

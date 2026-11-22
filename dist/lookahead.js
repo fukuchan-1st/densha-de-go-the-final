@@ -8,7 +8,8 @@ export function changesFromSections(sections=[]){
  return memo(sections,list=>{
   const at=s=>list.reduce((v,x)=>s>=x.sStart&&s<x.sEnd?(v===null?x.kmh:Math.min(v,x.kmh)):v,null);
   const points=[...new Set(list.flatMap(x=>[x.sStart,x.sEnd]))].sort((a,b)=>a-b);
-  const out=[];for(const s of points){const before=at(s-.01),after=at(s);if(before!==after)out.push({s,kmh:after,down:after!==null&&(before===null||after<before)});}
+  const weatherAt=s=>list.some(x=>x.weather&&s>=x.sStart&&s<x.sEnd);
+  const out=[];for(const s of points){const before=at(s-.01),after=at(s),weather=after===40&&weatherAt(s);if(before!==after||(after===40&&weatherAt(s-.01)!==weatherAt(s)))out.push({s,kmh:after,down:after!==null&&(before===null||after<before),...(weather?{weather:true}:{} )});}
   return out;
  });
 }
@@ -36,6 +37,7 @@ export function mountLookahead(parent){
   for(const {x,d} of ahead(limits)){const key='l'+x.s;seen.add(key);
    const el=element(key,()=>{const e=document.createElement('div');e.className='la-limit '+(x.kmh===null?'release':x.down?'down':'up');e.innerHTML=`<b>${x.kmh===null?'解除':Math.round(x.kmh)}</b>`;e.title=x.kmh===null?'制限解除':`制限 ${Math.round(x.kmh)} km/h`;return e;});place(el,d);
    const y=(1-d/LOOKAHEAD_M)*h,lane=[0,1].find(i=>Math.abs(y-lastY[i])>=30);
+   el.classList.toggle('slow',Boolean(x.weather));el.querySelector('b').textContent=x.weather?'徐行\n40':x.kmh===null?'解除':Math.round(x.kmh);el.title=x.weather?'徐行40 km/h':x.kmh===null?'制限解除':`制限 ${Math.round(x.kmh)} km/h`;
    el.classList.toggle('nearest',rank===0);el.style.zIndex=String(100-rank++);
    el.hidden=lane===undefined;if(lane!==undefined){lastY[lane]=y;el.style.setProperty('--lane',lane);}}
   let lastSignalY=-1e9;

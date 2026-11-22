@@ -460,3 +460,5 @@ dialog h2{font:italic 900 30px var(--ax-font);color:#fff}
 .hud-next{width:460px;min-width:0;max-width:460px;overflow:hidden}.hud-next strong{white-space:nowrap;font-size:var(--station-name-size,64px);letter-spacing:var(--station-name-spacing,8px)}
 #drive .next-stop{width:460px;min-width:0;max-width:460px;overflow:hidden}#drive .next-stop b{font-size:var(--station-name-size,64px);letter-spacing:var(--station-name-spacing,8px);white-space:nowrap}
 .next-station strong.compact-station-name,.compact-station-name{font-size:var(--station-name-size)!important;letter-spacing:0!important;white-space:nowrap}
+
+.la-limit.slow{color:#ffd829}.la-limit.slow b{display:grid;place-content:end center;width:64px;height:59px;box-sizing:border-box;clip-path:polygon(50% 0,100% 100%,0 100%);background:#ffda27;color:#141414;border:0;border-radius:0;white-space:pre-line;text-align:center;font:900 17px/1.05 Arial,Meiryo,sans-serif;padding:0 0 4px;text-shadow:none;box-shadow:none}

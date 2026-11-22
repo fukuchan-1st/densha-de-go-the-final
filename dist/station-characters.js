@@ -1,5 +1,5 @@
-import * as T from './assets/vendor/three.module.js?v=105';
-import {decodeVertices,decodeIndices} from './model-format.js?v=105';
+import * as T from './assets/vendor/three.module.js?v=106';
+import {decodeVertices,decodeIndices} from './model-format.js?v=106';
 export const STATION_CHARACTERS=[{id:'reimu',station:'博麗前',name:'霊夢'},{id:'marisa',station:'霧雨',name:'魔理沙'},{id:'sakuya',station:'紅魔',name:'咲夜'}];
 export function characterAnchors(route){
  if(!route.id?.startsWith('toho'))return [];

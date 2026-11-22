@@ -1,4 +1,4 @@
-import {changesFromSections} from './lookahead.js?v=105';
+import {changesFromSections} from './lookahead.js?v=106';
 const cache=new WeakMap();
 export function restrictionSigns(route){
  const limits=route.limits??[];let track=cache.get(limits);

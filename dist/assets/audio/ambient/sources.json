@@ -42,5 +42,40 @@
     }
   ],
   "slowVoice": "C:\\Users\\bmwhz\\OneDrive\\Desktop\\整理\\folder\\dengo_thef\\train\\207-2000_ver2\\207-2000\\3notch\\207-2000\\navi\\sound\\jyoko_1.wav",
-  "description": "User-supplied station/environment recordings; short mono loops"
+  "description": "User-supplied station/environment recordings; short mono loops",
+  "slow40": {
+    "records": [
+      {
+        "bank": "kanko0",
+        "slow": "uta121.wag",
+        "number": "uta101.wag",
+        "numberTrimStart": 0.49,
+        "file": "kanko0-slow40.ogg"
+      },
+      {
+        "bank": "kanko1",
+        "slow": "utb121.wag",
+        "number": "utb101.wag",
+        "numberTrimStart": 0.58,
+        "file": "kanko1-slow40.ogg"
+      },
+      {
+        "bank": "kanko2",
+        "slow": "utd121.wag",
+        "number": "utd101.wag",
+        "numberTrimStart": 0.6,
+        "file": "kanko2-slow40.ogg"
+      },
+      {
+        "bank": "kanko3",
+        "slow": "ute121.wag",
+        "number": "ute101.wag",
+        "numberTrimStart": 0.65,
+        "file": "kanko3-slow40.ogg"
+      }
+    ],
+    "identification": "121=徐行, 122=徐行解除; existing local recognition-block-atc-sequences.jsonl plus four-bank common-number correspondence",
+    "numberAlignment": "Local cached Whisper small word timings for 制限 and 40, with cuts in their pause",
+    "warning": "jyoko_1 separate 2.35s advisory at reduced gain; never in driver queue"
+  }
 }

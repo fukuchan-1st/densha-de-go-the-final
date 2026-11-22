@@ -1,11 +1,11 @@
-import {WEATHER,weatherType,weatherMarkup,bindWeather} from './weather.js?v=105';
-import {graphicsComparisonMarkup} from './graphics-previews.js?v=105';
-import {confirmHighGraphics} from './graphics-warning.js?v=105';
-import {mountBasinEditor} from './basin-editor.js?v=105';
-import {startTitleIntro} from './title-intro.js?v=105';
-import {audioMixMarkup,bindAudioMix} from './audio-mix.js?v=105';
-import {loadReplay} from './replay-store.js?v=105';
-import {MuseumViewer} from './museum.js?v=105';
+import {WEATHER,weatherType,weatherMarkup,bindWeather} from './weather.js?v=106';
+import {graphicsComparisonMarkup} from './graphics-previews.js?v=106';
+import {confirmHighGraphics} from './graphics-warning.js?v=106';
+import {mountBasinEditor} from './basin-editor.js?v=106';
+import {startTitleIntro} from './title-intro.js?v=106';
+import {audioMixMarkup,bindAudioMix} from './audio-mix.js?v=106';
+import {loadReplay} from './replay-store.js?v=106';
+import {MuseumViewer} from './museum.js?v=106';
 export const MAIN_MENU=[
  ['drive','運転乗務','運転乗務は、電車の運転をするゲームです。乗務完了後には、自分の運転をリプレイメニューから見ることもできます。'],
  ['replay','リプレイ','リプレイは、過去に運転した乗務のリプレイを見ることができます。'],

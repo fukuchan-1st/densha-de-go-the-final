@@ -1,8 +1,8 @@
-import {stationBuildingClear} from './station-space.js?v=105';
-import * as T from './assets/vendor/three.module.js?v=105';
-import {interpolateKnots} from './track-layout.js?v=105';
-import {residentialAllowed} from './yamagata-mountain.js?v=105';
-import {estimateBuildingHeight} from './building-estimate.js?v=105';
+import {stationBuildingClear} from './station-space.js?v=106';
+import * as T from './assets/vendor/three.module.js?v=106';
+import {interpolateKnots} from './track-layout.js?v=106';
+import {residentialAllowed} from './yamagata-mountain.js?v=106';
+import {estimateBuildingHeight} from './building-estimate.js?v=106';
 const pending=new Map(),grids=new WeakMap();
 const fictional=route=>route.id==='toho'||route.id?.startsWith('toho-');
 function point(points,s){let lo=0,hi=points.length-1;while(hi-lo>1){const m=(lo+hi)>>1;if(points[m][0]<=s)lo=m;else hi=m;}const a=points[lo],b=points[hi],t=(s-a[0])/(b[0]-a[0]);return [a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t];}

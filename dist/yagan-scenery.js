@@ -1,11 +1,11 @@
-import {sceneryDensity,sceneryTreeAmount} from './scenery-profile.js?v=105';
-import {basinDensity,basinTerrainAt} from './basin-profile.js?v=105';
-import {replacesNativeTrees,districtAt} from './toho-biomes.js?v=105';
-import {tohoTerrainHeight} from './toho-scenery.js?v=105';
-import {valleyWidth} from './geographic-sections.js?v=105';
-import {terrainShade} from './terrain-materials.js?v=105';
-import {treeVariant} from './real-trees.js?v=105';
-import {interpolateKnots} from './track-layout.js?v=105';
+import {sceneryDensity,sceneryTreeAmount} from './scenery-profile.js?v=106';
+import {basinDensity,basinTerrainAt} from './basin-profile.js?v=106';
+import {replacesNativeTrees,districtAt} from './toho-biomes.js?v=106';
+import {tohoTerrainHeight} from './toho-scenery.js?v=106';
+import {valleyWidth} from './geographic-sections.js?v=106';
+import {terrainShade} from './terrain-materials.js?v=106';
+import {treeVariant} from './real-trees.js?v=106';
+import {interpolateKnots} from './track-layout.js?v=106';
 
 const hillsides=[-148,-96,-61,-36,-20,-10,10,20,36,61,96,148];
 
