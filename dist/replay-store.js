@@ -2,7 +2,7 @@ const KEY='latest-duty';
 export function openReplayDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open('railway-replay',1);req.onupgradeneeded=()=>req.result.createObjectStore('duties');req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);});}
 export async function saveReplay(replay){const db=await openReplayDB();try{await new Promise((resolve,reject)=>{const tx=db.transaction('duties','readwrite');tx.objectStore('duties').put(replay,KEY);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);});}finally{db.close();}}
 export async function loadReplay(){const db=await openReplayDB();try{return await new Promise((resolve,reject)=>{const req=db.transaction('duties').objectStore('duties').get(KEY);req.onsuccess=()=>resolve(req.result??null);req.onerror=()=>reject(req.error);});}finally{db.close();}}
-export const replayFields=['s','v','notch','elapsed','next','startIndex','endIndex','served','missed','doors','doorVisual','doorVisualTime','doorVisualSeed','doorVisualActive','doorVisualStation','doorPhase','finished','acceleration','clockStart','holdBraking','viewMode','weather','wheelSlip','wheelSpeed','wheelExcess','wheelSlide','wheelDeficit'];
+export const replayFields=['s','v','notch','elapsed','next','startIndex','endIndex','served','missed','doors','doorVisual','doorVisualTime','doorVisualSeed','doorVisualActive','doorVisualStation','doorPhase','finished','acceleration','clockStart','holdBraking','viewMode','weather','wheelSlip','wheelSpeed','wheelExcess','wheelSlide','wheelDeficit','typhoonSection','typhoonAnnounced'];
 export function sampleState(state,points=0,chain=0){return {...Object.fromEntries(replayFields.map(k=>[k,state[k]])),points,chain};}
 export class DutyRecorder{
  constructor(meta){this.data={schema:1,created:Date.now(),...meta,samples:[],events:[]};this.lastSave=-Infinity;this.pending=null;this.dirty=false;}
@@ -18,7 +18,7 @@ export function replayStateAt(samples,time){
 
 export function recordReplayAudio(sound,getRecorder,getState){
  let depth=0;
- for(const method of ['playEffect','playRouteAnnouncement','callDriver','callStation','callStationTiming','callRestriction','callRouteCue','setHorn']){
+ for(const method of ['playEffect','playRouteAnnouncement','callDriver','callStation','callStationTiming','callRestriction','callSlowRestriction','callRouteCue','setHorn']){
   if(typeof sound[method]!=='function')continue;const original=sound[method].bind(sound);
   sound[method]=(...args)=>{const recorder=getRecorder(),state=getState();if(recorder&&state&&depth===0)recorder.event(method,args,state.elapsed);depth++;try{return original(...args);}finally{depth--;}};
  }

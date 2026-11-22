@@ -1,6 +1,6 @@
-import {sceneryDensity} from './scenery-profile.js?v=99';
-import {districtAt} from './toho-biomes.js?v=83';
-import * as T from './assets/vendor/three.module.js';
+import {sceneryDensity} from './scenery-profile.js?v=105';
+import {districtAt} from './toho-biomes.js?v=105';
+import * as T from './assets/vendor/three.module.js?v=105';
 export const isToho=route=>route.id?.startsWith('toho');
 const terrainIndexes=new WeakMap();
 // A hillside belonging to a nearby bend must not cover another piece of track.

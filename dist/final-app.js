@@ -1,40 +1,42 @@
-import {mountRoutePages} from './route-pages.js?v=97final';
-import {WEATHER,weatherType,updateWeatherStatus} from './weather.js?v=102';
-import {gradeLabel} from './tunnel-effects.js?v=93';
-import {updateDoorVisual} from './train-doors.js?v=97final';
-import {scheduledBoardingDelay} from './published-schedules.js?v=86';
-import {loadRoadAsset} from './road-assets.js?v=104';
-import {CrossingAudio} from './crossings.js?v=85';
-import {VIEW_LABELS,normalizedView,replayViewMode} from './view-modes.js?v=79';
-import {yaganPlanningSpec,yaganBoardingReady,yaganBoardingDelay} from './yagan-timetable.js?v=75';
-import {progress,serviceKey} from './scenario-progress.js?v=85';
-import {scenarioRanges} from './scenario-ranges.js?v=72';
-import {installCheats,jumpToStation} from './game-cheats.js?v=85';
-import {mountGameShell} from './game-shell.js?v=104';
-import {DutyRecorder,replayStateAt,recordReplayAudio} from './replay-store.js?v=101';
-import {osakaPlanningSpec} from './osaka-timetable.js?v=72';
-import {collectStationReports,collectRestrictionReports,pauseWhenSpeechEnds} from './station-timing.js?v=84';
-import {buildConnectingRoutes} from './service-catalog.js?v=104';
-import {loadAudioMix,audioMixMarkup,bindAudioMix} from './audio-mix.js?v=91';
-import {bindRouteKeys,bindScreenKeys} from './screen-keys.js?v=97final';
-import {sharedEffects} from './buffered-effects.js?v=phone58fix';
-import {bindTrainSelectionKeys} from './selection-keys.js?v=keys61fix';
-import {beginTerminalOpening,advanceTerminalOpening} from './terminal-arrival.js?v=score13';
-import {vehiclePhoto} from './vehicle-photos.js?v=97final';
-import {mountTrainDetails} from './train-details.js?v=85';
-import {mountWheelPicker} from './wheel-picker.js?v=85';
-import {routePlanningSpec,mountScoring,checkpointMarks,scoringStations,buildScoreTimetable,resolveScoreSchedule,scoreHazards,hornMarks,currentScoreRestriction,signalRestriction} from './scoring.js?v=90';
-import {mountDrivingOverlay} from './driving-overlay.js?v=72';import {mountLookahead,changesFromSections,stationMarks} from './lookahead.js?v=evaluation59';
-import {serviceChoices,makeServiceRoute} from './train-selection.js?v=104';
-import {GeneratedCab,generatedCab} from './generated-cab.js?v=95';
-import {FinalWorld} from './final-world.js?v=104';
-import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=97final';
-import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=103';
-import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,routeLimitAt,stopPosition,finishStop,beginDoorClosing,isDoorClosing,takeDepartureCall} from './final-model.js?v=102';
-import {STATIONS as TOHOKU_STATIONS} from './route-data.js?v=41';
-import {FINAL_SCENARIOS,scenarioJourney} from './final-scenarios.js?v=41';
-import {detectStoppedOverrun,correctStoppedOverrun,nextSignalCall} from './train-operations.js?v=91';
-import {bindHornButton} from './assets/audio/held-horn.js?v=85';
+import {fitStationName} from './station-name-layout.js?v=105';
+import {weatherRoute,weatherLimits,weatherLimitAt,reportTyphoon} from './weather-operations.js?v=105';
+import {mountRoutePages} from './route-pages.js?v=105';
+import {WEATHER,weatherType,updateWeatherStatus} from './weather.js?v=105';
+import {gradeLabel} from './tunnel-effects.js?v=105';
+import {updateDoorVisual} from './train-doors.js?v=105';
+import {scheduledBoardingDelay} from './published-schedules.js?v=105';
+import {loadRoadAsset} from './road-assets.js?v=105';
+import {CrossingAudio} from './crossings.js?v=105';
+import {VIEW_LABELS,normalizedView,replayViewMode} from './view-modes.js?v=105';
+import {yaganPlanningSpec,yaganBoardingReady,yaganBoardingDelay} from './yagan-timetable.js?v=105';
+import {progress,serviceKey} from './scenario-progress.js?v=105';
+import {scenarioRanges} from './scenario-ranges.js?v=105';
+import {installCheats,jumpToStation} from './game-cheats.js?v=105';
+import {mountGameShell} from './game-shell.js?v=105';
+import {DutyRecorder,replayStateAt,recordReplayAudio} from './replay-store.js?v=105';
+import {osakaPlanningSpec} from './osaka-timetable.js?v=105';
+import {collectStationReports,collectRestrictionReports,pauseWhenSpeechEnds} from './station-timing.js?v=105';
+import {buildConnectingRoutes} from './service-catalog.js?v=105';
+import {loadAudioMix,audioMixMarkup,bindAudioMix} from './audio-mix.js?v=105';
+import {bindRouteKeys,bindScreenKeys} from './screen-keys.js?v=105';
+import {sharedEffects} from './buffered-effects.js?v=105';
+import {bindTrainSelectionKeys} from './selection-keys.js?v=105';
+import {beginTerminalOpening,advanceTerminalOpening} from './terminal-arrival.js?v=105';
+import {vehiclePhoto} from './vehicle-photos.js?v=105';
+import {mountTrainDetails} from './train-details.js?v=105';
+import {mountWheelPicker} from './wheel-picker.js?v=105';
+import {routePlanningSpec,mountScoring,checkpointMarks,scoringStations,buildScoreTimetable,resolveScoreSchedule,scoreHazards,hornMarks,currentScoreRestriction,signalRestriction} from './scoring.js?v=105';
+import {mountDrivingOverlay} from './driving-overlay.js?v=105';import {mountLookahead,changesFromSections,stationMarks} from './lookahead.js?v=105';
+import {serviceChoices,makeServiceRoute} from './train-selection.js?v=105';
+import {GeneratedCab,generatedCab} from './generated-cab.js?v=105';
+import {FinalWorld} from './final-world.js?v=105';
+import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=105';
+import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=105';
+import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,routeLimitAt,stopPosition,finishStop,beginDoorClosing,isDoorClosing,takeDepartureCall} from './final-model.js?v=105';
+import {STATIONS as TOHOKU_STATIONS} from './route-data.js?v=105';
+import {FINAL_SCENARIOS,scenarioJourney} from './final-scenarios.js?v=105';
+import {detectStoppedOverrun,correctStoppedOverrun,nextSignalCall} from './train-operations.js?v=105';
+import {bindHornButton} from './assets/audio/held-horn.js?v=105';
 
 const TOHOKU_TRAIN={id:'701',name:'701系1500番台',playableSpecs:{carCount:2}};
 const $=id=>document.getElementById(id),META=[
@@ -76,12 +78,12 @@ const gameShell=mountGameShell({stage:$('stage'),settings,mix:audioMix,onSound:p
 if(new URLSearchParams(location.search).get('menu')==='main')gameShell.showMain();
 const routeMain=document.createElement('button');routeMain.id='routeMainMenu';routeMain.textContent='Esc　メインメニューへ';$('menuScreen').append(routeMain);routeMain.onclick=()=>gameShell.showMain();
 
-function updateMenuWeather(){const type=weatherType(settings.weather),icon={clear:'☀',rain:'☂',snow:'❄'}[type];const label=document.querySelector('.menu-bottom>.sun');if(label)label.textContent=icon+' '+WEATHER[type].name;document.querySelectorAll('.route-card>.sun').forEach(el=>el.textContent=icon);}
+function updateMenuWeather(){const type=weatherType(settings.weather),icon={clear:'☀',rain:'☂',snow:'❄',heavySnow:'❄',settledSnow:'❄',thunderstorm:'ϟ',typhoon:'≋'}[type];const label=document.querySelector('.menu-bottom>.sun');if(label)label.textContent=icon+' '+WEATHER[type].name;document.querySelectorAll('.route-card>.sun').forEach(el=>el.textContent=icon);}
 function fit(){const r=$('stageArea').getBoundingClientRect(),scale=Math.min(r.width/1600,r.height/900);document.documentElement.style.setProperty('--overlay-ui-scale',Math.max(1,Math.min(3.5,44/(54*scale))));$('stage').style.left='50%';$('stage').style.top='50%';$('stage').style.transform=`translate(-50%,-50%) scale(${scale})`;}
 addEventListener('resize',fit);visualViewport?.addEventListener('resize',fit);new ResizeObserver(fit).observe($('stageArea'));fit();
 function recipe(){const train=META[selected].legacy?TOHOKU_TRAIN:recipes.trains.find(t=>t.id===(chosenVehicle??META[selected].vehicle));return chosenVehicle&&chosenOption?.carCount?{...train,playableSpecs:{...train.playableSpecs,carCount:chosenOption.carCount}}:train;}
 function selectedRoute(){return chosenRoute??routes[selected];}
-function route(){return activeRoute??selectedRoute();}
+function route(){const base=activeRoute??selectedRoute();return mode==='drive'&&run?weatherRoute(run,base):base;}
 function selectedScenario(){
  const value=$('scenarioSelect').value;
  return value===''?null:FINAL_SCENARIOS[META[selected].id]?.[Number(value)]??null;
@@ -274,7 +276,7 @@ async function start(startIndex){
 }
 $('startDrive').onclick=()=>start();$('retryButton').onclick=()=>{const index=Math.max(run.startIndex,run.next-1);toggleExtras(false);start(index);};
 function showResults(){if(!replaySession){progress.complete(run.dutyKey,route().stations[run.startIndex].s,route().stations[run.endIndex].s,run);refreshClears();}recorder?.capture(run,score.engine.points,score.engine.chain);recorder?.flush();const errors=run.errors.map(x=>Math.abs(x)),mean=errors.length?errors.reduce((a,b)=>a+b,0)/errors.length:0;showModal(`<p class="eyebrow">DRIVER'S WORK COMPLETE</p><h2>乗務、おつかれさま。</h2><p>${score.engine.points} points · ${score.engine.chain} chain<br>${META[selected].name} · ${recipe().name}<br>停車 ${run.served}駅 / 通過 ${run.missed}駅<br>平均停止誤差 ${distanceLabel(mean)}</p><div class="dialog-buttons"><button id="resultMenu" class="start-button">路線選択へ</button></div>`,{pause:false});$('resultMenu').onclick=returnMenu;}
-function hud(){updateWeatherStatus($('driveScreen'),run);{const lr=route(),end=lr.stations[run.endIndex]?.s??Infinity;lookahead.update(run.s,changesFromSections(lr.limits),lr.signals??[],[...stationMarks(lr.stations,lr.sceneryStations),...checkpointMarks(run.scoreCheckpoints,run),...hornMarks(scoreHazards(lr),score.engine.done)].filter(x=>x.s<=end+1&&(!x.stop||x.s>=(lr.stations[Math.min(run.next,run.endIndex)]?.s??0)-2)));}const r=route(),next=r.stations[Math.min(run.next,run.endIndex)],d=next.s-run.s,notch=notchLabel(recipe(),run.notch),speed=Math.round(run.v*3.6),door=run.doorPhase==='closing'?'戸閉中':run.doors?'戸開':'戸閉';$('hudNext').textContent=next.name;if(recipe().id==='e131')$('hudNextKind').textContent=`次の停車駅 · ${recipe().playableSpecs.carCount===6?6:3}両停止位置`;$('hudDistance').textContent=run.finished?'運転完了':`${d<0?'超過 ':'あと '}${distanceLabel(d)}`;$('hudSpeed').textContent=speed;$('nativeSpeed').textContent=speed;$('hudNotch').textContent=notch;$('hudNotch').parentElement.dataset.kind=notch==='EB'?'eb':run.notch<0?'brake':run.notch>0?'power':'neutral';$('nativeNotch').textContent=notch;$('hudDoors').textContent=door;$('hudGrade').textContent=gradeLabel(world.grade(run.s));$('nativeDoor').textContent=door;$('nativeNext').textContent=next.name;$('nativeDistance').textContent=(d<0?'超過 ':'')+distanceLabel(d);$('closedLamp').classList.toggle('lit',!run.doors);const t=run.clockStart+Math.floor(run.elapsed);$('hudTime').textContent=[Math.floor(t/3600)%24,Math.floor(t/60)%60,t%60].map(x=>String(x).padStart(2,'0')).join(':');$('hudScore').textContent=`停車 ${run.served} / ${run.endIndex-run.startIndex}`;$('speedBar').style.setProperty('--speed',speed/recipe().playableSpecs.maxSpeedKmh*100);const marker=stopPosition(d);$('stopDiamond').hidden=!marker.visible;$('stopGauge').classList.toggle('far',Math.abs(d)>150);$('stopDiamond').style.top=marker.percent+'%';$('stopGauge').setAttribute('aria-label',`停止位置±10メートルマーカー ${marker.text}`);$('notchStrip').querySelectorAll('button').forEach(b=>b.classList.toggle('active',Number(b.dataset.notch)===run.notch));
+function hud(){updateWeatherStatus($('driveScreen'),run);{const lr=route(),end=lr.stations[run.endIndex]?.s??Infinity;lookahead.update(run.s,changesFromSections(lr.limits),lr.signals??[],[...stationMarks(lr.stations,lr.sceneryStations),...checkpointMarks(run.scoreCheckpoints,run),...hornMarks(scoreHazards(lr),score.engine.done)].filter(x=>x.s<=end+1&&(!x.stop||x.s>=(lr.stations[Math.min(run.next,run.endIndex)]?.s??0)-2)));}const r=route(),next=r.stations[Math.min(run.next,run.endIndex)],d=next.s-run.s,notch=notchLabel(recipe(),run.notch),speed=Math.round(run.v*3.6),door=run.doorPhase==='closing'?'戸閉中':run.doors?'戸開':'戸閉';fitStationName($('hudNext'),next.name);if(recipe().id==='e131')$('hudNextKind').textContent=`次の停車駅 · ${recipe().playableSpecs.carCount===6?6:3}両停止位置`;$('hudDistance').textContent=run.finished?'運転完了':`${d<0?'超過 ':'あと '}${distanceLabel(d)}`;$('hudSpeed').textContent=speed;$('nativeSpeed').textContent=speed;$('hudNotch').textContent=notch;$('hudNotch').parentElement.dataset.kind=notch==='EB'?'eb':run.notch<0?'brake':run.notch>0?'power':'neutral';$('nativeNotch').textContent=notch;$('hudDoors').textContent=door;$('hudGrade').textContent=gradeLabel(world.grade(run.s));$('nativeDoor').textContent=door;$('nativeNext').textContent=next.name;$('nativeDistance').textContent=(d<0?'超過 ':'')+distanceLabel(d);$('closedLamp').classList.toggle('lit',!run.doors);const t=run.clockStart+Math.floor(run.elapsed);$('hudTime').textContent=[Math.floor(t/3600)%24,Math.floor(t/60)%60,t%60].map(x=>String(x).padStart(2,'0')).join(':');$('hudScore').textContent=`停車 ${run.served} / ${run.endIndex-run.startIndex}`;$('speedBar').style.setProperty('--speed',speed/recipe().playableSpecs.maxSpeedKmh*100);const marker=stopPosition(d);$('stopDiamond').hidden=!marker.visible;$('stopGauge').classList.toggle('far',Math.abs(d)>150);$('stopDiamond').style.top=marker.percent+'%';$('stopGauge').setAttribute('aria-label',`停止位置±10メートルマーカー ${marker.text}`);$('notchStrip').querySelectorAll('button').forEach(b=>b.classList.toggle('active',Number(b.dataset.notch)===run.notch));
  const upcoming=Math.abs(d)<=3?next:(r.sceneryStations??r.stations).find(station=>station.s>run.s+2);
  if(upcoming&&!run.finished){
   const stops=r.stations.some(station=>Math.abs(station.s-upcoming.s)<.5);
@@ -298,6 +300,7 @@ function advance(dt){
  const overrun=detectStoppedOverrun(run,station.s,score.engine.cfg.blueTolerance);if(overrun)toast(`${station.name} オーバーラン ＋${distanceLabel(overrun.error)}`,8);
  score.update(run,{eb:controlsFor(train).min,...currentScoreRestriction(r,run.s),hazards:scoreHazards(r),vehicleSpec:run.scoreVehicleSpec??train.playableSpecs,routeLimits:r.limits,stations:run.scoreTimetable??scoringStations(r)},dt);
  const corrected=correctStoppedOverrun(run,station.s,score.engine.cfg.blueTolerance);
+ reportTyphoon(run,r,previous,sound);
  for(const change of collectRestrictionReports(run,changesFromSections(r.limits),previous))sound.callRestriction(change.kmh);
  for(const report of collectStationReports(run,run.scoreTimetable,previous,station.s)){sound.callStationTiming(report.kind,report.station,report.error);run.lastTimingReport=report;}
  if(corrected!==null)return;
@@ -322,7 +325,7 @@ function frame(now){
  last=now;
  if(mode==='drive'&&world&&run){
   const r=route();
-  if(!replaySession&&run.weather!==settings.weather){run.weather=weatherType(settings.weather);run.wheelSlip=false;run.wheelSlide=false;run.wheelExcess=0;run.wheelDeficit=0;run.wheelSpeed=run.v;}
+  if(!replaySession&&run.weather!==settings.weather){run.weather=weatherType(settings.weather);delete run.typhoonSection;delete run.typhoonAnnounced;run.wheelSlip=false;run.wheelSlide=false;run.wheelExcess=0;run.wheelDeficit=0;run.wheelSpeed=run.v;}
   if(replaySession){updateReplay(dt);}
   else if(!paused){
    cheats.speedStep(run,dt);

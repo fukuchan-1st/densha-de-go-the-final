@@ -455,3 +455,8 @@ dialog h2{font:italic 900 30px var(--ax-font);color:#fff}
  }
  #extras,#controlExtras{top:calc(22px + 52px * min(var(--overlay-ui-scale),1.5));right:auto;left:50%;transform:translateX(-50%)}
 }
+
+/* Keep station plates clear of the three central action buttons. */
+.hud-next{width:460px;min-width:0;max-width:460px;overflow:hidden}.hud-next strong{white-space:nowrap;font-size:var(--station-name-size,64px);letter-spacing:var(--station-name-spacing,8px)}
+#drive .next-stop{width:460px;min-width:0;max-width:460px;overflow:hidden}#drive .next-stop b{font-size:var(--station-name-size,64px);letter-spacing:var(--station-name-spacing,8px);white-space:nowrap}
+.next-station strong.compact-station-name,.compact-station-name{font-size:var(--station-name-size)!important;letter-spacing:0!important;white-space:nowrap}

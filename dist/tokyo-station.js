@@ -1,4 +1,4 @@
-import {interpolateKnots} from './track-layout.js?v=79';
+import {interpolateKnots} from './track-layout.js?v=105';
 export const tokyoWeight=d=>{const t=Math.max(0,Math.min(1,(Math.abs(d)-300)/1100));return 1-t*t*(3-2*t);};
 // Canonical cross-section looks north: Marunouchi/Chuo west, Yaesu east.
 export function prepareTokyoStation(route){

@@ -1,26 +1,26 @@
-import {addMappedBuildings} from './mapped-buildings.js?v=104';
-import {stationBuildingClear} from './station-space.js?v=90';
-import {sceneryDensity} from './scenery-profile.js?v=99';
-import {RoadScenery} from './road-scenery.js?v=99';
-import {BallastDetail} from './ballast-detail.js?v=88';
-import {LevelCrossings} from './crossings.js?v=88';
-import {createBuildingMaterial,buildingVariant,buildingPalette} from './terrain-materials.js?v=79';
-import {SceneAtmosphere} from './scene-atmosphere.js?v=102';
-import {PlayerTrain} from './player-train.js?v=104';
-import {prepareTurnoutLayout} from './turnout-layout.js?v=92';
-import {addTurnouts} from './turnout-scene.js?v=99';
-import {OpposingTrains} from './opposing-trains.js?v=104';
-import {CabSuspension} from './cab-motion.js?v=23';
-import {interpolateKnots} from './track-layout.js?v=79';
-import {TrackLayout} from './track-layout.js?v=79';
-import {buildRailways,addStations} from './station-scene.js?v=99';
-import * as T from './assets/vendor/three.module.js?v=23';
-import {settlementAt} from './route-data.js?v=23';
-import {DISPLAY_WIDTH,DISPLAY_HEIGHT} from './display.js?v=23';
-import {addStructures} from './structures.js?v=99';
-import {structureRanges,segmentIntersects,corridorOccupied} from './structure-ranges.js?v=23';
-import {addVegetation,createSurfaceMaterial} from './vegetation.js?v=99';
-import {addTrackSignal} from './track-signal.js?v=32';
+import {addMappedBuildings} from './mapped-buildings.js?v=105';
+import {stationBuildingClear} from './station-space.js?v=105';
+import {sceneryDensity} from './scenery-profile.js?v=105';
+import {RoadScenery} from './road-scenery.js?v=105';
+import {BallastDetail} from './ballast-detail.js?v=105';
+import {LevelCrossings} from './crossings.js?v=105';
+import {createBuildingMaterial,buildingVariant,buildingPalette} from './terrain-materials.js?v=105';
+import {SceneAtmosphere} from './scene-atmosphere.js?v=105';
+import {PlayerTrain} from './player-train.js?v=105';
+import {prepareTurnoutLayout} from './turnout-layout.js?v=105';
+import {addTurnouts} from './turnout-scene.js?v=105';
+import {OpposingTrains} from './opposing-trains.js?v=105';
+import {CabSuspension} from './cab-motion.js?v=105';
+import {interpolateKnots} from './track-layout.js?v=105';
+import {TrackLayout} from './track-layout.js?v=105';
+import {buildRailways,addStations} from './station-scene.js?v=105';
+import * as T from './assets/vendor/three.module.js?v=105';
+import {settlementAt} from './route-data.js?v=105';
+import {DISPLAY_WIDTH,DISPLAY_HEIGHT} from './display.js?v=105';
+import {addStructures} from './structures.js?v=105';
+import {structureRanges,segmentIntersects,corridorOccupied} from './structure-ranges.js?v=105';
+import {addVegetation,createSurfaceMaterial} from './vegetation.js?v=105';
+import {addTrackSignal} from './track-signal.js?v=105';
 export class RailWorld {
  constructor(container,geometry,stations,profile,structures,stationLayouts,signals=[],{quality='standard',drawDistance=1500,roads=[],mappedBuildings}={}){
   this.sceneryRoute={id:'tohoku',stations,mappedBuildings};this.quality=quality;this.drawDistance=drawDistance;this.routeRoads=roads;
@@ -60,7 +60,7 @@ export class RailWorld {
  ribbon(offset,width,y,color,kind=null){const pos=[],uv=[],idx=[],tile=kind==='ballast'?3:kind==='ground'?6:5;for(let s=-200,i=0;s<=this.length+400;s+=5,i++){const f=this.frame(s,offset);for(const a of [-width/2,width/2]){pos.push(f.p.x+f.right.x*a,f.p.y+y,f.p.z+f.right.z*a);uv.push((a+width/2)/tile,s/tile);}if(i>0&&!((kind==='ground'||kind==='ballast')&&this.ranges.groundGaps.some(x=>segmentIntersects(s-5,s,x)))){const k=i*2;idx.push(k-2,k-1,k,k-1,k+1,k);}}const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setIndex(idx);g.computeVertexNormals();const mat=kind?createSurfaceMaterial(kind):new T.MeshStandardMaterial({color,roughness:.95,side:T.DoubleSide});mat.side=T.DoubleSide;this.scene.add(new T.Mesh(g,mat));}
  build(){
   let seed=701;const rand=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
-  const middle=this.point(this.length/2),ground=new T.Mesh(new T.PlaneGeometry(260000,260000),this.mat('#7a8b50'));ground.rotation.x=-Math.PI/2;ground.position.set(middle.x,-25,middle.z);this.scene.add(ground);
+  const middle=this.point(this.length/2),ground=new T.Mesh(new T.PlaneGeometry(260000,260000),this.mat('#7a8b50'));ground.material.name='textured-ground';ground.rotation.x=-Math.PI/2;ground.position.set(middle.x,-25,middle.z);this.scene.add(ground);
   this.ribbon(2,450,-.12,'#76844d','ground');
   this.railwayStats=buildRailways(this);addTurnouts(this,this.scene,this.turnouts,this.trackLayout.tracks);
   const poles=[],arms=[],houses=[],roofs=[],fields=[],wire=[];

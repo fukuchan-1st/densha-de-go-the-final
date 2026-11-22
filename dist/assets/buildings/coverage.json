@@ -9,79 +9,79 @@
   "routes": {
     "chuo-extended": {
       "buildings": 50547,
-      "bytes": 625743
+      "bytes": 631760
     },
     "chuo-kofu": {
       "buildings": 5274,
-      "bytes": 65506
+      "bytes": 66132
     },
     "chuo-osm-gap": {
       "buildings": 4140,
-      "bytes": 55098
+      "bytes": 55787
     },
     "chuo": {
       "buildings": 27627,
-      "bytes": 333360
+      "bytes": 337398
     },
     "chuo-shinshu": {
       "buildings": 7069,
-      "bytes": 91124
+      "bytes": 92081
     },
     "itsukaichi": {
       "buildings": 576,
-      "bytes": 7705
+      "bytes": 7828
     },
     "oito": {
       "buildings": 3598,
-      "bytes": 47370
+      "bytes": 47843
     },
     "ome-okutama": {
       "buildings": 1606,
-      "bytes": 21132
+      "bytes": 21445
     },
     "ome": {
       "buildings": 8495,
-      "bytes": 103416
+      "bytes": 104454
     },
     "osaka": {
       "buildings": 16035,
-      "bytes": 205366
+      "bytes": 208938
     },
     "shinonoi-approach": {
       "buildings": 1616,
-      "bytes": 21063
+      "bytes": 21300
     },
     "shinonoi-extended": {
       "buildings": 6870,
-      "bytes": 88949
+      "bytes": 89901
     },
     "shinonoi": {
       "buildings": 5290,
-      "bytes": 69920
+      "bytes": 70692
     },
     "tatsuno": {
       "buildings": 2773,
-      "bytes": 37295
+      "bytes": 37899
     },
     "tokaido": {
       "buildings": 42356,
-      "bytes": 504151
+      "bytes": 508970
     },
     "yagan": {
       "buildings": 227,
-      "bytes": 3305
+      "bytes": 3354
     },
     "yamagata": {
       "buildings": 13368,
-      "bytes": 164608
+      "bytes": 165927
     },
     "yamanote": {
       "buildings": 16826,
-      "bytes": 213478
+      "bytes": 216206
     },
     "tohoku": {
       "buildings": 13616,
-      "bytes": 165980
+      "bytes": 167048
     }
   },
   "attribution": "© OpenStreetMap contributors / ODbL",

@@ -1,0 +1,46 @@
+{
+  "records": [
+    {
+      "source": "B01STNNO.wav",
+      "file": "B01STNNO.ogg",
+      "duration": 2.878235
+    },
+    {
+      "source": "B02STNNO.wav",
+      "file": "B02STNNO.ogg",
+      "duration": 3.922222
+    },
+    {
+      "source": "B03STNNO.wav",
+      "file": "B03STNNO.ogg",
+      "duration": 3.828889
+    },
+    {
+      "source": "B04STNNO.wav",
+      "file": "B04STNNO.ogg",
+      "duration": 3.004444
+    },
+    {
+      "source": "rain_se.mp3",
+      "file": "rain_se.ogg",
+      "duration": 11.728209
+    },
+    {
+      "source": "snow_se.mp3",
+      "file": "snow_se.ogg",
+      "duration": 16
+    },
+    {
+      "source": "hill_se.mp3",
+      "file": "hill_se.ogg",
+      "duration": 16
+    },
+    {
+      "source": "city_se.mp3",
+      "file": "city_se.ogg",
+      "duration": 16
+    }
+  ],
+  "slowVoice": "C:\\Users\\bmwhz\\OneDrive\\Desktop\\整理\\folder\\dengo_thef\\train\\207-2000_ver2\\207-2000\\3notch\\207-2000\\navi\\sound\\jyoko_1.wav",
+  "description": "User-supplied station/environment recordings; short mono loops"
+}

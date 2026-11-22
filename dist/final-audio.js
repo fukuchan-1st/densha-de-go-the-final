@@ -1,11 +1,12 @@
-import {stationDepartureCue} from './station-broadcast.js?v=93';
-import {TrainPassbyAudio} from './train-passby-audio.js?v=85';
-import {timingVoiceRefs,timingPreloadRefs,restrictionVoiceRefs} from './station-timing.js?v=84';
-import {stationCueRefs,stationVoiceBank} from './station-voice.js?v=97final';
-import {createMixGains,voiceCategory} from './audio-mix.js?v=91';
-import {interpolateColumn} from './final-vehicle.js?v=103';
-import {runPitch} from './assets/audio/run-pitch.js';
-import {HeldHorn} from './assets/audio/held-horn.js?v=85';
+import {AmbientAudio} from './ambient-audio.js?v=105';
+import {stationDepartureCue} from './station-broadcast.js?v=105';
+import {TrainPassbyAudio} from './train-passby-audio.js?v=105';
+import {timingVoiceRefs,timingPreloadRefs,restrictionVoiceRefs} from './station-timing.js?v=105';
+import {stationCueRefs,stationVoiceBank} from './station-voice.js?v=105';
+import {createMixGains,voiceCategory} from './audio-mix.js?v=105';
+import {interpolateColumn} from './final-vehicle.js?v=105';
+import {runPitch} from './assets/audio/run-pitch.js?v=105';
+import {HeldHorn} from './assets/audio/held-horn.js?v=105';
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const whistle={entryIndex:'departure-whistle'};
 const voiceBanks={e235:['kanko0','uta'],e233:['kanko1','utb'],323:['kanko2','utd'],207:['kanko3','ute']};
@@ -75,6 +76,7 @@ export class LocalTrainAudio {
  configureDriverRoute(route,line){this.driverRoute=route;this.driverRouteLine=stationVoiceBank(line)?line:null;}
  stationRefs(kind,station){return stationCueRefs(this.driverRouteLine,station,kind,this.recipe.playableSpecs?.carCount);}
  callStation(kind,station){return this.queueDriverCalls(this.stationRefs(kind,station));}
+ callSlowRestriction(kmh){const ref={entryIndex:'weather-slow',driverVoiceFile:'./assets/audio/ambient/jyoko.ogg'};return this.queueDriverCalls([ref,...restrictionVoiceRefs(this.driverRouteLine,kmh)]);}
  callRestriction(kmh){return this.queueDriverCalls(restrictionVoiceRefs(this.driverRouteLine,kmh));}
  callStationTiming(kind,station,error){return this.queueDriverCalls(timingVoiceRefs(this.driverRouteLine,station,kind,error));}
  async prepare(){
@@ -227,12 +229,12 @@ export class LocalTrainAudio {
    else this.releaseLoop(key);
   }
  }
- updatePassby(world,s,speed,viewMode,paused){this.passby.update(world,s,speed,viewMode,paused);this.horn?.setPlaybackRate(this.passby.horn.pitch);}
+ updatePassby(world,s,speed,viewMode,paused){if(this.context??this.ctx){this.ambient??=new AmbientAudio(this);this.ambient.update(world,s,speed,viewMode,paused);}this.passby.update(world,s,speed,viewMode,paused);this.horn?.setPlaybackRate(this.passby.horn.pitch);}
  setMix(values){this.mix.update(values);}
  setVolume(n){this.volume=clamp(n,0,1);this.master.gain.value=this.volume;}
  async setPaused(paused){this.paused=paused;this.master.gain.value=paused?0:this.volume;if(paused){this.horn?.end(true);await this.context.suspend();}else await this.context.resume();}
  pause(){return this.setPaused(true);}
  resume(){return this.setPaused(false);}
- stop(){this.horn?.end(true);this.passby.reset();this.stopped=true;this.lastNotch=undefined;this.generation++;this.driverQueue=null;this.announcementQueue=null;for(const source of this.sources){try{source.stop();}catch{}}this.sources.clear();this.loops.clear();}
+ stop(){this.ambient?.stop();this.horn?.end(true);this.passby.reset();this.stopped=true;this.lastNotch=undefined;this.generation++;this.driverQueue=null;this.announcementQueue=null;for(const source of this.sources){try{source.stop();}catch{}}this.sources.clear();this.loops.clear();}
  async dispose(){this.stop();this.passby.dispose();this.buffers.clear();this.master.disconnect();for(const node of Object.values(this.mix.gains))node.disconnect();if(this.ownsContext)await this.context.close();}
 }

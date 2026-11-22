@@ -1,11 +1,12 @@
-import {stationBuildingClear} from './station-space.js?v=90';
-import * as T from './assets/vendor/three.module.js';
-import {interpolateKnots} from './track-layout.js?v=79';
-import {residentialAllowed} from './yamagata-mountain.js?v=101';
+import {stationBuildingClear} from './station-space.js?v=105';
+import * as T from './assets/vendor/three.module.js?v=105';
+import {interpolateKnots} from './track-layout.js?v=105';
+import {residentialAllowed} from './yamagata-mountain.js?v=105';
+import {estimateBuildingHeight} from './building-estimate.js?v=105';
 const pending=new Map(),grids=new WeakMap();
 const fictional=route=>route.id==='toho'||route.id?.startsWith('toho-');
 function point(points,s){let lo=0,hi=points.length-1;while(hi-lo>1){const m=(lo+hi)>>1;if(points[m][0]<=s)lo=m;else hi=m;}const a=points[lo],b=points[hi],t=(s-a[0])/(b[0]-a[0]);return [a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t];}
-export function decodeBuildingRows(route,rows){return rows.map(([ss,dx,dz,w,d,a,h])=>{const s=ss/10,p=point(route.points,s);return [s,p[0]+dx/10,p[1]+dz/10,w/10,d/10,a/1000,h/10];});}
+export function decodeBuildingRows(route,rows){return rows.map(([ss,dx,dz,w,d,a,h,estimated])=>{const s=ss/10,p=point(route.points,s);return [s,p[0]+dx/10,p[1]+dz/10,w/10,d/10,a/1000,estimateBuildingHeight(route,s,w/10,d/10,h/10,Boolean(estimated))];});}
 export async function loadMappedBuildings(route){
  if(fictional(route)||!route.id||!route.points?.length)return route;
  const id=route.id;if(!pending.has(id))pending.set(id,(async()=>{const response=await fetch(`./assets/buildings/${id}.json.gz?v=104`);if(!response.ok)throw Error('建物の位置データを読み込めません');const bytes=new Uint8Array(await response.arrayBuffer());return bytes[0]===31&&bytes[1]===139?new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).json():JSON.parse(new TextDecoder().decode(bytes));})().catch(error=>{pending.delete(id);throw error;}));

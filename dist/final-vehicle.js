@@ -1,4 +1,4 @@
-import {inflateSync,gunzipSync} from './assets/vendor/fflate.module.js';
+import {inflateSync,gunzipSync} from './assets/vendor/fflate.module.js?v=105';
 
 export async function loadVehicleRecipes(){const r=await fetch(new URL('./assets/final/vehicle-recipes.json?v=97final',import.meta.url));if(!r.ok)throw Error('車両設定を読み込めません');return r.json();}
 
@@ -95,5 +95,5 @@ export function interpolateColumn(table,column,speed,defaultValue=0){
  }
  return points.at(-1)[1];
 }
-export {LocalCabPanel} from './final-panel.js?v=95';
-export {LocalTrainAudio} from './final-audio.js?v=103';
+export {LocalCabPanel} from './final-panel.js?v=105';
+export {LocalTrainAudio} from './final-audio.js?v=105';

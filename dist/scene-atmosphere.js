@@ -1,9 +1,9 @@
-import {WeatherScene} from './weather-scene.js?v=102';
-import {weatherType} from './weather.js?v=102';
-import {TrainWindowEnvironment,updateTrainWindowLighting} from './train-window-reflections.js?v=96';
-import {tunnelAdaptation} from './tunnel-effects.js?v=93';
-import * as T from './assets/vendor/three.module.js';
-import {graphicsProfile,HighQualityRenderer} from './graphics-quality.js?v=87b';
+import {WeatherScene} from './weather-scene.js?v=105';
+import {weatherType} from './weather.js?v=105';
+import {TrainWindowEnvironment,updateTrainWindowLighting} from './train-window-reflections.js?v=105';
+import {tunnelAdaptation} from './tunnel-effects.js?v=105';
+import * as T from './assets/vendor/three.module.js?v=105';
+import {graphicsProfile,HighQualityRenderer} from './graphics-quality.js?v=105';
 export function lightingProfile(quality='standard',night=false){
  const simple=quality==='light';return {simple,shadows:!simple&&!night,clouds:!simple,sky:night?.25:simple?1.3:.82,sun:night?.06:simple?1.8:3.1,exposure:night?1.02:1.04};
 }
@@ -94,7 +94,7 @@ export class SceneAtmosphere{
   this.windowEnvironment??=new TrainWindowEnvironment(world);this.windowEnvironment.update(dt,point);updateTrainWindowLighting(world.scene,solar.daylight,inside);
   const wet=weatherType(world.weather)!=='clear';
   if(wet){this.sun.intensity*=.22;this.sky.intensity*=.82;this.sunSprite.visible=false;const grey=new T.Color('#101820').lerp(new T.Color('#7d8892'),solar.daylight);world.scene.background.lerp(grey,1-inside);world.scene.fog?.color.lerp(grey,.9*(1-inside));this.sky.color.lerp(new T.Color('#96a0a8'),.85);if(this.cloudMaterial){this.cloudMaterial.color.copy(grey);this.cloudMaterial.opacity=.98;}}
-  this.weatherScene??=new WeatherScene(world);this.weatherScene.update(dt,{type:world.weather,tunnel:inside,daylight:solar.daylight});
+  this.weatherScene??=new WeatherScene(world);this.weatherScene.update(dt,{type:world.weather,tunnel:inside,daylight:solar.daylight,s});
   followSunShadow(this.sun,point,solar.direction);
   this.shadowClock+=dt;if(profile.shadows&&(moving||this.shadowClock>.12||!this.lastShadowPosition||point.distanceTo(this.lastShadowPosition)>3||Math.abs(time-(this.lastShadowTime??time))>1)){
    world.renderer.shadowMap.needsUpdate=true;this.shadowClock=0;this.lastShadowPosition=point.clone();this.lastShadowTime=time;

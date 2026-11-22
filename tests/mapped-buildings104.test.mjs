@@ -20,7 +20,7 @@ test('all 19 real source corridors contain compact mapped buildings while fictio
  assert.equal(Object.keys(coverage.routes).length,19);assert.ok(!Object.keys(coverage.routes).some(id=>id==='toho'||id.startsWith('toho-')));
  for(const [id,entry]of Object.entries(coverage.routes)){
   assert.ok(entry.buildings>0,id);const data=JSON.parse(gunzipSync(await readFile(new URL(id+'.json.gz',base))));assert.equal(data.encoding,'decimetre-center-delta-v1');assert.equal(data.rows.length,entry.buildings);
-  let previous=-Infinity;for(const row of data.rows){assert.equal(row.length,7);assert.ok(row.every(Number.isFinite));assert.ok(row[0]>=previous);previous=row[0];assert.ok(row[3]>=20&&row[4]>=20&&row[6]>=20);}
+  let previous=-Infinity;for(const row of data.rows){assert.equal(row.length,8);assert.ok(row[7]===0||row[7]===1);assert.ok(row.every(Number.isFinite));assert.ok(row[0]>=previous);previous=row[0];assert.ok(row[3]>=20&&row[4]>=20&&row[6]>=20);}
  }
 });
 test('building downloads are shared, decoded and include Tohoku without treating it as fictional Toho',async()=>{

@@ -1,4 +1,4 @@
-export const WEATHER={clear:{name:'晴れ',traction:Infinity},rain:{name:'雨',traction:.32},snow:{name:'雪',traction:.20}};
+export const WEATHER={clear:{name:'晴れ',traction:Infinity},rain:{name:'雨',traction:.32,precipitation:'rain'},snow:{name:'雪',traction:.20,precipitation:'snow'},heavySnow:{name:'大雪',traction:.16,precipitation:'snow'},thunderstorm:{name:'雷雨',traction:.27,precipitation:'rain'},typhoon:{name:'台風',traction:.24,precipitation:'rain'},settledSnow:{name:'積雪',traction:.18}};
 export const weatherType=value=>Object.hasOwn(WEATHER,value)?value:'clear';
 export const SLIP_EFFORT_RATIO=.8;
 // Gameplay adhesion approximation, not a measured vehicle/rail friction model.
@@ -29,7 +29,7 @@ export function brakeAdhesionStep(state,demand,dt,fraction=0){
  return sliding?demand*SLIP_EFFORT_RATIO:demand;
 }
 export function weatherMarkup(selected='clear'){
- return '<fieldset class="weather-controls"><legend>天候</legend><div>'+Object.entries(WEATHER).map(([id,{name}])=>`<button type="button" data-weather="${id}" aria-pressed="${id===weatherType(selected)}">${name}</button>`).join('')+'</div><p>雨・雪では強い力行で空転しやすくなります。<br>空転したらノッチを戻し、弱い力行から再加速してください。<br>滑りやすさ：晴れ ＜ 雨 ＜ 雪<br>空転時の加速・強いブレーキで滑走した時の減速は通常の80％</p></fieldset>';
+ return '<fieldset class="weather-controls"><legend>天候</legend><div>'+Object.entries(WEATHER).map(([id,{name}])=>`<button type="button" data-weather="${id}" aria-pressed="${id===weatherType(selected)}">${name}</button>`).join('')+'</div><p>雨・雪では強い力行で空転しやすくなります。<br>空転したらノッチを戻し、弱い力行から再加速してください。<br>大雪・積雪は山間部ほど積もります。台風では臨時40km/h徐行区間を設けます。<br>空転時の加速・強いブレーキで滑走した時の減速は通常の80％</p></fieldset>';
 }
 export function bindWeather(root,settings,onChange){
  const update=()=>root.querySelectorAll('[data-weather]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.weather===weatherType(settings.weather))));

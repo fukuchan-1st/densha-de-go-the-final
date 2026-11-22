@@ -1,0 +1,2 @@
+export function stationNameLayout(name){const n=Array.from(name??'').length;return {compact:n>=6,size:n>=6?Math.min(52,Math.floor(302/n)):64,spacing:n>=6?0:8};}
+export function fitStationName(element,name){if(!element)return;const layout=stationNameLayout(name);element.textContent=name;element.classList.toggle('compact-station-name',layout.compact);element.style.setProperty('--station-name-size',layout.size+'px');element.style.setProperty('--station-name-spacing',layout.spacing+'px');}
