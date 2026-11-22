@@ -1,15 +1,17 @@
 {
-  "version": 91,
-  "checkedAt": "2026-11-18",
+  "version": 108,
+  "checkedAt": "2026-11-22",
   "sources": [
     "https://ekimero.miraheze.org/wiki/中央快速線",
     "https://ekimero.miraheze.org/wiki/中央本線",
     "https://ekimero.miraheze.org/wiki/篠ノ井線",
     "https://ekimero.miraheze.org/wiki/大糸線",
-    "https://ekimero.miraheze.org/wiki/信越本線"
+    "https://ekimero.miraheze.org/wiki/信越本線",
+    "https://ekimero.miraheze.org/wiki/青梅線",
+    "https://ekimero.miraheze.org/wiki/五日市線"
   ],
   "sourceCredit": "駅別情報：首都圏駅メロwiki（CC BY-SA 4.0）。音源：ユーザー提供。",
-  "scope": "信越本線はSE-09〜SE-13。通常番線は推定、明示番線を優先。電子電鈴はユーザー指定によりbell(tokyu)へ統一。",
+  "scope": "信越本線はSE-09〜SE-13。通常番線は推定、明示番線を優先。電子電鈴はユーザー指定によりbell(tokyu)へ統一。 青梅・五日市線は2026年使用状況。青梅から奥多摩方向および宮ノ平〜奥多摩では駅側メロディを鳴らさない。立川・拝島は系統別の通常番線を推定し、明示番線を優先。 青梅・五日市線は2026年使用状況。青梅から奥多摩方向および宮ノ平〜奥多摩では駅側メロディを鳴らさない。立川・拝島は系統別の通常番線を推定し、明示番線を優先。",
   "sampleVoice": "voice/sample.mp3",
   "files": [
     {
@@ -517,6 +519,108 @@
         "八王子"
       ],
       "embeddedAnnouncement": false
+    },
+    {
+      "file": "syutoken41-1.ogg",
+      "sourceFile": "syutoken41-1.mp3",
+      "stations": [
+        "立川",
+        "西立川",
+        "東中神",
+        "中神",
+        "昭島",
+        "牛浜",
+        "福生",
+        "羽村",
+        "小作",
+        "拝島",
+        "河辺",
+        "青梅",
+        "東秋留",
+        "秋川",
+        "武蔵増戸",
+        "武蔵五日市"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "syutoken41-2.ogg",
+      "sourceFile": "syutoken41-2.mp3",
+      "stations": [
+        "河辺"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "syutoken41-3.ogg",
+      "sourceFile": "syutoken41-3.mp3",
+      "stations": [
+        "東青梅"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "syutoken41-4.ogg",
+      "sourceFile": "syutoken41-4.mp3",
+      "stations": [
+        "青梅"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "syutoken41-5.ogg",
+      "sourceFile": "syutoken41-5.mp3",
+      "stations": [
+        "青梅"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "syutoken41-6.ogg",
+      "sourceFile": "syutoken41-6.mp3",
+      "stations": [
+        "拝島"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "syutoken41-7.ogg",
+      "sourceFile": "syutoken41-7.mp3",
+      "stations": [
+        "熊川"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "syutoken41-8.ogg",
+      "sourceFile": "syutoken41-8.mp3",
+      "stations": [
+        "武蔵引田"
+      ],
+      "embeddedAnnouncement": false
+    },
+    {
+      "file": "syutoken41.ogg",
+      "sourceFile": "syutoken41.mp3",
+      "stations": [
+        "立川",
+        "西立川",
+        "東中神",
+        "中神",
+        "昭島",
+        "牛浜",
+        "福生",
+        "羽村",
+        "小作",
+        "拝島",
+        "河辺",
+        "青梅",
+        "東秋留",
+        "秋川",
+        "武蔵増戸",
+        "武蔵五日市"
+      ],
+      "embeddedAnnouncement": false
     }
   ],
   "stations": [
@@ -765,54 +869,6 @@
       "direction": "番線優先",
       "platform": "3",
       "file": "ikst016-01.mp3",
-      "status": "対応済み",
-      "embedded": false
-    },
-    {
-      "station": "立川",
-      "direction": "上り",
-      "platform": "通常番線（推定）",
-      "file": "ikst016-01.mp3",
-      "status": "対応済み",
-      "embedded": false
-    },
-    {
-      "station": "立川",
-      "direction": "下り",
-      "platform": "通常番線（推定）",
-      "file": "ikst016-02.mp3",
-      "status": "対応済み",
-      "embedded": false
-    },
-    {
-      "station": "立川",
-      "direction": "番線優先",
-      "platform": "3",
-      "file": "ikst016-01.mp3",
-      "status": "対応済み",
-      "embedded": false
-    },
-    {
-      "station": "立川",
-      "direction": "番線優先",
-      "platform": "4",
-      "file": "ikst016-04.mp3",
-      "status": "対応済み",
-      "embedded": false
-    },
-    {
-      "station": "立川",
-      "direction": "番線優先",
-      "platform": "5",
-      "file": "ikst016-03.mp3",
-      "status": "対応済み",
-      "embedded": false
-    },
-    {
-      "station": "立川",
-      "direction": "番線優先",
-      "platform": "6",
-      "file": "ikst016-02.mp3",
       "status": "対応済み",
       "embedded": false
     },
@@ -2309,6 +2365,454 @@
       "direction": "下り",
       "platform": "通常番線（推定）",
       "file": "nagano2.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "立川",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "ikst016-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "立川",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "ikst016-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "立川",
+      "direction": "番線優先",
+      "platform": "1",
+      "file": "syutoken41.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "立川",
+      "direction": "番線優先",
+      "platform": "2",
+      "file": "syutoken41-1.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "立川",
+      "direction": "番線優先",
+      "platform": "3",
+      "file": "ikst016-01.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "立川",
+      "direction": "番線優先",
+      "platform": "4",
+      "file": "ikst016-04.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "立川",
+      "direction": "番線優先",
+      "platform": "5",
+      "file": "ikst016-03.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "立川",
+      "direction": "番線優先",
+      "platform": "6",
+      "file": "ikst016-02.mp3",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "西立川",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "syutoken41-1.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "西立川",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "syutoken41.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "東中神",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "syutoken41-1.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "東中神",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "syutoken41.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "中神",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "syutoken41-1.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "中神",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "syutoken41.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "昭島",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "syutoken41-1.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "昭島",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "syutoken41.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "牛浜",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "syutoken41-1.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "牛浜",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "syutoken41.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "福生",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "syutoken41-1.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "福生",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "syutoken41.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "羽村",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "syutoken41-1.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "羽村",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "syutoken41.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "小作",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "syutoken41-1.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "小作",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "syutoken41.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "拝島",
+      "direction": "上り",
+      "platform": 3,
+      "file": "syutoken41-1.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "拝島",
+      "direction": "下り",
+      "platform": 2,
+      "file": "syutoken41.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "拝島",
+      "direction": "番線優先",
+      "platform": "1",
+      "file": "syutoken41-6.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "拝島",
+      "direction": "番線優先",
+      "platform": "2",
+      "file": "syutoken41.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "拝島",
+      "direction": "番線優先",
+      "platform": "3",
+      "file": "syutoken41-1.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "河辺",
+      "direction": "上り",
+      "platform": 1,
+      "file": "syutoken41-1.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "河辺",
+      "direction": "下り",
+      "platform": 2,
+      "file": "syutoken41.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "河辺",
+      "direction": "番線優先",
+      "platform": "1",
+      "file": "syutoken41-1.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "河辺",
+      "direction": "番線優先",
+      "platform": "2",
+      "file": "syutoken41.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "河辺",
+      "direction": "番線優先",
+      "platform": "3",
+      "file": "syutoken41-2.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "東青梅",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "syutoken41-3.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "東青梅",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "syutoken41-3.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "青梅",
+      "direction": "上り",
+      "platform": 4,
+      "file": "syutoken41-5.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "青梅",
+      "direction": "下り",
+      "platform": 1,
+      "file": "syutoken41.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "青梅",
+      "direction": "番線優先",
+      "platform": "1",
+      "file": "syutoken41.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "青梅",
+      "direction": "番線優先",
+      "platform": "2",
+      "file": "syutoken41-1.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "青梅",
+      "direction": "番線優先",
+      "platform": "3",
+      "file": "syutoken41-4.ogg",
+      "status": "ワンマン区間・駅側不使用",
+      "embedded": false
+    },
+    {
+      "station": "青梅",
+      "direction": "番線優先",
+      "platform": "4",
+      "file": "syutoken41-5.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "東秋留",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "syutoken41-1.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "東秋留",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "syutoken41.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "秋川",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "syutoken41-1.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "秋川",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "syutoken41.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "武蔵増戸",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "syutoken41-1.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "武蔵増戸",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "syutoken41.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "熊川",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "syutoken41-7.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "熊川",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "syutoken41-7.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "武蔵引田",
+      "direction": "上り",
+      "platform": "通常番線（推定）",
+      "file": "syutoken41-8.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "武蔵引田",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "syutoken41-8.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "武蔵五日市",
+      "direction": "上り",
+      "platform": 1,
+      "file": "syutoken41-1.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "武蔵五日市",
+      "direction": "下り",
+      "platform": "通常番線（推定）",
+      "file": "",
+      "status": "終着方向",
+      "embedded": false
+    },
+    {
+      "station": "武蔵五日市",
+      "direction": "番線優先",
+      "platform": "1",
+      "file": "syutoken41-1.ogg",
+      "status": "対応済み",
+      "embedded": false
+    },
+    {
+      "station": "武蔵五日市",
+      "direction": "番線優先",
+      "platform": "2",
+      "file": "syutoken41.ogg",
       "status": "対応済み",
       "embedded": false
     }
