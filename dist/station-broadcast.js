@@ -1,4 +1,4 @@
-export const stationMusicFile=file=>file+(/^syutoken41/.test(file)?'.ogg':'.mp3');
+export const stationMusicFile=file=>file+(/^(syutoken41|water_crown|gota_del_vient)/.test(file)?'.ogg':'.mp3');
 const music=(file,platform=null)=>({file:stationMusicFile(file),platform});
 const rows={};
 const pair=(names,up,down)=>{for(const name of names.split(' '))rows[name]={up:typeof up==='string'?music(up):up,down:typeof down==='string'?music(down):down};};
@@ -46,7 +46,16 @@ for(const [n,a,b]of [['神田','mondamin_a','mondamin_b'],['鶯谷','seseragi','
 yamanoteRows['大崎'].platforms={1:'ikst010-01',2:'ikst010-03',3:'ikst010-02',4:'ikst010-05'};yamanoteRows['池袋'].platforms={5:'bigcamera_a',6:'bigcamera_b',7:'bigcamera_c',8:'bigcamera_d'};
 export const YAMANOTE_BROADCAST_ROWS=yamanoteRows;
 function yamanoteCue(route,station){const row=yamanoteRows[station.name];if(!row)return null;const dir=route.reverseDirection?'inner':'outer',platform=Number(station.departurePlatform??station.platformNumber??station.platform),file=(row.platforms?.[platform]??row[dir])+'.mp3';return {file,station:station.name,direction:dir,embeddedAnnouncement:false,refs:[{entryIndex:'station-broadcast:yamanote:'+file,driverVoiceFile:'./assets/station-broadcast/east/yamanote/'+file,mixCategory:'se'},{entryIndex:'station-broadcast:sample',driverVoiceFile:'./assets/station-broadcast/east/voice/sample.mp3',mixCategory:'voice'}]};}
+export function omeOnboardFile(route,station){
+ if(!/^(chuo|ome)/.test(route?.id??''))return null;
+ const all=route.sceneryStations??route.stations??[],at=all.findIndex(st=>Math.abs(st.s-station.s)<1),rank=ome.indexOf(station.name);if(rank<ome.indexOf('青梅'))return null;
+ const next=all.slice(at+1).find(st=>ome.includes(st.name)),prev=all.slice(0,Math.max(0,at)).findLast(st=>ome.includes(st.name));let down=!route.reverseDirection;
+ if(next)down=ome.indexOf(next.name)>rank;else if(prev)down=rank>ome.indexOf(prev.name);
+ if(station.name==='青梅'&&!down)return null;
+ return stationMusicFile(down?'water_crown':'gota_del_vient');
+}
 export function stationDepartureCue(route,station){
+ const onboard=omeOnboardFile(route,station);if(onboard)return {file:onboard,station:station.name,onboard:true,suppressWhistle:true,embeddedAnnouncement:false,refs:[{entryIndex:'onboard-departure:'+onboard,driverVoiceFile:'./assets/station-broadcast/east/chuo/'+onboard,mixCategory:'se'}]};
  if(route?.id==='yamanote')return yamanoteCue(route,station);
  if(!/^(chuo|shinonoi|oito|tatsuno|suwa-nagano|ome|itsukaichi)/.test(route?.id??''))return null;
  const all=route.sceneryStations??route.stations??[],at=all.findIndex(st=>Math.abs(st.s-station.s)<1),adjacent=[all[at-1]?.name,all[at+1]?.name],isOito=route.id==='oito'||adjacent.some(n=>oito.includes(n)&&n!=='松本'),isItsukaichi=/itsukaichi/.test(route.id)||all.some(st=>itsukaichi.includes(st.name)&&st.name!=='拝島'),isOme=isItsukaichi||/ome/.test(route.id)||all.some(st=>ome.includes(st.name)&&!['立川','拝島'].includes(st.name)),order=isOito?oito:isItsukaichi&&itsukaichi.includes(station.name)?itsukaichi:isOme&&ome.includes(station.name)?ome:central,rank=order.indexOf(station.name);

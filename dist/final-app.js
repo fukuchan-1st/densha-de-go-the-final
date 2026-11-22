@@ -1,3 +1,4 @@
+import {omeOnboardFile} from './station-broadcast.js?v=109';
 import {wallet,SCENARIO_PRICE} from './scenario-wallet.js?v=107';
 import {TOHOKU_TRAIN,loadTohokuRoute} from './tohoku-integration.js?v=107';
 import {TohokuAudio} from './tohoku-audio.js?v=107';
@@ -164,7 +165,7 @@ async function closeSequence(generation){
   const departureKey=activeRun.startingDeparture&&r.stations[activeRun.startIndex].departureSound;
   if(departureKey){await sound.playRouteAnnouncement(r.stations[activeRun.startIndex].announcementRouteId??r.id,departureKey);if(!current())return;}
   await sound.playStationDeparture(r.stations[stationIndex],current);if(!current())return;
-  await effect('whistle');if(!current())return;
+  if(!omeOnboardFile(r,r.stations[stationIndex]))await effect('whistle');if(!current())return;
   activeRun.doorPhase='closing';const completed=await effect('close');
   if(!current()||!completed)return;
   if(!finishStop(activeRun,r,attempt.stationIndex)){activeRun.doorPhase='audio-error';toast('停車位置を確認できません。戸開状態を維持します。',10);return;}
