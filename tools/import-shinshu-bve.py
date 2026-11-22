@@ -149,7 +149,7 @@ class BveMap:
 
 class Profile:
     def __init__(self, commands, element, axis=None, key=None):
-        state, transition = 0, False
+        state, transition, last_interpolate = 0, False, 0
         self.knots = [(-1e9, 0, False)]
         for s, obj, name, method, args in sorted(commands, key=lambda c: c[0]):
             if obj == "legacy" and element in {"curve", "gradient"}:
@@ -175,14 +175,23 @@ class Profile:
             if method == "end":
                 value = 0
             else:
-                value = args[0] if args and args[0] is not None else state
-                if element == "curve":
-                    value = 1 / value if value else 0
+                if args and args[0] is not None:
+                    value = args[0]
+                    if element == "curve":
+                        value = 1 / value if value else 0
+                else:
+                    # State is already curvature (1/radius). Never invert it
+                    # again for Curve.Interpolate() without arguments.
+                    value = last_interpolate if method == "interpolate" else state
+            if method == "interpolate":
+                last_interpolate = value
             interpolate = method == "interpolate" or transition and method != "change"
             state = value
             self.knots.append((s, value, interpolate))
             transition = False
-        self.knots = list({s: (s, value, interpolate) for s, value, interpolate in self.knots}.values())
+        # Keep both sides of a same-distance change. The first knot is the
+        # incoming interpolation target; the last is the outgoing value.
+        # Collapsing them turns a short turnout into kilometres of curvature.
         self.distances = [knot[0] for knot in self.knots]
         self.sinusoidal = element == "curve"
 

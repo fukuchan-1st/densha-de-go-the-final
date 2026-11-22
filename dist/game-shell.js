@@ -5,7 +5,7 @@ import {mountBasinEditor} from './basin-editor.js?v=99';
 import {startTitleIntro} from './title-intro.js?v=72';
 import {audioMixMarkup,bindAudioMix} from './audio-mix.js?v=91';
 import {loadReplay} from './replay-store.js?v=101';
-import {MuseumViewer} from './museum.js?v=89';
+import {MuseumViewer} from './museum.js?v=104';
 export const MAIN_MENU=[
  ['drive','運転乗務','運転乗務は、電車の運転をするゲームです。乗務完了後には、自分の運転をリプレイメニューから見ることもできます。'],
  ['replay','リプレイ','リプレイは、過去に運転した乗務のリプレイを見ることができます。'],

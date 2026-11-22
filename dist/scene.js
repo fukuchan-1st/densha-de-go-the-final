@@ -1,3 +1,4 @@
+import {addMappedBuildings} from './mapped-buildings.js?v=104';
 import {stationBuildingClear} from './station-space.js?v=90';
 import {sceneryDensity} from './scenery-profile.js?v=99';
 import {RoadScenery} from './road-scenery.js?v=99';
@@ -5,10 +6,10 @@ import {BallastDetail} from './ballast-detail.js?v=88';
 import {LevelCrossings} from './crossings.js?v=88';
 import {createBuildingMaterial,buildingVariant,buildingPalette} from './terrain-materials.js?v=79';
 import {SceneAtmosphere} from './scene-atmosphere.js?v=102';
-import {PlayerTrain} from './player-train.js?v=96';
+import {PlayerTrain} from './player-train.js?v=104';
 import {prepareTurnoutLayout} from './turnout-layout.js?v=92';
 import {addTurnouts} from './turnout-scene.js?v=99';
-import {OpposingTrains} from './opposing-trains.js?v=89';
+import {OpposingTrains} from './opposing-trains.js?v=104';
 import {CabSuspension} from './cab-motion.js?v=23';
 import {interpolateKnots} from './track-layout.js?v=79';
 import {TrackLayout} from './track-layout.js?v=79';
@@ -21,8 +22,8 @@ import {structureRanges,segmentIntersects,corridorOccupied} from './structure-ra
 import {addVegetation,createSurfaceMaterial} from './vegetation.js?v=99';
 import {addTrackSignal} from './track-signal.js?v=32';
 export class RailWorld {
- constructor(container,geometry,stations,profile,structures,stationLayouts,signals=[],{quality='standard',drawDistance=1500,roads=[]}={}){
-  this.sceneryRoute={id:'tohoku',stations};this.quality=quality;this.drawDistance=drawDistance;this.routeRoads=roads;
+ constructor(container,geometry,stations,profile,structures,stationLayouts,signals=[],{quality='standard',drawDistance=1500,roads=[],mappedBuildings}={}){
+  this.sceneryRoute={id:'tohoku',stations,mappedBuildings};this.quality=quality;this.drawDistance=drawDistance;this.routeRoads=roads;
   this.suspension=new CabSuspension();
   const prepared=prepareTurnoutLayout(stationLayouts.tracks,{length:geometry.points.at(-1)[0],stations:stationLayouts.stations});this.turnouts=prepared.turnouts;this.trackLayout=new TrackLayout({...stationLayouts,tracks:prepared.tracks});
   this.structuresData=structures;this.ranges=structureRanges(structures);this.isStructureCorridor=(s,offset)=>corridorOccupied(structures,s,offset)||this.trackLayout.occupied(s,offset);
@@ -34,7 +35,7 @@ export class RailWorld {
   this.skyLight=new T.HemisphereLight('#e6f0ff','#57583b',1.4);this.scene.add(this.skyLight);const sun=new T.DirectionalLight('#fff0d7',2.2);sun.position.set(-400,600,200);this.scene.add(sun);this.sun=sun;
   this.traffic=new OpposingTrains(this);this.materials={}; this.box=new T.BoxGeometry(1,1,1); this.build();this.routeStructures=addStructures(this,structures);this.crossings=new LevelCrossings(this);for(const c of structures.structures??[])if(c.kind==='crossing')this.crossings.add(this.scene,c);
   for(const signal of signals)addTrackSignal(T,this,this.scene,signal);
-  this.atmosphere=new SceneAtmosphere(this);this.atmosphere.prepare(this.scene);this.ballastDetail=new BallastDetail(this);this.roadScenery=new RoadScenery(this);
+  this.atmosphere=new SceneAtmosphere(this);this.ballastDetail=new BallastDetail(this);this.roadScenery=new RoadScenery(this);addMappedBuildings(this,this.scene,-300,this.length+300);this.atmosphere.prepare(this.scene);
   addEventListener('resize',()=>{this.renderer.setSize(DISPLAY_WIDTH,DISPLAY_HEIGHT);this.camera.aspect=16/9;this.camera.updateProjectionMatrix();});
  }
  setQuality(quality){this.atmosphere.setQuality(quality);}
@@ -73,7 +74,7 @@ export class RailWorld {
   }
   for(const tunnel of this.ranges.tunnels)for(let s=tunnel.sStart;s<tunnel.sEnd;s+=8){const a=this.frame(s).p,b=this.frame(Math.min(s+8,tunnel.sEnd)).p;wire.push(a.x,a.y+4.45,a.z,b.x,b.y+4.45,b.z);}
   this.instances(this.box,'#8c9290',poles);this.instances(this.box,'#656b6a',arms);const wg=new T.BufferGeometry();wg.setAttribute('position',new T.Float32BufferAttribute(wire,3));this.scene.add(new T.LineSegments(wg,new T.LineBasicMaterial({color:'#414c51',transparent:true,opacity:.7})));
-  for(let s=-150;s<this.length+500;s+=55)for(const side of [-1,1]){const urban=sceneryDensity(this.sceneryRoute,s).building/100;if(rand()<urban){const offset=side*((urban>.6?16:35)+rand()*65);if(this.isStructureCorridor(s,offset)||!stationBuildingClear(this,s,offset,11,10))continue;const f=this.frame(s,offset),h=3+rand()*(3+urban*10);houses.push({x:f.p.x,y:f.p.y+h/2,z:f.p.z,w:6+rand()*4,h,d:7,r:f.angle});roofs.push({x:f.p.x,y:f.p.y+h+.25,z:f.p.z,w:8,h:.5,d:9,r:f.angle});}}
+  if(!this.sceneryRoute.mappedBuildings)for(let s=-150;s<this.length+500;s+=55)for(const side of [-1,1]){const urban=sceneryDensity(this.sceneryRoute,s).building/100;if(rand()<urban){const offset=side*((urban>.6?16:35)+rand()*65);if(this.isStructureCorridor(s,offset)||!stationBuildingClear(this,s,offset,11,10))continue;const f=this.frame(s,offset),h=3+rand()*(3+urban*10);houses.push({x:f.p.x,y:f.p.y+h/2,z:f.p.z,w:6+rand()*4,h,d:7,r:f.angle});roofs.push({x:f.p.x,y:f.p.y+h+.25,z:f.p.z,w:8,h:.5,d:9,r:f.angle});}}
   for(let variant=0;variant<30;variant++)this.instances(this.box,'facade:house:'+variant,houses.filter(a=>buildingVariant(a.x,a.z)===variant));this.instances(this.box,'#5c625d',roofs);
   addVegetation(this);
   for(let s=-100;s<this.length+400;s+=120)for(const side of [-1,1]){if(this.isStructureCorridor(s,side*65)||sceneryDensity(this.sceneryRoute,s).green<40)continue;const f=this.frame(s,side*65);fields.push({x:f.p.x,y:f.p.y-.04,z:f.p.z,w:85,h:.04,d:100,r:f.angle,pitch:Math.asin(f.dir.y)});}const fieldMat=createSurfaceMaterial('field');fieldMat.map.repeat.set(16,18);this.instances(this.box,'#b3b377',fields,fieldMat);

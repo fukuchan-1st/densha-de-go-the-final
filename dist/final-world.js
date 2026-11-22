@@ -1,3 +1,4 @@
+import {addMappedBuildings} from './mapped-buildings.js?v=104';
 import {tamaTown} from './tama-scenery.js?v=93';
 import {StationCharacters} from './station-characters.js?v=88';
 import {residentialAllowed} from './yamagata-mountain.js?v=99';
@@ -8,7 +9,7 @@ import {basinDensity,basinAnchors,basinTerrainAreas,basinTerrainAt} from './basi
 import {TohoLandmarks} from './toho-landmarks.js?v=99';
 import {isToho,villageAt,woodMaterial,addTohoHouses} from './toho-scenery.js?v=99';
 import {filmingChunkIndices} from './railfan-tunnel.js?v=81';
-import {chuoScenery,mountainArea} from './geographic-sections.js?v=97final';
+import {chuoScenery,mountainArea} from './geographic-sections.js?v=104';
 import {prepareUrbanViaduct} from './urban-viaduct.js?v=93';
 import {RoadScenery} from './road-scenery.js?v=99';
 import {BallastDetail} from './ballast-detail.js?v=88';
@@ -17,19 +18,19 @@ import {LevelCrossings} from './crossings.js?v=88';
 import {createTerrainMaterial,createBuildingMaterial,terrainKind,terrainShade,buildingVariant,buildingPalette} from './terrain-materials.js?v=79';
 import {SceneAtmosphere} from './scene-atmosphere.js?v=102';
 import {RealTrees,treeVariant} from './real-trees.js?v=87';
-import {PlayerTrain} from './player-train.js?v=96';
+import {PlayerTrain} from './player-train.js?v=104';
 import {prepareLeftTraffic} from './route-traffic.js?v=98';
 import {prepareCorridorScenery,corridorSceneryType} from './corridor-scenery.js?v=controls55';
 import {sampleRouteCurve} from './route-curve.js?v=39';
 import {prepareTurnoutLayout} from './turnout-layout.js?v=92';
 import {addTurnouts} from './turnout-scene.js?v=99';
-import {OpposingTrains} from './opposing-trains.js?v=89';
+import {OpposingTrains} from './opposing-trains.js?v=104';
 import * as T from './assets/vendor/three.module.js';
 import {CabSuspension} from './cab-motion.js?v=24';
 import {addTrackSignal} from './track-signal.js?v=32';
 import {addStoppingMarker} from './stop-scene.js?v=99';
 import {interpolateKnots} from './track-layout.js?v=79';
-import {addYaganHillsides,addYaganTunnel} from './yagan-scenery.js?v=99';
+import {addYaganHillsides,addYaganTunnel} from './yagan-scenery.js?v=104';
 const clamp=T.MathUtils.clamp;
 // Original streamed scenery. Track coordinates come from the route JSON; buildings and platforms are approximate.
 export class FinalWorld {
@@ -228,11 +229,11 @@ export class FinalWorld {
    }
   }
   this.instances(group,poles,'#9da5a2');this.instances(group,arms,'#737c7a');const wg=new T.BufferGeometry();wg.setAttribute('position',new T.Float32BufferAttribute(wires,3));group.add(new T.LineSegments(wg,new T.LineBasicMaterial({color:'#3d4d53'})));
-  const roofs=[];
+  const roofs=[];addMappedBuildings(this,group,start,end);
   if(isToho(this.route))addTohoHouses(this,group,start,end,trackEnvelope,random);
   for(let s=Math.ceil(start/26)*26;s<end;s+=26)for(const side of[-1,1]){
    const near=this.stationNear(s),kind=this.sceneryTypeAt(s),density=sceneryDensity(this.route,s),inBasin=!!basinTerrainAt(this.route,s);
-   if(!residentialAllowed(this.route,s,32)||density&&random()>density.building/100)continue;
+   if(this.route.mappedBuildings||!residentialAllowed(this.route,s,32)||density&&random()>density.building/100)continue;
    if(isToho(this.route))continue;
    if(this.structureAt(s,'tunnel')||(kind==='mountain'&&density.building<35&&(near.d>260||random()>.38)))continue;
    const tama=tamaTown(this.route,s),urban=tama?random()>tama.houseShare:(inBasin?density.building>=80&&near.d<600:kind==='city'),[min,max]=trackEnvelope(s),edge=side<0?min:max;
@@ -255,7 +256,7 @@ export class FinalWorld {
   }
   // Fill the city depth with blocks, while retaining the Tama house/green mix.
   const occupied=(s,x,w,d)=>buildings.some(b=>Math.abs(b.s-s)<(b.d+d)/2+2&&Math.abs(b.x-x)<(b.w+w)/2+2);
-  for(let s=Math.ceil(start/32)*32;s<end;s+=32){const density=sceneryDensity(this.route,s),tama=tamaTown(this.route,s),city=this.sceneryTypeAt(s)==='city';if(!residentialAllowed(this.route,s,32)||isToho(this.route)||this.structureAt(s,'tunnel')||(!city&&!tama&&density.building<70))continue;const [min,max]=trackEnvelope(s),rows=city?(this.quality==='light'?[110,155]:[105,145,190,240,300]):(this.quality==='light'?[70,110]:[55,80,110,145]);for(const side of [-1,1])for(const row of rows){const w=city?20+random()*10:6+random()*3,d=city?21+random()*7:7+random()*3,h=city?13+random()*45:3.5+random()*3,x=(side<0?min:max)+side*(row+(random()-.5)*8);if(occupied(s,x,w,d)||!this.roadScenery.buildingClear(s,x,w,d))continue;buildings.push({s,x,y:0,w,h,d});if(!city)roofs.push({s,x,y:h,w:w+.5,h:1,d:d+.5});}}
+  for(let s=Math.ceil(start/32)*32;s<end;s+=32){const density=sceneryDensity(this.route,s),tama=tamaTown(this.route,s),city=this.sceneryTypeAt(s)==='city';if(this.route.mappedBuildings||!residentialAllowed(this.route,s,32)||isToho(this.route)||this.structureAt(s,'tunnel')||(!city&&!tama&&density.building<70))continue;const [min,max]=trackEnvelope(s),rows=city?(this.quality==='light'?[110,155]:[105,145,190,240,300]):(this.quality==='light'?[70,110]:[55,80,110,145]);for(const side of [-1,1])for(const row of rows){const w=city?20+random()*10:6+random()*3,d=city?21+random()*7:7+random()*3,h=city?13+random()*45:3.5+random()*3,x=(side<0?min:max)+side*(row+(random()-.5)*8);if(occupied(s,x,w,d)||!this.roadScenery.buildingClear(s,x,w,d))continue;buildings.push({s,x,y:0,w,h,d});if(!city)roofs.push({s,x,y:h,w:w+.5,h:1,d:d+.5});}}
   addBasinFields(this,group,start,end,trackEnvelope,random);
   this.instances(group,roofs,'#616b71',this.route.id==='tokaido'?this.houseRoof:this.box);
   for(let variant=0;variant<30;variant++){this.instances(group,buildings.filter(a=>a.h>9&&buildingVariant(a.s,a.x)===variant),'facade:office:'+variant);this.instances(group,buildings.filter(a=>a.h<=9&&buildingVariant(a.s,a.x)===variant),'facade:house:'+variant);}this.instances(group,windows,'#405d68');this.trees.add(group,trees.map(a=>({...a,y:0,variant:treeVariant(random()),rotation:random()*Math.PI*2}))); 

@@ -5,7 +5,7 @@ import {setRailPose} from './rail-pose.js?v=80';
 import {RailfanCamera} from './railfan-camera.js?v=90';
 import {OuterCamera} from './outer-camera.js?v=73';
 import * as T from './assets/vendor/three.module.js';
-import {ImportedTrafficModels} from './opposing-models.js?v=97final';
+import {ImportedTrafficModels} from './opposing-models.js?v=104';
 const COLORS={'207':'#3879ba','681':'#215b9c',e127:'#5dad9e','223-1000':'#b5a176'};
 export class PlayerTrain{
  constructor(world,id,count=2){this.world=world;this.id=id;this.count=count;this.models=new ImportedTrafficModels();this.group=new T.Group();this.group.visible=false;world.scene.add(this.group);this.cars=[];this.own=[];this.cameraController=new OuterCamera(world,this.group,s=>this.frame(s));this.railfanController=new RailfanCamera(world,this.group,s=>this.frame(s));this.ready=this.load();}
