@@ -1,11 +1,11 @@
-import {StationLighting} from './station-lighting.js?v=111';
-import {TunnelExitLight} from './tunnel-exit-light.js?v=111';
-import {WeatherScene} from './weather-scene.js?v=111';
-import {weatherType} from './weather.js?v=111';
-import {TrainWindowEnvironment,updateTrainWindowLighting} from './train-window-reflections.js?v=111';
-import {tunnelAdaptation} from './tunnel-effects.js?v=111';
-import * as T from './assets/vendor/three.module.js?v=111';
-import {graphicsProfile,HighQualityRenderer} from './graphics-quality.js?v=111';
+import {StationLighting} from './station-lighting.js?v=112c';
+import {TunnelExitLight} from './tunnel-exit-light.js?v=112c';
+import {WeatherScene} from './weather-scene.js?v=112c';
+import {weatherType} from './weather.js?v=112c';
+import {TrainWindowEnvironment,updateTrainWindowLighting} from './train-window-reflections.js?v=112c';
+import {tunnelAdaptation} from './tunnel-effects.js?v=112c';
+import * as T from './assets/vendor/three.module.js?v=112c';
+import {graphicsProfile,HighQualityRenderer} from './graphics-quality.js?v=112c';
 export function lightingProfile(quality='standard',night=false){
  const simple=quality==='light';return {simple,shadows:!simple&&!night,clouds:!simple,sky:night?.25:simple?1.3:.82,sun:night?.06:simple?1.8:3.1,exposure:night?1.02:1.04};
 }

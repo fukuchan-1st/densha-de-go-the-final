@@ -1,4 +1,4 @@
-import {inflateSync,gunzipSync} from './assets/vendor/fflate.module.js?v=111';
+import {inflateSync,gunzipSync} from './assets/vendor/fflate.module.js?v=112c';
 
 export async function loadVehicleRecipes(){const r=await fetch(new URL('./assets/final/vehicle-recipes.json?v=97final',import.meta.url));if(!r.ok)throw Error('車両設定を読み込めません');return r.json();}
 
@@ -21,7 +21,7 @@ class BundledTrainPack {
 }
 
 export async function loadBundledTrainPacks(){
- const response=await fetch(new URL('./assets/final/vehicles/manifest.json?v=111',import.meta.url));
+ const response=await fetch(new URL('./assets/final/vehicles/manifest.json?v=112c',import.meta.url));
  if(!response.ok)throw Error('アプリ内の車両一覧を読み込めません');
  const {trains}=await response.json();
  return new Map(Object.entries(trains).map(([id,assets])=>[id,new BundledTrainPack(id,assets)]));
@@ -95,5 +95,5 @@ export function interpolateColumn(table,column,speed,defaultValue=0){
  }
  return points.at(-1)[1];
 }
-export {LocalCabPanel} from './final-panel.js?v=111';
-export {LocalTrainAudio} from './final-audio.js?v=111';
+export {LocalCabPanel} from './final-panel.js?v=112c';
+export {LocalTrainAudio} from './final-audio.js?v=112c';

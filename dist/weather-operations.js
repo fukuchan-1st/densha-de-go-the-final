@@ -1,4 +1,4 @@
-import {sceneryDensity} from './scenery-profile.js?v=111';
+import {sceneryDensity} from './scenery-profile.js?v=112c';
 export function snowCover(route,s,type){
  if(!['snow','heavySnow','settledSnow'].includes(type))return 0;
  const d=sceneryDensity(route,s),urban=Math.max(d.building/100,d.urban??0),forest=Math.max(d.forest??0,d.green/100*.65);

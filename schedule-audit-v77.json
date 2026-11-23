@@ -1,7 +1,7 @@
 {
-  "scenarios": 96,
-  "sections": 2211,
-  "partialStarts": 1328,
+  "scenarios": 110,
+  "sections": 2437,
+  "partialStarts": 1554,
   "failures": [],
   "summary": [
     {
@@ -282,7 +282,7 @@
       "partialStarts": 42,
       "sections": 42,
       "checkpoints": 84,
-      "adjusted": 40
+      "adjusted": 42
     },
     {
       "line": "chuo",
@@ -309,7 +309,7 @@
       "vehicle": "211",
       "service": "普通",
       "reverse": false,
-      "partialStarts": 17,
+      "partialStarts": 18,
       "sections": 18,
       "checkpoints": 36,
       "adjusted": 14
@@ -319,10 +319,10 @@
       "vehicle": "211",
       "service": "普通",
       "reverse": true,
-      "partialStarts": 17,
+      "partialStarts": 18,
       "sections": 18,
       "checkpoints": 36,
-      "adjusted": 0
+      "adjusted": 18
     },
     {
       "line": "chuo",
@@ -442,7 +442,7 @@
       "partialStarts": 10,
       "sections": 10,
       "checkpoints": 20,
-      "adjusted": 0
+      "adjusted": 5
     },
     {
       "line": "chuo",
@@ -452,7 +452,7 @@
       "partialStarts": 22,
       "sections": 22,
       "checkpoints": 44,
-      "adjusted": 0
+      "adjusted": 18
     },
     {
       "line": "chuo",
@@ -482,7 +482,7 @@
       "partialStarts": 21,
       "sections": 22,
       "checkpoints": 44,
-      "adjusted": 0
+      "adjusted": 18
     },
     {
       "line": "chuo",
@@ -492,7 +492,7 @@
       "partialStarts": 9,
       "sections": 9,
       "checkpoints": 18,
-      "adjusted": 0
+      "adjusted": 9
     },
     {
       "line": "chuo",
@@ -603,6 +603,26 @@
       "sections": 34,
       "checkpoints": 68,
       "adjusted": 6
+    },
+    {
+      "line": "chuo",
+      "vehicle": "e131",
+      "service": "普通",
+      "reverse": false,
+      "partialStarts": 42,
+      "sections": 42,
+      "checkpoints": 84,
+      "adjusted": 34
+    },
+    {
+      "line": "chuo",
+      "vehicle": "e131",
+      "service": "普通",
+      "reverse": true,
+      "partialStarts": 42,
+      "sections": 42,
+      "checkpoints": 84,
+      "adjusted": 42
     },
     {
       "line": "chuo",
@@ -802,6 +822,126 @@
       "partialStarts": 2,
       "sections": 16,
       "checkpoints": 32,
+      "adjusted": 0
+    },
+    {
+      "line": "yamagata",
+      "vehicle": "719-5000",
+      "service": "普通（赤岩廃止後）",
+      "reverse": false,
+      "partialStarts": 7,
+      "sections": 7,
+      "checkpoints": 14,
+      "adjusted": 4
+    },
+    {
+      "line": "yamagata",
+      "vehicle": "719-5000",
+      "service": "普通（赤岩廃止後）",
+      "reverse": true,
+      "partialStarts": 7,
+      "sections": 7,
+      "checkpoints": 14,
+      "adjusted": 5
+    },
+    {
+      "line": "yamagata",
+      "vehicle": "719-5000",
+      "service": "普通（赤岩廃止後）",
+      "reverse": false,
+      "partialStarts": 27,
+      "sections": 27,
+      "checkpoints": 54,
+      "adjusted": 15
+    },
+    {
+      "line": "yamagata",
+      "vehicle": "719-5000",
+      "service": "普通（赤岩廃止後）",
+      "reverse": true,
+      "partialStarts": 27,
+      "sections": 27,
+      "checkpoints": 54,
+      "adjusted": 15
+    },
+    {
+      "line": "yamagata",
+      "vehicle": "719-5000",
+      "service": "普通（赤岩廃止後）",
+      "reverse": false,
+      "partialStarts": 9,
+      "sections": 9,
+      "checkpoints": 18,
+      "adjusted": 0
+    },
+    {
+      "line": "yamagata",
+      "vehicle": "719-5000",
+      "service": "普通（赤岩廃止後）",
+      "reverse": true,
+      "partialStarts": 9,
+      "sections": 9,
+      "checkpoints": 18,
+      "adjusted": 0
+    },
+    {
+      "line": "yamagata",
+      "vehicle": "719-5000",
+      "service": "普通（赤岩廃止後）",
+      "reverse": false,
+      "partialStarts": 18,
+      "sections": 18,
+      "checkpoints": 36,
+      "adjusted": 15
+    },
+    {
+      "line": "yamagata",
+      "vehicle": "719-5000",
+      "service": "普通（赤岩廃止後）",
+      "reverse": true,
+      "partialStarts": 18,
+      "sections": 18,
+      "checkpoints": 36,
+      "adjusted": 6
+    },
+    {
+      "line": "yamagata",
+      "vehicle": "719-5000",
+      "service": "普通（赤岩停車・休止前）",
+      "reverse": false,
+      "partialStarts": 8,
+      "sections": 8,
+      "checkpoints": 16,
+      "adjusted": 5
+    },
+    {
+      "line": "yamagata",
+      "vehicle": "719-5000",
+      "service": "普通（赤岩停車・休止前）",
+      "reverse": true,
+      "partialStarts": 8,
+      "sections": 8,
+      "checkpoints": 16,
+      "adjusted": 6
+    },
+    {
+      "line": "yamagata",
+      "vehicle": "719-5000",
+      "service": "普通（赤岩通過・休止中）",
+      "reverse": false,
+      "partialStarts": 1,
+      "sections": 2,
+      "checkpoints": 4,
+      "adjusted": 1
+    },
+    {
+      "line": "yamagata",
+      "vehicle": "719-5000",
+      "service": "普通（赤岩通過・休止中）",
+      "reverse": true,
+      "partialStarts": 1,
+      "sections": 2,
+      "checkpoints": 4,
       "adjusted": 0
     },
     {

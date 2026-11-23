@@ -1,5 +1,5 @@
-import {loadMappedBuildings} from './mapped-buildings.js?v=111';
-import {loadStationWiring} from './station-wiring.js?v=111';
+import {loadMappedBuildings} from './mapped-buildings.js?v=112c';
+import {loadStationWiring} from './station-wiring.js?v=112c';
 // Keep the complete road corridors compact on disk and share each download.
 const pending=new Map();let parallelPending;
 async function parallelRails(id){

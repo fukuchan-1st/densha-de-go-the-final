@@ -1,13 +1,16 @@
-import {RailJointAudio} from './rail-joints.js?v=111';
-import * as T from './assets/vendor/three.module.js?v=111';
+import {RailJointAudio} from './rail-joints.js?v=112c';
+import * as T from './assets/vendor/three.module.js?v=112c';
 export function crossingCenter(c){return c.sOrigin??((c.sStart+c.sEnd)/2);}
 export function crossingActive(c,s,speed,length=40){const x=crossingCenter(c);return s>=x-Math.max(320,speed*20)&&s-length<=x+25;}
 export function crossingDoppler(s,speed,crossing,lateral=6){const delta=crossing-s,radial=speed*delta/Math.hypot(delta,lateral);return Math.max(.7,Math.min(1.3,(343+radial)/343));}
 export class LevelCrossings{
  constructor(world){this.world=world;this.items=[];this.materials=new Map();this.box=new T.BoxGeometry(1,1,1);this.pole=new T.CylinderGeometry(.075,.075,1,8);this.lamp=new T.SphereGeometry(.14,8,6);}
  mat(color){if(!this.materials.has(color))this.materials.set(color,new T.MeshStandardMaterial({color,roughness:.8}));return this.materials.get(color);}
- add(parent,c){const s=crossingCenter(c),world=this.world,frame=world.frame(s),group=new T.Group();group.position.copy(frame.p);if(!world.frameIncludesDeck)group.position.y+=world.deckHeight?.(s)??0;group.rotation.y=frame.angle;group.userData.crossing=true;const drive=world.driveOffset?.(s)??0;
-  const offsets=[drive,...(world.railTracks?.filter(t=>s>=t.knots[0][0]&&s<=t.knots.at(-1)[0]).map(t=>{const knots=t.knots;let i=1;while(i<knots.length-1&&knots[i][0]<s)i++;const a=knots[i-1],b=knots[i];return a[1]+(b[1]-a[1])*(s-a[0])/Math.max(.001,b[0]-a[0]);})??world.trackLayout?.activeAt(s).map(t=>t.x)??[drive+4.2])].filter(x=>Math.abs(x-drive)<28),left=Math.min(...offsets)-3.2,right=Math.max(...offsets)+3.2;
+ add(parent,c){const s=crossingCenter(c),world=this.world;
+  // Near 姨捨 the track follows the mapped OSM layout; wait for it, then sit on that main line.
+  if(world.obasute?.info&&!world.obasute.loaded&&Math.abs(s-world.obasute.info.s)<1040){world.obasute.ready.then(()=>{if(parent.parent&&!this.disposed)this.add(parent,c);});return null;}
+  const special=world.obasute?.mainFrame?.(s),frame=special??world.frame(s),group=new T.Group();group.position.copy(frame.p);if(!special&&!world.frameIncludesDeck)group.position.y+=world.deckHeight?.(s)??0;group.rotation.y=frame.angle;group.userData.crossing=true;const drive=special?0:world.driveOffset?.(s)??0;
+  const offsets=special?[0]:[drive,...(world.railTracks?.filter(t=>s>=t.knots[0][0]&&s<=t.knots.at(-1)[0]).map(t=>{const knots=t.knots;let i=1;while(i<knots.length-1&&knots[i][0]<s)i++;const a=knots[i-1],b=knots[i];return a[1]+(b[1]-a[1])*(s-a[0])/Math.max(.001,b[0]-a[0]);})??world.trackLayout?.activeAt(s).map(t=>t.x)??[drive+4.2])].filter(x=>Math.abs(x-drive)<28),left=Math.min(...offsets)-3.2,right=Math.max(...offsets)+3.2;
   const mesh=(w,h,d,x,y,z,color)=>{const m=new T.Mesh(this.box,this.mat(color));m.scale.set(w,h,d);m.position.set(x,y,z);m.userData.shadowCaster=h>.3;group.add(m);return m;};
   // Asphalt panels remain below the rail head, and the approaches extend away from the track.
   mesh(right-left+18,.12,5.5,(left+right)/2,.055,0,'#4a4d4a');for(const edge of [-2.6,2.6])mesh(right-left+17,.018,.1,(left+right)/2,.125,edge,'#e7dfb0');
@@ -25,7 +28,7 @@ export class LevelCrossings{
  }
  update(s,v,dt,length){this.items=this.items.filter(x=>x.group.parent===this.world.scene||x.group.parent?.parent===this.world.scene);for(const item of this.items){const active=crossingActive(item.c,s,v,length),target=active?0:1;if(item.angle===null)item.angle=target;else item.angle+=Math.max(-dt*.45,Math.min(dt*.45,target-item.angle));for(const arm of item.arms)arm.hinge.rotation.x=-arm.side*item.angle*Math.PI/2;for(const {light,phase}of item.lamps)light.material.emissiveIntensity=active&&Math.floor(performance.now()/430)%2===phase?3:0;}}
  release(parent){for(const item of this.items.filter(x=>x.group.parent===parent)){parent.remove(item.group);for(const {light}of item.lamps)light.material.dispose();}this.items=this.items.filter(x=>x.group.parent!==null);}
- dispose(){for(const item of this.items){item.group.parent?.remove(item.group);for(const {light}of item.lamps)light.material.dispose();}for(const m of this.materials.values())m.dispose();this.box.dispose();this.pole.dispose();this.lamp.dispose();this.items=[];}
+ dispose(){this.disposed=true;for(const item of this.items){item.group.parent?.remove(item.group);for(const {light}of item.lamps)light.material.dispose();}for(const m of this.materials.values())m.dispose();this.box.dispose();this.pole.dispose();this.lamp.dispose();this.items=[];}
 }
 export class CrossingAudio{
  constructor(sound){this.sound=sound;this.context=sound.context??sound.ctx;this.nodes=new Map();this.joints=new RailJointAudio(sound);this.ready=fetch(new URL('./assets/audio/crossing.mp3',import.meta.url)).then(r=>{if(!r.ok)throw Error('crossing audio unavailable');return r.arrayBuffer();}).then(b=>this.context.decodeAudioData(b)).then(b=>{this.buffer=b;}).catch(e=>{this.error=e;});this.ready=Promise.all([this.ready,this.joints.ready]);}

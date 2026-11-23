@@ -1,7 +1,7 @@
-import {fitStationMainRails} from './station-main-continuity.js?v=111';
-import {fitYamagataOpposing} from './yamagata-wiring.js?v=111';
-import {prepareTokyoStation} from './tokyo-station.js?v=111';
-import {interpolateKnots} from './track-layout.js?v=111';
+import {fitStationMainRails} from './station-main-continuity.js?v=112c';
+import {fitYamagataOpposing} from './yamagata-wiring.js?v=112c';
+import {prepareTokyoStation} from './tokyo-station.js?v=112c';
+import {interpolateKnots} from './track-layout.js?v=112c';
 const keyName=s=>s?.replaceAll('ヶ','ケ').replaceAll('ノ','ノ').replace('ヤナバ前','ヤナバスキー場前');
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 let pending;

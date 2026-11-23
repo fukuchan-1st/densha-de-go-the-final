@@ -1,12 +1,14 @@
-import {panoramaAtFront} from './train-formation.js?v=111';
-import {setRailPose} from './rail-pose.js?v=111';
-import {ImportedTrafficModels,opposingVehicle,opposingVehicles,opposingCarCount} from './opposing-models.js?v=111';
-import * as T from './assets/vendor/three.module.js?v=111';
-import {interpolateKnots} from './track-layout.js?v=111';
-import {smoothTrafficStep,crossoverHold} from './opposing-motion.js?v=111';
+import {panoramaAtFront} from './train-formation.js?v=112c';
+import {setRailPose} from './rail-pose.js?v=112c';
+import {ImportedTrafficModels,opposingVehicle,opposingVehicles,opposingCarCount} from './opposing-models.js?v=112c';
+import * as T from './assets/vendor/three.module.js?v=112c';
+import {interpolateKnots} from './track-layout.js?v=112c';
+import {smoothTrafficStep,crossoverHold} from './opposing-motion.js?v=112c';
 
 export function trafficInterval(type){return type==='city'?60:300;}
 export function adjacentTracks(world,s){
+ // The switchback is one running line; generic opposing traffic may not use its sidings.
+ if(world.obasute?.info&&Math.abs(s-world.obasute.info.s)<1200)return [];
  const tokyo=world.route?.tokyoLayout?.north&&(world.route.sceneryStations??world.route.stations??[]).find(st=>st.name==='東京');
  if((s<0&&!(tokyo&&s>=tokyo.s-245))||s>world.length)return [];
  const own=world.driveOffset?.(s)??0;

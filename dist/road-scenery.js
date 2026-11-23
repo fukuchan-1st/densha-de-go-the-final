@@ -1,8 +1,8 @@
-import {residentialAllowed} from './yamagata-mountain.js?v=111';
-import {tunnelPillarClear} from './tunnel-effects.js?v=111';
-import {stationBuildingClear} from './station-space.js?v=111';
-import {RoadSeparation,roadElevation} from './road-separation.js?v=111';
-import * as T from './assets/vendor/three.module.js?v=111';import {crossingActive,crossingCenter} from './crossings.js?v=111';
+import {residentialAllowed} from './yamagata-mountain.js?v=112c';
+import {tunnelPillarClear} from './tunnel-effects.js?v=112c';
+import {stationBuildingClear} from './station-space.js?v=112c';
+import {RoadSeparation,roadElevation} from './road-separation.js?v=112c';
+import * as T from './assets/vendor/three.module.js?v=112c';import {crossingActive,crossingCenter} from './crossings.js?v=112c';
 export function segmentHitsFootprint(a,b,width,depth){let lo=0,hi=1;for(const [index,half]of[[0,width/2],[1,depth/2]]){const d=b[index]-a[index];if(Math.abs(d)<1e-8){if(Math.abs(a[index])<half)continue;return false;}let x=(-half-a[index])/d,y=(half-a[index])/d;if(x>y)[x,y]=[y,x];lo=Math.max(lo,x);hi=Math.min(hi,y);if(lo>hi)return false;}return true;}
 export function roadHeightOffset(bridge,railDeck=0){return bridge&&railDeck<1.3?6:-.1;}
 export function roadPath(points){let length=0;const distances=[0];for(let i=1;i<points.length;i++){length+=Math.hypot(points[i][0]-points[i-1][0],points[i][1]-points[i-1][1]);distances.push(length);}return {points,distances,length};}
@@ -17,7 +17,7 @@ export class RoadScenery{
  }
  build(index){this.prepareProfiles(index);const group=new T.Group(),cars=[],start=index*240,end=start+240,world=this.world;
   // Use surveyed road polylines. A mapped level crossing also defines a short road approach.
-  const rows=(this.roadBuckets.get(index)??[]).map(r=>({...r,profile:this.profiles.get(r)}));for(const c of this.crossings){const s=crossingCenter(c);if(s<start||s>=end)continue;const a=world.frame(s,-65).p,b=world.frame(s,65).p;if(!rows.some(r=>Math.abs(r.s-s)<12))rows.push({s,points:[[a.x,-a.z],[b.x,-b.z]],width:5.5,crossing:c,source:'crossing approach'});}
+  const nearObasute=s=>!!world.obasute?.info&&Math.abs(s-world.obasute.info.s)<1100;const rows=(this.roadBuckets.get(index)??[]).filter(r=>!nearObasute(r.s)).map(r=>({...r,profile:this.profiles.get(r)}));for(const c of this.crossings){const s=crossingCenter(c);if(s<start||s>=end||nearObasute(s))continue;const special=world.obasute?.mainFrame?.(s),a=special?special.p.clone().addScaledVector(special.right,-65):world.frame(s,-65).p,b=special?special.p.clone().addScaledVector(special.right,65):world.frame(s,65).p;if(!rows.some(r=>Math.abs(r.s-s)<12))rows.push({s,points:[[a.x,-a.z],[b.x,-b.z]],width:5.5,crossing:c,source:'crossing approach'});}
   for(const row of rows){let path=roadPath(row.points);if(path.length<10)continue;const dense=[],at=[...path.distances];for(let d=0;d<path.length;d+=5)at.push(d);for(const d of [...new Set(at)].sort((a,b)=>a-b)){const p=sampleRoad(path,d);dense.push([p.x,p.z]);}row.points=dense;path=roadPath(dense);const profile=row.profile??this.separation.profile(row,path,this.crossings),ground=profile.base,positions=[],uv=[],indices=[];
    for(let i=1;i<row.points.length;i++){const a=row.points[i-1],b=row.points[i],len=Math.hypot(b[0]-a[0],b[1]-a[1]);if(len<.1)continue;const nx=-(b[1]-a[1])/len*(row.width??6)/2,nz=(b[0]-a[0])/len*(row.width??6)/2,k=positions.length/3;for(const [x,z]of[[a[0]+nx,a[1]+nz],[a[0]-nx,a[1]-nz],[b[0]+nx,b[1]+nz],[b[0]-nx,b[1]-nz]]){const along=Math.hypot(x-(a[0]+nx),z-(a[1]+nz))<Math.hypot(x-(b[0]+nx),z-(b[1]+nz))?path.distances[i-1]:path.distances[i];positions.push(x,roadElevation(profile,along),-z);uv.push(x/4,z/4);}indices.push(k,k+1,k+2,k+1,k+3,k+2);}
    const geo=new T.BufferGeometry();geo.setAttribute('position',new T.Float32BufferAttribute(positions,3));geo.setAttribute('uv',new T.Float32BufferAttribute(uv,2));geo.setIndex(indices);geo.computeVertexNormals();const road=new T.Mesh(geo,world.mat?.('#565b5b')??this.mat('#555858'));road.material.side=T.DoubleSide;group.add(road);

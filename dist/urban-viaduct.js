@@ -1,5 +1,5 @@
 const clamp01=v=>Math.max(0,Math.min(1,v));
-import {interpolateKnots} from './track-layout.js?v=111';
+import {interpolateKnots} from './track-layout.js?v=112c';
 const urbanChuo=new Set('東京 神田 御茶ノ水 四ツ谷 新宿 中野 高円寺 阿佐ケ谷 荻窪 西荻窪 吉祥寺 三鷹 武蔵境 東小金井 武蔵小金井 国分寺 西国分寺 国立 立川'.split(' '));
 export function urbanDeckHeight(route,s){const old=route.elevatedTrack?.length?interpolateKnots(route.elevatedTrack,s):0,stations=route.sceneryStations??route.stations??[];let height=old;
  if(['yamanote','osaka'].includes(route.id))height=Math.max(height,4.8);
