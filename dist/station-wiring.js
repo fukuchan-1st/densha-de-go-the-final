@@ -1,3 +1,4 @@
+import {fitStationMainRails} from './station-main-continuity.js?v=110';
 import {fitYamagataOpposing} from './yamagata-wiring.js?v=107';
 import {prepareTokyoStation} from './tokyo-station.js?v=107';
 import {interpolateKnots} from './track-layout.js?v=107';
@@ -38,7 +39,7 @@ function drawingRails(record){
 }
 export function applyStationWiring(route,source=route){
  if(!route.diagramWiring)return route;
- const stations=route.sceneryStations??route.stations,key=[route.id,route.length,!!route.reverseDirection,route.serviceTrack,stations[0]?.name,stations.at(-1)?.name,route.era??''].join(':');if(route.diagramLayoutKey===key)return route;
+ const stations=route.sceneryStations??route.stations,key=[route.id,route.length,!!route.reverseDirection,route.serviceTrack,stations[0]?.name,stations.at(-1)?.name,route.era??'',110].join(':');if(route.diagramLayoutKey===key)return route;
  let rails=(route.neighborTracks??[]).filter(t=>!t.diagramTrack),layouts={...route.stationLayouts},audit=[],doors=new Map();const drive=s=>route.drivingTrack?.length?interpolateKnots(route.drivingTrack,s):0;
  for(let si=0;si<stations.length;si++){
   const st=stations[si],family=wiringFamily(route,st),records=route.diagramWiring[family]??[],rec=records.find(r=>keyName(r.name)===keyName(st.name));if(!rec||!rec.platforms.length)continue;
@@ -56,7 +57,7 @@ export function applyStationWiring(route,source=route){
   const rawLo=Math.min(at(rec.column[0]),at(rec.column[1])),rawHi=Math.max(at(rec.column[0]),at(rec.column[1]));
   const lo=Math.max(rawLo,si?(stations[si-1].s+st.s)/2:-300),hi=Math.min(rawHi,si<stations.length-1?(st.s+stations[si+1].s)/2:(route.length??st.s)+300);if(hi-lo<20)continue;
   // Keep separate-level lines (Tokyo's lower platforms, for example).
-  rails=rails.flatMap(t=>family==='yamagata'&&t.trafficMain||Math.abs(t.height??0)>.4?t:cutRail(t,lo,hi));
+  rails=rails.flatMap(t=>t.trafficMain||Math.abs(t.height??0)>.4?t:cutRail(t,lo,hi));
   const local=rec.segments.map(([a,y,b,z])=>({a:at(a),b:at(b),y:(y-ownY)*lat*sign,z:(z-ownY)*lat*sign}));
   const generated=[];
   for(const seg of local){let {a,b,y,z}=seg;if(a>b)[a,b,y,z]=[b,a,z,y];const start=Math.max(a,lo),end=Math.min(b,hi);if(end-start<1)continue;const offset=s=>drive(s)+y+(z-y)*(s-a)/(b-a);const x0=offset(start),x1=offset(end);
@@ -74,6 +75,7 @@ export function applyStationWiring(route,source=route){
   for(const rail of generated){const k=rail.knots,mid=(k[0][0]+k.at(-1)[0])/2,x=interpolateKnots(k,mid)-drive(mid);rail.direction=family==='yamagata'?'scenery':oppositeX>2.8&&Math.abs(x-oppositeX)<.8?'opposing':'scenery';if(family==='yamagata'&&st.name==='福島'&&ownY+x/lat/sign<310)rail.height=6.8;}
   rails.push(...generated);
   const platforms=rec.platforms.map((p,i)=>{const a=clamp(at(p[0]),lo,hi)-st.s,b=clamp(at(p[2]),lo,hi)-st.s,l=drive(st.s)+(p[1]-ownY)*lat*sign,r=drive(st.s)+(p[3]-ownY)*lat*sign;return {boarding:p===selected,diagramPlatform:true,sourceDocument:rec.document,sourcePage:rec.page,height:family==='yamagata'&&st.name==='福島'&&p[1]<310?6.8:0,edges:[[Math.min(a,b),Math.min(l,r),Math.max(l,r)],[Math.max(a,b),Math.min(l,r),Math.max(l,r)]],roof:[Math.min(a,b)+8,Math.max(a,b)-8]};}).filter(p=>p.edges[1][0]-p.edges[0][0]>4);
+  if(family!=='yamagata')rails=fitStationMainRails(rails,drive,st.s,lo,hi,platforms.filter(p=>!p.height),candidates.map(y=>(y-ownY)*lat*sign));
   if(family==='yamagata'){const primaryCandidates=boardingCandidates.map(y=>(y-ownY)*lat*sign).filter(x=>x>2.8).sort((a,b)=>a-b);rails=fitYamagataOpposing(rails,drive,st.s,lo,hi,platforms.filter(p=>!p.height),primaryCandidates[0]??4.2);}
   if(st.name==='東京'&&route.id.startsWith('chuo'))platforms.push(...old.filter(p=>(p.height??0)<-.3));
   layouts[st.name]={...layouts[st.name],platforms,diagramSource:{document:rec.document,page:rec.page,family},diagramTopology:true};

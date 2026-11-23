@@ -10,7 +10,7 @@ import {TohoLandmarks} from './toho-landmarks.js?v=107';
 import {isToho,villageAt,woodMaterial,addTohoHouses} from './toho-scenery.js?v=107';
 import {filmingChunkIndices} from './railfan-tunnel.js?v=107';
 import {chuoScenery,mountainArea} from './geographic-sections.js?v=107';
-import {prepareUrbanViaduct} from './urban-viaduct.js?v=107';
+import {prepareUrbanViaduct,railDeckSpans} from './urban-viaduct.js?v=110';
 import {RoadScenery} from './road-scenery.js?v=107';
 import {BallastDetail} from './ballast-detail.js?v=107';
 import {whiteRailPost,tactileMaterial,safePlatformBounds,platformStripClear} from './platform-details.js?v=107';
@@ -179,7 +179,7 @@ export class FinalWorld {
    for(let a=start;a<end;a+=6){
     const depth=Math.min(6,end-a),s=a+depth/2,height=this.deckHeight(s);
     if(height<.25)continue;
-    const layers=new Map();for(const rail of tracks){if(s<rail.start||s>rail.end)continue;const delta=rail.heightKnots?.length?interpolateKnots(rail.heightKnots,s):(rail.height??0),key=Math.round(delta*10)/10,layer=layers.get(key)??[];layer.push(rail.offset(s));layers.set(key,layer);}for(const [delta,offsets]of layers){const min=Math.min(...offsets),max=Math.max(...offsets);this.cube(group,s,(min+max)/2,height+delta-.85,max-min+7,.85,depth+.08,'#92948b');}
+    const layers=new Map();for(const rail of tracks){if(s<rail.start||s>rail.end)continue;const delta=rail.heightKnots?.length?interpolateKnots(rail.heightKnots,s):(rail.height??0),key=Math.round(delta*10)/10,layer=layers.get(key)??[];layer.push(rail.offset(s));layers.set(key,layer);}for(const [delta,offsets]of layers){for(const [min,max]of railDeckSpans(offsets))this.cube(group,s,(min+max)/2,height+delta-.85,max-min+7,.85,depth+.08,'#92948b');}
    }
    for(let s=Math.ceil(start/28)*28;s<end;s+=28){
     const height=this.deckHeight(s);

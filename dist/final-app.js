@@ -1,3 +1,4 @@
+import {DriveIntro} from './drive-intro.js?v=110';
 import {omeOnboardFile} from './station-broadcast.js?v=109';
 import {wallet,SCENARIO_PRICE} from './scenario-wallet.js?v=107';
 import {TOHOKU_TRAIN,loadTohokuRoute} from './tohoku-integration.js?v=107';
@@ -10,7 +11,7 @@ import {WEATHER,weatherType,updateWeatherStatus} from './weather.js?v=107';
 import {gradeLabel} from './tunnel-effects.js?v=107';
 import {updateDoorVisual} from './train-doors.js?v=107';
 import {scheduledBoardingDelay} from './published-schedules.js?v=107';
-import {loadRoadAsset} from './road-assets.js?v=107';
+import {loadRoadAsset} from './road-assets.js?v=110';
 import {CrossingAudio} from './crossings.js?v=107';
 import {VIEW_LABELS,normalizedView,replayViewMode} from './view-modes.js?v=107';
 import {yaganPlanningSpec,yaganBoardingReady,yaganBoardingDelay} from './yagan-timetable.js?v=107';
@@ -34,7 +35,7 @@ import {routePlanningSpec,mountScoring,checkpointMarks,scoringStations,buildScor
 import {mountDrivingOverlay} from './driving-overlay.js?v=107';import {mountLookahead,changesFromSections,stationMarks} from './lookahead.js?v=107';
 import {serviceChoices,makeServiceRoute} from './train-selection.js?v=107';
 import {GeneratedCab,generatedCab} from './generated-cab.js?v=107';
-import {FinalWorld} from './final-world.js?v=107';
+import {FinalWorld} from './final-world.js?v=110';
 import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=107';
 import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=107';
 import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,routeLimitAt,stopPosition,finishStop,beginDoorClosing,isDoorClosing,takeDepartureCall} from './final-model.js?v=107';
@@ -55,6 +56,7 @@ const $=id=>document.getElementById(id),META=[
  {id:'yamagata',name:'奥羽本線（山形線）',english:'YAMAGATA LINE',vehicle:'719-5000',color:'#e9a34b',summary:'福島〜米沢 / 米沢〜新庄 · 各駅停車',train:'719系5000番台',short:'719',card:'../vehicle-photos/719-5000.webp'}
 ];
 const preferredRoute=new URLSearchParams(location.search).get('route');
+const driveIntro=new DriveIntro();
 let selected=Math.max(0,META.findIndex(meta=>meta.id===preferredRoute)),recipes,routes=[],world,panel,sound,run,mode='menu',paused=false,assist=false,panorama=false,viewMode=0,token=0,loading=false,toastText='',toastUntil=0,modalPaused=false;
 let chosenOption,routePages;
 let packs=new Map(),activeRoute,chosenVehicle=null,chosenRoute=null,chosenService='普通',trainSelectionOpen=false;
@@ -134,7 +136,7 @@ function setNotch(n){if(replaySession)return;if(mode!=='drive'||paused||run.fini
 $('brakeButton').onclick=()=>setNotch(run.notch-1);$('powerButton').onclick=()=>setNotch(run.notch+1);$('neutralButton').onclick=()=>setNotch(0);$('ebButton').onclick=()=>setNotch(controlsFor(recipe()).min);bindHornButton($('hornButton'),pressed=>sound?.setHorn(pressed&&!paused&&!run?.finished));
 function toggleExtras(show){$('extras').hidden=!show;$('moreButton').setAttribute('aria-expanded',String(show));}
 $('moreButton').onclick=()=>toggleExtras($('extras').hidden);$('closeExtras').onclick=()=>toggleExtras(false);
-function setViewMode(value,manual=false){viewMode=normalizedView(value);panorama=viewMode!==0;$('cab').hidden=panorama;$('viewButton').textContent='視点：'+VIEW_LABELS[viewMode];if(manual&&replaySession)replaySession.viewOverride=viewMode;}
+function setViewMode(value,manual=false){if(manual&&loading)return;viewMode=normalizedView(value);panorama=viewMode!==0;$('cab').hidden=panorama;$('viewButton').textContent='視点：'+VIEW_LABELS[viewMode];if(manual&&replaySession)replaySession.viewOverride=viewMode;}
 $('viewButton').onclick=()=>{setViewMode((viewMode+1)%4,true);toggleExtras(false);};
 function cycleReplayView(){if(!replaySession)return;const current=replaySession.viewOverride;replaySession.viewOverride=current===null?0:current===3?null:current+1;setViewMode(replayViewMode(run,replaySession.viewOverride));const button=document.querySelector('[data-replay-view]');if(button)button.textContent='視点：'+(replaySession.viewOverride===null?'記録視点':VIEW_LABELS[viewMode]);}
 
@@ -205,12 +207,13 @@ async function start(startIndex){
  const meta=META[selected];
  const scenario=selectedScenario();
  const freeStart=Number($('startStation').value);
- loading=true;
+ loading=true;paused=true;
  const controlsToLock=document.querySelectorAll('#menuControls button,#menuControls select,#routeCards button');
  controlsToLock.forEach(element=>element.disabled=true);
  $('startDrive').textContent='運転台と音を準備中…';
  let nextSound;
  try{
+  await driveIntro.begin();
   if(mode==='menu')playMenuSound('confirm');
   const trip=scenarioJourney(makeServiceRoute(selectedRoute(),recipe().id,chosenService,chosenOption),scenario);
   if(!trip)throw Error('運転できるシナリオ区間を確認できません');if(!scenario&&detailEndIndex!==null)trip.endIndex=detailEndIndex;
@@ -243,11 +246,10 @@ async function start(startIndex){
   if(r.id==='yagan')r.eyeOffset=Number(train.playableSpecs.viewpoint.x);
   world=new FinalWorld($('world'),r,{quality:settings.quality,drawDistance:settings.drawDistance});
   world.setCabView(panel.viewOrigin);world.setPlayerTrain(train.id,train.playableSpecs.carCount);
-  viewMode=0;panorama=false;
-  $('cab').hidden=false;
-  paused=false;
+  setViewMode(3);
+  paused=true;
   modalPaused=false;
-  setMode('drive');
+  setMode('drive');$('driveScreen').inert=true;$('driveControls').inert=true;
   const controls=controlsFor(train);
   $('notchStrip').innerHTML=controls.labels.map((label,i)=>`<button data-notch="${i-controls.neutral}" aria-label="ノッチ ${label}">${label}</button>`).join('');
   $('notchStrip').querySelectorAll('button').forEach(button=>button.onclick=()=>setNotch(Number(button.dataset.notch)));
@@ -256,11 +258,14 @@ async function start(startIndex){
   $('vehicleLimit').textContent=`車両上限 ${train.playableSpecs.maxSpeedKmh} km/h`;
   $('mapQuality').textContent=r.geometryQuality??(r.soundEvents?.length?'提供BVE路線データ':'地図を参考にした試作');
   $('mapAttribution').hidden=!!r.soundEvents?.length&&!r.osmSections;
-  $('viewButton').textContent='視点：運転台';
+  $('viewButton').textContent='視点：沿線撮影';
   $('audioRetry').hidden=true;
   $('hornButton').hidden=!sound.effectRef('hornPrimary');
   toast(`${r.stations[startIndex].name}で戸開中。合図音の後に自動で戸閉します。`,8);
   recorder=new DutyRecorder({lineId:meta.id,lineName:meta.name,trainId:train.id,trainName:train.name,from:r.stations[startIndex].name,to:r.stations[run.endIndex].name,route:structuredClone(r),train:structuredClone(train),timetable:structuredClone(run.scoreTimetable)});recorder.capture(run);
+  await world.playerTrain.ready;
+  await driveIntro.reveal(meta.english);
+  setViewMode(0);driveIntro.finish();paused=false;
   if(r.publishedSchedule){run.doorPhase='boarding';run.dwell=0;}else closeSequence(token);
  }catch(error){
   if(nextSound&&nextSound!==sound)await nextSound.dispose().catch(()=>{});
@@ -269,9 +274,10 @@ async function start(startIndex){
   showModal('<h2>運転を開始できませんでした</h2><p id="startError"></p>');
   $('startError').textContent=error.message;
  }finally{
+  driveIntro.finish();$('driveScreen').inert=false;$('driveControls').inert=false;
   loading=false;
   controlsToLock.forEach(element=>element.disabled=false);
-  $('startDrive').innerHTML='<span>▶</span> 運転をはじめる';
+  refreshScenarioAccess();
  }
 }
 $('startDrive').onclick=()=>start();$('retryButton').onclick=()=>{const index=Math.max(run.startIndex,run.next-1);toggleExtras(false);start(index);};
@@ -315,7 +321,7 @@ function advance(dt){
 bindRouteKeys(document,{active:()=>!shellActive&&!!recipes&&mode==='menu'&&!trainSelectionOpen&&!$('modal').open&&!loading,choose,current:()=>selected,focusRoute:()=>document.querySelector('#routeCards [data-route="'+selected+'"]').focus({preventScroll:true}),open:openTrainSelection});
 bindScreenKeys(document,{root:()=>trainDetails?.root,active:()=>trainSelectionOpen&&$('trainSelection').dataset.view==='details'&&!$('modal').open&&!loading,onBack:showTrainList,onSound:playMenuSound});
 bindScreenKeys(document,{root:()=>$('modal'),active:()=>$('modal').open,onBack:closeModal,onSound:playMenuSound});
-document.addEventListener('keydown',e=>{if(shellActive)return;if(replaySession){if(e.code==='KeyV'){e.preventDefault();cycleReplayView();}if(e.code==='Escape'){e.preventDefault();$('pauseButton').click();}return;}if(mode==='menu'&&!trainSelectionOpen&&e.code==='Escape'){e.preventDefault();gameShell.showMain();return;}if((e.target.matches('input,select,textarea')&&e.target.id!=='notchSlider')||$('modal').open)return;if(mode==='menu'){if(trainSelectionOpen&&['ArrowUp','ArrowDown'].includes(e.code))return;if(e.code==='Escape'&&trainSelectionOpen){e.preventDefault();closeTrainSelection();return;}if(e.code==='ArrowUp'||e.code==='ArrowDown'){e.preventDefault();if(recipes)choose(selected+(e.code==='ArrowDown'?1:-1));}else if(e.code==='Enter'){if(e.target.closest('button,a')&&!e.target.closest('.route-card'))return;e.preventDefault();if(trainSelectionOpen){if($('trainSelection').dataset.view==='details')start();else showTrainDetails();}else openTrainSelection();}return;}if(e.code==='KeyV'){e.preventDefault();$('viewButton').click();return;}if(e.code==='Escape'){e.preventDefault();$('pauseButton').click();return;}if(e.code==='Enter'){e.preventDefault();if(!paused&&!e.repeat&&!run.finished)sound.setHorn(true);return;}if(paused||e.repeat)return;if(['KeyW','ArrowUp','KeyS','ArrowDown','ArrowLeft','Space'].includes(e.code))e.preventDefault();if(['KeyW','ArrowUp'].includes(e.code))setNotch(run.notch-1);else if(['KeyS','ArrowDown'].includes(e.code))setNotch(run.notch+1);else if(e.code==='ArrowLeft')setNotch(0);else if(e.code==='Space')setNotch(controlsFor(recipe()).min);else if(e.code==='KeyJ')effect('hornSecondary').catch(()=>{});});
+document.addEventListener('keydown',e=>{if(shellActive||loading)return;if(replaySession){if(e.code==='KeyV'){e.preventDefault();cycleReplayView();}if(e.code==='Escape'){e.preventDefault();$('pauseButton').click();}return;}if(mode==='menu'&&!trainSelectionOpen&&e.code==='Escape'){e.preventDefault();gameShell.showMain();return;}if((e.target.matches('input,select,textarea')&&e.target.id!=='notchSlider')||$('modal').open)return;if(mode==='menu'){if(trainSelectionOpen&&['ArrowUp','ArrowDown'].includes(e.code))return;if(e.code==='Escape'&&trainSelectionOpen){e.preventDefault();closeTrainSelection();return;}if(e.code==='ArrowUp'||e.code==='ArrowDown'){e.preventDefault();if(recipes)choose(selected+(e.code==='ArrowDown'?1:-1));}else if(e.code==='Enter'){if(e.target.closest('button,a')&&!e.target.closest('.route-card'))return;e.preventDefault();if(trainSelectionOpen){if($('trainSelection').dataset.view==='details')start();else showTrainDetails();}else openTrainSelection();}return;}if(e.code==='KeyV'){e.preventDefault();$('viewButton').click();return;}if(e.code==='Escape'){e.preventDefault();$('pauseButton').click();return;}if(e.code==='Enter'){e.preventDefault();if(!paused&&!e.repeat&&!run.finished)sound.setHorn(true);return;}if(paused||e.repeat)return;if(['KeyW','ArrowUp','KeyS','ArrowDown','ArrowLeft','Space'].includes(e.code))e.preventDefault();if(['KeyW','ArrowUp'].includes(e.code))setNotch(run.notch-1);else if(['KeyS','ArrowDown'].includes(e.code))setNotch(run.notch+1);else if(e.code==='ArrowLeft')setNotch(0);else if(e.code==='Space')setNotch(controlsFor(recipe()).min);else if(e.code==='KeyJ')effect('hornSecondary').catch(()=>{});});
 document.addEventListener('keyup',e=>{if(e.code==='Enter'&&mode==='drive'&&!replaySession)sound?.setHorn(false);});
 window.addEventListener('blur',()=>sound?.setHorn(false));
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&mode==='drive'&&!paused&&!run.finished)$('pauseButton').click();});

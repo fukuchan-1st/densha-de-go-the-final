@@ -1,4 +1,4 @@
-import {applyStationWiring} from './station-wiring.js?v=107';
+import {applyStationWiring} from './station-wiring.js?v=110';
 import {prepareSpecialStations} from './special-station-layouts.js?v=107';
 import {widenBoardingClearance,mergePlatformSurfaces} from './platform-details.js?v=107';
 import {yamanoteParallel} from './yamanote-parallel.js?v=107';

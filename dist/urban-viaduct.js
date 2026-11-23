@@ -11,3 +11,6 @@ export function urbanDeckHeight(route,s){const old=route.elevatedTrack?.length?i
  return height;
 }
 export function prepareUrbanViaduct(route){if(route.urbanViaductVersion===3)return route;if(!['yamanote','osaka'].includes(route.id)&&!route.id?.startsWith('chuo'))return route;const end=route.length??route.stations.at(-1).s,knots=[];for(let s=-300;s<=end+320;s+=20)knots.push([s,urbanDeckHeight(route,s)]);return {...route,elevatedTrack:knots,urbanViaductVersion:3};}
+
+// Separate unrelated elevated corridors instead of filling the entire gap between them.
+export function railDeckSpans(offsets){const groups=[];for(const x of [...offsets].sort((a,b)=>a-b)){const last=groups.at(-1);if(last&&x-last[1]<=8.5)last[1]=x;else groups.push([x,x]);}return groups;}
