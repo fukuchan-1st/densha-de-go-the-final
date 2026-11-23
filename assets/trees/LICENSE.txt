@@ -1,0 +1,5 @@
+Searsia Lucida — Poly Haven
+Source: https://polyhaven.com/a/searsia_lucida
+License: CC0 1.0 — https://creativecommons.org/publicdomain/zero/1.0/
+Five original tree meshes adapted with whole-card foliage LODs, simplified trunks resized textures and bark-mapped trunk extensions.
+Powered by Poly Haven. Assets are bundled locally; no runtime API calls.

@@ -1,0 +1,22 @@
+/* Phone controls use viewport pixels, independently of the scaled cab. */
+#rotatePrompt[hidden],#phoneMascon[hidden]{display:none!important}
+#rotatePrompt{position:fixed;inset:0;z-index:10000;background:radial-gradient(ellipse at center,#183d46,#050d17);display:flex;align-items:center;justify-content:center;flex-direction:column;padding:32px;text-align:center;color:#fff3b0;font:16px/1.7 Arial,'Yu Gothic',sans-serif}
+#rotatePrompt h1{font-size:24px;margin:20px 0 8px}#rotatePrompt p{max-width:300px;color:#d3e6e9}.rotate-phone{border:3px solid #ffe24b;border-radius:12px;width:92px;height:50px;font-size:40px;line-height:42px}
+body.rotate-needed #stageArea,body.rotate-needed #simulator,body.rotate-needed #menuControls,body.rotate-needed #mobileMenuPanel{visibility:hidden}
+body.phone-game:not(.rotate-needed) #menuControls{display:none!important}
+body.phone-game[data-mode=menu] #stageArea,body.phone-game[data-mode=selection] #stageArea{inset:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)!important;width:auto!important;height:auto!important;margin:0!important}
+body.phone-game[data-mode=drive] #stageArea{right:calc(var(--phone-rail) + env(safe-area-inset-right))!important}
+#phoneMascon{position:fixed;z-index:80;top:env(safe-area-inset-top);bottom:env(safe-area-inset-bottom);right:env(safe-area-inset-right);width:76px;background:#06121b;color:#fff;--overlay-ui-scale:1;--neutral-position:64.3%}
+#phoneMascon .overlay-controller{position:absolute;inset:6px 3px;bottom:6px;width:auto;pointer-events:auto;font-family:Arial,'Yu Gothic',sans-serif}
+#phoneMascon .overlay-guidance{display:none}
+#phoneMascon .overlay-slider-panel{height:100%;padding:4px 0;border:0;border-radius:0;background:none;box-shadow:none}
+#phoneMascon .overlay-slider-heading{height:25px;font-size:11px;justify-content:center;gap:5px;color:#ffe970}
+#phoneMascon .overlay-slider-heading output{display:inline;font-size:16px;min-width:23px}#phoneMascon .overlay-slider-heading>span{display:none}
+#phoneMascon .overlay-slider-body{position:absolute;top:40px;bottom:15px;left:0;right:0;width:auto;height:auto}
+#phoneMascon #notchSlider{left:25px;top:0;transform:none;writing-mode:vertical-lr;direction:ltr;appearance:none;-webkit-appearance:none;width:44px;height:100%;margin:0;padding:0;cursor:ns-resize;touch-action:none;background:transparent}
+#phoneMascon #notchSlider::-webkit-slider-runnable-track{width:7px;height:100%;background:linear-gradient(#db4b44,#c3b27b var(--neutral-position),#48a9e1 var(--neutral-position),#48a9e1);border:1px solid #c8dcdd;border-radius:0}
+#phoneMascon #notchSlider::-webkit-slider-thumb{width:38px;height:18px;margin:0 0 0 -16px;border:1px solid white;border-radius:3px;background:linear-gradient(#f6f6f6,#626c7c);box-shadow:0 1px 4px #000}
+#phoneMascon #notchSlider::-moz-range-track{width:7px;height:100%;background:#779ca3}#phoneMascon #notchSlider::-moz-range-thumb{width:38px;height:18px;border-radius:3px;background:#c8d4df}
+#phoneMascon .overlay-notch-labels{left:1px;right:auto;top:9px;bottom:9px;font-size:9px;width:20px;line-height:1;color:#dce7ee}
+#phoneMascon .overlay-notch-labels span{visibility:visible!important;text-align:left;line-height:0}
+#phoneMascon .overlay-slider-heading{letter-spacing:0;white-space:nowrap}#phoneMascon .overlay-slider-heading label{font-size:10px}

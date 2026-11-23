@@ -1,0 +1,2 @@
+export function fadeCabLight(current,target,dt){target=Math.max(0,Math.min(1,Number(target)));if(!Number.isFinite(current))return target;const step=Math.max(0,Math.min(.1,Number(dt)||0)),seconds=target>current?.4:.8;return current+(target-current)*(1-Math.exp(-step/seconds));}
+export function mixCabColor(a,b,t){const rgb=x=>[1,3,5].map(i=>parseInt(x.slice(i,i+2),16));const x=rgb(a),y=rgb(b);return '#'+x.map((v,i)=>Math.round(v+(y[i]-v)*t).toString(16).padStart(2,'0')).join('');}

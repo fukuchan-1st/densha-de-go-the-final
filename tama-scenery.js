@@ -1,0 +1,1 @@
+export function tamaTown(route,s){if(!route.id?.startsWith('chuo'))return null;const st=(route.sceneryStations??route.stations??[]).find(st=>st.name==='八王子');if(!st)return null;const distance=Math.abs(s-st.s),weight=Math.max(0,Math.min(1,(2800-distance)/900));return weight?{distance,weight,green:55+20*Math.min(1,distance/1800),houseShare:distance<220?.6:.9}:null;}

@@ -1,0 +1,512 @@
+Version 1.0
+
+[This]
+Resolution       = 2700;3300
+Left             = 100
+Top              = 90 
+Right            = 3400
+Bottom           = 2430
+DaytimeImage = N19\70119_D1.png
+NighttimeImage = N19\70119_N1.png
+Center           = 1800,  1000
+Origin           = 1805, 850
+
+[Pilotlamp]
+Subject          = true
+Location         = 2048, 0
+DaytimeImage     = N19\70119_D2.png
+NighttimeImage   = N19\70119_N2.png
+Layer            = 0
+
+[Pilotlamp]
+Subject          = true
+Location         = 0, 2048
+DaytimeImage     = N19\70119_D3.png
+NighttimeImage   = N19\70119_N3.png
+Layer            = 0
+
+[Pilotlamp]
+Subject          = true
+Location         = 2048, 2048
+DaytimeImage     = N19\70119_D4.png
+NighttimeImage   = N19\70119_N4.png
+Layer            = 0
+
+;[Pilotlamp]
+;Subject          = true
+;;Location         = 0, 0
+;DaytimeImage     = common\yogore_L.png
+;Layer            = -4
+
+;[Pilotlamp]
+;Subject          = true
+;Location         = 2048, 0
+;DaytimeImage     = common\yogore_R.png
+;Layer            = -4
+
+;戸閉め灯
+[Pilotlamp]
+Subject          = door
+Location         = 1823, 1510
+DaytimeImage     = common\prlump0.png
+NighttimeImage   = common\prlump0N.png
+Layer            = 1
+
+[Pilotlamp]
+Subject          = door
+Location         = 1808, 1662
+DaytimeImage     = N19\pilot_19D.png
+NighttimeImage     = N19\pilot_19N.png
+Layer            = 1
+
+;スピードメータ
+[PilotLamp]
+Subject = true
+Location = 1618, 1637
+DaytimeImage = common\spt.png
+NighttimeImage = common\sptN.png
+TransparentColor = #0000FF
+Layer = 1
+[Needle]
+Subject          = ats50;kmph
+Location         =1660, 1682
+DaytimeImage     = common\s_.png
+NighttimeImage   =common\s_n.png
+Origin           = 16, 220
+Layer            = 0
+Radius           = 98
+InitialAngle     = -118
+LastAngle        = 115
+Minimum          = 1000
+Maximum          = 120000
+NaturalFreq      = 5.7
+DampingRatio     = 0.5
+
+;圧力計
+
+[Needle]
+Subject          = bc
+Location         = 2115, 1682
+DaytimeImage     = common\b_kn.png
+NighttimeImage   = common\b_kn_N.png
+Origin           = 32, 173
+Layer            = 2
+Radius           = 92
+InitialAngle     = -131
+LastAngle        = 134
+Minimum          = 10
+Maximum          = 1000
+NaturalFreq      = 90
+DampingRatio     = 0.05
+[Needle]
+Subject          = mr
+Location         = 2115, 1682
+DaytimeImage     = common\b_kn2.png
+NighttimeImage   = common\b_kn2_N.png
+Origin           = 32, 173
+Layer            = 1
+Radius           = 92 
+InitialAngle     = -128
+LastAngle        = 135
+Minimum          = 10
+Maximum          = 1000
+NaturalFreq      = 0
+
+
+;EB表示灯
+[Pilotlamp]
+Subject          = ats10
+Location         = 1968,1373
+DaytimeImage     = common\EB.png
+NighttimeImage   = common\EB_N.png
+Layer            = 1
+
+
+;ATS電源表示灯
+[Pilotlamp]
+Subject          = ats0
+Location         = 1740,1375
+DaytimeImage     = common\ATSDN.png
+NighttimeImage   = common\ATSDN_N.png
+Layer            = 1
+;ATS動作表示灯
+[Pilotlamp]
+Subject          =ats1
+Location         = 1797,1374
+DaytimeImage     = common\ATSD.png
+NighttimeImage   = common\ATSD_N.png
+Layer            = 1
+
+;【ブレーキ表示灯】
+[DigitalNumber]
+Subject          = brake
+Location         = 2276,1497
+DaytimeImage     = common\b_st.png
+NighttimeImage   = common\b_stN.png
+Layer            = 1
+Interval         = 256
+
+
+
+;車両状態パネル
+;戸閉
+[Pilotlamp]
+Subject          = door
+Location         = 1340, 1467
+DaytimeImage     = common\dooro.png
+;NighttimeImage   = common\dooro.png
+Layer            = 1
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;【ユニット灯】※2両以上の場合は、ユニット2のコメントアウトを外すこと。3連ではユニット3は原則使用しない。
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;ユニット1
+
+[Pilotlamp]
+Subject          = ats41
+Location         = 1216, 1775
+DaytimeImage     = common\unit1.png
+NighttimeImage   = common\unit1_N.png
+Layer            = 1
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;ユニット2
+
+;[Pilotlamp]
+;Subject          = ats42
+;Location         = 1269, 1775
+;DaytimeImage     = common\unit2.png
+;NighttimeImage   = common\unit2_N.png
+;Layer            = 1
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;ユニット3
+
+;[Pilotlamp]
+;Subject          = ats43
+;Location         = 1319, 1775
+;DaytimeImage     = common\unit3.png
+;NighttimeImage   = common\unit3_N.png
+;Layer            = 1
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;【両数変更】※無選択は2両編成です。
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;4両編成(< Mc|Tc><Mc|Tc>)
+
+;[Pilotlamp]
+;Subject          = true
+;Location         = 1203, 1441
+;DaytimeImage     = common\2M2T.png
+;NighttimeImage   = common\2M2T.png
+;Layer            = 1
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;5両編成(< Mc|Tc><Mc|T|Tc>)
+
+;[Pilotlamp]
+;Subject          = true
+;Location         = 1203, 1441
+;DaytimeImage     = common\2M3T_(3R+2R).png
+;NighttimeImage   = common\2M3T_(3R+2R)_N.png
+;Layer            = 1
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;6両編成(<Mc|Tc><Mc|Tc><Mc|Tc>)
+
+;[Pilotlamp]
+;Subject          = true
+;Location         = 1203, 1441
+;DaytimeImage     = common\2M4T.png
+;NighttimeImage   = common\2M4T_N.png
+;Layer            = 1
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;【ドア開閉状態表示灯】※両数に応じてコメントアウトを外す
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;一号車
+
+[Pilotlamp]
+Subject          = doorl0
+Location         = 1256, 1462
+DaytimeImage     = common\doort.png
+Layer            = 2
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+[Pilotlamp]
+Subject          = doorr0
+Location         = 1292, 1462
+DaytimeImage     = common\doortr.png
+Layer            = 2
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;2号車
+
+[Pilotlamp]
+Subject          = doorl1
+Location         = 1254, 1492
+DaytimeImage     = common\doort.png
+Layer            = 3
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+[Pilotlamp]
+Subject          = doorr1
+Location         = 1289, 1492
+DaytimeImage     = common\doortr.png
+Layer            = 3
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;3号車
+;[Pilotlamp]
+;Subject          = doorl3
+;Location         = 1252, 1520
+;DaytimeImage     = common\doort.png
+;Layer            = 4
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;[Pilotlamp]
+;Subject          = doorr3
+;Location         = 1287, 1521
+;DaytimeImage     = common\doortr.png
+;Layer            = 4
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;4号車
+
+;[Pilotlamp]
+;Subject          = doorl4
+;Location         = 1250, 1548
+;DaytimeImage     = common\doort.png
+;Layer            = 5
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;[Pilotlamp]
+;Subject          = doorr4
+;Location         = 1285, 1549
+;DaytimeImage     = common\doortr.png
+;Layer            = 5
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;5号車
+
+;[Pilotlamp]
+;Subject          = doorl5
+;Location         = 1248, 1576
+;DaytimeImage     = common\doort.png
+;Layer            = 6
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;[Pilotlamp]
+;Subject          = doorr5
+;Location         = 1283, 1577
+;DaytimeImage     = common\doortr.png
+;Layer            = 6
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;6号車
+
+;[Pilotlamp]
+;Subject          = doorl6
+;Location         = 1246, 1604
+;DaytimeImage     = common\doort.png
+;Layer            = 7
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;[Pilotlamp]
+;Subject          = doorr6
+;Location         = 1281, 1605
+;DaytimeImage     = common\doortr.png
+;Layer            = 7
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;前灯SW
+[Pilotlamp]
+Subject          = ats100
+Location         = 1758,2188
+DaytimeImage     = common\light_on.png
+NighttimeImage   = common\light_on_N.png
+Layer            = 1
+
+[Pilotlamp]
+Subject          = ats101
+Location         = 1758,2188
+DaytimeImage     = common\light_on.png
+NighttimeImage   = common\light_on_N.png
+Layer            = 1
+
+;前灯減光SW
+[Pilotlamp]
+Subject          = ats101
+Location         = 2001,2187
+DaytimeImage     = common\light_high.png
+NighttimeImage   = common\light_high_N.png
+Layer            = 1
+
+;ヘッドライト・ロービーム
+[Pilotlamp]
+Subject          = ats100
+Location         =650,0
+DaytimeImage     = common\light_low.png
+
+Layer            = -1
+
+
+;ヘッドライト・ハイビーム
+
+[Pilotlamp]
+Subject          = ats101
+Location         =650,0
+DaytimeImage     = common\light_highbeem.png
+
+Layer            = -1
+
+[Pilotlamp]
+Subject          = true
+Location         = 700,2115
+DaytimeImage     = common\shockmeter.png
+NighttimeImage   = common\shockmeter_N.png
+Layer            = 1
+
+[Pilotlamp]
+Subject          = true
+Location         = 996,2267
+DaytimeImage     = common\shpt.png
+NighttimeImage   = common\shptN.png
+Layer            = 3
+[Needle]
+Subject          = ats125
+Location         = 1028,2300
+DaytimeImage     = common\shock_s2.png
+Origin           = 8, 131
+Layer            = 2
+Radius           = 96 
+InitialAngle     = 30
+LastAngle        = 250
+Minimum          = 120
+Maximum          = 1000
+NaturalFreq      = 5.7
+DampingRatio     = 0.5
+
+;Ps
+
+[DigitalNumber]
+Subject = ats18
+Location = 2196,1096
+DaytimeImage = common\Ps_meter.png
+Layer = 1
+Interval = 16
+
+[DigitalNumber]
+Subject = ats19
+Location = 2196,1096
+DaytimeImage = common\Ps_ptmeter.png
+Layer = 1
+Interval = 16
+
+
+[Pilotlamp]
+Subject          = ats13
+Location         = 2190,1143
+DaytimeImage     = common\Pt_hassei2.png
+NighttimeImage   = common\Pt_hassei_N.png
+Layer            = 1
+
+[Pilotlamp]
+Subject          = ats14
+Location         = 2255,1142
+DaytimeImage     = common\pt_sekkin2.png
+NighttimeImage   = common\pt_sekkin_N.png
+Layer            = 2
+
+
+[Pilotlamp]
+Subject          = ats15
+Location         = 2324,1142
+DaytimeImage     = common\br_dousa2.png
+NighttimeImage   = common\br_dousa.png
+Layer            = 3
+
+;;ブラインド
+
+[Pilotlamp]
+Subject          = ats103
+Location         = 1170,0
+DaytimeImage     = N19\blind_10.png
+NighttimeImage   = N19\blind_10N.png
+Layer            = -1
+
+[Pilotlamp]
+Subject          = ats104
+Location         = 1170,0
+DaytimeImage     = N19\blind_9.png
+NighttimeImage   = N19\blind_9N.png
+Layer            = -1
+
+[Pilotlamp]
+Subject          = ats105
+Location         = 1170,0
+DaytimeImage     = N19\blind_8.png
+NighttimeImage   = N19\blind_8N.png
+Layer            = -1
+
+[Pilotlamp]
+Subject          = ats106
+Location         = 1170,0
+DaytimeImage     = N19\blind_7.png
+NighttimeImage   = N19\blind_7N.png
+Layer            = -1
+
+[Pilotlamp]
+Subject          = ats107
+Location         = 1170,0
+DaytimeImage     = N19\blind_6.png
+NighttimeImage   = N19\blind_6N.png
+Layer            = -1
+
+[Pilotlamp]
+Subject          = ats108
+Location         = 1170,0
+DaytimeImage     = N19\blind_5.png
+NighttimeImage   = N19\blind_5N.png
+Layer            = -1
+
+[Pilotlamp]
+Subject          = ats109
+Location         = 1170,0
+DaytimeImage     = N19\blind_4.png
+NighttimeImage   = N19\blind_4N.png
+Layer            = -1
+
+[Pilotlamp]
+Subject          = ats110
+Location         = 1170,0
+DaytimeImage     = N19\blind_3.png
+NighttimeImage   = N19\blind_3N.png
+Layer            = -1
+
+[Pilotlamp]
+Subject          = ats111
+Location         = 1170,0
+DaytimeImage     = N19\blind_2.png
+NighttimeImage   = N19\blind_2N.png
+Layer            = -1
+
+[Pilotlamp]
+Subject          = ats112
+Location         = 1170,0
+DaytimeImage     = N19\blind_1.png
+NighttimeImage   = N19\blind_1N.png
+Layer            = -1
+
+[Pilotlamp]
+Subject          = true
+Location         = 2239,215
+DaytimeImage     = N19\YPD.png
+NighttimeImage   = N19\YPN.png
+Layer            = -5
+
+

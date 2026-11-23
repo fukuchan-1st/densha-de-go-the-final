@@ -1,0 +1,7 @@
+#cabCanvas{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none}
+#drive .photo-cab,#drive .windshield{display:none}
+#drive>.handle-panel.bve-controls{position:absolute;left:30px;bottom:75px;width:340px;min-width:340px;padding:10px 12px;background:#0c202bd9;border:1px solid #98b7a64a;border-radius:5px;z-index:5}
+.bve-controls>p{font-size:9px;margin-bottom:6px}.bve-controls .drive-buttons button{font-size:10px;padding:6px 4px}.bve-controls .notch-strip{font-size:9px}
+.hud,.top-tools,.line-status,.drive-footer,.journey,.attribution{z-index:4}
+.panorama #cabCanvas,.panorama .bve-controls,.panorama .bve-readout{display:none!important}
+.bve-readout{position:absolute;bottom:77px;right:45px;padding:7px 12px;background:#10242cbb;color:#dfefe5;border:1px solid #91b5a344;border-radius:4px;font-size:13px;z-index:5;white-space:nowrap;font-variant-numeric:tabular-nums}

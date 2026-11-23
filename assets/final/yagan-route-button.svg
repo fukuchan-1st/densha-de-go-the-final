@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 124" preserveAspectRatio="none">
+  <defs>
+    <linearGradient id="card" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#547a70"/>
+      <stop offset=".48" stop-color="#163c34"/>
+      <stop offset="1" stop-color="#0b2525"/>
+    </linearGradient>
+    <linearGradient id="forest">
+      <stop stop-color="#abc6a7"/>
+      <stop offset="1" stop-color="#3f7561"/>
+    </linearGradient>
+    <linearGradient id="body" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#fff1d5"/>
+      <stop offset="1" stop-color="#c8ae88"/>
+    </linearGradient>
+    <pattern id="lines" width="1" height="4" patternUnits="userSpaceOnUse">
+      <path d="M0 .5h1" stroke="#e7efe1" stroke-opacity=".08"/>
+    </pattern>
+    <clipPath id="frame"><rect width="195" height="124"/></clipPath>
+  </defs>
+  <rect width="720" height="124" fill="url(#card)"/>
+  <g clip-path="url(#frame)">
+    <path d="M0 0h195v124H0z" fill="#b5cbbf"/>
+    <path d="M0 50 20 37l18 3 35-25 22 13 32-18 33 14 35-18v118H0z" fill="url(#forest)"/>
+    <path d="M0 71 32 63l36 5 35-19 25 6 28-16 39 7v78H0z" fill="#3c6250"/>
+    <path d="M0 117 195 78v46H0z" fill="#506257"/>
+    <path d="m10 124 185-37m-142 37 142-30" stroke="#d0d6cb" stroke-width="2"/>
+    <path d="m60 112 122-21 3-8-128 18z" fill="#283439"/>
+    <path d="m73 54 112-12-1 43-113 23z" fill="url(#body)" stroke="#716a56"/>
+    <path d="m66 49 111-12 10 6-114 16z" fill="#869189"/>
+    <path d="m73 86 111-18v9L73 95z" fill="#a03339"/>
+    <path d="m85 61 15-2v16l-15 3zm20-3 14-2v16l-14 2zm19-3 13-1v15l-13 2zm18-2 12-2v15l-12 2zm18-2 11-1v14l-11 1zm15-2 7-1v14l-7 1z" fill="#354a4c"/>
+    <path d="M25 61q2-7 10-8l30-4 8 6v51l-46 7-5-6z" fill="url(#body)" stroke="#5d5f52"/>
+    <path d="m28 64 40-6v24l-40 6z" fill="#263b42"/>
+    <path d="m27 90 45-7v12l-45 7z" fill="#a03339"/>
+    <path d="m44 63 10-1v38l-10 2z" fill="#e7d8b8" stroke="#797765"/>
+    <path d="m46 67 6-1v14l-6 1z" fill="#2a454a"/>
+    <path d="m34 59 24-4v4l-24 4z" fill="#253d40"/>
+    <circle cx="32" cy="94" r="2.4" fill="#fff2ac"/>
+    <circle cx="64" cy="89" r="2.4" fill="#fff2ac"/>
+  </g>
+  <rect x="195" width="1.5" height="124" fill="#b9d2b5" opacity=".5"/>
+  <rect width="720" height="124" fill="url(#lines)"/>
+</svg>
