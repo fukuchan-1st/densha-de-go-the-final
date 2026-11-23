@@ -1,4 +1,4 @@
-import {interpolateKnots as at} from './track-layout.js?v=110';
+import {interpolateKnots as at} from './track-layout.js?v=111';
 const smooth=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
 // Retain the continuous running lines when a diagram replaces station sidings.
 export function fitStationMainRails(rails,drive,station,lo,hi,platforms,candidates=[]){

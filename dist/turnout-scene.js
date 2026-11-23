@@ -1,5 +1,5 @@
-import * as T from './assets/vendor/three.module.js?v=107';
-import {interpolateKnots} from './track-layout.js?v=107';
+import * as T from './assets/vendor/three.module.js?v=111';
+import {interpolateKnots} from './track-layout.js?v=111';
 
 export function addTurnouts(world,group,turnouts,tracks,start=-Infinity,end=Infinity){
  const byId=new Map(tracks.map(t=>[t.id,t]));

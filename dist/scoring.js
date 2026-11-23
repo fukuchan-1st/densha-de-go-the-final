@@ -1,12 +1,12 @@
-import {retimeMatsumotoLocals} from './matsumoto-timetable.js?v=107';
-import {resolvePublishedSchedule} from './published-schedules.js?v=107';
-import {routePlanningSpec,operatingBand,operatingCap} from './planning-profile.js?v=107';
+import {retimeMatsumotoLocals} from './matsumoto-timetable.js?v=111';
+import {resolvePublishedSchedule} from './published-schedules.js?v=111';
+import {routePlanningSpec,operatingBand,operatingCap} from './planning-profile.js?v=111';
 export {routePlanningSpec};
-import {yaganPlanningSpec,rebuildYaganTimetable,planningGrade} from './yagan-timetable.js?v=107';
-import {osakaPlanningSpec,rebuildOsakaTimetable} from './osaka-timetable.js?v=107';
-import {ScoreAudio} from './score-audio.js?v=107';
-import {ScoreEngine,timeSeconds} from './score-engine.js?v=107';
-import {restrictionSigns} from './restriction-signs.js?v=107';
+import {yaganPlanningSpec,rebuildYaganTimetable,planningGrade} from './yagan-timetable.js?v=111';
+import {osakaPlanningSpec,rebuildOsakaTimetable} from './osaka-timetable.js?v=111';
+import {ScoreAudio} from './score-audio.js?v=111';
+import {ScoreEngine,timeSeconds} from './score-engine.js?v=111';
+import {restrictionSigns} from './restriction-signs.js?v=111';
 export function mountScoring(parent,{badge,volume=()=>.65,blueTolerance=3}={}){
  const hud=document.createElement('div');hud.className='score-hud';hud.innerHTML='<small><b class="chain-number">0</b> chain</small><strong><b class="points-number">0</b> points</strong>';
  if(badge){[...badge.children].forEach(c=>c.hidden=true);badge.append(hud);badge.classList.add('scoring-badge');}else parent.append(hud);
@@ -20,7 +20,7 @@ export function mountScoring(parent,{badge,volume=()=>.65,blueTolerance=3}={}){
  function reset(state){run=state;engine.reset(state.s);scoreAudio.stop();hud.querySelector('.chain-number').textContent='0';hud.querySelector('.points-number').textContent='0';feedback.textContent='';}
  return {engine,reset,bindHorn(sound,getState,getHazards){const original=sound.setHorn.bind(sound);sound.setHorn=(on,...args)=>{const state=getState();if(state)engine.hornChange(Boolean(on),state.elapsed,state.s,getHazards?.()??[]);return original(on,...args);};},update(state,context,dt){if(run!==state)reset(state);if(observeScoreDeparture(state,context.stations??[]))state.scoreCheckpoints=null;context={...context,checkpoints:state.scoreCheckpoints??=makeCheckpoints(context.stations??[],context.routeLimits??[],engine.start,state.clockStart??28800,{...(context.vehicleSpec??{}),departureTimes:state.scoreDepartureTimes??{}})};engine.tick(state,context,dt);clockPanel.querySelector('.score-clock-now b').textContent=formatScoreTime((state.clockStart??28800)+state.elapsed,true);const pending=(context.stations??[]).filter(st=>st.s>engine.start+1&&st.s>=state.s-(st.stop?engine.cfg.blueTolerance:0)&&!engine.done.has('position:'+st.id));const station=pending[0],row=clockPanel.querySelector('.score-clock-next');row.querySelector('small').textContent=station?(station.stop?'停車予定':'通過予定'):'予定時刻';row.querySelector('span').textContent=station?station.name+(station.estimated?'（推定）':''):'';row.querySelector('b').textContent=station?formatScoreTime(station.time):'—';const now=(state.clockStart??28800)+state.elapsed,target=timeSeconds(station?.time);clockPanel.querySelector('.score-clock-now b').classList.toggle('in-score-window',target!==null&&Math.abs(now-target)<=(station.stop?10:5));const upcoming=context.checkpoints.filter(p=>p.s>state.s);objectives.replaceChildren(...['speed','time'].map(kind=>{const recent=engine.lastCheckpoint,line=document.createElement('div');if(recent?.kind===kind&&state.elapsed-recent.time<=5){line.textContent=`${kind==='speed'?'定速':'定通'} 通過　${kind==='speed'?'現在 '+Math.round(recent.actual)+' / 指定 '+recent.target+' km/h':'予定 '+formatScoreTime(recent.target)}　誤差 ${signedError(recent.error,kind)}`;}else{const point=upcoming.find(p=>p.kind===kind);line.textContent=point?checkpointCaption(point,state)+`　あと ${Math.round(point.s-state.s).toLocaleString()} m`:`${kind==='speed'?'定速':'定通'}　この先の目標なし`;line.hidden=!point||point.s-state.s>600;}return line;}));if(state.elapsed-lastEventAt>5)feedback.textContent='';},pause(paused){if(paused)scoreAudio.stop();},dispose(){scoreAudio.stop();}};
 }
-export function scoringStations(route){const end=route.stations?.at(-1)?.s??Infinity,stops=route.stations??[];return (route.sceneryStations??stops).filter(s=>s.s<=end+.5).map((st,index)=>({id:st.name+':'+st.s,name:st.name,s:st.s,stop:stops.some(x=>Math.abs(x.s-st.s)<.5),time:st.arrival??st.passTime??st.time??null}));}
+export function scoringStations(route){const end=route.stations?.at(-1)?.s??Infinity,stops=route.stations??[];return (route.sceneryStations??stops).filter(s=>!s.displayOnly&&s.s<=end+.5).map((st,index)=>({id:st.name+':'+st.s,name:st.name,s:st.s,stop:stops.some(x=>Math.abs(x.s-st.s)<.5),time:st.arrival??st.passTime??st.time??null}));}
 export function scoreHazards(route){
  const hazards=[],tunnels=(route.structures??[]).filter(x=>x.kind==='tunnel').map(x=>({s:x.sStart??x.s,end:x.sEnd??x.sStart??x.s})).filter(x=>Number.isFinite(x.s)).sort((a,b)=>a.s-b.s);
  for(const t of tunnels){const previous=hazards.at(-1);if(previous&&t.s<=previous.end+1)previous.end=Math.max(previous.end,t.end);else hazards.push({id:'tunnel:'+t.s,s:t.s,end:t.end,name:'トンネル'});}

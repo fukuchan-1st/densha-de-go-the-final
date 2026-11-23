@@ -1,7 +1,7 @@
-import {fitStationMainRails} from './station-main-continuity.js?v=110';
-import {fitYamagataOpposing} from './yamagata-wiring.js?v=107';
-import {prepareTokyoStation} from './tokyo-station.js?v=107';
-import {interpolateKnots} from './track-layout.js?v=107';
+import {fitStationMainRails} from './station-main-continuity.js?v=111';
+import {fitYamagataOpposing} from './yamagata-wiring.js?v=111';
+import {prepareTokyoStation} from './tokyo-station.js?v=111';
+import {interpolateKnots} from './track-layout.js?v=111';
 const keyName=s=>s?.replaceAll('ヶ','ケ').replaceAll('ノ','ノ').replace('ヤナバ前','ヤナバスキー場前');
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 let pending;
@@ -39,7 +39,7 @@ function drawingRails(record){
 }
 export function applyStationWiring(route,source=route){
  if(!route.diagramWiring)return route;
- const stations=route.sceneryStations??route.stations,key=[route.id,route.length,!!route.reverseDirection,route.serviceTrack,stations[0]?.name,stations.at(-1)?.name,route.era??'',110].join(':');if(route.diagramLayoutKey===key)return route;
+ const stations=(route.sceneryStations??route.stations).filter(st=>!st.displayOnly),key=[route.id,route.length,!!route.reverseDirection,route.serviceTrack,stations[0]?.name,stations.at(-1)?.name,route.era??'',110].join(':');if(route.diagramLayoutKey===key)return route;
  let rails=(route.neighborTracks??[]).filter(t=>!t.diagramTrack),layouts={...route.stationLayouts},audit=[],doors=new Map();const drive=s=>route.drivingTrack?.length?interpolateKnots(route.drivingTrack,s):0;
  for(let si=0;si<stations.length;si++){
   const st=stations[si],family=wiringFamily(route,st),records=route.diagramWiring[family]??[],rec=records.find(r=>keyName(r.name)===keyName(st.name));if(!rec||!rec.platforms.length)continue;

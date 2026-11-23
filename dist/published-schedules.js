@@ -88,7 +88,7 @@ export function applyPublishedSchedule(route,vehicle,service){
 // Use published stops as anchors. Solve each complete leg, including all passing
 // stations, so an intermediate checkpoint cannot force a catch-up acceleration.
 export function resolvePublishedSchedule(route,startS,spec,planSection){
- const stops=route.stations,all=(route.sceneryStations??stops).map(st=>({...st,id:st.name+':'+st.s,stop:stops.some(x=>Math.abs(x.s-st.s)<.5),time:null,estimated:st.arrival==null}));
+ const stops=route.stations,all=(route.sceneryStations??stops).filter(st=>!st.displayOnly).map(st=>({...st,id:st.name+':'+st.s,stop:stops.some(x=>Math.abs(x.s-st.s)<.5),time:null,estimated:st.arrival==null}));
  const departureTimes={},adjustments=[];spec={...spec,departureTimes};
  const first=all[0];first.time=first.startTime??(first.departure!=null?first.departure-30:first.arrival??null);
  if(first.time==null){

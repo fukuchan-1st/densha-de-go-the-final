@@ -1,14 +1,14 @@
-import {extrapolatedPitch,SlipPitchController} from '../../motor-pitch.js?v=107';
-import {AmbientAudio} from '../../ambient-audio.js?v=107';
-import {TrainPassbyAudio} from '../../train-passby-audio.js?v=107';
-import {stationCueRefs,driverWordRefs,stationVoiceBank} from '../../station-voice.js?v=107';
-import {timingVoiceRefs,timingPreloadRefs,restrictionVoiceRefs} from '../../station-timing.js?v=107';
-import {STATIONS} from '../../route-data.js?v=107';
-import {createMixGains} from '../../audio-mix.js?v=107';
-import {sharedEffects} from '../../buffered-effects.js?v=107';
-import {departureFilesFor,STATION_DEPARTURE_AUDIO} from '../../train-operations.js?v=107';
-import {runPitch} from './run-pitch.js?v=107';
-import {HeldHorn} from './held-horn.js?v=107';
+import {extrapolatedPitch,SlipPitchController} from '../../motor-pitch.js?v=111';
+import {AmbientAudio} from '../../ambient-audio.js?v=111';
+import {TrainPassbyAudio} from '../../train-passby-audio.js?v=111';
+import {stationCueRefs,driverWordRefs,stationVoiceBank} from '../../station-voice.js?v=111';
+import {timingVoiceRefs,timingPreloadRefs,restrictionVoiceRefs} from '../../station-timing.js?v=111';
+import {STATIONS} from '../../route-data.js?v=111';
+import {createMixGains} from '../../audio-mix.js?v=111';
+import {sharedEffects} from '../../buffered-effects.js?v=111';
+import {departureFilesFor,STATION_DEPARTURE_AUDIO} from '../../train-operations.js?v=111';
+import {runPitch} from './run-pitch.js?v=111';
+import {HeldHorn} from './held-horn.js?v=111';
 // Browser port of the supplied RTM RSM2 sound_701.js. Speed input is km/h.
 export function interpolate(points, speed) {
   if (points.length === 1) return 0;
@@ -49,7 +49,7 @@ export class SoundEngine {
     this.master.connect(this.compressor).connect(this.ctx.destination);
     this.mix=createMixGains(this.ctx,this.master,this.mixValues);this.passby=new TrainPassbyAudio(this.ctx,this.mix.gains.running,this.mix.gains.se);
     this.loading=(async()=>{
-      const response=await fetch(new URL('./sound-config.json',import.meta.url));
+      const response=await fetch(new URL('./sound-config.json?v=111',import.meta.url));
       if (!response.ok) throw Error('音源設定を読み込めません');
       this.config=await response.json();
       const cache=new Map();

@@ -1,6 +1,6 @@
-import {semiDoorAmount} from './door-policy.js?v=107';
-import * as T from './assets/vendor/three.module.js?v=107';
-import {interpolateKnots} from './track-layout.js?v=107';
+import {semiDoorAmount} from './door-policy.js?v=111';
+import * as T from './assets/vendor/three.module.js?v=111';
+import {interpolateKnots} from './track-layout.js?v=111';
 // Local car coordinates, measured from the centre of the body. Passenger doors
 // only: cab access doors and gangways remain fixed.
 export const DOOR_LAYOUTS={

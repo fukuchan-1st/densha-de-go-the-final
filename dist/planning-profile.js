@@ -1,4 +1,4 @@
-import {sampleRouteCurve} from './route-curve.js?v=107';
+import {sampleRouteCurve} from './route-curve.js?v=111';
 // Operating targets shape timetables; route speed-limit signs remain unchanged.
 const tokyo=new Set('東京 神田 御茶ノ水 四ツ谷 新宿 中野 高円寺 阿佐ケ谷 荻窪 西荻窪 吉祥寺 三鷹 武蔵境 東小金井 武蔵小金井 国分寺 西国分寺 国立 立川 日野 豊田 八王子 西八王子 高尾'.split(' '));
 const north=new Set('長野 安茂里 川中島 今井 篠ノ井'.split(' '));
@@ -9,7 +9,7 @@ const hakuba=new Set('南小谷 千国 白馬大池 信濃森上 白馬'.split('
 export function routePlanningSpec(route,spec={}){
  if(spec.operatingBands)return spec;
  if(!route.id)return spec;
- const express=(route.service??'').includes('特急')||['e353','383','681'].includes(route.vehicle),stations=[...(route.sceneryStations??route.stations??[])].sort((a,b)=>a.s-b.s);
+ const express=(route.service??'').includes('特急')||['e353','383','681'].includes(route.vehicle),stations=[...(route.sceneryStations??route.stations??[])].filter(st=>!st.displayOnly).sort((a,b)=>a.s-b.s);
  const bands=[];
  let gradeProfile=route.grades??spec.gradeProfile;
  if(route.points?.length>1){const end=stations.at(-1)?.s??route.length??0;gradeProfile=[];for(let s=0;s<=end+20;s+=20){const grade=Math.max(-40,Math.min(40,(sampleRouteCurve(route.points,s+10)[2]-sampleRouteCurve(route.points,s-10)[2])*50));gradeProfile.push([s,grade]);}}

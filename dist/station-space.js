@@ -1,6 +1,7 @@
-import {interpolateKnots} from './track-layout.js?v=107';
-import {platformExtent} from './station-platform-length.js?v=107';
+import {interpolateKnots} from './track-layout.js?v=111';
+import {platformExtent} from './station-platform-length.js?v=111';
 export function stationPlatforms(world,station){
+ if(station.displayOnly)return [];
  const legacy=world.trackLayout?.stations?.find(st=>Math.abs(st.s-station.s)<1);
  if(legacy)return (legacy.platforms??[]).map(p=>({station:legacy,platform:p,start:p.start,end:p.end,legacy:true}));
  const route=world.route??{},drive=world.driveOffset?.(station.s)??0,opposite=world.oppositeOffset?.(station.s)??drive+4.2,side=opposite>=drive?-1:1,edge=drive+side*1.55,outer=edge+side*4.8,length=world.platformLength?.()??220;

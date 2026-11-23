@@ -1,10 +1,11 @@
-import {withYamagataEra} from './yamagata-era.js?v=107';
-import {applyPublishedSchedule} from './published-schedules.js?v=107';
-import {releaseMatsumotoExpressLimit} from './geographic-sections.js?v=107';
-import {prepareLeftTraffic} from './route-traffic.js?v=107';
-import {selectTokaidoServiceTrack} from './tokaido-service-track.js?v=107';
-import {serviceChoices,STOP_PATTERNS} from './service-catalog.js?v=107';
-import {sliceRoute,reverseRoute} from './service-routes.js?v=107';
+import {withChuoLocalPasses} from './chuo-local-passes.js?v=111';
+import {withYamagataEra} from './yamagata-era.js?v=111';
+import {applyPublishedSchedule} from './published-schedules.js?v=111';
+import {releaseMatsumotoExpressLimit} from './geographic-sections.js?v=111';
+import {prepareLeftTraffic} from './route-traffic.js?v=111';
+import {selectTokaidoServiceTrack} from './tokaido-service-track.js?v=111';
+import {serviceChoices,STOP_PATTERNS} from './service-catalog.js?v=111';
+import {sliceRoute,reverseRoute} from './service-routes.js?v=111';
 export {serviceChoices};
 function makeDefaultServiceRoute(route,vehicle,service){
  route={...selectTokaidoServiceTrack(route,service),vehicle,service};
@@ -24,7 +25,7 @@ function makeDefaultServiceRoute(route,vehicle,service){
 }
 
 export function makeServiceRoute(route,vehicle,service,option){
- if(!option)return applyPublishedSchedule(makeDefaultServiceRoute(route,vehicle,service),vehicle,service);
+ if(!option)return withChuoLocalPasses(applyPublishedSchedule(makeDefaultServiceRoute(route,vehicle,service),vehicle,service));
  route=withYamagataEra(route,option.era);
  let r=selectTokaidoServiceTrack(route,service.includes('しなの')?'特急':service);r={...r,sceneryStations:r.sceneryStations??r.stations,limits:r.limitsByVehicle?.[vehicle]??r.limits};
  r=releaseMatsumotoExpressLimit(r,vehicle,service);
@@ -42,5 +43,5 @@ export function makeServiceRoute(route,vehicle,service,option){
  if(r.id==='oito'&&pattern==='大糸快速')r={...r,soundEvents:[],announcementPolicy:'service-stop-calls'};
  r={...r,sceneryStations:all,stations:stops,service,vehicle,serviceOption:option};if(option.reverse)r=reverseRoute(r);
  if(option.startTime){r={...r,night:!!option.night,stations:r.stations.map(x=>{const st={...x};for(const k of ['arrival','departure','time','passTime','startTime'])delete st[k];return st;}),sceneryStations:r.sceneryStations.map(x=>{const st={...x};for(const k of ['arrival','departure','time','passTime','startTime'])delete st[k];return st;})};r.stations[0].startTime=option.startTime??'20:00:00';}
- return applyPublishedSchedule(r,vehicle,service);
+ return withChuoLocalPasses(applyPublishedSchedule(r,vehicle,service));
 }

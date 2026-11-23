@@ -1,4 +1,4 @@
-import {adhesionStep,brakeAdhesionStep} from './weather.js?v=107';
+import {adhesionStep,brakeAdhesionStep} from './weather.js?v=111';
 export const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 export function interpolateTable(rows,speed,column=1){
  const points=rows.filter(r=>Number.isFinite(r[0])&&Number.isFinite(r[column]));

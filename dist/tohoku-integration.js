@@ -1,6 +1,6 @@
-import {RouteProfile} from './route-profile.js?v=107';
-import {STATIONS} from './route-data.js?v=107';
-import {loadRoadAsset} from './road-assets.js?v=110';
+import {RouteProfile} from './route-profile.js?v=111';
+import {STATIONS} from './route-data.js?v=111';
+import {loadRoadAsset} from './road-assets.js?v=111';
 export const TOHOKU_TRAIN={id:'701',name:'701系1500番台',notchLabels:['EB','B7','B6','B5','B4','B3','B2','B1','抑速','N','P1','P2','P3','P4','P5'],serviceBrakeKmhPerSecond:3.6,emergencyBrakeKmhPerSecond:3.6,playableSpecs:{carCount:2,maxSpeedKmh:110,startingAccelerationKmhPerSecondApprox:2.1,gauge:1.067,viewpoint:{x:0,y:3.1,z:0}}};
 export function buildTohokuRoute(geometry,profileData,layout,structures,extension,crossings,signals){
  const profile=new RouteProfile(profileData),length=STATIONS.at(-1).s;

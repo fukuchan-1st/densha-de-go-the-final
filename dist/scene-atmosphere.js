@@ -1,10 +1,11 @@
-import {TunnelExitLight} from './tunnel-exit-light.js?v=107';
-import {WeatherScene} from './weather-scene.js?v=107';
-import {weatherType} from './weather.js?v=107';
-import {TrainWindowEnvironment,updateTrainWindowLighting} from './train-window-reflections.js?v=107';
-import {tunnelAdaptation} from './tunnel-effects.js?v=107';
-import * as T from './assets/vendor/three.module.js?v=107';
-import {graphicsProfile,HighQualityRenderer} from './graphics-quality.js?v=107';
+import {StationLighting} from './station-lighting.js?v=111';
+import {TunnelExitLight} from './tunnel-exit-light.js?v=111';
+import {WeatherScene} from './weather-scene.js?v=111';
+import {weatherType} from './weather.js?v=111';
+import {TrainWindowEnvironment,updateTrainWindowLighting} from './train-window-reflections.js?v=111';
+import {tunnelAdaptation} from './tunnel-effects.js?v=111';
+import * as T from './assets/vendor/three.module.js?v=111';
+import {graphicsProfile,HighQualityRenderer} from './graphics-quality.js?v=111';
 export function lightingProfile(quality='standard',night=false){
  const simple=quality==='light';return {simple,shadows:!simple&&!night,clouds:!simple,sky:night?.25:simple?1.3:.82,sun:night?.06:simple?1.8:3.1,exposure:night?1.02:1.04};
 }
@@ -97,11 +98,12 @@ export class SceneAtmosphere{
   if(wet){this.sun.intensity*=.22;this.sky.intensity*=.82;this.sunSprite.visible=false;const grey=new T.Color('#101820').lerp(new T.Color('#7d8892'),solar.daylight);world.scene.background.lerp(grey,1-inside);world.scene.fog?.color.lerp(grey,.9*(1-inside));this.sky.color.lerp(new T.Color('#96a0a8'),.85);if(this.cloudMaterial){this.cloudMaterial.color.copy(grey);this.cloudMaterial.opacity=.98;}}
   this.weatherScene??=new WeatherScene(world);this.weatherScene.update(dt,{type:world.weather,tunnel:inside,daylight:solar.daylight,s});
   this.exitLight??=new TunnelExitLight(world);this.exitLight.update(s,solar.daylight);
+  this.stationLighting??=new StationLighting(world);this.stationLighting.update(s,solar.daylight);
   followSunShadow(this.sun,point,solar.direction);
   this.shadowClock+=dt;if(profile.shadows&&(moving||this.shadowClock>.12||!this.lastShadowPosition||point.distanceTo(this.lastShadowPosition)>3||Math.abs(time-(this.lastShadowTime??time))>1)){
    world.renderer.shadowMap.needsUpdate=true;this.shadowClock=0;this.lastShadowPosition=point.clone();this.lastShadowTime=time;
   }
  }
  render(){if(this.highRenderer)this.highRenderer.render(this.world.scene,this.world.camera);else this.world.renderer.render(this.world.scene,this.world.camera);}
- dispose(){this.exitLight?.dispose();this.weatherScene?.dispose();this.windowEnvironment?.dispose();this.highRenderer?.dispose();this.sun.shadow.mapPass?.dispose();this.world.scene.remove(this.sun.target,this.sunSprite);if(this.clouds)this.world.scene.remove(this.clouds);this.map?.dispose();this.cloudGeometry?.dispose();this.cloudMaterial?.dispose();this.cloudDepth?.dispose();this.sunMap.dispose();this.sunSpriteMaterial.dispose();this.sun.shadow.map?.dispose();}
+ dispose(){this.stationLighting?.dispose();this.exitLight?.dispose();this.weatherScene?.dispose();this.windowEnvironment?.dispose();this.highRenderer?.dispose();this.sun.shadow.mapPass?.dispose();this.world.scene.remove(this.sun.target,this.sunSprite);if(this.clouds)this.world.scene.remove(this.clouds);this.map?.dispose();this.cloudGeometry?.dispose();this.cloudMaterial?.dispose();this.cloudDepth?.dispose();this.sunMap.dispose();this.sunSpriteMaterial.dispose();this.sun.shadow.map?.dispose();}
 }
