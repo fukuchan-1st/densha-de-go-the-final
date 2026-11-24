@@ -1,6 +1,6 @@
-import {prepareLeftTraffic} from './route-traffic.js?v=112c';
-import {interpolateKnots} from './track-layout.js?v=112c';
-import {reverseSteps} from './service-routes.js?v=112c';
+import {prepareLeftTraffic} from './route-traffic.js?v=113';
+import {interpolateKnots} from './track-layout.js?v=113';
+import {reverseSteps} from './service-routes.js?v=113';
 export function reverseLegacyProfile(base,length){
  const steps=(rows,key,sign=1)=>{const full=[...rows.map(x=>[x.s,x[key]]),[base.data.lengthM+.001,key==='kmh'?110:0]];return reverseSteps(full,length,sign).map(([s,value])=>({s,[key]:value}));};
  const limits=steps(base.limits,'kmh'),grades=steps(base.grades,'perMille',-1);

@@ -1,12 +1,12 @@
-import {restoreObasuteLocalStop} from './obasute-operations.js?v=112c';
-import {withChuoLocalPasses} from './chuo-local-passes.js?v=112c';
-import {withYamagataEra} from './yamagata-era.js?v=112c';
-import {applyPublishedSchedule} from './published-schedules.js?v=112c';
-import {releaseMatsumotoExpressLimit} from './geographic-sections.js?v=112c';
-import {prepareLeftTraffic} from './route-traffic.js?v=112c';
-import {selectTokaidoServiceTrack} from './tokaido-service-track.js?v=112c';
-import {serviceChoices,STOP_PATTERNS} from './service-catalog.js?v=112c';
-import {sliceRoute,reverseRoute} from './service-routes.js?v=112c';
+import {restoreObasuteLocalStop} from './obasute-operations.js?v=113';
+import {withChuoLocalPasses} from './chuo-local-passes.js?v=113';
+import {withYamagataEra} from './yamagata-era.js?v=113';
+import {applyPublishedSchedule} from './published-schedules.js?v=113';
+import {releaseMatsumotoExpressLimit} from './geographic-sections.js?v=113';
+import {prepareLeftTraffic} from './route-traffic.js?v=113';
+import {selectTokaidoServiceTrack} from './tokaido-service-track.js?v=113';
+import {serviceChoices,STOP_PATTERNS} from './service-catalog.js?v=113';
+import {sliceRoute,reverseRoute} from './service-routes.js?v=113';
 export {serviceChoices};
 function makeDefaultServiceRoute(route,vehicle,service){
  route={...selectTokaidoServiceTrack(route,service),vehicle,service};

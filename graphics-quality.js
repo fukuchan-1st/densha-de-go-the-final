@@ -1,4 +1,4 @@
-import * as T from './assets/vendor/three.module.js?v=112c';
+import * as T from './assets/vendor/three.module.js?v=113';
 export const GRAPHICS_QUALITIES=['light','standard','high'];
 export function graphicsProfile(quality='standard',pixelRatio=1,maxTextureSize=4096){
  const high=quality==='high',light=quality==='light';

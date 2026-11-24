@@ -1,4 +1,4 @@
-import {gunzipSync} from './assets/vendor/fflate.module.js?v=112c';
+import {gunzipSync} from './assets/vendor/fflate.module.js?v=113';
 export function unpackModel(buffer){
  if(new Uint8Array(buffer)[0]===31&&new Uint8Array(buffer)[1]===139){const data=gunzipSync(new Uint8Array(buffer));buffer=data.buffer.slice(data.byteOffset,data.byteOffset+data.byteLength);}
  return buffer;

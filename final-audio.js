@@ -1,13 +1,13 @@
-import {motorVolumeReference,SlipPitchController,fixedCurveValue} from './motor-pitch.js?v=112c';
-import {AmbientAudio} from './ambient-audio.js?v=112c';
-import {stationDepartureCue} from './station-broadcast.js?v=112c';
-import {TrainPassbyAudio} from './train-passby-audio.js?v=112c';
-import {timingVoiceRefs,timingPreloadRefs,restrictionVoiceRefs} from './station-timing.js?v=112c';
-import {stationCueRefs,stationVoiceBank} from './station-voice.js?v=112c';
-import {createMixGains,voiceCategory} from './audio-mix.js?v=112c';
-import {interpolateColumn} from './final-vehicle.js?v=112c';
-import {runPitch} from './assets/audio/run-pitch.js?v=112c';
-import {HeldHorn} from './assets/audio/held-horn.js?v=112c';
+import {motorVolumeReference,SlipPitchController,fixedCurveValue} from './motor-pitch.js?v=113';
+import {AmbientAudio} from './ambient-audio.js?v=113';
+import {stationDepartureCue} from './station-broadcast.js?v=113';
+import {TrainPassbyAudio} from './train-passby-audio.js?v=113';
+import {timingVoiceRefs,timingPreloadRefs,restrictionVoiceRefs} from './station-timing.js?v=113';
+import {stationCueRefs,stationVoiceBank} from './station-voice.js?v=113';
+import {createMixGains,voiceCategory} from './audio-mix.js?v=113';
+import {interpolateColumn} from './final-vehicle.js?v=113';
+import {runPitch} from './assets/audio/run-pitch.js?v=113';
+import {HeldHorn} from './assets/audio/held-horn.js?v=113';
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const whistle={entryIndex:'departure-whistle'};
 const voiceBanks={e235:['kanko0','uta'],e233:['kanko1','utb'],323:['kanko2','utd'],207:['kanko3','ute']};
@@ -235,6 +235,18 @@ export class LocalTrainAudio {
  setMix(values){this.mix.update(values);}
  setVolume(n){this.volume=clamp(n,0,1);this.master.gain.value=this.volume;}
  async setPaused(paused){this.paused=paused;this.master.gain.value=paused?0:this.volume;if(paused){this.horn?.end(true);await this.context.suspend();}else await this.context.resume();}
+ // 車内放送: 1本ずつ流し、新しい放送が来たら前の放送を止める。
+ onboardRef(url){return {entryIndex:'onboard:'+url,driverVoiceFile:url,mixCategory:'se'};}
+ preloadOnboard(url){return this.buffer(this.onboardRef(url));}
+ stopOnboard(){const source=this.onboardSource;this.onboardSource=null;try{source?.stop();}catch{}}
+ async playOnboard(url){
+  this.stopOnboard();const generation=this.generation,token=this.onboardToken=(this.onboardToken??0)+1;
+  const buffer=await this.buffer(this.onboardRef(url)).catch(()=>null);
+  if(!buffer||this.stopped||generation!==this.generation||token!==this.onboardToken)return false;
+  const source=this.context.createBufferSource();source.buffer=buffer;source.connect(this.mix.gains.se);this.sources.add(source);this.onboardSource=source;
+  source.onended=()=>{this.sources.delete(source);if(this.onboardSource===source)this.onboardSource=null;source.disconnect();};
+  source.start();return true;
+ }
  pause(){return this.setPaused(true);}
  resume(){return this.setPaused(false);}
  stop(){this.slipPitch?.reset();this.ambient?.stop();this.horn?.end(true);this.passby.reset();this.stopped=true;this.lastNotch=undefined;this.generation++;this.driverQueue=null;this.announcementQueue=null;for(const source of this.sources){try{source.stop();}catch{}}this.sources.clear();this.loops.clear();}

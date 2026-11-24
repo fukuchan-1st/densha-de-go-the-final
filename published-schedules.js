@@ -31,6 +31,9 @@ export const SCHEDULES={
  ['京都',null,'18:50'],['新大阪','19:13','19:14'],['大阪','19:18']],null),
  misuzu:book('みすず',[
  ['辰野',null,'07:47'],['川岸','07:54','07:54'],['岡谷','07:59','08:08'],['みどり湖','08:15','08:15'],['塩尻','08:19','08:21'],['広丘','08:25','08:25'],['村井','08:28','08:28'],['平田','08:31','08:31'],['南松本','08:34','08:34'],['松本','08:38','08:40'],['田沢','08:48','08:48'],['明科','08:54','08:54'],['西条','09:02','09:02'],['坂北','09:06','09:07'],['聖高原','09:11','09:12'],['冠着','09:16','09:23'],['姨捨','09:29','09:30'],['稲荷山','09:39','09:40'],['篠ノ井','09:44','09:45'],['今井','09:47','09:48'],['川中島','09:50','09:51'],['安茂里','09:53','09:53'],['長野','09:58']], 'https://timetables.jreast.co.jp/2611/train/130/131531.html'),
+ // 0時以降は24時台として続け、時刻が逆戻りしないようにする
+ nightShinshu:book('ナイトエクスプレス信州',[
+ ['新宿',null,'23:58'],['立川','24:34','24:35'],['八王子','24:45','24:46'],['松本','28:46','28:48'],['長野','29:40']],null),
  rapid2530:book('快速2530M',[
  ['長野',null,'06:54'],['川中島','06:59','07:00'],['篠ノ井','07:05','07:05'],['稲荷山','07:09','07:10'],['聖高原','07:25','07:26'],['坂北','07:30','07:33'],['西条','07:37','07:37'],['明科','07:44','07:45'],['田沢','07:51','07:52'],['松本','08:01']], 'https://timetables.jreast.co.jp/2611/train/025/027811.html')
 };
@@ -53,6 +56,7 @@ export function applyPublishedSchedule(route,vehicle,service){
  else if(service==='特急おうめ')key=first==='東京'?'oumeDown':'oumeUp';
  else if(service==='特急はちおうじ')key=first==='東京'?'hachiojiDown':'hachiojiUp';
  else if(service==='特急はくば')key=first==='松本'?'hakubaDown':'hakubaUp';
+ else if(service==='ナイトエクスプレス信州')key='nightShinshu';
  else if(service==='特急信州')key=first==='塩尻'?'shinshuDown':'shinshuUp';
  else if(route.id==='tatsuno-nagano')key=service==='快速みすず'?'rapidMisuzu':first==='辰野'?'misuzu':'misuzuReverse';
  else if(route.id==='chuo-extended'&&vehicle==='211'&&service==='快速みすず')key=first==='岡谷'?'misuzu':'misuzuReverse';
@@ -82,7 +86,7 @@ export function applyPublishedSchedule(route,vehicle,service){
  };
  const scenery=all.map(clean),stops=scenery.filter((st,i)=>i===0||i===scenery.length-1||names.has(st.name));
  if(stops[0].departure!=null)stops[0].startTime=stops[0].departure-30;
- const night=key==='shinanoEvening'||['oumeDown','hachiojiDown','shinshuUp'].includes(key);
+ const night=key==='shinanoEvening'||['oumeDown','hachiojiDown','shinshuUp','nightShinshu'].includes(key);
  return {...route,stations:stops,sceneryStations:scenery,publishedSchedule:{id:key,title:source.id,url:source.url,estimated:!!source.estimated},night};
 }
 // Use published stops as anchors. Solve each complete leg, including all passing

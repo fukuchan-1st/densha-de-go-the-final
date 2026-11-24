@@ -1,8 +1,8 @@
-import {sceneryDensity,sceneryTreeAmount} from './scenery-profile.js?v=112c';
-import {createTerrainMaterial} from './terrain-materials.js?v=112c';
-import {RealTrees,treeVariant} from './real-trees.js?v=112c';
-import {settlementAt} from './route-data.js?v=112c';
-import * as T from './assets/vendor/three.module.js?v=112c';
+import {sceneryDensity,sceneryTreeAmount} from './scenery-profile.js?v=113';
+import {createTerrainMaterial} from './terrain-materials.js?v=113';
+import {RealTrees,treeVariant} from './real-trees.js?v=113';
+import {settlementAt} from './route-data.js?v=113';
+import * as T from './assets/vendor/three.module.js?v=113';
 
 // Reproducible, browser-native vegetation. No images or network fetches required.
 function random(seed=701153){return ()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};}
