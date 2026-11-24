@@ -1,0 +1,761 @@
+{
+ "note": "車内放送。提供動画から切り出し。発車後放送は前の停車駅を200m過ぎたら、到着放送は停車駅の500m手前で流す。",
+ "sets": {
+  "e131-down": {
+   "stations": {
+    "田沢": {
+     "next": {
+      "file": "e131-down/000.mp3",
+      "seconds": 38.5
+     },
+     "soon": {
+      "file": "e131-down/001.mp3",
+      "seconds": 27.1
+     }
+    },
+    "明科": {
+     "next": {
+      "file": "e131-down/002.mp3",
+      "seconds": 8.6
+     },
+     "soon": {
+      "file": "e131-down/003.mp3",
+      "seconds": 27.0
+     }
+    },
+    "西条": {
+     "next": {
+      "file": "e131-down/004.mp3",
+      "seconds": 8.9
+     },
+     "soon": {
+      "file": "e131-down/005.mp3",
+      "seconds": 28.1
+     }
+    },
+    "坂北": {
+     "next": {
+      "file": "e131-down/006.mp3",
+      "seconds": 8.7
+     },
+     "soon": {
+      "file": "e131-down/007.mp3",
+      "seconds": 27.3
+     }
+    },
+    "聖高原": {
+     "next": {
+      "file": "e131-down/008.mp3",
+      "seconds": 11.7
+     },
+     "soon": {
+      "file": "e131-down/009.mp3",
+      "seconds": 29.1
+     }
+    },
+    "冠着": {
+     "next": {
+      "file": "e131-down/010.mp3",
+      "seconds": 31.6
+     },
+     "soon": {
+      "file": "e131-down/011.mp3",
+      "seconds": 27.5
+     }
+    },
+    "姨捨": {
+     "next": {
+      "file": "e131-down/012.mp3",
+      "seconds": 11.3
+     },
+     "soon": {
+      "file": "e131-down/013.mp3",
+      "seconds": 50.1
+     }
+    },
+    "稲荷山": {
+     "next": {
+      "file": "e131-down/014.mp3",
+      "seconds": 9.5
+     },
+     "soon": {
+      "file": "e131-down/015.mp3",
+      "seconds": 27.9
+     }
+    },
+    "篠ノ井": {
+     "next": {
+      "file": "e131-down/016.mp3",
+      "seconds": 9.9
+     },
+     "soon": {
+      "file": "e131-down/017.mp3",
+      "seconds": 35.3
+     }
+    },
+    "今井": {
+     "next": {
+      "file": "e131-down/018.mp3",
+      "seconds": 48.1
+     }
+    },
+    "川中島": {
+     "next": {
+      "file": "e131-down/019.mp3",
+      "seconds": 26.0
+     }
+    },
+    "安茂里": {
+     "next": {
+      "file": "e131-down/020.mp3",
+      "seconds": 25.5
+     }
+    },
+    "長野": {
+     "next": {
+      "file": "e131-down/021.mp3",
+      "seconds": 11.2
+     },
+     "soon": {
+      "file": "e131-down/022.mp3",
+      "seconds": 59.3
+     }
+    },
+    "竜王": {
+     "next": {
+      "file": "e131-down/023.mp3",
+      "seconds": 36.6
+     },
+     "soon": {
+      "file": "e131-down/024.mp3",
+      "seconds": 27.7
+     }
+    },
+    "塩崎": {
+     "next": {
+      "file": "e131-down/025.mp3",
+      "seconds": 9.5
+     },
+     "soon": {
+      "file": "e131-down/026.mp3",
+      "seconds": 28.2
+     }
+    },
+    "韮崎": {
+     "next": {
+      "file": "e131-down/027.mp3",
+      "seconds": 6.6
+     },
+     "soon": {
+      "file": "e131-down/028.mp3",
+      "seconds": 39.6
+     }
+    },
+    "新府": {
+     "next": {
+      "file": "e131-down/029.mp3",
+      "seconds": 68.8
+     }
+    },
+    "穴山": {
+     "next": {
+      "file": "e131-down/030.mp3",
+      "seconds": 9.0
+     },
+     "soon": {
+      "file": "e131-down/031.mp3",
+      "seconds": 37.1
+     }
+    },
+    "日野春": {
+     "next": {
+      "file": "e131-down/032.mp3",
+      "seconds": 6.6
+     },
+     "soon": {
+      "file": "e131-down/033.mp3",
+      "seconds": 30.1
+     }
+    },
+    "長坂": {
+     "next": {
+      "file": "e131-down/034.mp3",
+      "seconds": 6.6
+     },
+     "soon": {
+      "file": "e131-down/035.mp3",
+      "seconds": 39.4
+     }
+    },
+    "小淵沢": {
+     "next": {
+      "file": "e131-down/036.mp3",
+      "seconds": 6.8
+     },
+     "soon": {
+      "file": "e131-down/037.mp3",
+      "seconds": 31.1
+     }
+    },
+    "信濃境": {
+     "next": {
+      "file": "e131-down/038.mp3",
+      "seconds": 32.8
+     },
+     "soon": {
+      "file": "e131-down/039.mp3",
+      "seconds": 28.7
+     }
+    },
+    "富士見": {
+     "next": {
+      "file": "e131-down/040.mp3",
+      "seconds": 9.1
+     },
+     "soon": {
+      "file": "e131-down/041.mp3",
+      "seconds": 27.2
+     }
+    },
+    "すずらんの里": {
+     "next": {
+      "file": "e131-down/042.mp3",
+      "seconds": 10.7
+     },
+     "soon": {
+      "file": "e131-down/043.mp3",
+      "seconds": 29.1
+     }
+    },
+    "青柳": {
+     "next": {
+      "file": "e131-down/044.mp3",
+      "seconds": 26.1
+     }
+    },
+    "茅野": {
+     "next": {
+      "file": "e131-down/045.mp3",
+      "seconds": 35.9
+     }
+    },
+    "上諏訪": {
+     "next": {
+      "file": "e131-down/046.mp3",
+      "seconds": 14.1
+     },
+     "soon": {
+      "file": "e131-down/047.mp3",
+      "seconds": 23.6
+     }
+    },
+    "下諏訪": {
+     "next": {
+      "file": "e131-down/048.mp3",
+      "seconds": 32.0
+     },
+     "soon": {
+      "file": "e131-down/049.mp3",
+      "seconds": 28.4
+     }
+    },
+    "岡谷": {
+     "next": {
+      "file": "e131-down/050.mp3",
+      "seconds": 6.2
+     },
+     "soon": {
+      "file": "e131-down/051.mp3",
+      "seconds": 42.5
+     }
+    },
+    "みどり湖": {
+     "next": {
+      "file": "e131-down/052.mp3",
+      "seconds": 31.4
+     },
+     "soon": {
+      "file": "e131-down/053.mp3",
+      "seconds": 27.7
+     }
+    },
+    "塩尻": {
+     "next": {
+      "file": "e131-down/054.mp3",
+      "seconds": 13.5
+     },
+     "soon": {
+      "file": "e131-down/055.mp3",
+      "seconds": 42.9
+     }
+    },
+    "広丘": {
+     "next": {
+      "file": "e131-down/056.mp3",
+      "seconds": 31.1
+     },
+     "soon": {
+      "file": "e131-down/057.mp3",
+      "seconds": 13.0
+     }
+    },
+    "村井": {
+     "next": {
+      "file": "e131-down/058.mp3",
+      "seconds": 25.2
+     },
+     "soon": {
+      "file": "e131-down/059.mp3",
+      "seconds": 22.6
+     }
+    },
+    "平田": {
+     "next": {
+      "file": "e131-down/060.mp3",
+      "seconds": 25.6
+     }
+    },
+    "南松本": {
+     "next": {
+      "file": "e131-down/061.mp3",
+      "seconds": 26.4
+     }
+    },
+    "松本": {
+     "next": {
+      "file": "e131-down/062.mp3",
+      "seconds": 59.0
+     }
+    },
+    "相模湖": {
+     "next": {
+      "file": "e131-down/063.mp3",
+      "seconds": 39.1
+     },
+     "soon": {
+      "file": "e131-down/064.mp3",
+      "seconds": 38.8
+     }
+    },
+    "藤野": {
+     "next": {
+      "file": "e131-down/065.mp3",
+      "seconds": 10.6
+     },
+     "soon": {
+      "file": "e131-down/066.mp3",
+      "seconds": 27.9
+     }
+    },
+    "上野原": {
+     "next": {
+      "file": "e131-down/067.mp3",
+      "seconds": 9.3
+     },
+     "soon": {
+      "file": "e131-down/068.mp3",
+      "seconds": 28.4
+     }
+    },
+    "四方津": {
+     "next": {
+      "file": "e131-down/069.mp3",
+      "seconds": 9.2
+     },
+     "soon": {
+      "file": "e131-down/070.mp3",
+      "seconds": 27.6
+     }
+    },
+    "梁川": {
+     "next": {
+      "file": "e131-down/071.mp3",
+      "seconds": 9.3
+     },
+     "soon": {
+      "file": "e131-down/072.mp3",
+      "seconds": 38.1
+     }
+    },
+    "鳥沢": {
+     "next": {
+      "file": "e131-down/073.mp3",
+      "seconds": 9.0
+     },
+     "soon": {
+      "file": "e131-down/074.mp3",
+      "seconds": 37.0
+     }
+    },
+    "猿橋": {
+     "next": {
+      "file": "e131-down/075.mp3",
+      "seconds": 9.5
+     },
+     "soon": {
+      "file": "e131-down/076.mp3",
+      "seconds": 29.1
+     }
+    },
+    "大月": {
+     "next": {
+      "file": "e131-down/077.mp3",
+      "seconds": 33.2
+     }
+    },
+    "初狩": {
+     "next": {
+      "file": "e131-down/078.mp3",
+      "seconds": 70.7
+     }
+    },
+    "笹子": {
+     "next": {
+      "file": "e131-down/079.mp3",
+      "seconds": 9.1
+     },
+     "soon": {
+      "file": "e131-down/080.mp3",
+      "seconds": 37.3
+     }
+    },
+    "甲斐大和": {
+     "next": {
+      "file": "e131-down/081.mp3",
+      "seconds": 37.6
+     },
+     "soon": {
+      "file": "e131-down/082.mp3",
+      "seconds": 10.8
+     }
+    },
+    "勝沼ぶどう郷": {
+     "next": {
+      "file": "e131-down/083.mp3",
+      "seconds": 10.5
+     },
+     "soon": {
+      "file": "e131-down/084.mp3",
+      "seconds": 30.1
+     }
+    },
+    "塩山": {
+     "next": {
+      "file": "e131-down/085.mp3",
+      "seconds": 9.1
+     },
+     "soon": {
+      "file": "e131-down/086.mp3",
+      "seconds": 32.1
+     }
+    },
+    "東山梨": {
+     "next": {
+      "file": "e131-down/087.mp3",
+      "seconds": 70.0
+     }
+    },
+    "山梨市": {
+     "next": {
+      "file": "e131-down/088.mp3",
+      "seconds": 26.3
+     }
+    },
+    "春日居町": {
+     "next": {
+      "file": "e131-down/089.mp3",
+      "seconds": 15.0
+     },
+     "soon": {
+      "file": "e131-down/090.mp3",
+      "seconds": 33.4
+     }
+    },
+    "石和温泉": {
+     "next": {
+      "file": "e131-down/091.mp3",
+      "seconds": 10.1
+     },
+     "soon": {
+      "file": "e131-down/092.mp3",
+      "seconds": 29.3
+     }
+    },
+    "酒折": {
+     "next": {
+      "file": "e131-down/093.mp3",
+      "seconds": 24.9
+     },
+     "soon": {
+      "file": "e131-down/094.mp3",
+      "seconds": 13.5
+     }
+    },
+    "甲府": {
+     "next": {
+      "file": "e131-down/095.mp3",
+      "seconds": 10.9
+     },
+     "soon": {
+      "file": "e131-down/096.mp3",
+      "seconds": 61.9
+     }
+    }
+   }
+  },
+  "azusa-up": {
+   "stations": {
+    "白馬": {
+     "next": {
+      "file": "azusa-up/000.mp3",
+      "seconds": 193.9
+     },
+     "soon": {
+      "file": "azusa-up/001.mp3",
+      "seconds": 35.8
+     }
+    },
+    "信濃大町": {
+     "next": {
+      "file": "azusa-up/002.mp3",
+      "seconds": 33.6
+     },
+     "soon": {
+      "file": "azusa-up/003.mp3",
+      "seconds": 36.8
+     }
+    },
+    "穂高": {
+     "next": {
+      "file": "azusa-up/004.mp3",
+      "seconds": 32.3
+     },
+     "soon": {
+      "file": "azusa-up/005.mp3",
+      "seconds": 34.9
+     }
+    },
+    "豊科": {
+     "next": {
+      "file": "azusa-up/006.mp3",
+      "seconds": 32.1
+     },
+     "soon": {
+      "file": "azusa-up/007.mp3",
+      "seconds": 35.2
+     }
+    },
+    "松本": {
+     "next": {
+      "file": "azusa-up/008.mp3",
+      "seconds": 32.2
+     },
+     "soon": {
+      "file": "azusa-up/009.mp3",
+      "seconds": 49.0
+     }
+    },
+    "塩尻": {
+     "next": {
+      "file": "azusa-up/010.mp3",
+      "seconds": 155.1
+     },
+     "soon": {
+      "file": "azusa-up/011.mp3",
+      "seconds": 52.8
+     }
+    },
+    "岡谷": {
+     "next": {
+      "file": "azusa-up/012.mp3",
+      "seconds": 31.9
+     },
+     "soon": {
+      "file": "azusa-up/013.mp3",
+      "seconds": 49.1
+     }
+    },
+    "上諏訪": {
+     "next": {
+      "file": "azusa-up/014.mp3",
+      "seconds": 32.2
+     },
+     "soon": {
+      "file": "azusa-up/015.mp3",
+      "seconds": 34.9
+     }
+    },
+    "茅野": {
+     "next": {
+      "file": "azusa-up/016.mp3",
+      "seconds": 31.9
+     },
+     "soon": {
+      "file": "azusa-up/017.mp3",
+      "seconds": 34.4
+     }
+    },
+    "小淵沢": {
+     "next": {
+      "file": "azusa-up/018.mp3",
+      "seconds": 32.5
+     },
+     "soon": {
+      "file": "azusa-up/019.mp3",
+      "seconds": 44.5
+     }
+    },
+    "甲府": {
+     "next": {
+      "file": "azusa-up/020.mp3",
+      "seconds": 31.9
+     },
+     "soon": {
+      "file": "azusa-up/021.mp3",
+      "seconds": 43.3
+     }
+    },
+    "八王子": {
+     "next": {
+      "file": "azusa-up/022.mp3",
+      "seconds": 171.8
+     },
+     "soon": {
+      "file": "azusa-up/023.mp3",
+      "seconds": 47.5
+     }
+    },
+    "立川": {
+     "next": {
+      "file": "azusa-up/024.mp3",
+      "seconds": 155.0
+     },
+     "soon": {
+      "file": "azusa-up/025.mp3",
+      "seconds": 51.7
+     }
+    },
+    "新宿": {
+     "next": {
+      "file": "azusa-up/026.mp3",
+      "seconds": 34.0
+     },
+     "soon": {
+      "file": "azusa-up/027.mp3",
+      "seconds": 85.4
+     }
+    }
+   }
+  },
+  "itsukaichi-up": {
+   "stations": {
+    "武蔵増戸": {
+     "next": {
+      "file": "itsukaichi-up/000.mp3",
+      "seconds": 32.9
+     }
+    },
+    "武蔵引田": {
+     "next": {
+      "file": "itsukaichi-up/001.mp3",
+      "seconds": 34.7
+     }
+    },
+    "秋川": {
+     "next": {
+      "file": "itsukaichi-up/002.mp3",
+      "seconds": 19.8
+     }
+    },
+    "東秋留": {
+     "next": {
+      "file": "itsukaichi-up/003.mp3",
+      "seconds": 43.0
+     }
+    },
+    "熊川": {
+     "next": {
+      "file": "itsukaichi-up/004.mp3",
+      "seconds": 18.8
+     }
+    },
+    "拝島": {
+     "next": {
+      "file": "itsukaichi-up/005.mp3",
+      "seconds": 40.1
+     }
+    }
+   }
+  },
+  "itsukaichi-down": {
+   "stations": {
+    "西立川": {
+     "next": {
+      "file": "itsukaichi-down/000.mp3",
+      "seconds": 115.2
+     }
+    },
+    "東中神": {
+     "next": {
+      "file": "itsukaichi-down/001.mp3",
+      "seconds": 32.1
+     }
+    },
+    "中神": {
+     "next": {
+      "file": "itsukaichi-down/002.mp3",
+      "seconds": 28.6
+     }
+    },
+    "昭島": {
+     "next": {
+      "file": "itsukaichi-down/003.mp3",
+      "seconds": 29.5
+     }
+    },
+    "拝島": {
+     "next": {
+      "file": "itsukaichi-down/004.mp3",
+      "seconds": 108.2
+     }
+    },
+    "熊川": {
+     "next": {
+      "file": "itsukaichi-down/005.mp3",
+      "seconds": 86.7
+     }
+    },
+    "東秋留": {
+     "next": {
+      "file": "itsukaichi-down/006.mp3",
+      "seconds": 55.6
+     }
+    },
+    "秋川": {
+     "next": {
+      "file": "itsukaichi-down/007.mp3",
+      "seconds": 29.4
+     }
+    },
+    "武蔵引田": {
+     "next": {
+      "file": "itsukaichi-down/008.mp3",
+      "seconds": 30.6
+     }
+    },
+    "武蔵増戸": {
+     "next": {
+      "file": "itsukaichi-down/009.mp3",
+      "seconds": 30.3
+     }
+    },
+    "武蔵五日市": {
+     "next": {
+      "file": "itsukaichi-down/010.mp3",
+      "seconds": 56.6
+     }
+    }
+   }
+  }
+ }
+}

@@ -1,7 +1,7 @@
 {
-  "scenarios": 110,
-  "sections": 2437,
-  "partialStarts": 1554,
+  "scenarios": 115,
+  "sections": 2563,
+  "partialStarts": 1610,
   "failures": [],
   "summary": [
     {
@@ -643,6 +643,56 @@
       "sections": 42,
       "checkpoints": 84,
       "adjusted": 42
+    },
+    {
+      "line": "chuo",
+      "vehicle": "e131",
+      "service": "普通",
+      "reverse": false,
+      "partialStarts": 13,
+      "sections": 13,
+      "checkpoints": 26,
+      "adjusted": 9
+    },
+    {
+      "line": "chuo",
+      "vehicle": "e131",
+      "service": "普通",
+      "reverse": true,
+      "partialStarts": 13,
+      "sections": 13,
+      "checkpoints": 26,
+      "adjusted": 8
+    },
+    {
+      "line": "chuo",
+      "vehicle": "e131",
+      "service": "普通",
+      "reverse": false,
+      "partialStarts": 13,
+      "sections": 13,
+      "checkpoints": 26,
+      "adjusted": 9
+    },
+    {
+      "line": "chuo",
+      "vehicle": "e131",
+      "service": "普通",
+      "reverse": true,
+      "partialStarts": 13,
+      "sections": 13,
+      "checkpoints": 26,
+      "adjusted": 8
+    },
+    {
+      "line": "chuo",
+      "vehicle": "e257-5000",
+      "service": "ナイトエクスプレス信州",
+      "reverse": false,
+      "partialStarts": 4,
+      "sections": 74,
+      "checkpoints": 148,
+      "adjusted": 18
     },
     {
       "line": "osaka",

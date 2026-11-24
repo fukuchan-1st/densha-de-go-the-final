@@ -1,7 +1,7 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {serviceChoices,makeServiceRoute} from '../dist/train-selection.js';import {reverseRoute,reverseSteps,samplePoint} from '../dist/service-routes.js';import {loadServiceRoutes} from './service-fixture.mjs';import {resolveScoreSchedule} from '../dist/scoring.js';
 const routes=await loadServiceRoutes();
 test('all timetables have nonempty ranges; retained paired services run in both directions',()=>{
- const oneWay=new Set(['tatsuno-nagano/211/普通みすず','tatsuno-nagano/211/快速みすず','suwa-nagano/211/快速','oito/e127/快速']);
+ const oneWay=new Set(['tatsuno-nagano/211/普通みすず','tatsuno-nagano/211/快速みすず','suwa-nagano/211/快速','oito/e127/快速','chuo-nagano/e257-5000/ナイトエクスプレス信州']);
  for(const [line,choices] of Object.entries(serviceChoices))for(const [id,v,s,o] of choices){
   if(id==='tohoku')continue;
   const r=makeServiceRoute(routes.get(id),v,s,o);assert.ok(r.stations.length>=2,line);

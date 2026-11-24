@@ -1,4 +1,4 @@
-import {interpolateKnots} from './track-layout.js?v=112c';
+import {interpolateKnots} from './track-layout.js?v=113';
 export function prepareSpecialStations(route){
  if(route.id==='yagan'){
   const layout=route.stationLayouts?.['男鹿高原'];if(!layout?.platforms?.length)return route;

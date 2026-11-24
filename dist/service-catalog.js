@@ -1,4 +1,4 @@
-import {joinRoutes,sliceRoute,reverseRoute} from './service-routes.js?v=112c';
+import {joinRoutes,sliceRoute,reverseRoute} from './service-routes.js?v=113';
 const item=(route,vehicle,service,from,to,extra={})=>[route,vehicle,service,{from,to,...extra}];
 const special=['東京','神田','御茶ノ水','四ツ谷','新宿','中野','三鷹','国分寺','立川'];
 export const STOP_PATTERNS={
@@ -15,6 +15,7 @@ export const STOP_PATTERNS={
  'しなの':['京都','新大阪','大阪','塩尻','松本','穂高','信濃大町','神城','白馬'],
  '長野松本快速':['長野','川中島','篠ノ井','稲荷山','聖高原','坂北','西条','明科','田沢','松本'],
  'みすず':['松本','南松本','平田','村井','広丘','塩尻','みどり湖','岡谷'],
+ 'ナイトエクスプレス信州':['新宿','立川','八王子','松本','長野'],
  '長野快速':['上諏訪','下諏訪','岡谷','みどり湖','塩尻','広丘','村井','平田','南松本','松本','田沢','明科','西条','坂北','聖高原','冠着','姨捨','稲荷山','篠ノ井','今井','川中島','安茂里','長野']
 };
 const base={
@@ -47,7 +48,10 @@ function reviseChuo(entries){
   return [entry];
  });
  // Stable order retains the identities/progress of every unchanged service.
- return [...revised.filter(x=>x[1]==='e233'),...revised.filter(x=>x[1]!=='e233'),...([3,6].flatMap(carCount=>[false,true].map(reverse=>item('chuo-extended','e131','普通','高尾','松本',{pattern:'all',reverse,carCount}))))];
+ return [...revised.filter(x=>x[1]==='e233'),...revised.filter(x=>x[1]!=='e233'),...([3,6].flatMap(carCount=>[false,true].map(reverse=>item('chuo-extended','e131','普通','高尾','松本',{pattern:'all',reverse,carCount})))),
+  // Added after the existing entries so earlier service numbers and progress keep their identity.
+  ...[3,6].flatMap(carCount=>[false,true].map(reverse=>item('shinonoi-extended','e131','普通','長野','松本',{pattern:'all',reverse,carCount}))),
+  item('chuo-nagano','e257-5000','ナイトエクスプレス信州','新宿','長野',{pattern:'ナイトエクスプレス信州',night:true,carCount:9})];
 }
 export const serviceChoices=Object.fromEntries(Object.entries(base).map(([line,entries])=>{
  const paired=entries.flatMap(entry=>[entry,[...entry.slice(0,3),{...entry[3],reverse:true,...(line==='tokaido'&&entry[1]==='383'?{night:false,startTime:'08:57:30'}:{})}]]);
@@ -60,6 +64,7 @@ export function buildConnectingRoutes(routes){
  ['chuo-itsukaichi',joinRoutes([sliceRoute(ome,'立川','拝島'),routes.get('itsukaichi')],'chuo-itsukaichi','青梅線・五日市線')],
  ['chuo-ome',joinRoutes([sliceRoute(chuo,'東京','立川'),ome],'chuo-ome','中央線・青梅線')],
  ['chuo-oito',joinRoutes([chuo,reverseRoute(oito,{switchTrack:false})],'chuo-oito','中央線・大糸線')],
+ ['chuo-nagano',joinRoutes([sliceRoute(chuo,'新宿','松本'),reverseRoute(sliceRoute(shinonoi,'長野','松本'),{switchTrack:false})],'chuo-nagano','中央線・篠ノ井線')],
  ['suwa-nagano',joinRoutes([sliceRoute(chuo,'上諏訪','松本'),reverseRoute(sliceRoute(shinonoi,'長野','松本'),{switchTrack:false})],'suwa-nagano','中央線・篠ノ井線・信越本線')]
  ]);return result;
 }
