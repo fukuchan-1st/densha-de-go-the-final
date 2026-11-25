@@ -1,5 +1,5 @@
-import {fadeCabLight} from './cab-light.js?v=116';
-import {drawCabSheen} from './cab-sheen.js?v=116';
+import {fadeCabLight} from './cab-light.js?v=117';
+import {drawCabSheen} from './cab-sheen.js?v=117';
 export function brakeSpriteFrame(notch){return notch<=-9?9:notch===-1?1:notch<0?Math.min(8,-notch):0;}
 export const PANEL_VIEW={x:100,y:90,width:3300,height:1856.25,scale:1600/3300};
 export function panelPoint(x,y){return {x:(x-PANEL_VIEW.x)*PANEL_VIEW.scale,y:(y-PANEL_VIEW.y)*PANEL_VIEW.scale};}

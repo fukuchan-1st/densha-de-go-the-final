@@ -1,4 +1,4 @@
-import * as T from './assets/vendor/three.module.js?v=116';
+import * as T from './assets/vendor/three.module.js?v=117';
 export const JOINT_SPACING=25;
 export function crossedJoints(previous,current,spacing=JOINT_SPACING){if(current<=previous||current-previous>100)return [];const rows=[];for(let n=Math.floor(previous/spacing)+1;n<=Math.floor(current/spacing);n++)rows.push(n*spacing);return rows;}
 export function randomJointIndex(previous=-1,random=Math.random){const choices=Array.from({length:7},(_,i)=>i).filter(i=>i!==previous);return choices[Math.min(choices.length-1,Math.floor(random()*choices.length))];}

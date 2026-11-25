@@ -1,8 +1,8 @@
-import {residentialAllowed} from './yamagata-mountain.js?v=116';
-import {tunnelPillarClear} from './tunnel-effects.js?v=116';
-import {stationBuildingClear} from './station-space.js?v=116';
-import {RoadSeparation,roadElevation} from './road-separation.js?v=116';
-import * as T from './assets/vendor/three.module.js?v=116';import {crossingActive,crossingCenter} from './crossings.js?v=116';
+import {residentialAllowed} from './yamagata-mountain.js?v=117';
+import {tunnelPillarClear} from './tunnel-effects.js?v=117';
+import {stationBuildingClear} from './station-space.js?v=117';
+import {RoadSeparation,roadElevation} from './road-separation.js?v=117';
+import * as T from './assets/vendor/three.module.js?v=117';import {crossingActive,crossingCenter} from './crossings.js?v=117';
 export function segmentHitsFootprint(a,b,width,depth){let lo=0,hi=1;for(const [index,half]of[[0,width/2],[1,depth/2]]){const d=b[index]-a[index];if(Math.abs(d)<1e-8){if(Math.abs(a[index])<half)continue;return false;}let x=(-half-a[index])/d,y=(half-a[index])/d;if(x>y)[x,y]=[y,x];lo=Math.max(lo,x);hi=Math.min(hi,y);if(lo>hi)return false;}return true;}
 export function roadHeightOffset(bridge,railDeck=0){return bridge&&railDeck<1.3?6:-.1;}
 export function roadPath(points){let length=0;const distances=[0];for(let i=1;i<points.length;i++){length+=Math.hypot(points[i][0]-points[i-1][0],points[i][1]-points[i-1][1]);distances.push(length);}return {points,distances,length};}

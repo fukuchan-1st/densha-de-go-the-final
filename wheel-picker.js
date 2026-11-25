@@ -1,4 +1,4 @@
-import {applyProgressFrame} from './scenario-progress.js?v=116';
+import {applyProgressFrame} from './scenario-progress.js?v=117';
 export function wheelVisibleIndices(selected,count){if(!count)return [null,null,null];if(count===1)return [null,0,null];return [(selected-1+count)%count,selected,(selected+1)%count];}
 export function mountWheelPicker(select){
  select.hidden=true;select.dataset.wheel='true';const root=document.createElement('div');root.className='wheel-picker';root.setAttribute('role','group');root.setAttribute('aria-label',select.getAttribute('aria-label')??'列車を選択');

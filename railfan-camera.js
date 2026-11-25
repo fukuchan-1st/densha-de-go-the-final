@@ -1,7 +1,7 @@
-import {stationPlatforms,platformBoundsAt,stoppingStationSpot} from './station-space.js?v=116';
-import {tunnelFilmingPlan,tunnelRanges,filmingTracks} from './railfan-tunnel.js?v=116';
-import * as T from './assets/vendor/three.module.js?v=116';
-import {crossingCenter} from './crossings.js?v=116';
+import {stationPlatforms,platformBoundsAt,stoppingStationSpot} from './station-space.js?v=117';
+import {tunnelFilmingPlan,tunnelRanges,filmingTracks} from './railfan-tunnel.js?v=117';
+import * as T from './assets/vendor/three.module.js?v=117';
+import {crossingCenter} from './crossings.js?v=117';
 export const RAILFAN_EYE_HEIGHT=1.68;
 export function trainHasCleared(s,spot,length){return s-length>spot+30;}
 export function passbyShake(speed,elapsed,distance=8){if(speed<70/3.6||elapsed<0||elapsed>2.4)return 0;return Math.min(.016,(speed*3.6-55)*.00024)*Math.exp(-elapsed*2.6)*Math.min(1,8/Math.max(4,distance));}

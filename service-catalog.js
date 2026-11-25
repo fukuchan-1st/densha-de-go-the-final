@@ -1,4 +1,4 @@
-import {joinRoutes,sliceRoute,reverseRoute} from './service-routes.js?v=116';
+import {joinRoutes,sliceRoute,reverseRoute} from './service-routes.js?v=117';
 const item=(route,vehicle,service,from,to,extra={})=>[route,vehicle,service,{from,to,...extra}];
 const special=['東京','神田','御茶ノ水','四ツ谷','新宿','中野','三鷹','国分寺','立川'];
 export const STOP_PATTERNS={
@@ -18,7 +18,7 @@ export const STOP_PATTERNS={
  'ナイトエクスプレス信州':['新宿','立川','八王子','松本','長野'],
  '長野快速':['上諏訪','下諏訪','岡谷','みどり湖','塩尻','広丘','村井','平田','南松本','松本','田沢','明科','西条','坂北','聖高原','冠着','姨捨','稲荷山','篠ノ井','今井','川中島','安茂里','長野']
 };
-import {TOBU_SCENARIOS} from './tobu-services.js?v=116';
+import {TOBU_SCENARIOS} from './tobu-services.js?v=117';
 const base={
  yamanote:[item('yamanote','e235','普通')],
  chuo:[

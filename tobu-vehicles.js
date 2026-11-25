@@ -7,7 +7,7 @@ export class TobuVehiclePack {
 }
 
 export async function loadTobuVehiclePatch(){
- const response=await fetch(new URL('./assets/final/tobu114/vehicle-patch.json?v=116',import.meta.url));
+ const response=await fetch(new URL('./assets/final/tobu114/vehicle-patch.json?v=117',import.meta.url));
  if(!response.ok)throw Error('東武車両データを読み込めません');return response.json();
 }
 

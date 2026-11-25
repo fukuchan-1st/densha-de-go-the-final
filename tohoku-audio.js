@@ -1,6 +1,6 @@
-import {SoundEngine} from './assets/audio/sound-engine.js?v=116';
-import {driverWordRefs} from './station-voice.js?v=116';
-import {departureFilesFor} from './train-operations.js?v=116';
+import {SoundEngine} from './assets/audio/sound-engine.js?v=117';
+import {driverWordRefs} from './station-voice.js?v=117';
+import {departureFilesFor} from './train-operations.js?v=117';
 const aliases={relayOn:'pilotOn',relayOff:'pilotOff'};
 // Keep the supplied 701 motor/BVE recordings while sharing the driving lifecycle.
 export class TohokuAudio extends SoundEngine{
