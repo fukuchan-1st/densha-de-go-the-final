@@ -12,7 +12,7 @@ export const ONBOARD_SETS={
  'itsukaichi-up':{vehicles:['e233'],route:/itsukaichi/,order:ITSUKAICHI.slice(5).toReversed()}
 };
 let manifestPending;
-function loadManifest(){manifestPending??=fetch(new URL('./assets/onboard/manifest.json?v=113',import.meta.url)).then(r=>r.ok?r.json():null).catch(()=>{manifestPending=null;return null;});return manifestPending;}
+function loadManifest(){manifestPending??=fetch(new URL('./assets/onboard/manifest.json?v=114',import.meta.url)).then(r=>r.ok?r.json():null).catch(()=>{manifestPending=null;return null;});return manifestPending;}
 // 停車駅がその組の順序どおりに並んでいるか(逆方向の列車には流さない)
 export function chooseOnboardSet(sets,vehicle,service,routeId,stopNames){
  for(const [id,set] of Object.entries(ONBOARD_SETS)){

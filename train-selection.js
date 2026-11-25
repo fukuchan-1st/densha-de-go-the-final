@@ -1,12 +1,14 @@
-import {restoreObasuteLocalStop} from './obasute-operations.js?v=113';
-import {withChuoLocalPasses} from './chuo-local-passes.js?v=113';
-import {withYamagataEra} from './yamagata-era.js?v=113';
-import {applyPublishedSchedule} from './published-schedules.js?v=113';
-import {releaseMatsumotoExpressLimit} from './geographic-sections.js?v=113';
-import {prepareLeftTraffic} from './route-traffic.js?v=113';
-import {selectTokaidoServiceTrack} from './tokaido-service-track.js?v=113';
-import {serviceChoices,STOP_PATTERNS} from './service-catalog.js?v=113';
-import {sliceRoute,reverseRoute} from './service-routes.js?v=113';
+import {restoreObasuteLocalStop} from './obasute-operations.js?v=114';
+import {withChuoLocalPasses} from './chuo-local-passes.js?v=114';
+import {withYamagataEra} from './yamagata-era.js?v=114';
+import {applyPublishedSchedule} from './published-schedules.js?v=114';
+import {releaseMatsumotoExpressLimit} from './geographic-sections.js?v=114';
+import {prepareLeftTraffic} from './route-traffic.js?v=114';
+import {selectTokaidoServiceTrack} from './tokaido-service-track.js?v=114';
+import {serviceChoices,STOP_PATTERNS} from './service-catalog.js?v=114';
+import {sliceRoute,reverseRoute} from './service-routes.js?v=114';
+import {applyTobuScenario} from './tobu-services.js?v=114';
+import {applyTobuHibiyaPlatform} from './tobu-routes.js?v=114';
 export {serviceChoices};
 function makeDefaultServiceRoute(route,vehicle,service){
  route={...selectTokaidoServiceTrack(route,service),vehicle,service};
@@ -29,6 +31,7 @@ export function makeServiceRoute(route,vehicle,service,option){
  route=restoreObasuteLocalStop(route,service);
  if(!option)return withChuoLocalPasses(applyPublishedSchedule(makeDefaultServiceRoute(route,vehicle,service),vehicle,service));
  route=withYamagataEra(route,option.era);
+ if(option.tobuScenario&&vehicle==='70000')route=applyTobuHibiyaPlatform(route);
  let r=selectTokaidoServiceTrack(route,service.includes('しなの')?'特急':service);r={...r,sceneryStations:r.sceneryStations??r.stations,limits:r.limitsByVehicle?.[vehicle]??r.limits};
  r=releaseMatsumotoExpressLimit(r,vehicle,service);
  if(r.id==='yagan')r=makeDefaultServiceRoute(r,vehicle,'普通');
@@ -45,5 +48,6 @@ export function makeServiceRoute(route,vehicle,service,option){
  if(r.id==='oito'&&pattern==='大糸快速')r={...r,soundEvents:[],announcementPolicy:'service-stop-calls'};
  r={...r,sceneryStations:all,stations:stops,service,vehicle,serviceOption:option};if(option.reverse)r=reverseRoute(r);
  if(option.startTime){r={...r,night:!!option.night,stations:r.stations.map(x=>{const st={...x};for(const k of ['arrival','departure','time','passTime','startTime'])delete st[k];return st;}),sceneryStations:r.sceneryStations.map(x=>{const st={...x};for(const k of ['arrival','departure','time','passTime','startTime'])delete st[k];return st;})};r.stations[0].startTime=option.startTime??'20:00:00';}
+ if(option.tobuScenario){r=applyTobuScenario(r,option.tobuScenario);r={...r,carLengthM:vehicle==='20400'?18:20,serviceSpeedKmh:vehicle==='500'?120:vehicle==='20400'||vehicle==='70000'?110:100};return r;}
  return withChuoLocalPasses(applyPublishedSchedule(r,vehicle,service));
 }

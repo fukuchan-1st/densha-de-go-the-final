@@ -1,0 +1,236 @@
+{
+  "folder": "dengo_thef/sounds/pmsm",
+  "sampleCount": 20,
+  "sourceConfigurationFound": true,
+  "sourceConfiguration": "6_15/MotorNoise.txt",
+  "mapping": "Slots 0-5 = AnSync/AS0-AS5; slots 6-19 = Sync/S0-S13. Exact unresampled power/brake CSV rows and sparse values retained. Power has 19 channels, brake has 20; slot 19 is brake-only.",
+  "encoding": "Vorbis quality 7; decoded source frame counts checked within 128 samples (2.67ms at 48kHz)",
+  "tables": [
+    {
+      "phase": "power",
+      "table": "frequency",
+      "source": "6_15/Power/PowerFreq.csv",
+      "sha256": "8836257f8fc3a96e2c61238496af6172870730131e46018b86dd52f0bddb14ab"
+    },
+    {
+      "phase": "power",
+      "table": "volume",
+      "source": "6_15/Power/PowerVol.csv",
+      "sha256": "18afc86318b6c877581012eedb89fcff3630b8de710213a546bc3c1ad4050ce0"
+    },
+    {
+      "phase": "brake",
+      "table": "frequency",
+      "source": "6_15/Brake/BrakeFreq.csv",
+      "sha256": "c5e960fe471d409d174a27d91fce22d845fdc35f2f7500f6c3be000e8701fde4"
+    },
+    {
+      "phase": "brake",
+      "table": "volume",
+      "source": "6_15/Brake/BrakeVol.csv",
+      "sha256": "a771dd0f8d82f70b828ff552935bf6e3911885682c51dd1a61679b245bf62b71"
+    }
+  ],
+  "samples": [
+    {
+      "channel": 0,
+      "source": "AnSync/AS0.wav",
+      "sha256": "eb94d73c1a2f56443e8e00b305065a8e944998572648d01f9b493242791c92c2",
+      "sampleRate": 48000,
+      "channels": 2,
+      "sourceFrames": 169576,
+      "decodedFrames": 169576,
+      "pitchMode": "Exact sparse phase frequency table from 6_15; original fixed sections preserved"
+    },
+    {
+      "channel": 1,
+      "source": "AnSync/AS1.wav",
+      "sha256": "f63f3bb3ba1abd7a88ac8e9b7f5d6949c59c979dd1c4516fcf07afe91a34ca02",
+      "sampleRate": 48000,
+      "channels": 2,
+      "sourceFrames": 134415,
+      "decodedFrames": 134415,
+      "pitchMode": "Exact sparse phase frequency table from 6_15; original fixed sections preserved"
+    },
+    {
+      "channel": 2,
+      "source": "AnSync/AS2.wav",
+      "sha256": "46f4d161f5ef75b587b8258fdaa6008cc131bfe20961b8471e838b6d6af89979",
+      "sampleRate": 48000,
+      "channels": 2,
+      "sourceFrames": 235528,
+      "decodedFrames": 235528,
+      "pitchMode": "Exact sparse phase frequency table from 6_15; original fixed sections preserved"
+    },
+    {
+      "channel": 3,
+      "source": "AnSync/AS3.wav",
+      "sha256": "683764211a84e9e1fe85830faee2c4abbfa2c325f006d7e15ca1564f1314037a",
+      "sampleRate": 48000,
+      "channels": 2,
+      "sourceFrames": 114314,
+      "decodedFrames": 114314,
+      "pitchMode": "Exact sparse phase frequency table from 6_15; original fixed sections preserved"
+    },
+    {
+      "channel": 4,
+      "source": "AnSync/AS4.wav",
+      "sha256": "a249160e8385f7f069ca4967e4a872292ea30878f719f3a4558f8c0aab6f65ee",
+      "sampleRate": 48000,
+      "channels": 2,
+      "sourceFrames": 412264,
+      "decodedFrames": 412264,
+      "pitchMode": "Exact sparse phase frequency table from 6_15; original fixed sections preserved"
+    },
+    {
+      "channel": 5,
+      "source": "AnSync/AS5.wav",
+      "sha256": "ec98becd219b89f25360084f2094213d08520fc957e702b7fcbca74fdfd357b8",
+      "sampleRate": 48000,
+      "channels": 2,
+      "sourceFrames": 518458,
+      "decodedFrames": 518458,
+      "pitchMode": "Exact sparse phase frequency table from 6_15; original fixed sections preserved"
+    },
+    {
+      "channel": 6,
+      "source": "Sync/S0.wav",
+      "sha256": "5740aa4df81fd74a458d41c1f8409719c6bc6186429d58024ef68e7ef1ec7f47",
+      "sampleRate": 48000,
+      "channels": 2,
+      "sourceFrames": 82462,
+      "decodedFrames": 82462,
+      "pitchMode": "Exact sparse phase frequency table from 6_15; original fixed sections preserved"
+    },
+    {
+      "channel": 7,
+      "source": "Sync/S1.wav",
+      "sha256": "9c0ad74d00860dc335e5e200a08596ae41a1fa3f4969017402019e8fd8353cfa",
+      "sampleRate": 48000,
+      "channels": 2,
+      "sourceFrames": 69367,
+      "decodedFrames": 69367,
+      "pitchMode": "Exact sparse phase frequency table from 6_15; original fixed sections preserved"
+    },
+    {
+      "channel": 8,
+      "source": "Sync/S2.wav",
+      "sha256": "6bac1182c803634afcfcf6e8bf1c13610bcbfaf5e29e91289047f0c03ad15385",
+      "sampleRate": 48000,
+      "channels": 2,
+      "sourceFrames": 120848,
+      "decodedFrames": 120848,
+      "pitchMode": "Exact sparse phase frequency table from 6_15; original fixed sections preserved"
+    },
+    {
+      "channel": 9,
+      "source": "Sync/S3.wav",
+      "sha256": "dd1c92df2e7c157223a587be55e720bcfa2ef14c30071a3dd6428dd722215af6",
+      "sampleRate": 48000,
+      "channels": 2,
+      "sourceFrames": 159067,
+      "decodedFrames": 159067,
+      "pitchMode": "Exact sparse phase frequency table from 6_15; original fixed sections preserved"
+    },
+    {
+      "channel": 10,
+      "source": "Sync/S4.wav",
+      "sha256": "40485be21217d5ce66c48feafd0af95794002784bcdbbf38c4f021cafe5167b8",
+      "sampleRate": 48000,
+      "channels": 2,
+      "sourceFrames": 165888,
+      "decodedFrames": 165888,
+      "pitchMode": "Exact sparse phase frequency table from 6_15; original fixed sections preserved"
+    },
+    {
+      "channel": 11,
+      "source": "Sync/S5.wav",
+      "sha256": "c6bc8b7ebf4981e0c211f609c1afad4c3bd99f29406f043f0e0a4ff14b2ee9d2",
+      "sampleRate": 48000,
+      "channels": 2,
+      "sourceFrames": 253952,
+      "decodedFrames": 253952,
+      "pitchMode": "Exact sparse phase frequency table from 6_15; original fixed sections preserved"
+    },
+    {
+      "channel": 12,
+      "source": "Sync/S6.wav",
+      "sha256": "21ebe824352a2317a11450869b13d496b9fb9ed5f279ef14ead7e7dec61f3305",
+      "sampleRate": 48000,
+      "channels": 2,
+      "sourceFrames": 259100,
+      "decodedFrames": 259100,
+      "pitchMode": "Exact sparse phase frequency table from 6_15; original fixed sections preserved"
+    },
+    {
+      "channel": 13,
+      "source": "Sync/S7.wav",
+      "sha256": "e98251d2a995c6eb261d6cfbef2d36274d134f1ddd827ab1669e3aeb95229e14",
+      "sampleRate": 48000,
+      "channels": 2,
+      "sourceFrames": 245758,
+      "decodedFrames": 245758,
+      "pitchMode": "Exact sparse phase frequency table from 6_15; original fixed sections preserved"
+    },
+    {
+      "channel": 14,
+      "source": "Sync/S8.wav",
+      "sha256": "56b3cd8900d505567c6edd6ceefdfe97c77c189b8be2b394a9824130395a89ce",
+      "sampleRate": 48000,
+      "channels": 2,
+      "sourceFrames": 28702,
+      "decodedFrames": 28800,
+      "pitchMode": "Exact sparse phase frequency table from 6_15; original fixed sections preserved"
+    },
+    {
+      "channel": 15,
+      "source": "Sync/S9.wav",
+      "sha256": "24f1ef2d4a939b96d2e0f348656c4b8b78ab18376abf0b253fe099da944d40b1",
+      "sampleRate": 48000,
+      "channels": 2,
+      "sourceFrames": 219162,
+      "decodedFrames": 219162,
+      "pitchMode": "Exact sparse phase frequency table from 6_15; original fixed sections preserved"
+    },
+    {
+      "channel": 16,
+      "source": "Sync/S10.wav",
+      "sha256": "b81dd3c8b07e8608c11413353409f33c9898c36c0938b0aa27fc4a672efc231b",
+      "sampleRate": 48000,
+      "channels": 2,
+      "sourceFrames": 122894,
+      "decodedFrames": 122894,
+      "pitchMode": "Exact sparse phase frequency table from 6_15; original fixed sections preserved"
+    },
+    {
+      "channel": 17,
+      "source": "Sync/S11.wav",
+      "sha256": "21bbf8c35c3d0985ca9de6fa7930fd7bbed6b939d912ef161aa2b98e8ed7e0f6",
+      "sampleRate": 48000,
+      "channels": 2,
+      "sourceFrames": 39811,
+      "decodedFrames": 39683,
+      "pitchMode": "Exact sparse phase frequency table from 6_15; original fixed sections preserved"
+    },
+    {
+      "channel": 18,
+      "source": "Sync/S12.wav",
+      "sha256": "9a23a6377bc3abe9a0a43c650684648aeec08bb0bec41b05b648ec00411a4ad1",
+      "sampleRate": 48000,
+      "channels": 2,
+      "sourceFrames": 289806,
+      "decodedFrames": 289806,
+      "pitchMode": "Exact sparse phase frequency table from 6_15; original fixed sections preserved"
+    },
+    {
+      "channel": 19,
+      "source": "Sync/S13.wav",
+      "sha256": "8db807449cb8683a0e4466860068e39d5ce4e81daff3c7847017bb794c51075d",
+      "sampleRate": 48000,
+      "channels": 2,
+      "sourceFrames": 231424,
+      "decodedFrames": 231424,
+      "pitchMode": "Exact sparse phase frequency table from 6_15; original fixed sections preserved"
+    }
+  ]
+}

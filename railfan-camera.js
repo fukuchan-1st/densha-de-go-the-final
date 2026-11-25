@@ -1,7 +1,7 @@
-import {stationPlatforms,platformBoundsAt,stoppingStationSpot} from './station-space.js?v=113';
-import {tunnelFilmingPlan,tunnelRanges,filmingTracks} from './railfan-tunnel.js?v=113';
-import * as T from './assets/vendor/three.module.js?v=113';
-import {crossingCenter} from './crossings.js?v=113';
+import {stationPlatforms,platformBoundsAt,stoppingStationSpot} from './station-space.js?v=114';
+import {tunnelFilmingPlan,tunnelRanges,filmingTracks} from './railfan-tunnel.js?v=114';
+import * as T from './assets/vendor/three.module.js?v=114';
+import {crossingCenter} from './crossings.js?v=114';
 export const RAILFAN_EYE_HEIGHT=1.68;
 export function trainHasCleared(s,spot,length){return s-length>spot+30;}
 export function passbyShake(speed,elapsed,distance=8){if(speed<70/3.6||elapsed<0||elapsed>2.4)return 0;return Math.min(.016,(speed*3.6-55)*.00024)*Math.exp(-elapsed*2.6)*Math.min(1,8/Math.max(4,distance));}
@@ -17,7 +17,7 @@ export class RailfanCamera{
  setNear(near){if(this.world.camera.near!==near){this.world.camera.near=near;this.world.camera.updateProjectionMatrix();}}
  nextSpot(s){const nearby=this.spots.find(x=>x.s>s+65&&x.s<s+800);if(nearby)return nearby;const tunnels=tunnelRanges(this.world);for(const distance of[100,60,160,30,-50,-100]){const at=Math.max(5,Math.min(this.world.length-5,s+distance));if(!tunnels.some(t=>at>t.sStart-20&&at<t.sEnd+20))return {s:at,kind:'line',name:'沿線'};}return {s:Math.max(5,Math.min(this.world.length-5,s)),kind:'line',name:'沿線'};}
  prepare(s){
-  const length=this.world.playerTrain?.count*20||40,station=stoppingStationSpot(this.world,s,length);
+  const length=this.world.playerTrain?.lengthM||40,station=stoppingStationSpot(this.world,s,length);
   if(station){if(!this.spot?.stopping||this.spot.station.s!==station.station.s){this.spot=station;this.pendingOutdoor=true;this.position=null;this.rotation=null;this.passAt=null;}this.tunnelPlan=null;this.setNear(this.normalNear);return this.spot.s;}
   if(this.spot?.stopping){this.spot=null;this.position=null;this.pendingOutdoor=true;}
   const plan=tunnelFilmingPlan(this.world,s,length,this.tunnelPlan);
@@ -49,7 +49,7 @@ export class RailfanCamera{
   if(safe){this.position=safe.p;this.spot={...spot,s:safe.at};this.sideDistance=Math.abs(safe.x-drive);}
   else{this.position=world.frame(spot.s,Math.min(...rails)-8).p.clone();this.position.y+=(world.deckHeight?.(spot.s)??0)+RAILFAN_EYE_HEIGHT;this.sideDistance=8;}
  }
- update(s,speed,dt,time=0){const length=this.world.playerTrain?.count*20||40;this.prepare(s);if(this.pendingOutdoor||!this.position)this.choose(s,length);this.elapsed+=dt;
+ update(s,speed,dt,time=0){const length=this.world.playerTrain?.lengthM||40;this.prepare(s);if(this.pendingOutdoor||!this.position)this.choose(s,length);this.elapsed+=dt;
 
   if(this.lastS!=null&&this.lastS<this.spot.s&&s>=this.spot.s){this.passAt=this.elapsed;this.passSpeed=speed;}
   if(dt===0&&this.lastS!=null&&Math.abs(s-this.lastS)>1)this.rotation=null;

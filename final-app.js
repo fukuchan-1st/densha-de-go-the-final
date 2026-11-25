@@ -1,49 +1,49 @@
-import {obasuteServing,updateObasuteOperation,obasuteDirection,obasuteActive,obasuteShunting,obasuteDoorReady,advanceObasute,obasuteCaption,obasuteTarget,obasuteSpeedLimit} from './obasute-operations.js?v=113';
-import {DriveIntro} from './drive-intro.js?v=113';
-import {omeOnboardFile} from './station-broadcast.js?v=113';
-import {wallet,SCENARIO_PRICE} from './scenario-wallet.js?v=113';
-import {TOHOKU_TRAIN,loadTohokuRoute} from './tohoku-integration.js?v=113';
-import {TohokuAudio} from './tohoku-audio.js?v=113';
-import {CabPanel} from './cab-panel.js?v=113';
-import {fitStationName} from './station-name-layout.js?v=113';
-import {weatherRoute,weatherLimits,weatherLimitAt,reportTyphoon} from './weather-operations.js?v=113';
-import {mountRoutePages} from './route-pages.js?v=113';
-import {WEATHER,weatherType,updateWeatherStatus} from './weather.js?v=113';
-import {gradeLabel} from './tunnel-effects.js?v=113';
-import {updateDoorVisual} from './train-doors.js?v=113';
-import {scheduledBoardingDelay} from './published-schedules.js?v=113';
-import {loadRoadAsset} from './road-assets.js?v=113';import {OnboardBroadcast} from './onboard-broadcast.js?v=113';
-import {CrossingAudio} from './crossings.js?v=113';
-import {VIEW_LABELS,normalizedView,replayViewMode} from './view-modes.js?v=113';
-import {yaganPlanningSpec,yaganBoardingReady,yaganBoardingDelay} from './yagan-timetable.js?v=113';
-import {progress,serviceKey} from './scenario-progress.js?v=113';
-import {scenarioRanges} from './scenario-ranges.js?v=113';
-import {installCheats,jumpToStation} from './game-cheats.js?v=113';
-import {mountGameShell} from './game-shell.js?v=113';
-import {DutyRecorder,replayStateAt,recordReplayAudio} from './replay-store.js?v=113';
-import {osakaPlanningSpec} from './osaka-timetable.js?v=113';
-import {collectStationReports,collectRestrictionReports,pauseWhenSpeechEnds} from './station-timing.js?v=113';
-import {buildConnectingRoutes} from './service-catalog.js?v=113';
-import {loadAudioMix,audioMixMarkup,bindAudioMix} from './audio-mix.js?v=113';
-import {bindRouteKeys,bindScreenKeys} from './screen-keys.js?v=113';
-import {sharedEffects} from './buffered-effects.js?v=113';
-import {bindTrainSelectionKeys} from './selection-keys.js?v=113';
-import {beginTerminalOpening,advanceTerminalOpening} from './terminal-arrival.js?v=113';
-import {vehiclePhoto} from './vehicle-photos.js?v=113';
-import {mountTrainDetails} from './train-details.js?v=113';
-import {mountWheelPicker} from './wheel-picker.js?v=113';
-import {routePlanningSpec,mountScoring,checkpointMarks,scoringStations,buildScoreTimetable,resolveScoreSchedule,scoreHazards,hornMarks,currentScoreRestriction,signalRestriction} from './scoring.js?v=113';
-import {mountDrivingOverlay} from './driving-overlay.js?v=113';import {mountLookahead,changesFromSections,stationMarks} from './lookahead.js?v=113';
-import {serviceChoices,makeServiceRoute} from './train-selection.js?v=113';
-import {GeneratedCab,generatedCab} from './generated-cab.js?v=113';
-import {FinalWorld} from './final-world.js?v=113';
-import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=113';
-import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=113';
-import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,routeLimitAt,stopPosition,finishStop,beginDoorClosing,isDoorClosing,takeDepartureCall} from './final-model.js?v=113';
-import {STATIONS as TOHOKU_STATIONS} from './route-data.js?v=113';
-import {FINAL_SCENARIOS,scenarioJourney} from './final-scenarios.js?v=113';
-import {detectStoppedOverrun,correctStoppedOverrun,nextSignalCall} from './train-operations.js?v=113';
-import {bindHornButton} from './assets/audio/held-horn.js?v=113';
+import {obasuteServing,updateObasuteOperation,obasuteDirection,obasuteActive,obasuteShunting,obasuteDoorReady,advanceObasute,obasuteCaption,obasuteTarget,obasuteSpeedLimit} from './obasute-operations.js?v=114';
+import {DriveIntro} from './drive-intro.js?v=114';
+import {omeOnboardFile} from './station-broadcast.js?v=114';
+import {wallet,SCENARIO_PRICE} from './scenario-wallet.js?v=114';
+import {TOHOKU_TRAIN,loadTohokuRoute} from './tohoku-integration.js?v=114';
+import {TohokuAudio} from './tohoku-audio.js?v=114';
+import {CabPanel} from './cab-panel.js?v=114';
+import {fitStationName} from './station-name-layout.js?v=114';
+import {weatherRoute,weatherLimits,weatherLimitAt,reportTyphoon} from './weather-operations.js?v=114';
+import {mountRoutePages} from './route-pages.js?v=114';
+import {WEATHER,weatherType,updateWeatherStatus} from './weather.js?v=114';
+import {gradeLabel} from './tunnel-effects.js?v=114';
+import {updateDoorVisual} from './train-doors.js?v=114';
+import {scheduledBoardingDelay} from './published-schedules.js?v=114';
+import {loadRoadAsset} from './road-assets.js?v=114';import {OnboardBroadcast} from './onboard-broadcast.js?v=114';
+import {CrossingAudio} from './crossings.js?v=114';
+import {VIEW_LABELS,normalizedView,replayViewMode} from './view-modes.js?v=114';
+import {yaganPlanningSpec,yaganBoardingReady,yaganBoardingDelay} from './yagan-timetable.js?v=114';
+import {progress,serviceKey} from './scenario-progress.js?v=114';
+import {scenarioRanges} from './scenario-ranges.js?v=114';
+import {installCheats,jumpToStation} from './game-cheats.js?v=114';
+import {mountGameShell} from './game-shell.js?v=114';
+import {DutyRecorder,replayStateAt,recordReplayAudio} from './replay-store.js?v=114';
+import {osakaPlanningSpec} from './osaka-timetable.js?v=114';
+import {collectStationReports,collectRestrictionReports,pauseWhenSpeechEnds} from './station-timing.js?v=114';
+import {buildConnectingRoutes} from './service-catalog.js?v=114';
+import {loadAudioMix,audioMixMarkup,bindAudioMix} from './audio-mix.js?v=114';
+import {bindRouteKeys,bindScreenKeys} from './screen-keys.js?v=114';
+import {sharedEffects} from './buffered-effects.js?v=114';
+import {bindTrainSelectionKeys} from './selection-keys.js?v=114';
+import {beginTerminalOpening,advanceTerminalOpening} from './terminal-arrival.js?v=114';
+import {vehiclePhoto} from './vehicle-photos.js?v=114';
+import {mountTrainDetails} from './train-details.js?v=114';
+import {mountWheelPicker} from './wheel-picker.js?v=114';
+import {routePlanningSpec,mountScoring,checkpointMarks,scoringStations,buildScoreTimetable,resolveScoreSchedule,scoreHazards,hornMarks,currentScoreRestriction,signalRestriction} from './scoring.js?v=114';
+import {mountDrivingOverlay} from './driving-overlay.js?v=114';import {mountLookahead,changesFromSections,stationMarks} from './lookahead.js?v=114';
+import {serviceChoices,makeServiceRoute} from './train-selection.js?v=114';
+import {GeneratedCab,generatedCab} from './generated-cab.js?v=114';
+import {FinalWorld} from './final-world.js?v=114';
+import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=114';
+import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=114';
+import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,routeLimitAt,stopPosition,finishStop,beginDoorClosing,isDoorClosing,takeDepartureCall} from './final-model.js?v=114';
+import {STATIONS as TOHOKU_STATIONS} from './route-data.js?v=114';
+import {FINAL_SCENARIOS,scenarioJourney} from './final-scenarios.js?v=114';
+import {detectStoppedOverrun,correctStoppedOverrun,nextSignalCall} from './train-operations.js?v=114';
+import {bindHornButton} from './assets/audio/held-horn.js?v=114';
 
 
 const $=id=>document.getElementById(id),META=[
@@ -52,7 +52,7 @@ const $=id=>document.getElementById(id),META=[
  {id:'osaka',name:'大阪環状線',english:'OSAKA LOOP LINE',vehicle:'323',color:'#e85248',trainColor:'#e57227',summary:'大阪 → 大阪 · 外回り',train:'323系',short:'323'},
  {id:'tokaido',name:'東海道線',english:'TOKAIDO LINE',vehicle:'207',color:'#5caddb',summary:'京都 → 神戸 · 各駅停車',train:'207系2000番台',short:'207'},
  {id:'tohoku',name:'東北本線',english:'TOHOKU MAIN LINE',vehicle:'701',color:'#78b888',summary:'黒磯 → 福島 · 各駅停車',train:'701系1500番台',short:'701'},
- {id:'yagan',name:'野岩鉄道',english:'AIZU KINUGAWA LINE',vehicle:'6050',color:'#d7b991',trainColor:'#a53037',bodyColor:'#f2e4c7',summary:'新藤原 → 会津高原尾瀬口 · 各駅停車',train:'6050型',short:'6050',series:'型',card:'yagan-route-button.svg'},
+ {id:'yagan',name:'東武スカイツリーライン・日光線系統',english:'TOBU SKYTREE / NIKKO LINES',vehicle:'6050',color:'#d7b991',trainColor:'#a53037',bodyColor:'#f2e4c7',summary:'浅草〜東武日光・会津田島',train:'500・10030・70000・20400・6050系',short:'6050',series:'型',card:'yagan-route-button.svg'},
  {id:'toho',name:'東方鉄道線',english:'TOHO RAILWAY',vehicle:'6050',color:'#cda86f',summary:'東方本線・人里線・センター支線',train:'6050型 / 211系',short:'6050',series:'型',card:'toho-route-button.svg'},
  {id:'yamagata',name:'奥羽本線（山形線）',english:'YAMAGATA LINE',vehicle:'719-5000',color:'#e9a34b',summary:'福島〜米沢 / 米沢〜新庄 · 各駅停車',train:'719系5000番台',short:'719',card:'../vehicle-photos/719-5000.webp'}
 ];
@@ -62,6 +62,9 @@ let selected=Math.max(0,META.findIndex(meta=>meta.id===preferredRoute)),recipes,
 let chosenOption,routePages;
 let packs=new Map(),activeRoute,chosenVehicle=null,chosenRoute=null,chosenService='普通',trainSelectionOpen=false;
 let trainDetails,detailEndIndex=null;
+import {integrateTobuVehicles} from './tobu-vehicles.js?v=114';
+import {loadTobuRouteParts,assembleTobuRoutes} from './tobu-routes.js?v=114';
+import {formationCount} from './formation-operations.js?v=114';
 const extraRoutes=new Map();
 let recorder=null,replaySession=null,crossingAudio=null;
 const settings={weather:'clear',volume:.65,shake:1,drawDistance:1500,quality:matchMedia('(pointer:coarse)').matches?'light':'standard'};
@@ -89,7 +92,7 @@ const routeMain=document.createElement('button');routeMain.id='routeMainMenu';ro
 function updateMenuWeather(){const type=weatherType(settings.weather),icon={clear:'☀',rain:'☂',snow:'❄',heavySnow:'❄',settledSnow:'❄',thunderstorm:'ϟ',typhoon:'≋'}[type];const label=document.querySelector('.menu-bottom>.sun');if(label)label.textContent=icon+' '+WEATHER[type].name;document.querySelectorAll('.route-card>.sun').forEach(el=>el.textContent=icon);}
 function fit(){const r=$('stageArea').getBoundingClientRect(),scale=Math.min(r.width/1600,r.height/900);document.documentElement.style.setProperty('--overlay-ui-scale',Math.max(1,Math.min(3.5,44/(54*scale))));$('stage').style.left='50%';$('stage').style.top='50%';$('stage').style.transform=`translate(-50%,-50%) scale(${scale})`;}
 addEventListener('resize',fit);visualViewport?.addEventListener('resize',fit);new ResizeObserver(fit).observe($('stageArea'));fit();
-function recipe(){const train=(chosenVehicle??META[selected].vehicle)==='701'?TOHOKU_TRAIN:recipes.trains.find(t=>t.id===(chosenVehicle??META[selected].vehicle));return chosenVehicle&&chosenOption?.carCount?{...train,playableSpecs:{...train.playableSpecs,carCount:chosenOption.carCount}}:train;}
+function recipe(){const train=(chosenVehicle??META[selected].vehicle)==='701'?TOHOKU_TRAIN:recipes.trains.find(t=>t.id===(chosenVehicle??META[selected].vehicle));const count=mode==='drive'&&run?.carCount?run.carCount:chosenOption?.carCount;return chosenVehicle&&count?{...train,playableSpecs:{...train.playableSpecs,carCount:count}}:train;}
 function selectedRoute(){return chosenRoute??routes[selected];}
 function route(){const base=activeRoute??selectedRoute();return mode==='drive'&&run?weatherRoute(run,base):base;}
 function selectedScenario(){
@@ -172,10 +175,17 @@ async function closeSequence(generation){
   activeRun.doorPhase='closing';const completed=await effect('close');
   if(!current()||!completed)return;
   if(!finishStop(activeRun,r,attempt.stationIndex)){activeRun.doorPhase='audio-error';toast('停車位置を確認できません。戸開状態を維持します。',10);return;}
+  syncFormation(r);
   sound.playEffect('relayOn').catch(()=>{});
   toast(activeRun.finished?'全区間の運転を完了しました。':`戸閉よし。次は${r.stations[activeRun.next].name}。`,5);
   if(activeRun.finished){paused=true;pauseAfterArrivalVoice();showResults();}else sound.callDriver('doorsClosed','departure');
  }catch(error){if(!current())return;activeRun.doorPhase='audio-error';$('audioRetry').hidden=false;toast('戸閉音を再生できませんでした。「その他」から再試行できます。',9999);}
+}
+function syncFormation(r){
+ const count=formationCount(r,run,recipe().playableSpecs.carCount);
+ if(run.carCount===count)return;run.carCount=count;r.carCount=count;world.route.carCount=count;
+ world.playerTrain?.setCount(count);
+ if(sound?.recipe?.playableSpecs)sound.recipe={...sound.recipe,playableSpecs:{...sound.recipe.playableSpecs,carCount:count}};
 }
 function updateDriverCalls(){
  if(run.finished||run.doors||obasuteShunting(run))return;
@@ -195,7 +205,7 @@ function updateDriverCalls(){
  const station=r.stations[run.next],distance=station.s-run.s;
  if(run.lastCalledStop!==run.next&&distance>=0&&distance<=300){
   run.lastCalledStop=run.next;
-  sound.callStation('approach',station);
+  sound.currentCarCount=run.carCount;sound.callStation('approach',station);
  }
  const block=nextSignalCall(r.signals??[],run.s,run.calledSignals??=new Set());
  if(block!==null)sound.callRouteCue('signal',block);
@@ -240,7 +250,7 @@ async function start(startIndex){
   const [loadedPanel]=await Promise.all([generatedCab&&['e235','e233','323','207','6050','701'].includes(train.id)?GeneratedCab.load($('cab'),train.id):train.id==='701'?CabPanel.load($('cab')):LocalCabPanel.load($('cab'),train,pack),sound.prepare(),audioEnabled]);
   panel=loadedPanel;
   crossingAudio=new CrossingAudio(sound);await crossingAudio.ready;
-  run=createJourney(r,train,startIndex,trip.endIndex);onboard=null;OnboardBroadcast.create(sound,r,train.id,chosenService).then(o=>{if(!o||activeRoute!==r)return;onboard=o;o.preload(r,run.startIndex,run.endIndex);}).catch(()=>{});run.rewardId=globalThis.crypto?.randomUUID?.()??Date.now()+':'+Math.random();run.weather=weatherType(settings.weather);run.dutyKey=currentDutyKey();run.requiredStops=trip.endIndex-startIndex;run.obasuteCarLength=train.playableSpecs.carCount*20;cheats.reset();score.reset(run);score.bindHorn(sound,()=>run,()=>scoreHazards(route()));
+  run=createJourney(r,train,startIndex,trip.endIndex);run.carCount=formationCount(r,run,train.playableSpecs.carCount);r.carLengthM=train.playableSpecs.carLengthM??r.carLengthM??20;onboard=null;OnboardBroadcast.create(sound,r,train.id,chosenService).then(o=>{if(!o||activeRoute!==r)return;onboard=o;o.preload(r,run.startIndex,run.endIndex);}).catch(()=>{});run.rewardId=globalThis.crypto?.randomUUID?.()??Date.now()+':'+Math.random();run.weather=weatherType(settings.weather);run.dutyKey=currentDutyKey();run.requiredStops=trip.endIndex-startIndex;run.obasuteCarLength=train.playableSpecs.carCount*20;cheats.reset();score.reset(run);score.bindHorn(sound,()=>run,()=>scoreHazards(route()));
   if(r.soundEvents?.length){
    const first=r.soundEvents.findIndex(event=>event.s>=run.s);
    run.soundCursor=first<0?r.soundEvents.length:first;
@@ -251,11 +261,11 @@ async function start(startIndex){
   run.scoreVehicleSpec=schedule.planningSpec;
   run.scoreTimetable=schedule.timetable.filter(st=>st.s<=r.stations[run.endIndex].s+.5);
   r.color=meta.color;
-  r.carCount=train.playableSpecs.carCount;
+  r.carCount=run.carCount;
   r.eyeHeight=Number(train.playableSpecs.viewpoint?.y??2.7);
   if(r.id==='yagan')r.eyeOffset=Number(train.playableSpecs.viewpoint.x);
   world=new FinalWorld($('world'),r,{quality:settings.quality,drawDistance:settings.drawDistance});
-  world.setCabView(panel.viewOrigin);world.setPlayerTrain(train.id,train.playableSpecs.carCount);
+  world.setCabView(panel.viewOrigin);world.setPlayerTrain(train.id,run?.carCount??train.playableSpecs.carCount);
   setViewMode(3);
   paused=true;
   modalPaused=false;
@@ -313,7 +323,7 @@ function updateObasuteControls(){let box=$('obasuteControls');if(!box){box=docum
 function advance(dt){
  if(run.finished)return;
  const r=route(),train=recipe(),station=r.stations[run.next],previous={s:run.s,v:run.v,elapsed:run.elapsed};
- updateObasuteOperation(run,r);if(run.obasute?.phase==='head-in'&&run.lastCalledStop!==run.next){run.lastCalledStop=run.next;sound.callStation('approach',station);}
+ updateObasuteOperation(run,r);if(run.obasute?.phase==='head-in'&&run.lastCalledStop!==run.next){run.lastCalledStop=run.next;sound.currentCarCount=run.carCount;sound.callStation('approach',station);}
  if(obasuteShunting(run)){run.inTunnel=false;if(assist){const target=obasuteTarget(run),op=run.obasute;if(target!==null){const distance=Math.abs(target-op.u),limit=op.phase==='head-in'&&op.u>-450?Math.min(45/3.6,Math.sqrt((15/3.6)**2+1.2*(op.u+450))):15/3.6,desired=Math.min(limit,Math.sqrt(Math.max(0,distance-1)*.6));run.notch=run.v>desired?-4:run.v<desired-.3?Math.min(4,Math.max(1,run.notch)+(run.acceleration<.05?1:0)):0;}}advanceObasute(run,r,train,dt,driveStep,world.grade(run.s));cheats.clockStep(run,dt);return;}
  if(assist&&!run.doors)brakeAssist(run,r,train);
  run.inTunnel=Boolean(world.structureAt(run.s,'tunnel'));driveStep(run,train,dt,world.grade(run.s));cheats.clockStep(run,dt);onboard?.update(run,r);
@@ -346,7 +356,7 @@ function frame(now){
  if(mode==='drive'&&world&&run){
   const r=route();
   if(!replaySession&&run.weather!==settings.weather){run.weather=weatherType(settings.weather);delete run.typhoonSection;delete run.typhoonAnnounced;run.wheelSlip=false;run.wheelSlide=false;run.wheelExcess=0;run.wheelDeficit=0;run.wheelSpeed=run.v;}
-  if(replaySession){updateReplay(dt);}
+  if(replaySession){updateReplay(dt);if(run.carCount&&world.playerTrain.count!==run.carCount)world.playerTrain.setCount(run.carCount);}
   else if(!paused){
    cheats.speedStep(run,dt);
    let remaining=dt;
@@ -381,6 +391,7 @@ try {
   return response.json();
  });
  [recipes,packs,...routes]=await Promise.all([loadVehicleRecipes(),loadBundledTrainPacks(),...routeLoads]);
+ await integrateTobuVehicles(recipes,packs);
  $('routeCards').innerHTML=META.map((m,i)=>`<button class="route-card${m.card?' yagan-card':m.legacy?' tohoku-card':''}" data-route="${i}" data-line="${m.id}" style="--i:${i};--route-color:${m.color};--card-image:url(./assets/final/${m.card??m.id+'-route-button-v26.webp'})" aria-pressed="false"><span class="route-copy"><strong>${m.name}</strong><small>${m.english}</small><em>普通　${m.train}</em></span><span class="sun" aria-hidden="true">☀</span></button>`).join('');
  $('routeCards').querySelectorAll('button').forEach(button=>button.onclick=()=>{choose(Number(button.dataset.route));openTrainSelection();});
  routePages=mountRoutePages($('routeCards'),{choose,current:()=>selected,active:()=>!shellActive&&mode==='menu'&&!trainSelectionOpen&&!$('modal').open&&!loading});
@@ -391,6 +402,11 @@ try {
  if(response.ok)extraRoutes.set(id,await response.json());
 }));
  for(const [id,r] of buildConnectingRoutes(extraRoutes))extraRoutes.set(id,r);
+ const originalYagan=await loadRoadAsset(routes[META.findIndex(m=>m.id==='yagan')]);
+ extraRoutes.set('yagan',originalYagan);
+ const tobu=assembleTobuRoutes(await loadTobuRouteParts(),originalYagan);
+ extraRoutes.set('tobu-aizu',tobu.main);extraRoutes.set('tobu-nikko',tobu.nikko);
+ routes[META.findIndex(m=>m.id==='yagan')]=tobu.main;
  registerProgressCatalog();
  setupTrainSelection();
  displayMenu();
@@ -437,7 +453,7 @@ function openTrainSelection(){
  $('trainChoice').replaceChildren(...choices.map(([routeId,vehicle,service,option],index)=>{
   const train=vehicle==='701'?TOHOKU_TRAIN:recipes.trains.find(t=>t.id===vehicle);
   const r=makeServiceRoute(extraRoutes.get(routeId)??routes[selected],vehicle,service,option);
-  const element=new Option((train?.name??vehicle)+' · '+service+' · '+r.name+' · '+r.stations[0].name+' → '+r.stations.at(-1).name,String(index));Object.assign(element.dataset,{train:train?.name??vehicle,service:(!wallet.isUnlocked(serviceKey(META[selected].id,choices[index]))?'🔒 1000points · ':'')+service+(option.carCount?` · ${option.carCount}両`:'')+(option.reverse?' / 逆方向':' / 順方向')+(option.night?'・夜':''),range:r.stations[0].name+' → '+r.stations.at(-1).name,photo:vehiclePhoto(vehicle,META[selected].id),index:String(index+1),locked:String(!wallet.isUnlocked(serviceKey(META[selected].id,choices[index]))),progress:String(progress.fraction(serviceKey(META[selected].id,choices[index]),r.stations[0].s,r.stations.at(-1).s)),cleared:String(progress.cleared(serviceKey(META[selected].id,choices[index]),r.stations[0].s,r.stations.at(-1).s))});return element;
+  const element=new Option((train?.name??vehicle)+' · '+service+' · '+r.name+' · '+r.stations[0].name+' → '+r.stations.at(-1).name,String(index));Object.assign(element.dataset,{train:train?.name??vehicle,service:(!wallet.isUnlocked(serviceKey(META[selected].id,choices[index]))?'🔒 1000points · ':'')+service+(option.carCount?` · ${option.carCount}両`:'')+((option.reverse||r.reverseDirection)?' / 逆方向':' / 順方向')+(option.night?'・夜':''),range:r.stations[0].name+' → '+r.stations.at(-1).name,photo:vehiclePhoto(vehicle,META[selected].id),index:String(index+1),locked:String(!wallet.isUnlocked(serviceKey(META[selected].id,choices[index]))),progress:String(progress.fraction(serviceKey(META[selected].id,choices[index]),r.stations[0].s,r.stations.at(-1).s)),cleared:String(progress.cleared(serviceKey(META[selected].id,choices[index]),r.stations[0].s,r.stations.at(-1).s))});return element;
  }));
  showTrainList();trainSelectionOpen=true;$('menuScreen').hidden=true;$('menuControls').hidden=true;$('menuScreen').inert=true;$('menuControls').inert=true;document.body.dataset.mode='selection';applyTrainChoice();$('trainSelection').hidden=false;fit();$('trainChoice').wheel.sync();$('trainChoice').wheel.focus();
 }
@@ -464,7 +480,7 @@ async function playSavedReplay(data){
   activeRoute=structuredClone(data.route);const train=data.train,pack=train.id==='701'?{}:packs.get(train.id);if(!pack)throw Error('リプレイの車両素材がありません');
   sound=new (train.id==='701'?TohokuAudio:LocalTrainAudio)(train,pack,{volume:1,mix:audioMix,context:menuEffects?.context});sound.configureDriverRoute(activeRoute,data.lineId);
   [panel]=await Promise.all([train.id==='701'?CabPanel.load($('cab')):LocalCabPanel.load($('cab'),train,pack),sound.prepare(),sound.resume()]);
-  world=new FinalWorld($('world'),activeRoute,{quality:settings.quality,drawDistance:settings.drawDistance});world.setCabView(panel.viewOrigin);world.setPlayerTrain(train.id,train.playableSpecs.carCount);viewMode=0;crossingAudio=new CrossingAudio(sound);await Promise.all([crossingAudio.ready,world.obasute.ready,world.playerTrain.ready]);
+  world=new FinalWorld($('world'),activeRoute,{quality:settings.quality,drawDistance:settings.drawDistance});world.setCabView(panel.viewOrigin);world.setPlayerTrain(train.id,run?.carCount??train.playableSpecs.carCount);viewMode=0;crossingAudio=new CrossingAudio(sound);await Promise.all([crossingAudio.ready,world.obasute.ready,world.playerTrain.ready]);
   run=replayStateAt(data.samples,data.samples[0].elapsed);run.scoreTimetable=data.timetable??resolveScoreSchedule(activeRoute,run.s,osakaPlanningSpec(activeRoute,train.playableSpecs)).timetable;score.reset(run);
   replaySession={data,time:run.elapsed,speed:1,eventCursor:0,viewOverride:null};paused=false;panorama=false;setMode('drive');document.body.classList.add('replaying');setViewMode(replayViewMode(run));
   $('vehicleLimit').textContent='リプレイ · '+data.trainName;$('hudRoute').textContent=data.lineName;

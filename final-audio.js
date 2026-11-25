@@ -1,13 +1,13 @@
-import {motorVolumeReference,SlipPitchController,fixedCurveValue} from './motor-pitch.js?v=113';
-import {AmbientAudio} from './ambient-audio.js?v=113';
-import {stationDepartureCue} from './station-broadcast.js?v=113';
-import {TrainPassbyAudio} from './train-passby-audio.js?v=113';
-import {timingVoiceRefs,timingPreloadRefs,restrictionVoiceRefs} from './station-timing.js?v=113';
-import {stationCueRefs,stationVoiceBank} from './station-voice.js?v=113';
-import {createMixGains,voiceCategory} from './audio-mix.js?v=113';
-import {interpolateColumn} from './final-vehicle.js?v=113';
-import {runPitch} from './assets/audio/run-pitch.js?v=113';
-import {HeldHorn} from './assets/audio/held-horn.js?v=113';
+import {motorVolumeReference,SlipPitchController,fixedCurveValue} from './motor-pitch.js?v=114';
+import {AmbientAudio} from './ambient-audio.js?v=114';
+import {stationDepartureCue} from './station-broadcast.js?v=114';
+import {TrainPassbyAudio} from './train-passby-audio.js?v=114';
+import {timingVoiceRefs,timingPreloadRefs,restrictionVoiceRefs} from './station-timing.js?v=114';
+import {stationCueRefs,stationVoiceBank,tobuDepartureRefs} from './station-voice.js?v=114';
+import {createMixGains,voiceCategory} from './audio-mix.js?v=114';
+import {interpolateColumn} from './final-vehicle.js?v=114';
+import {runPitch} from './assets/audio/run-pitch.js?v=114';
+import {HeldHorn} from './assets/audio/held-horn.js?v=114';
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const whistle={entryIndex:'departure-whistle'};
 const voiceBanks={e235:['kanko0','uta'],e233:['kanko1','utb'],323:['kanko2','utd'],207:['kanko3','ute']};
@@ -76,7 +76,7 @@ export class LocalTrainAudio {
    ...rolling,...Object.values(sounds.motor??{})].filter(Boolean);
  }
  configureDriverRoute(route,line){this.driverRoute=route;this.driverRouteLine=stationVoiceBank(line)?line:null;}
- stationRefs(kind,station){return stationCueRefs(this.driverRouteLine,station,kind,this.recipe.playableSpecs?.carCount);}
+ stationRefs(kind,station){return stationCueRefs(this.driverRouteLine,station,kind,this.currentCarCount??this.recipe.playableSpecs?.carCount);}
  callStation(kind,station){return this.queueDriverCalls(this.stationRefs(kind,station));}
  callSlowRestriction(kmh){const bank=stationVoiceBank(this.driverRouteLine)?.[0]??'kanko1',ref={entryIndex:'weather-slow:'+bank,driverVoiceFile:`./assets/audio/ambient/${bank}-slow40.ogg`},call=this.queueDriverCalls([ref]);if(!this.weatherWarningPlayed){this.weatherWarningPlayed=true;const generation=this.generation;call.then(()=>{if(!this.stopped&&this.generation===generation)this.playRef({entryIndex:'weather-warning',driverVoiceFile:'./assets/audio/ambient/slow-warning.ogg',mixCategory:'se'}).catch(()=>false);});}return call;}
  callRestriction(kmh){return this.queueDriverCalls(restrictionVoiceRefs(this.driverRouteLine,kmh));}
@@ -94,6 +94,8 @@ export class LocalTrainAudio {
   return {entryIndex,driverVoiceFile:`./assets/final/driver-voice/${directory}/${entryIndex}.wav`};
  }
  callDriver(...names){
+  const tobu=names.includes('departure')?tobuDepartureRefs(this.driverRouteLine):null;
+  if(tobu)return this.queueDriverCalls(tobu);
   return this.queueDriverCalls(names.map(name=>this.driverCallRef(name)));
  }
  async playStationDeparture(station,isCurrent=()=>true){

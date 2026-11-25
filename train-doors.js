@@ -1,9 +1,14 @@
-import {semiDoorAmount} from './door-policy.js?v=113';
-import * as T from './assets/vendor/three.module.js?v=113';
-import {interpolateKnots} from './track-layout.js?v=113';
+import {semiDoorAmount} from './door-policy.js?v=114';
+import * as T from './assets/vendor/three.module.js?v=114';
+import {interpolateKnots} from './track-layout.js?v=114';
 // Local car coordinates, measured from the centre of the body. Passenger doors
 // only: cab access doors and gangways remain fixed.
 export const DOOR_LAYOUTS={
+"20400":{"centres":[-6.147,-0.227,5.693],"width":1.32,"bottom":1.177,"top":2.977,"single":false,"variants":{"head":{"centres":[-6.147,-0.227,5.693],"width":1.32,"bottom":1.177,"top":2.977,"single":false},"middle":{"centres":[-5.923,-0.003,5.917],"width":1.32,"bottom":1.177,"top":2.977,"single":false},"motor":{"centres":[-5.923,-0.003,5.917],"width":1.32,"bottom":1.177,"top":2.977,"single":false},"tail":{"centres":[-6.147,-0.227,5.693],"width":1.32,"bottom":1.177,"top":2.977,"single":false}}},
+"70000":{"centres":[-6.4,0,6.4],"width":1.3,"bottom":1.1,"top":3.1},
+"10030":{"centres":[-7.1,-2.35,2.35,7.1],"width":1.3,"bottom":1.1,"top":3.1},
+"500":{"centres":[5.42],"width":1.031,"bottom":1.229,"top":3.059,"single":true,"variants":{"head":{"centres":[5.42],"width":1.031,"bottom":1.229,"top":3.059,"single":true},"middle":{"centres":[-4.479],"width":1.011,"bottom":1.229,"top":3.059,"single":true},"tail":{"centres":[5.671],"width":1.052,"bottom":1.229,"top":3.059,"single":true}}},
+
  '719-5000':{centres:[-6.71,-.19,6.34],width:1.3,bottom:1.10,top:3.08,variants:{tail:{centres:[-6.44,.09,6.61]}}},
  '207':{centres:[-7.1,-2.4,2.4,7.1]},'223-1000':{centres:[-6.8,0,6.8]},e233:{centres:[-5.9,-2.3,2.55,7.4],width:1.23,bottom:1.23,top:3.04,variants:{tail:{centres:[-7.1,-2.25,2.6,6.25]},middle:{centres:[-7.2,-2.4,2.4,7.2]}}},e235:{centres:[-7.52,-2.49,2.45,6.12],width:1.23,bottom:1.06,top:3.12,variants:{tail:{centres:[-6.14,-2.51,2.47,7.47]},middle:{centres:[-7.5,-2.5,2.5,7.5]}}},
  '323':{centres:[-7.2,-.13,6.9],width:1.24,bottom:1.10,top:2.98,variants:{tail:{centres:[-6.93,.13,7.18],top:2.94},middle:{centres:[-7.05,0,7.05]}}},'211':{centres:[-6.75,-.15,6.45],width:1.3,bottom:1.14,top:3.12,variants:{tail:{centres:[-6.45,.12,6.75]},middle:{centres:[-6.65,0,6.65]}}},
