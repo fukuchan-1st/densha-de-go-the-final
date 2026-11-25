@@ -1,4 +1,4 @@
-import {sceneryDensity} from './scenery-profile.js?v=114';
+import {sceneryDensity} from './scenery-profile.js?v=115';
 const clamp=x=>Math.max(0,Math.min(1,x));
 export function ambientLevels(route,s,v,type,viewMode,tunnel=false){
  const d=sceneryDensity(route,s),city=clamp(Math.max(d.building/90,d.urban??0)),hill=clamp((d.forest??d.green/100)*1.4),stations=route.sceneryStations??route.stations??[];

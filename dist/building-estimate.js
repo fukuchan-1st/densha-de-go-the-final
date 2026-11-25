@@ -1,4 +1,4 @@
-import {sceneryDensity} from './scenery-profile.js?v=114';
+import {sceneryDensity} from './scenery-profile.js?v=115';
 // Representative Street View checks calibrate low-rise houses and station-front
 // shops. This is a settlement estimate, not a survey of every individual facade.
 export function estimateBuildingHeight(route,s,width,depth,height,estimated=false){

@@ -1,4 +1,4 @@
-import {interpolateKnots} from './track-layout.js?v=114';
+import {interpolateKnots} from './track-layout.js?v=115';
 const major=new Set(['京都','新大阪','大阪','神戸']);
 export function corridorSceneryType(route,s){
  if(route.id!=='tokaido')return null;

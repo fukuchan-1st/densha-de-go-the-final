@@ -1,8 +1,9 @@
-import {applyStationWiring} from './station-wiring.js?v=114';
-import {prepareSpecialStations} from './special-station-layouts.js?v=114';
-import {widenBoardingClearance,mergePlatformSurfaces} from './platform-details.js?v=114';
-import {yamanoteParallel} from './yamanote-parallel.js?v=114';
-import {interpolateKnots} from './track-layout.js?v=114';
+import {applyStationWiring} from './station-wiring.js?v=115';
+import {prepareSpecialStations} from './special-station-layouts.js?v=115';
+import {prepareTobuStations} from './tobu-station-layouts.js?v=115';
+import {widenBoardingClearance,mergePlatformSurfaces} from './platform-details.js?v=115';
+import {yamanoteParallel} from './yamanote-parallel.js?v=115';
+import {interpolateKnots} from './track-layout.js?v=115';
 
 // All offsets are measured to the driver's right. A direction belongs to a
 // rail, rather than being guessed from its distance to the player's train.
@@ -45,7 +46,7 @@ const ownLane=(tracks,reverse,outer)=>tracks===1?0:tracks===2?(reverse?-4.2:0):r
 
 export function prepareLeftTraffic(source){
  source=yamanoteParallel(source);if(source.leftTrafficVersion===5)return applyStationWiring(source);
- const sections=inferTrafficSections(source),reverse=!!source.reverseDirection,outer=source.id==='tokaido'&&source.serviceTrack==='outer',L=source.length??source.stations.at(-1).s;
+ const sections=inferTrafficSections(source),reverse=!!source.reverseDirection,outer=(source.id==='tokaido'||source.id?.startsWith('tobu'))&&source.serviceTrack==='outer',L=source.length??source.stations.at(-1).s;
  const base=s=>ownLane(trafficSectionAt({...source,trafficSections:sections},s).tracks,reverse,outer);
  // Continuous driver path through a change from four tracks to two or one.
  const laneAt=s=>{let x=base(s);for(let i=1;i<sections.length;i++){const boundary=sections[i].sStart,from=ownLane(sections[i-1].tracks,reverse,outer),to=ownLane(sections[i].tracks,reverse,outer);if(from===to)continue;const begin=Math.abs(to)>Math.abs(from)?boundary-160:boundary,end=begin+160;if(s>=begin&&s<=end){const t=(s-begin)/160;x=from+(to-from)*(t*t*(3-2*t));}}return x;};
@@ -87,5 +88,5 @@ export function prepareLeftTraffic(source){
   if(trafficSectionAt({...source,trafficSections:sections},st.s).tracks===4){const opposing=reverse?[0,8]:[8,16],l=opposing[0]+1.55,r=opposing[1]-1.55;if(!platforms.some(p=>p.edges[0][1]<=l&&p.edges[0][2]>=r))platforms.push(make(l,r));}
   layouts[st.name]={...layout,platforms:mergePlatformSurfaces(platforms.filter(p=>p===boarding||p.edges[0][2]-p.edges[0][1]>=2.5))};
  }
- return applyStationWiring(prepareSpecialStations({...source,trafficSide:'left',leftTrafficVersion:5,trafficSections:sections,tokyoBaseDrivingTrack:undefined,drivingTrack:driving,neighborTracks:neighbors,stationLayouts:layouts,corridorSceneryPrepared:true}),source);
+ return applyStationWiring(prepareTobuStations(prepareSpecialStations({...source,trafficSide:'left',leftTrafficVersion:5,trafficSections:sections,tokyoBaseDrivingTrack:undefined,drivingTrack:driving,neighborTracks:neighbors,stationLayouts:layouts,corridorSceneryPrepared:true})),source);
 }
