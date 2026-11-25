@@ -1,4 +1,4 @@
-import * as T from './assets/vendor/three.module.js?v=114';import {interpolateKnots} from './track-layout.js?v=114';
+import * as T from './assets/vendor/three.module.js?v=115';import {interpolateKnots} from './track-layout.js?v=115';
 export class BallastDetail{
  constructor(world){this.world=world;this.chunks=new Map();this.geometry=new T.OctahedronGeometry(1,0);this.material=new T.MeshStandardMaterial({color:'#96958c',roughness:1});}
  build(index){const {world}=this,start=index*120,end=start+120,items=[];let seed=(index*17011+78123)>>>0;const random=()=>((seed=Math.imul(seed,1664525)+1013904223>>>0)/4294967296);

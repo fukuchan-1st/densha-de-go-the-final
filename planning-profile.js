@@ -1,4 +1,4 @@
-import {sampleRouteCurve} from './route-curve.js?v=114';
+import {sampleRouteCurve} from './route-curve.js?v=115';
 // Operating targets shape timetables; route speed-limit signs remain unchanged.
 const tokyo=new Set('東京 神田 御茶ノ水 四ツ谷 新宿 中野 高円寺 阿佐ケ谷 荻窪 西荻窪 吉祥寺 三鷹 武蔵境 東小金井 武蔵小金井 国分寺 西国分寺 国立 立川 日野 豊田 八王子 西八王子 高尾'.split(' '));
 const north=new Set('長野 安茂里 川中島 今井 篠ノ井'.split(' '));

@@ -1,7 +1,7 @@
-import * as T from './assets/vendor/three.module.js?v=114';
-import {snowCover} from './weather-operations.js?v=114';
-import {stationBuildingClear} from './station-space.js?v=114';
-import {interpolateKnots} from './track-layout.js?v=114';
+import * as T from './assets/vendor/three.module.js?v=115';
+import {snowCover} from './weather-operations.js?v=115';
+import {stationBuildingClear} from './station-space.js?v=115';
+import {interpolateKnots} from './track-layout.js?v=115';
 const random=(i,k)=>{const n=Math.sin(i*127.1+k*311.7)*43758.5453;return n-Math.floor(n);};
 export function snowBankShape(cover,seed=0){const scale=Math.max(0,(cover-.12)/.84);return {height:.22+scale*(3.2+seed*3.1),width:1.6+scale*(4+seed*3),depth:1.8+scale*(3+seed*3)};}
 export class SnowBanks{

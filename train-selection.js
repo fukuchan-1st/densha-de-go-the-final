@@ -1,14 +1,14 @@
-import {restoreObasuteLocalStop} from './obasute-operations.js?v=114';
-import {withChuoLocalPasses} from './chuo-local-passes.js?v=114';
-import {withYamagataEra} from './yamagata-era.js?v=114';
-import {applyPublishedSchedule} from './published-schedules.js?v=114';
-import {releaseMatsumotoExpressLimit} from './geographic-sections.js?v=114';
-import {prepareLeftTraffic} from './route-traffic.js?v=114';
-import {selectTokaidoServiceTrack} from './tokaido-service-track.js?v=114';
-import {serviceChoices,STOP_PATTERNS} from './service-catalog.js?v=114';
-import {sliceRoute,reverseRoute} from './service-routes.js?v=114';
-import {applyTobuScenario} from './tobu-services.js?v=114';
-import {applyTobuHibiyaPlatform} from './tobu-routes.js?v=114';
+import {restoreObasuteLocalStop} from './obasute-operations.js?v=115';
+import {withChuoLocalPasses} from './chuo-local-passes.js?v=115';
+import {withYamagataEra} from './yamagata-era.js?v=115';
+import {applyPublishedSchedule} from './published-schedules.js?v=115';
+import {releaseMatsumotoExpressLimit} from './geographic-sections.js?v=115';
+import {prepareLeftTraffic} from './route-traffic.js?v=115';
+import {selectTokaidoServiceTrack} from './tokaido-service-track.js?v=115';
+import {serviceChoices,STOP_PATTERNS} from './service-catalog.js?v=115';
+import {sliceRoute,reverseRoute} from './service-routes.js?v=115';
+import {applyTobuScenario,tobuScenarioById,tobuStopNames} from './tobu-services.js?v=115';
+import {applyTobuHibiyaPlatform} from './tobu-routes.js?v=115';
 export {serviceChoices};
 function makeDefaultServiceRoute(route,vehicle,service){
  route={...selectTokaidoServiceTrack(route,service),vehicle,service};
@@ -35,6 +35,9 @@ export function makeServiceRoute(route,vehicle,service,option){
  let r=selectTokaidoServiceTrack(route,service.includes('しなの')?'特急':service);r={...r,sceneryStations:r.sceneryStations??r.stations,limits:r.limitsByVehicle?.[vehicle]??r.limits};
  r=releaseMatsumotoExpressLimit(r,vehicle,service);
  if(r.id==='yagan')r=makeDefaultServiceRoute(r,vehicle,'普通');
+ // Tobu: express-class trains use the 急行線 of the 北千住〜北越谷 four-track section;
+ // stopping trains take the diagram's stop track (待避線) at stations they serve.
+ if(option.tobuScenario){const scenario=tobuScenarioById(option.tobuScenario);if(scenario)r={...r,serviceTrack:vehicle==='70000'||scenario.service==='普通'?undefined:'outer',tobuStops:tobuStopNames(scenario,r.sceneryStations??r.stations)};}
  r=prepareLeftTraffic(r);
  if(option.from||option.to)r=sliceRoute(r,option.from,option.to);
  const all=r.sceneryStations??r.stations,pattern=option.pattern,boundary=option.beyond?r.stations.find(x=>x.name===option.beyond)?.s:null;
