@@ -1,4 +1,4 @@
-import {loadServiceRoutes} from './service-fixture.mjs';
+import {loadServiceRoutes,loadRecipesWithTobu} from './service-fixture.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {makeCheckpoints,resolveScoreSchedule,observeScoreDeparture,checkpointSectionPlan,sectionSpeedPlan} from '../dist/scoring.js';
@@ -23,7 +23,7 @@ test('定速から定通まで同じ指定速度を維持でき、次駅にも3�
 });
 test('全列車コースを実車両の力行表で監査し、加減速が必要な定通を作らない',async()=>{
  const load=async id=>JSON.parse(await readFile(new URL('../dist/assets/final/'+id,import.meta.url),'utf8'));
- const recipes=(await load('vehicle-recipes.json')).trains,routes=await loadServiceRoutes();let checked=0;
+ const recipes=(await loadRecipesWithTobu()).trains,routes=await loadServiceRoutes();let checked=0;
  for(const choices of Object.values(serviceChoices))for(const [id,vehicle,service,option] of choices){
   if(vehicle==='701')continue;
   const train=recipes.find(t=>t.id===vehicle),route=makeServiceRoute(routes.get(id),vehicle,service,option);

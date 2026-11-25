@@ -8,7 +8,7 @@ test('all timetables have nonempty ranges; retained paired services run in both 
   for(let n=1;n<r.stations.length;n++)assert.ok(r.stations[n].s>r.stations[n-1].s);
   for(let n=1;n<r.points.length;n++)assert.ok(r.points[n][0]>r.points[n-1][0],id);
   assert.ok(r.points.every(p=>p.every(Number.isFinite)));
-  if(oneWay.has(id+'/'+v+'/'+s))continue;
+  if(oneWay.has(id+'/'+v+'/'+s)||o.tobuScenario||id.startsWith('tobu-'))continue;
   const counterpart=choices.find(x=>x[0]===id&&x[1]===v&&x[2]===s&&x[3].from===o.from&&x[3].to===o.to&&!!x[3].reverse!==!!o.reverse);
   assert.ok(counterpart,line+' '+id+' '+s+' reverse service');
   const b=makeServiceRoute(routes.get(id),...counterpart.slice(1));

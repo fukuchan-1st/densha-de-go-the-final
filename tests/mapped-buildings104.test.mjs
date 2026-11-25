@@ -25,7 +25,7 @@ test('all 19 real source corridors contain compact mapped buildings while fictio
 });
 test('building downloads are shared, decoded and include Tohoku without treating it as fictional Toho',async()=>{
  const original=globalThis.fetch;let requests=0;try{globalThis.fetch=async()=>{requests++;return new Response(gzipSync(JSON.stringify({rows:[[1000,300,0,80,120,0,70]],source:'OpenStreetMap',bufferM:150})));};
- const [a,b]=await Promise.all([loadMappedBuildings({...route,id:'tohoku'}),loadMappedBuildings({...route,id:'tohoku'})]);assert.equal(requests,1);assert.equal(a.mappedBuildings.length,1);assert.deepEqual(a.mappedBuildings,b.mappedBuildings);
+ const [a,b]=await Promise.all([loadMappedBuildings({...route,id:'tohoku',mappedBuildings:undefined}),loadMappedBuildings({...route,id:'tohoku',mappedBuildings:undefined})]);assert.equal(requests,1);assert.equal(a.mappedBuildings.length,1);assert.deepEqual(a.mappedBuildings,b.mappedBuildings);
  const fiction=await loadMappedBuildings({...route,id:'toho'});assert.equal(fiction.id,'toho');assert.equal(requests,1);
  }finally{globalThis.fetch=original;}
 });

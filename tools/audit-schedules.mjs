@@ -1,4 +1,4 @@
-import {loadServiceRoutes} from '../tests/service-fixture.mjs';
+import {loadServiceRoutes,loadRecipesWithTobu} from '../tests/service-fixture.mjs';
 import {readFile,writeFile} from 'node:fs/promises';
 import {serviceChoices,makeServiceRoute} from '../dist/train-selection.js';
 import {resolveScoreSchedule,makeCheckpoints,sectionSpeedPlan,routePlanningSpec} from '../dist/scoring.js';
@@ -6,7 +6,7 @@ import {STATIONS} from '../dist/route-data.js';
 import {reverseLegacyProfile} from '../dist/tohoku-direction.js';
 import {RouteProfile} from '../dist/route-profile.js';
 const load=async p=>JSON.parse(await readFile(new URL('../dist/'+p,import.meta.url),'utf8'));
-const recipes=(await load('assets/final/vehicle-recipes.json')).trains,routes=await loadServiceRoutes(),failures=[],summary=[];
+const recipes=(await loadRecipesWithTobu()).trains,routes=await loadServiceRoutes(),failures=[],summary=[];
 const profile=new RouteProfile(await load('assets/bve-profile.json'));
 for(const [line,choices] of Object.entries(serviceChoices))for(const [id,vehicle,service,option] of choices){
  let route,spec;

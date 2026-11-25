@@ -8,9 +8,9 @@ test('指定路線と高尾の境界で対向列車を選び、野岩鉄道で�
  const r={id:'chuo-extended',sceneryStations:[{name:'東京',s:0},{name:'高尾',s:53000},{name:'大月',s:100000}]};assert.equal(opposingVehicle(r,52999),'e233');assert.equal(opposingVehicle(r,53001),'211');
  assert.equal(opposingVehicle({id:'shinonoi-extended'},1000),'211');
 });
-test('提供された17車種の車体・機器・テクスチャを欠けなく内蔵する',async()=>{
+test('提供された21車種の車体・機器・テクスチャを欠けなく内蔵する',async()=>{
  const root=new URL('../dist/assets/opposing/',import.meta.url),manifest=JSON.parse(await readFile(new URL('manifest.json',root),'utf8'));
- assert.equal(Object.keys(manifest.models).length,17);
+ assert.equal(Object.keys(manifest.models).length,21);
  for(const [id,model]of Object.entries(manifest.models))for(const [role,part]of Object.entries(model.variants)){
   const file=await readFile(new URL(part.file,root));assert.equal(unpackModel(file.buffer.slice(file.byteOffset,file.byteOffset+file.byteLength)).byteLength,part.vertices*((part.stride??8)*(part.componentType==='float16'?2:4)));
   const [lo,hi]=part.bounds;assert.ok(hi[0]-lo[0]<4,`${id} ${role} 車幅`);assert.ok(hi[1]-lo[1]<6);assert.ok(hi[2]-lo[2]<23);

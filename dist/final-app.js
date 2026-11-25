@@ -205,7 +205,7 @@ function updateDriverCalls(){
  const station=r.stations[run.next],distance=station.s-run.s;
  if(run.lastCalledStop!==run.next&&distance>=0&&distance<=300){
   run.lastCalledStop=run.next;
-  sound.callStation('approach',station);
+  sound.currentCarCount=run.carCount;sound.callStation('approach',station);
  }
  const block=nextSignalCall(r.signals??[],run.s,run.calledSignals??=new Set());
  if(block!==null)sound.callRouteCue('signal',block);
@@ -323,7 +323,7 @@ function updateObasuteControls(){let box=$('obasuteControls');if(!box){box=docum
 function advance(dt){
  if(run.finished)return;
  const r=route(),train=recipe(),station=r.stations[run.next],previous={s:run.s,v:run.v,elapsed:run.elapsed};
- updateObasuteOperation(run,r);if(run.obasute?.phase==='head-in'&&run.lastCalledStop!==run.next){run.lastCalledStop=run.next;sound.callStation('approach',station);}
+ updateObasuteOperation(run,r);if(run.obasute?.phase==='head-in'&&run.lastCalledStop!==run.next){run.lastCalledStop=run.next;sound.currentCarCount=run.carCount;sound.callStation('approach',station);}
  if(obasuteShunting(run)){run.inTunnel=false;if(assist){const target=obasuteTarget(run),op=run.obasute;if(target!==null){const distance=Math.abs(target-op.u),limit=op.phase==='head-in'&&op.u>-450?Math.min(45/3.6,Math.sqrt((15/3.6)**2+1.2*(op.u+450))):15/3.6,desired=Math.min(limit,Math.sqrt(Math.max(0,distance-1)*.6));run.notch=run.v>desired?-4:run.v<desired-.3?Math.min(4,Math.max(1,run.notch)+(run.acceleration<.05?1:0)):0;}}advanceObasute(run,r,train,dt,driveStep,world.grade(run.s));cheats.clockStep(run,dt);return;}
  if(assist&&!run.doors)brakeAssist(run,r,train);
  run.inTunnel=Boolean(world.structureAt(run.s,'tunnel'));driveStep(run,train,dt,world.grade(run.s));cheats.clockStep(run,dt);onboard?.update(run,r);
