@@ -102,8 +102,8 @@ export function resolvePublishedSchedule(route,startS,spec,planSection){
  }
  let at=0,carry=0;
  for(let end=1;end<all.length;end++){
-  const anchor=all[end];if(anchor.arrival==null&&end!==all.length-1)continue;
-  const a=all[at],desiredDeparture=a.departure??a.time+(a.stop?25:0),departure=Math.max(desiredDeparture,a.time+(a.stop?23:0));departureTimes[a.s]=departure;
+  const anchor=all[end];if(anchor.arrival==null&&!(route.tobuDwells&&anchor.stop)&&end!==all.length-1)continue;
+  const a=all[at],desiredDeparture=a.departure??a.time+(a.stop?(spec.departureDwells?.[a.s]??25):0),departure=Math.max(desiredDeparture,a.time+(a.stop?23:0));departureTimes[a.s]=departure;
   const target=anchor.arrival;
   const calculate=factor=>{let t=departure,v=carry;const times=[],speeds=[],departures={};for(let i=at+1;i<=end;i++){
    if(route.tobuScenario&&i-1>at&&all[i-1].stop){t=Math.max(t+25,all[i-1].departure??-Infinity);departures[all[i-1].s]=t;}

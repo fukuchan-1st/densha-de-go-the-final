@@ -1,4 +1,4 @@
-import {mountPhoneLayout} from './phone-layout.js?v=116';
+import {mountPhoneLayout} from './phone-layout.js?v=117';
 export function notchKeyValue(code,value,min,max){
  const delta=['ArrowUp','KeyW'].includes(code)?-1:['ArrowDown','ArrowRight','KeyS'].includes(code)?1:0;
  if(delta)return Math.max(min,Math.min(max,value+delta));

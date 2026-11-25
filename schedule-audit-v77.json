@@ -1,7 +1,7 @@
 {
   "scenarios": 134,
   "sections": 3191,
-  "partialStarts": 1988,
+  "partialStarts": 1996,
   "failures": [],
   "summary": [
     {
@@ -1042,7 +1042,7 @@
       "partialStarts": 21,
       "sections": 21,
       "checkpoints": 42,
-      "adjusted": 2
+      "adjusted": 0
     },
     {
       "line": "yagan",
@@ -1069,7 +1069,7 @@
       "vehicle": "10030",
       "service": "区間急行",
       "reverse": false,
-      "partialStarts": 13,
+      "partialStarts": 17,
       "sections": 31,
       "checkpoints": 62,
       "adjusted": 0
@@ -1079,7 +1079,7 @@
       "vehicle": "10030",
       "service": "区間急行",
       "reverse": false,
-      "partialStarts": 13,
+      "partialStarts": 17,
       "sections": 31,
       "checkpoints": 62,
       "adjusted": 0
@@ -1102,7 +1102,7 @@
       "partialStarts": 39,
       "sections": 72,
       "checkpoints": 144,
-      "adjusted": 2
+      "adjusted": 0
     },
     {
       "line": "yagan",
@@ -1202,7 +1202,7 @@
       "partialStarts": 54,
       "sections": 72,
       "checkpoints": 144,
-      "adjusted": 2
+      "adjusted": 0
     },
     {
       "line": "yagan",

@@ -1,6 +1,6 @@
-import {fadeCabLight,mixCabColor} from './cab-light.js?v=116';
-import {drawCabSheen} from './cab-sheen.js?v=116';
-import {loadPanelImage} from './panel-image.js?v=116';
+import {fadeCabLight,mixCabColor} from './cab-light.js?v=117';
+import {drawCabSheen} from './cab-sheen.js?v=117';
+import {loadPanelImage} from './panel-image.js?v=117';
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 // PNG alpha/tRNS already carries transparency. Black is also real dashboard ink.
 export function panelTransparentColor(element,panel){return element.transparentcolor??panel.this.transparentcolor??null;}

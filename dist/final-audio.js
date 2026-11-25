@@ -1,13 +1,13 @@
-import {motorVolumeReference,SlipPitchController,fixedCurveValue} from './motor-pitch.js?v=116';
-import {AmbientAudio} from './ambient-audio.js?v=116';
-import {stationDepartureCue} from './station-broadcast.js?v=116';
-import {TrainPassbyAudio} from './train-passby-audio.js?v=116';
-import {timingVoiceRefs,timingPreloadRefs,restrictionVoiceRefs} from './station-timing.js?v=116';
-import {stationCueRefs,stationVoiceBank,tobuDepartureRefs} from './station-voice.js?v=116';
-import {createMixGains,voiceCategory} from './audio-mix.js?v=116';
-import {interpolateColumn} from './final-vehicle.js?v=116';
-import {runPitch} from './assets/audio/run-pitch.js?v=116';
-import {HeldHorn} from './assets/audio/held-horn.js?v=116';
+import {motorVolumeReference,SlipPitchController,fixedCurveValue} from './motor-pitch.js?v=117';
+import {AmbientAudio} from './ambient-audio.js?v=117';
+import {stationDepartureCue} from './station-broadcast.js?v=117';
+import {TrainPassbyAudio} from './train-passby-audio.js?v=117';
+import {timingVoiceRefs,timingPreloadRefs,restrictionVoiceRefs} from './station-timing.js?v=117';
+import {stationCueRefs,stationVoiceBank,tobuDepartureRefs} from './station-voice.js?v=117';
+import {createMixGains,voiceCategory} from './audio-mix.js?v=117';
+import {interpolateColumn} from './final-vehicle.js?v=117';
+import {runPitch} from './assets/audio/run-pitch.js?v=117';
+import {HeldHorn} from './assets/audio/held-horn.js?v=117';
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const whistle={entryIndex:'departure-whistle'};
 const voiceBanks={e235:['kanko0','uta'],e233:['kanko1','utb'],323:['kanko2','utd'],207:['kanko3','ute']};
@@ -94,7 +94,7 @@ export class LocalTrainAudio {
   return {entryIndex,driverVoiceFile:`./assets/final/driver-voice/${directory}/${entryIndex}.wav`};
  }
  callDriver(...names){
-  const tobu=names.includes('departure')?tobuDepartureRefs(this.driverRouteLine):null;
+  const tobu=names.includes('departure')?tobuDepartureRefs(this.driverRouteLine,Math.random,this.departureStationName):null;
   if(tobu)return this.queueDriverCalls(tobu);
   return this.queueDriverCalls(names.map(name=>this.driverCallRef(name)));
  }

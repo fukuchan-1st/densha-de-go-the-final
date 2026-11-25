@@ -1,6 +1,6 @@
-import {yamagataMountainDensity} from './yamagata-mountain.js?v=116';
-import {SCENERY_PROFILES} from './scenery-profile-data.js?v=116';
-import {basinDensity,basinProfile} from './basin-profile.js?v=116';
+import {yamagataMountainDensity} from './yamagata-mountain.js?v=117';
+import {SCENERY_PROFILES} from './scenery-profile-data.js?v=117';
+import {basinDensity,basinProfile} from './basin-profile.js?v=117';
 // Read-only indices are regenerated from geographical land use, not user sliders.
 export function sceneryProfiles(){return [{id:'kofu',name:'甲府盆地',rows:basinProfile()},...SCENERY_PROFILES];}
 const aliases={chuo:'chuo','chuo-extended':'chuo','chuo-kofu':'chuo','chuo-system':'chuo','chuo-oito':'chuo','chuo-shinshu':'chuo','chuo-osm-gap':'chuo',shinonoi:'shinonoi','shinonoi-extended':'shinonoi','shinonoi-approach':'shinonoi','suwa-nagano':'shinonoi','tatsuno-nagano':'tatsuno','chuo-ome':'ome','chuo-itsukaichi':'itsukaichi','ome-okutama':'okutama'};
