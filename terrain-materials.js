@@ -1,4 +1,4 @@
-import * as T from './assets/vendor/three.module.js?v=115';
+import * as T from './assets/vendor/three.module.js?v=116';
 export function terrainKind(color){return ({'#869177':'grass','#667d52':'forest','#74746b':'ballast','#565b5b':'asphalt','#9a9d93':'concrete','#a8aaa1':'concrete','#e3ce67':'tactile'})[color]??null;}
 export function terrainShade(x,z){return .94+.07*Math.sin(x/27+z/53)+.05*Math.cos(z/31-x/67);}
 export function createTerrainMaterial(kind='grass'){

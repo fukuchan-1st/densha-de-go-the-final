@@ -1,4 +1,4 @@
-import {interpolateKnots} from './track-layout.js?v=115';
+import {interpolateKnots} from './track-layout.js?v=116';
 // Tobu / Aizu station cross-sections traced from the user-supplied 配線略図.net
 // diagrams (きたまと, 2023年6月現在):
 //  (10) 東武伊勢崎線 Ver.3.2, (11) 東武日光線 Ver.2.0, (12) 東武鬼怒川線 Ver.2.0, (13) 会津鉄道線 Ver.1.0.

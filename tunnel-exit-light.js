@@ -1,4 +1,4 @@
-import * as T from './assets/vendor/three.module.js?v=115';
+import * as T from './assets/vendor/three.module.js?v=116';
 export class TunnelExitLight{
  constructor(world){this.world=world;this.group=new T.Group();this.group.name='tunnel-exit-daylight';world.scene.add(this.group);
   const canvas=document.createElement('canvas');canvas.width=canvas.height=128;const c=canvas.getContext('2d'),g=c.createRadialGradient(64,64,5,64,64,64);g.addColorStop(0,'rgba(255,251,224,.65)');g.addColorStop(.45,'rgba(236,248,255,.25)');g.addColorStop(1,'rgba(220,238,255,0)');c.fillStyle=g;c.fillRect(0,0,128,128);this.texture=new T.CanvasTexture(canvas);this.texture.colorSpace=T.SRGBColorSpace;

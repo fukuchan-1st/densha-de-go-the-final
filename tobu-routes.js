@@ -1,8 +1,8 @@
-import {joinRoutes,sliceRoute} from './service-routes.js?v=115';
+import {joinRoutes,sliceRoute} from './service-routes.js?v=116';
 const cache=new Map();
 async function json(url){const response=await fetch(url);if(!response.ok)throw Error(`東武路線データを読み込めません: ${url}`);const bytes=new Uint8Array(await response.arrayBuffer());return bytes[0]===31&&bytes[1]===139?new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).json():JSON.parse(new TextDecoder().decode(bytes));}
 export async function loadTobuRouteParts(){
- const entries=await Promise.all(['tobu-skytree','tobu-nikko','tobu-kinugawa','aizu'].map(async id=>{if(!cache.has(id))cache.set(id,(async()=>{const route=await json(`./assets/final/${id}-route.json?v=115`),geo=await json(`./assets/final/${id}-geography.json.gz?v=115`);return {...route,roads:geo.roads,mappedBuildings:geo.mappedBuildings,mappedBuildingSource:geo.source,mappedBuildingBuffer:geo.bufferM,roadAsset:undefined};})());return [id,await cache.get(id)];}));return Object.fromEntries(entries);
+ const entries=await Promise.all(['tobu-skytree','tobu-nikko','tobu-kinugawa','aizu'].map(async id=>{if(!cache.has(id))cache.set(id,(async()=>{const route=await json(`./assets/final/${id}-route.json?v=116`),geo=await json(`./assets/final/${id}-geography.json.gz?v=116`);return {...route,roads:geo.roads,mappedBuildings:geo.mappedBuildings,mappedBuildingSource:geo.source,mappedBuildingBuffer:geo.bufferM,roadAsset:undefined};})());return [id,await cache.get(id)];}));return Object.fromEntries(entries);
 }
 export function assembleTobuRoutes(parts,yagan){
  const main=joinRoutes([parts['tobu-skytree'],sliceRoute(parts['tobu-nikko'],'東武動物公園','下今市'),parts['tobu-kinugawa'],yagan,parts.aizu],'tobu-aizu','東武・野岩・会津鉄道 浅草〜会津田島');

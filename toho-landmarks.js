@@ -1,7 +1,7 @@
-import {sceneryDensity} from './scenery-profile.js?v=115';
-import * as T from './assets/vendor/three.module.js?v=115';
-import {districtAt,fixedMoodAt,DISTRICTS} from './toho-biomes.js?v=115';
-import {treeVariant} from './real-trees.js?v=115';
+import {sceneryDensity} from './scenery-profile.js?v=116';
+import * as T from './assets/vendor/three.module.js?v=116';
+import {districtAt,fixedMoodAt,DISTRICTS} from './toho-biomes.js?v=116';
+import {treeVariant} from './real-trees.js?v=116';
 const clamp=T.MathUtils.clamp;
 function flowerMap(kind){
  const canvas=document.createElement('canvas');canvas.width=96;canvas.height=128;const c=canvas.getContext('2d');c.strokeStyle='#446739';c.lineWidth=3;c.beginPath();c.moveTo(48,127);c.quadraticCurveTo(42,75,48,28);c.stroke();
