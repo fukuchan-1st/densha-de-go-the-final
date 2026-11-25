@@ -1,10 +1,10 @@
-import {addTrainWindowReflections} from './train-window-reflections.js?v=113';
-import {tint6050Bogies} from './vehicle-details.js?v=113';
-import {carVariant} from './train-formation.js?v=113';
-import {decodeVertices,decodeIndices} from './model-format.js?v=113';
-import {repair701Body} from './701-body-repair.js?v=113';
-import * as T from './assets/vendor/three.module.js?v=113';
-import {stationLeg} from './geographic-sections.js?v=113';
+import {addTrainWindowReflections} from './train-window-reflections.js?v=114';
+import {tint6050Bogies} from './vehicle-details.js?v=114';
+import {carVariant} from './train-formation.js?v=114';
+import {decodeVertices,decodeIndices} from './model-format.js?v=114';
+import {repair701Body} from './701-body-repair.js?v=114';
+import * as T from './assets/vendor/three.module.js?v=114';
+import {stationLeg} from './geographic-sections.js?v=114';
 const chuoOrder=["東京", "神田", "御茶ノ水", "四ツ谷", "新宿", "中野", "高円寺", "阿佐ケ谷", "荻窪", "西荻窪", "吉祥寺", "三鷹", "武蔵境", "東小金井", "武蔵小金井", "国分寺", "西国分寺", "国立", "立川", "日野", "豊田", "八王子", "西八王子", "高尾", "相模湖", "藤野", "上野原", "四方津", "梁川", "鳥沢", "猿橋", "大月", "初狩", "笹子", "甲斐大和", "勝沼ぶどう郷", "塩山", "東山梨", "山梨市", "春日居町", "石和温泉", "酒折", "甲府", "竜王", "塩崎", "韮崎", "新府", "穴山", "日野春", "長坂", "小淵沢", "信濃境", "富士見", "すずらんの里", "青柳", "茅野", "上諏訪", "下諏訪", "岡谷", "みどり湖", "塩尻", "広丘", "村井", "平田", "南松本", "松本"];
 const rank=new Map(chuoOrder.map((name,i)=>[name,i]));
 const oitoNames=new Set('松本 北松本 島内 島高松 梓橋 一日市場 中萱 南豊科 豊科 柏矢町 穂高 有明 安曇追分 細野 北細野 信濃松川 安曇沓掛 信濃常盤 南大町 信濃大町 北大町 信濃木崎 稲尾 海ノ口 簗場 ヤナバ前 南神城 神城 飯森 白馬 信濃森上 白馬大池 千国 南小谷'.split(' '));
@@ -12,7 +12,7 @@ const shinonoiNames=new Set('松本 田沢 明科 西条 坂北 聖高原 冠着
 const omeBranchNames=new Set('立川 西立川 東中神 中神 昭島 拝島 牛浜 福生 羽村 小作 河辺 東青梅 青梅 宮ノ平 日向和田 石神前 二俣尾 軍畑 沢井 御嶽 川井 古里 鳩ノ巣 白丸 奥多摩 熊川 東秋留 秋川 武蔵引田 武蔵増戸 武蔵五日市'.split(' '));
 export function opposingCarCount(route,s,vehicle,fallback){if(vehicle!=='e233')return fallback;if(route.id==='ome-okutama')return 4;if(['itsukaichi','chuo-itsukaichi'].includes(route.id))return 6;return fallback;}
 export function opposingVehicles(route={},s=0){
- const id=route.id??'tohoku';if(id==='yagan')return [];
+ const id=route.id??'tohoku';if(id==='yagan')return [];if(id.startsWith('tobu-'))return ['20400','500','6050'];
  if(id==='yamagata')return ['719-5000'];if(id==='yamanote')return ['e235'];if(id==='osaka')return ['323'];if(id==='tokaido')return ['221'];if(id==='tohoku')return ['701'];
  const leg=stationLeg(route,s),names=leg.map(x=>x.name);if(['ome','ome-okutama','itsukaichi'].includes(id)||names.length===2&&names.every(n=>omeBranchNames.has(n)))return ['e233'];
  if(names.length===2&&names.every(x=>oitoNames.has(x))){const all=route.sceneryStations??route.stations,omachi=all.find(x=>x.name==='信濃大町'),matsumoto=all.find(x=>x.name==='松本');let north;
@@ -38,7 +38,7 @@ export class ImportedTrafficModels{
   const promise=this.loadModel(id);this.loading.set(id,promise);return promise;
  }
  async loadModel(id){
-  this.manifest??=fetch(new URL('./assets/opposing/manifest.json?v=97final',import.meta.url)).then(response=>{if(!response.ok)throw Error('対向列車データを取得できません');return response.json();});
+  this.manifest??=fetch(new URL('./assets/opposing/manifest.json?v=114',import.meta.url)).then(response=>{if(!response.ok)throw Error('対向列車データを取得できません');return response.json();});
   const definition=(await this.manifest).models[id];if(!definition)throw Error('対向列車 '+id+' がありません');
   const variants={};
   for(const [role,part]of Object.entries(definition.variants)){

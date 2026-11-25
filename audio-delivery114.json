@@ -1,0 +1,4920 @@
+{
+  "codec": "Vorbis quality6 from original lossless sources, native rate/channels, source originals retained",
+  "sourceBackup": "C:\\Users\\bmwhz\\Documents\\Codex\\2026-10-30\\new-chat-2\\outputs\\audio-source114",
+  "files": [
+    {
+      "source": "dist\\assets\\final\\vehicles\\e235\\388.flac",
+      "file": "dist\\assets\\final\\vehicles\\e235\\388.ogg",
+      "originalBytes": 90859,
+      "bytes": 34035,
+      "duration": 1.499002,
+      "sha256": "d6af54876a0e671cd401fb87fc6f2332e31937db4ba1f74f7bf5cd4ddc3cbc5e",
+      "refs": [
+        [
+          "e235",
+          "388"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e233\\10000.flac",
+      "file": "dist\\assets\\final\\vehicles\\e233\\10000.ogg",
+      "originalBytes": 162817,
+      "bytes": 63384,
+      "duration": 2.924396,
+      "sha256": "94ee7f817b84f6e49239ed5f70567b088ca434b3ec105978e5b3e1ce77cf738f",
+      "refs": [
+        [
+          "e233",
+          "10000"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e233\\10001.flac",
+      "file": "dist\\assets\\final\\vehicles\\e233\\10001.ogg",
+      "originalBytes": 129126,
+      "bytes": 56976,
+      "duration": 2.721792,
+      "sha256": "3c13a1a7d61e6d8a82db6c81c20900d8c381c74d090e520184a0b660cabc8fd9",
+      "refs": [
+        [
+          "e233",
+          "10001"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e233\\10002.flac",
+      "file": "dist\\assets\\final\\vehicles\\e233\\10002.ogg",
+      "originalBytes": 179329,
+      "bytes": 67314,
+      "duration": 3.447333,
+      "sha256": "a8641883790681bd3a2307630834341894d113139778c4f1e901ae497a0f982a",
+      "refs": [
+        [
+          "e233",
+          "10002"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e233\\10003.flac",
+      "file": "dist\\assets\\final\\vehicles\\e233\\10003.ogg",
+      "originalBytes": 136090,
+      "bytes": 60403,
+      "duration": 3.148542,
+      "sha256": "478508fc9129d64fdf68b2caf6e56d7c2914f9a36479c6569aaf61fe5a9fc4df",
+      "refs": [
+        [
+          "e233",
+          "10003"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e233\\10004.flac",
+      "file": "dist\\assets\\final\\vehicles\\e233\\10004.ogg",
+      "originalBytes": 146995,
+      "bytes": 65542,
+      "duration": 3.347229,
+      "sha256": "5587fa7a4a6f3106b54febbb07f9cf15a347ad5e3b36593b5d879ad732e16e14",
+      "refs": [
+        [
+          "e233",
+          "10004"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e233\\10005.flac",
+      "file": "dist\\assets\\final\\vehicles\\e233\\10005.ogg",
+      "originalBytes": 118583,
+      "bytes": 50649,
+      "duration": 2.438646,
+      "sha256": "bac427d77b2686904ddcc9ba5a4aa99c96cfe4dbbb2ffd3fcc88ae35cd948816",
+      "refs": [
+        [
+          "e233",
+          "10005"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e233\\10006.flac",
+      "file": "dist\\assets\\final\\vehicles\\e233\\10006.ogg",
+      "originalBytes": 199858,
+      "bytes": 53682,
+      "duration": 2.520083,
+      "sha256": "487a93e33e7358c54d47aaa1d4449822893d23893f76fc8e76435e6a70efe5a9",
+      "refs": [
+        [
+          "e233",
+          "10006"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e233\\10007.flac",
+      "file": "dist\\assets\\final\\vehicles\\e233\\10007.ogg",
+      "originalBytes": 216514,
+      "bytes": 62567,
+      "duration": 2.944083,
+      "sha256": "75fb8b68201e5f5d2317317ed6fa8c1cc9d4a9f02ff206012ff158614bf1c198",
+      "refs": [
+        [
+          "e233",
+          "10007"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e233\\10008.flac",
+      "file": "dist\\assets\\final\\vehicles\\e233\\10008.ogg",
+      "originalBytes": 377727,
+      "bytes": 98476,
+      "duration": 4.902167,
+      "sha256": "b04f24617f05ecddfe62014e5e814b74a9542881acbbf5cfcc44ce4b2ae28937",
+      "refs": [
+        [
+          "e233",
+          "10008"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e233\\10009.flac",
+      "file": "dist\\assets\\final\\vehicles\\e233\\10009.ogg",
+      "originalBytes": 250481,
+      "bytes": 72595,
+      "duration": 3.612708,
+      "sha256": "dcc96da565dfcb1a9223b36c157a3472941b867c56a4a7c4fd59ae90919e93b7",
+      "refs": [
+        [
+          "e233",
+          "10009"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e233\\10010.flac",
+      "file": "dist\\assets\\final\\vehicles\\e233\\10010.ogg",
+      "originalBytes": 235533,
+      "bytes": 61040,
+      "duration": 2.906375,
+      "sha256": "d98418528302e42457f86158471e4c1cd1f09fd4ec0aba03aa3b5c3f53ba9762",
+      "refs": [
+        [
+          "e233",
+          "10010"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e233\\10011.flac",
+      "file": "dist\\assets\\final\\vehicles\\e233\\10011.ogg",
+      "originalBytes": 366032,
+      "bytes": 86645,
+      "duration": 4.366042,
+      "sha256": "3d69e71df643c14e2bb52a18c9a911340cb620e8cec88598f71b859bb1de2104",
+      "refs": [
+        [
+          "e233",
+          "10011"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e233\\10012.flac",
+      "file": "dist\\assets\\final\\vehicles\\e233\\10012.ogg",
+      "originalBytes": 464461,
+      "bytes": 106512,
+      "duration": 5.287979,
+      "sha256": "97532ed114d85ade49c83416f3b33d742fe09f87e6d86f05d2673e1876dd0837",
+      "refs": [
+        [
+          "e233",
+          "10012"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e233\\10013.flac",
+      "file": "dist\\assets\\final\\vehicles\\e233\\10013.ogg",
+      "originalBytes": 516241,
+      "bytes": 123891,
+      "duration": 6.122875,
+      "sha256": "34d1de966afce710b78d101e5a3a2ea16c8311a4c4a012fd38e8a9ab08d72c55",
+      "refs": [
+        [
+          "e233",
+          "10013"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e233\\10014.flac",
+      "file": "dist\\assets\\final\\vehicles\\e233\\10014.ogg",
+      "originalBytes": 198568,
+      "bytes": 75918,
+      "duration": 4.016708,
+      "sha256": "488a01e986d4472b21efbe5f0fcd7f22b9f7dfa1050b5328421e7480785a033c",
+      "refs": [
+        [
+          "e233",
+          "10014"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e233\\10015.flac",
+      "file": "dist\\assets\\final\\vehicles\\e233\\10015.ogg",
+      "originalBytes": 129006,
+      "bytes": 69684,
+      "duration": 3.749917,
+      "sha256": "c44f213580e24d30004c2ddb3d2917335b6ce0cb1ae9c5ffbd35197e18da1721",
+      "refs": [
+        [
+          "e233",
+          "10015"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e233\\10016.flac",
+      "file": "dist\\assets\\final\\vehicles\\e233\\10016.ogg",
+      "originalBytes": 188075,
+      "bytes": 50073,
+      "duration": 2.155563,
+      "sha256": "d8644ea401378a16d1e23528326f5355fede9d70ddc0f7986323283348575d5d",
+      "refs": [
+        [
+          "e233",
+          "10016"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e233\\10017.flac",
+      "file": "dist\\assets\\final\\vehicles\\e233\\10017.ogg",
+      "originalBytes": 154271,
+      "bytes": 41706,
+      "duration": 1.780646,
+      "sha256": "9bf2712376bd696638f23fdacb2344f3a3c7321563a24b7c38a9fb5063f7db2a",
+      "refs": [
+        [
+          "e233",
+          "10017"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e233\\10018.flac",
+      "file": "dist\\assets\\final\\vehicles\\e233\\10018.ogg",
+      "originalBytes": 215677,
+      "bytes": 57397,
+      "duration": 2.607646,
+      "sha256": "ca00efc4f3db7717fa409bdf0b12e3a7d0da1d8d30476fa416753514e70078b0",
+      "refs": [
+        [
+          "e233",
+          "10018"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e233\\10019.flac",
+      "file": "dist\\assets\\final\\vehicles\\e233\\10019.ogg",
+      "originalBytes": 204580,
+      "bytes": 54646,
+      "duration": 2.480375,
+      "sha256": "7c052e862cc679a83159aa907607548f63c4eac45aab6c220464de83010d4bcb",
+      "refs": [
+        [
+          "e233",
+          "10019"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e233\\10020.flac",
+      "file": "dist\\assets\\final\\vehicles\\e233\\10020.ogg",
+      "originalBytes": 228529,
+      "bytes": 57754,
+      "duration": 2.713042,
+      "sha256": "3278385f3bb9e85d080307bf4623aee0558fa84197ee26b2cba14c2750dd6c7b",
+      "refs": [
+        [
+          "e233",
+          "10020"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e233\\10021.flac",
+      "file": "dist\\assets\\final\\vehicles\\e233\\10021.ogg",
+      "originalBytes": 277928,
+      "bytes": 71680,
+      "duration": 3.287875,
+      "sha256": "a5199624f7d696fb844396779eb315a659d90350468b5b51ecb72e572560e88b",
+      "refs": [
+        [
+          "e233",
+          "10021"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e233\\10022.flac",
+      "file": "dist\\assets\\final\\vehicles\\e233\\10022.ogg",
+      "originalBytes": 156171,
+      "bytes": 40422,
+      "duration": 1.803771,
+      "sha256": "6544bae2c21e5e7e52a6b57b341982896da2abe9b6fde3f254bf40dc88ee6960",
+      "refs": [
+        [
+          "e233",
+          "10022"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e233\\10023.flac",
+      "file": "dist\\assets\\final\\vehicles\\e233\\10023.ogg",
+      "originalBytes": 123027,
+      "bytes": 32183,
+      "duration": 1.425542,
+      "sha256": "2de3f81b110f4f3deb50255ec8055dd9fb1e3cc23e85fbcf2cdad231c243cf3e",
+      "refs": [
+        [
+          "e233",
+          "10023"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\323\\229.flac",
+      "file": "dist\\assets\\final\\vehicles\\323\\229.ogg",
+      "originalBytes": 170891,
+      "bytes": 46197,
+      "duration": 1.886,
+      "sha256": "ca25b371866b2d2ff997990c184450112c7f13ad99910d7ca5f693341167d132",
+      "refs": [
+        [
+          "323",
+          "229"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\323\\230.flac",
+      "file": "dist\\assets\\final\\vehicles\\323\\230.ogg",
+      "originalBytes": 136442,
+      "bytes": 33906,
+      "duration": 1.375583,
+      "sha256": "bf9dccc09e2cab112b85ed14317438c65956445758b27763d3ae32a23308d4d7",
+      "refs": [
+        [
+          "323",
+          "230"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\323\\231.flac",
+      "file": "dist\\assets\\final\\vehicles\\323\\231.ogg",
+      "originalBytes": 179418,
+      "bytes": 68636,
+      "duration": 3.146304,
+      "sha256": "5b8c8287d23c58328ead874d6ca6009411d630797e98b063aa050ea74913117d",
+      "refs": [
+        [
+          "323",
+          "231"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\323\\232.flac",
+      "file": "dist\\assets\\final\\vehicles\\323\\232.ogg",
+      "originalBytes": 179041,
+      "bytes": 30884,
+      "duration": 1.109688,
+      "sha256": "c8c043d1858f03ca875e4a365a92cff40a16ee3137b63a4a77d090e1d182fd7b",
+      "refs": [
+        [
+          "323",
+          "232"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\207\\365.flac",
+      "file": "dist\\assets\\final\\vehicles\\207\\365.ogg",
+      "originalBytes": 57178,
+      "bytes": 25781,
+      "duration": 1.077234,
+      "sha256": "06968c1915f0ffe70ec96c83ca36fc80bdc90cc0a1638dc8360a92f4535e0364",
+      "refs": [
+        [
+          "207",
+          "365"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\207\\371.flac",
+      "file": "dist\\assets\\final\\vehicles\\207\\371.ogg",
+      "originalBytes": 469024,
+      "bytes": 211240,
+      "duration": 10.070159,
+      "sha256": "02166df2c04837228a0c8ac0e37aab7d4927681dda72d726fa74115dde2e0b98",
+      "refs": [
+        [
+          "207",
+          "371"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\207\\372.flac",
+      "file": "dist\\assets\\final\\vehicles\\207\\372.ogg",
+      "originalBytes": 184398,
+      "bytes": 113642,
+      "duration": 6.070159,
+      "sha256": "2cbfe15a62b7d80d8420588b6f5c9076ce9d4e66b1fd13b35fbdfd311c069c95",
+      "refs": [
+        [
+          "207",
+          "372"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\207\\373.flac",
+      "file": "dist\\assets\\final\\vehicles\\207\\373.ogg",
+      "originalBytes": 205640,
+      "bytes": 99222,
+      "duration": 4.742177,
+      "sha256": "77441d8230482f40d5f322fe2284a393766b51c84fba6ffd36226880e2c88066",
+      "refs": [
+        [
+          "207",
+          "373"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\207\\374.flac",
+      "file": "dist\\assets\\final\\vehicles\\207\\374.ogg",
+      "originalBytes": 278833,
+      "bytes": 111872,
+      "duration": 5.035193,
+      "sha256": "a3fa71d99ca0eaad0b857f9dab494149fe66c857d5a12a1a295a419d15415da7",
+      "refs": [
+        [
+          "207",
+          "374"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\207\\375.flac",
+      "file": "dist\\assets\\final\\vehicles\\207\\375.ogg",
+      "originalBytes": 226184,
+      "bytes": 96540,
+      "duration": 5.287029,
+      "sha256": "8b619a423b66fb08c54a85a91595dd4d79f11be9d0a13f5c9c582ded11eab5c0",
+      "refs": [
+        [
+          "207",
+          "375"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\207\\376.flac",
+      "file": "dist\\assets\\final\\vehicles\\207\\376.ogg",
+      "originalBytes": 173486,
+      "bytes": 67741,
+      "duration": 3.052698,
+      "sha256": "d9767d64087afdb4b1ed36386ba646a346c5c65a6ea68ff6086dbd7d87a97c65",
+      "refs": [
+        [
+          "207",
+          "376"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\207\\377.flac",
+      "file": "dist\\assets\\final\\vehicles\\207\\377.ogg",
+      "originalBytes": 134432,
+      "bytes": 49243,
+      "duration": 2.17737,
+      "sha256": "a7b0adcefb0e6f0366cd2d3387878a698a802fdb5d0e6aaabcd7beca881dbe90",
+      "refs": [
+        [
+          "207",
+          "377"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\207\\378.flac",
+      "file": "dist\\assets\\final\\vehicles\\207\\378.ogg",
+      "originalBytes": 151041,
+      "bytes": 55805,
+      "duration": 2.396916,
+      "sha256": "2bd5d8b5420ba057a4ad045419f5ee980f8250f1cbdb83160ed624fa5a8a45c4",
+      "refs": [
+        [
+          "207",
+          "378"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\207\\379.flac",
+      "file": "dist\\assets\\final\\vehicles\\207\\379.ogg",
+      "originalBytes": 169655,
+      "bytes": 58567,
+      "duration": 2.535465,
+      "sha256": "88a83c51607b82f7fa068b247db42601a765c0a4e849bbefada76ee5abee4768",
+      "refs": [
+        [
+          "207",
+          "379"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\207\\366.flac",
+      "file": "dist\\assets\\final\\vehicles\\207\\366.ogg",
+      "originalBytes": 580564,
+      "bytes": 190677,
+      "duration": 8.591338,
+      "sha256": "6e1b34c9c73ca6bfda0c517f3fb37c428acd08b63af422e5f111c4ff13c8747e",
+      "refs": [
+        [
+          "207",
+          "366"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\207\\367.flac",
+      "file": "dist\\assets\\final\\vehicles\\207\\367.ogg",
+      "originalBytes": 349421,
+      "bytes": 113791,
+      "duration": 5.108617,
+      "sha256": "0e782fcf88299971fb25cbef84b2933e5c8a5b8bcd3d57daa58db197b9014703",
+      "refs": [
+        [
+          "207",
+          "367"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\207\\368.flac",
+      "file": "dist\\assets\\final\\vehicles\\207\\368.ogg",
+      "originalBytes": 288723,
+      "bytes": 90915,
+      "duration": 4.040227,
+      "sha256": "5bb897ac2c0ef459545399abbe905f70e88ab29590b449a41f05261d71d39b13",
+      "refs": [
+        [
+          "207",
+          "368"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\207\\369.flac",
+      "file": "dist\\assets\\final\\vehicles\\207\\369.ogg",
+      "originalBytes": 668100,
+      "bytes": 186694,
+      "duration": 8.545306,
+      "sha256": "30dc7cccd2485be722279527e6a18e5197b671a709bb5b04a6ef785dfd10a8eb",
+      "refs": [
+        [
+          "207",
+          "369"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\207\\370.flac",
+      "file": "dist\\assets\\final\\vehicles\\207\\370.ogg",
+      "originalBytes": 233131,
+      "bytes": 89170,
+      "duration": 4.00771,
+      "sha256": "a33d5e8e957c3700a2dfd0134bc2bda6d1f3f9bc032d489de1a52846b7ad9aaf",
+      "refs": [
+        [
+          "207",
+          "370"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\6050\\28.flac",
+      "file": "dist\\assets\\final\\vehicles\\6050\\28.ogg",
+      "originalBytes": 647511,
+      "bytes": 143786,
+      "duration": 7.003188,
+      "sha256": "e564925e1e9260a65793d5bc2b31fb5535b91eacece9e6eefff3ad6b2c60d5e7",
+      "refs": [
+        [
+          "6050",
+          "28"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\6050\\29.flac",
+      "file": "dist\\assets\\final\\vehicles\\6050\\29.ogg",
+      "originalBytes": 395874,
+      "bytes": 82479,
+      "duration": 3.969063,
+      "sha256": "050f9c86f17c5e0882bcab33fe379a0d49a31430bf3f2550acee4d90a872318b",
+      "refs": [
+        [
+          "6050",
+          "29"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\6050\\30.flac",
+      "file": "dist\\assets\\final\\vehicles\\6050\\30.ogg",
+      "originalBytes": 760464,
+      "bytes": 148976,
+      "duration": 7.24625,
+      "sha256": "67cdc5ad7812eb6d8434af3477aac2eeb9433e9426444d7781e57ff8b00e4416",
+      "refs": [
+        [
+          "6050",
+          "30"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\6050\\31.flac",
+      "file": "dist\\assets\\final\\vehicles\\6050\\31.ogg",
+      "originalBytes": 178134,
+      "bytes": 42706,
+      "duration": 1.998021,
+      "sha256": "b6eabc2dea9cbd10f993edba7c3136f2ae96f53c572e72d43406332193a81c64",
+      "refs": [
+        [
+          "6050",
+          "31"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\6050\\32.flac",
+      "file": "dist\\assets\\final\\vehicles\\6050\\32.ogg",
+      "originalBytes": 315266,
+      "bytes": 72837,
+      "duration": 3.456333,
+      "sha256": "47a2f0b678781da08f5d2ef4d9c328b9304a12deed7fe5d400ffe2ff5e9f3249",
+      "refs": [
+        [
+          "6050",
+          "32"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\6050\\33.flac",
+      "file": "dist\\assets\\final\\vehicles\\6050\\33.ogg",
+      "originalBytes": 744103,
+      "bytes": 151718,
+      "duration": 7.402583,
+      "sha256": "14508f771752777f1ac5081a635d2f319996525b7973f37d857ea45da105ee5c",
+      "refs": [
+        [
+          "6050",
+          "33"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\6050\\39.flac",
+      "file": "dist\\assets\\final\\vehicles\\6050\\39.ogg",
+      "originalBytes": 248483,
+      "bytes": 69211,
+      "duration": 3.132938,
+      "sha256": "fc1275f83a362f8a0d81b6b42453ca5c01fb71eff5900c02dab65ad237981cfd",
+      "refs": [
+        [
+          "6050",
+          "39"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\6050\\62.flac",
+      "file": "dist\\assets\\final\\vehicles\\6050\\62.ogg",
+      "originalBytes": 343107,
+      "bytes": 85211,
+      "duration": 3.988542,
+      "sha256": "e7898684a3696ccec5119a3fb6921b7d1c47eb12cd5fb32aafbb67002fbffcbd",
+      "refs": [
+        [
+          "6050",
+          "62"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\6050\\63.flac",
+      "file": "dist\\assets\\final\\vehicles\\6050\\63.ogg",
+      "originalBytes": 84453,
+      "bytes": 22000,
+      "duration": 0.875875,
+      "sha256": "10dd8d90d918dbf71c9058f0d7b9770a7570db1f6e7c796f67acfa432546878c",
+      "refs": [
+        [
+          "6050",
+          "63"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\6050\\64.flac",
+      "file": "dist\\assets\\final\\vehicles\\6050\\64.ogg",
+      "originalBytes": 355581,
+      "bytes": 86399,
+      "duration": 4.038792,
+      "sha256": "c614055d7fc87928913df78ace5783828188a5a4764b183bbd59f20d821591fe",
+      "refs": [
+        [
+          "6050",
+          "64"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\6050\\65.flac",
+      "file": "dist\\assets\\final\\vehicles\\6050\\65.ogg",
+      "originalBytes": 193035,
+      "bytes": 50314,
+      "duration": 2.267292,
+      "sha256": "2b2c771df11066d7d61d891b9633d2b481e395e37144bea8c838d2aa3ef633c1",
+      "refs": [
+        [
+          "6050",
+          "65"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\6050\\66.flac",
+      "file": "dist\\assets\\final\\vehicles\\6050\\66.ogg",
+      "originalBytes": 280683,
+      "bytes": 74939,
+      "duration": 3.494917,
+      "sha256": "a70fa28e5e411b9a8b3d68272010ead804ee6ef86e06b3c138a173371e1c003e",
+      "refs": [
+        [
+          "6050",
+          "66"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\6050\\67.flac",
+      "file": "dist\\assets\\final\\vehicles\\6050\\67.ogg",
+      "originalBytes": 318014,
+      "bytes": 89367,
+      "duration": 4.240583,
+      "sha256": "fd0c92a49054b678570bfa6a97076a51ccb5fff1fbbed02fa2fff7226175d084",
+      "refs": [
+        [
+          "6050",
+          "67"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\6050\\68.flac",
+      "file": "dist\\assets\\final\\vehicles\\6050\\68.ogg",
+      "originalBytes": 234514,
+      "bytes": 66228,
+      "duration": 2.970667,
+      "sha256": "0f7eb09ae05329c453798c3c90e2ebfebfb941b609104544ae92848b9379fd32",
+      "refs": [
+        [
+          "6050",
+          "68"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\6050\\69.flac",
+      "file": "dist\\assets\\final\\vehicles\\6050\\69.ogg",
+      "originalBytes": 274453,
+      "bytes": 77976,
+      "duration": 3.56575,
+      "sha256": "37ac46be43a3cdf2bf09d6b12a783dde856c9c1f845026c2b54ac21298e7a3e0",
+      "refs": [
+        [
+          "6050",
+          "69"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\6050\\70.flac",
+      "file": "dist\\assets\\final\\vehicles\\6050\\70.ogg",
+      "originalBytes": 187720,
+      "bytes": 57466,
+      "duration": 2.716125,
+      "sha256": "0dfdba04e2c9170b8cbdc4512d31cc72d4ca1458f000ab825e2d4f125e7b7914",
+      "refs": [
+        [
+          "6050",
+          "70"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\6050\\71.flac",
+      "file": "dist\\assets\\final\\vehicles\\6050\\71.ogg",
+      "originalBytes": 140342,
+      "bytes": 45340,
+      "duration": 2.047333,
+      "sha256": "a82d5be996ec57e1b00cc34d6f9705e24b9fac0db9a5159d787eebdce5ac7e34",
+      "refs": [
+        [
+          "6050",
+          "71"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\6050\\72.flac",
+      "file": "dist\\assets\\final\\vehicles\\6050\\72.ogg",
+      "originalBytes": 157102,
+      "bytes": 51519,
+      "duration": 2.353458,
+      "sha256": "c7d3b2853a379d043525a49d48d2a709138f583cdb49ed72902ce8bf93a0a736",
+      "refs": [
+        [
+          "6050",
+          "72"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\6050\\73.flac",
+      "file": "dist\\assets\\final\\vehicles\\6050\\73.ogg",
+      "originalBytes": 118725,
+      "bytes": 40052,
+      "duration": 1.748,
+      "sha256": "9e65e61b1b96a259ce9f96d21e401032275bc6c3ce14ee037eb6940b5b4a9162",
+      "refs": [
+        [
+          "6050",
+          "73"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\6050\\74.flac",
+      "file": "dist\\assets\\final\\vehicles\\6050\\74.ogg",
+      "originalBytes": 174772,
+      "bytes": 56874,
+      "duration": 2.648292,
+      "sha256": "5634a24f89aefe678d9fadea46f7ad653b2d2555d5fa89a805ba17f5b5bc715e",
+      "refs": [
+        [
+          "6050",
+          "74"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\6050\\75.flac",
+      "file": "dist\\assets\\final\\vehicles\\6050\\75.ogg",
+      "originalBytes": 137934,
+      "bytes": 47322,
+      "duration": 2.112083,
+      "sha256": "2eb14320b35a180d70e8185038e1bbd10a23f52c5b198e71c31d718f8dd012e9",
+      "refs": [
+        [
+          "6050",
+          "75"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\6050\\76.flac",
+      "file": "dist\\assets\\final\\vehicles\\6050\\76.ogg",
+      "originalBytes": 145646,
+      "bytes": 51187,
+      "duration": 2.296125,
+      "sha256": "60d779dc47907075bdce1f5424e91cd8e206b71be49c7c14c739627d8a1c93d2",
+      "refs": [
+        [
+          "6050",
+          "76"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\6050\\77.flac",
+      "file": "dist\\assets\\final\\vehicles\\6050\\77.ogg",
+      "originalBytes": 566304,
+      "bytes": 121228,
+      "duration": 5.536333,
+      "sha256": "88abeba02587ef1e163fed5c4f96040149e8800ef778b9643604498f1e4fadb4",
+      "refs": [
+        [
+          "6050",
+          "77"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223-1000\\29.flac",
+      "file": "dist\\assets\\final\\vehicles\\223-1000\\29.ogg",
+      "originalBytes": 587258,
+      "bytes": 126191,
+      "duration": 5.628481,
+      "sha256": "cd1078e8fb2ba79167f1e8d5e45d39a88172da3c4b0304f50a65486c9b105632",
+      "refs": [
+        [
+          "223-1000",
+          "29"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223-1000\\30.flac",
+      "file": "dist\\assets\\final\\vehicles\\223-1000\\30.ogg",
+      "originalBytes": 723743,
+      "bytes": 148599,
+      "duration": 6.735714,
+      "sha256": "aff50b7f7499db14e49f3e933ef48b696865f5656b775e69a6d8d96349980f19",
+      "refs": [
+        [
+          "223-1000",
+          "30"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223-1000\\41.flac",
+      "file": "dist\\assets\\final\\vehicles\\223-1000\\41.ogg",
+      "originalBytes": 83125,
+      "bytes": 27159,
+      "duration": 1.091338,
+      "sha256": "63a84ff277eb1d6ddb97b4c7bbb01c3905fa299c0e7f846b20ae5ef26acae117",
+      "refs": [
+        [
+          "223-1000",
+          "41"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223-1000\\54.flac",
+      "file": "dist\\assets\\final\\vehicles\\223-1000\\54.ogg",
+      "originalBytes": 573130,
+      "bytes": 167299,
+      "duration": 7.403447,
+      "sha256": "82da7041639e2c473f9c0f9cc25904f1179203caaae567e23e09fd63fdaab339",
+      "refs": [
+        [
+          "223-1000",
+          "54"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223-1000\\55.flac",
+      "file": "dist\\assets\\final\\vehicles\\223-1000\\55.ogg",
+      "originalBytes": 383055,
+      "bytes": 103618,
+      "duration": 4.258813,
+      "sha256": "86c3593c13cb3551e90ad7d61af274ec8f45530e2acef6e780dfe0daaa9ca767",
+      "refs": [
+        [
+          "223-1000",
+          "55"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223-1000\\56.flac",
+      "file": "dist\\assets\\final\\vehicles\\223-1000\\56.ogg",
+      "originalBytes": 57404,
+      "bytes": 36795,
+      "duration": 1.71746,
+      "sha256": "16065ff0c2ba3284857716365ddf7de273ddf77a540450d718d714cef0dc851e",
+      "refs": [
+        [
+          "223-1000",
+          "56"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223-1000\\57.flac",
+      "file": "dist\\assets\\final\\vehicles\\223-1000\\57.ogg",
+      "originalBytes": 74384,
+      "bytes": 50476,
+      "duration": 2.612336,
+      "sha256": "fce474e62128d3bfe77cffccef9d9c418ad2328ac8236ab5f6ebfd89a9695718",
+      "refs": [
+        [
+          "223-1000",
+          "57"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223-1000\\58.flac",
+      "file": "dist\\assets\\final\\vehicles\\223-1000\\58.ogg",
+      "originalBytes": 126167,
+      "bytes": 68858,
+      "duration": 3.403152,
+      "sha256": "88fc77c58daf6c3d17091c6d5adb779531b562c9ca0bbab8e8bf59d714e766a7",
+      "refs": [
+        [
+          "223-1000",
+          "58"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223-1000\\59.flac",
+      "file": "dist\\assets\\final\\vehicles\\223-1000\\59.ogg",
+      "originalBytes": 131466,
+      "bytes": 62565,
+      "duration": 3.241723,
+      "sha256": "5efb44e333a3be60846b7ee88b4e29318e6a91dd447b3148111b80d42d6c9502",
+      "refs": [
+        [
+          "223-1000",
+          "59"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223-1000\\60.flac",
+      "file": "dist\\assets\\final\\vehicles\\223-1000\\60.ogg",
+      "originalBytes": 155441,
+      "bytes": 63627,
+      "duration": 3.43941,
+      "sha256": "a10f32b1680bcb91d2e97b9bcca7719070dc7136b94486a62af3de44d9d15827",
+      "refs": [
+        [
+          "223-1000",
+          "60"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223-1000\\61.flac",
+      "file": "dist\\assets\\final\\vehicles\\223-1000\\61.ogg",
+      "originalBytes": 189557,
+      "bytes": 72605,
+      "duration": 3.628095,
+      "sha256": "f8c5cc53857cca5326e271fb562e8f6fd120c97c62f1e2f69a3b44a761521f4e",
+      "refs": [
+        [
+          "223-1000",
+          "61"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223-1000\\62.flac",
+      "file": "dist\\assets\\final\\vehicles\\223-1000\\62.ogg",
+      "originalBytes": 222493,
+      "bytes": 61350,
+      "duration": 2.680998,
+      "sha256": "8183e24276a2bd12c730d616b307bac7f78efa65150d95d3d82a91c0c0d5e9f6",
+      "refs": [
+        [
+          "223-1000",
+          "62"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223-1000\\63.flac",
+      "file": "dist\\assets\\final\\vehicles\\223-1000\\63.ogg",
+      "originalBytes": 415594,
+      "bytes": 108109,
+      "duration": 4.860045,
+      "sha256": "b304572d4ae73c90c23ff9e6eec0303808de61980feebd8d44c3986a6f76b891",
+      "refs": [
+        [
+          "223-1000",
+          "63"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223-1000\\64.flac",
+      "file": "dist\\assets\\final\\vehicles\\223-1000\\64.ogg",
+      "originalBytes": 285029,
+      "bytes": 73156,
+      "duration": 3.261134,
+      "sha256": "ca786c58e816139414aeec77a1deeda893f34570718c2fbe32f83bf5b642b59f",
+      "refs": [
+        [
+          "223-1000",
+          "64"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223-1000\\65.flac",
+      "file": "dist\\assets\\final\\vehicles\\223-1000\\65.ogg",
+      "originalBytes": 211437,
+      "bytes": 57604,
+      "duration": 2.542721,
+      "sha256": "3e82167b9f0a11c03ce0e758b6463e6d9463881dc017453a5c34f09915c0a68c",
+      "refs": [
+        [
+          "223-1000",
+          "65"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223-1000\\66.flac",
+      "file": "dist\\assets\\final\\vehicles\\223-1000\\66.ogg",
+      "originalBytes": 311935,
+      "bytes": 78659,
+      "duration": 3.49585,
+      "sha256": "673d1aacf9fea2375604f0355ec1382ae22dd8622757606c2e9ddbe718cf6f06",
+      "refs": [
+        [
+          "223-1000",
+          "66"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223-1000\\67.flac",
+      "file": "dist\\assets\\final\\vehicles\\223-1000\\67.ogg",
+      "originalBytes": 327255,
+      "bytes": 79919,
+      "duration": 3.549297,
+      "sha256": "f75c62ff7d47e19aa6508016482c102d7e0af895db025b17e5872c9c3085bc13",
+      "refs": [
+        [
+          "223-1000",
+          "67"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223-1000\\68.flac",
+      "file": "dist\\assets\\final\\vehicles\\223-1000\\68.ogg",
+      "originalBytes": 374914,
+      "bytes": 90096,
+      "duration": 3.993787,
+      "sha256": "2e22cea3c1584dc7b0f11d0dab692367e07660447b2a19126c4a4d9ccff5828c",
+      "refs": [
+        [
+          "223-1000",
+          "68"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223-1000\\69.flac",
+      "file": "dist\\assets\\final\\vehicles\\223-1000\\69.ogg",
+      "originalBytes": 323840,
+      "bytes": 77588,
+      "duration": 3.390249,
+      "sha256": "1b994d0b8258679b74a0db851b06ad24a5096ca53203cad52042ab90ddc52063",
+      "refs": [
+        [
+          "223-1000",
+          "69"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223-1000\\70.flac",
+      "file": "dist\\assets\\final\\vehicles\\223-1000\\70.ogg",
+      "originalBytes": 426000,
+      "bytes": 98602,
+      "duration": 4.318866,
+      "sha256": "d834a13ed45880131e99f5635bb97ca81c918d5ac59db038c80178f0073f3cb8",
+      "refs": [
+        [
+          "223-1000",
+          "70"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223-1000\\71.flac",
+      "file": "dist\\assets\\final\\vehicles\\223-1000\\71.ogg",
+      "originalBytes": 82250,
+      "bytes": 24840,
+      "duration": 0.942222,
+      "sha256": "c599998735ba7fef850442b5528645722817bf2f0b57213b02893a01cf3410bd",
+      "refs": [
+        [
+          "223-1000",
+          "71"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223-1000\\72.flac",
+      "file": "dist\\assets\\final\\vehicles\\223-1000\\72.ogg",
+      "originalBytes": 167196,
+      "bytes": 53880,
+      "duration": 2.29873,
+      "sha256": "a51df5f8cf5d49b332d32aa60ac35bf43ba2cfa4399bb6756b691252fa892b2e",
+      "refs": [
+        [
+          "223-1000",
+          "72"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223-1000\\73.flac",
+      "file": "dist\\assets\\final\\vehicles\\223-1000\\73.ogg",
+      "originalBytes": 156986,
+      "bytes": 51325,
+      "duration": 2.211338,
+      "sha256": "91273b91c6dd18b87e06f61c34cdc74dc3d224cd4101e1fdf6a28e68c4c9dc2b",
+      "refs": [
+        [
+          "223-1000",
+          "73"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223-1000\\74.flac",
+      "file": "dist\\assets\\final\\vehicles\\223-1000\\74.ogg",
+      "originalBytes": 186136,
+      "bytes": 58496,
+      "duration": 2.441814,
+      "sha256": "10a839c7b23832914acf092e6f3eb776e435b2efe39d488d46391efe87932a93",
+      "refs": [
+        [
+          "223-1000",
+          "74"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223-1000\\75.flac",
+      "file": "dist\\assets\\final\\vehicles\\223-1000\\75.ogg",
+      "originalBytes": 211833,
+      "bytes": 72357,
+      "duration": 3.109206,
+      "sha256": "09f669eb0a242ea025c22294e1f884f26617af73f94d36a94be54ab63553981c",
+      "refs": [
+        [
+          "223-1000",
+          "75"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223-1000\\76.flac",
+      "file": "dist\\assets\\final\\vehicles\\223-1000\\76.ogg",
+      "originalBytes": 252092,
+      "bytes": 67905,
+      "duration": 2.914059,
+      "sha256": "6950f1893b58451cb95f4620ba1be8f38fc060109d1b667c8b598dd01e2b7f38",
+      "refs": [
+        [
+          "223-1000",
+          "76"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223-1000\\77.flac",
+      "file": "dist\\assets\\final\\vehicles\\223-1000\\77.ogg",
+      "originalBytes": 227234,
+      "bytes": 64315,
+      "duration": 2.826939,
+      "sha256": "07fe79c5f0c74ab0b7214049625665d5d6221fa4ed3408ab91308dd04767bfa8",
+      "refs": [
+        [
+          "223-1000",
+          "77"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223-1000\\78.flac",
+      "file": "dist\\assets\\final\\vehicles\\223-1000\\78.ogg",
+      "originalBytes": 252110,
+      "bytes": 68254,
+      "duration": 3.017324,
+      "sha256": "1aab4a2b78edd58c17b5d17df1b9d67b08e7ac5d08192b1369a7637828dca0c5",
+      "refs": [
+        [
+          "223-1000",
+          "78"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223-1000\\79.flac",
+      "file": "dist\\assets\\final\\vehicles\\223-1000\\79.ogg",
+      "originalBytes": 127249,
+      "bytes": 62321,
+      "duration": 3.079093,
+      "sha256": "c9f2ffa0d864f6226dc1b074db15937a4ccb50364ea423464e2dae97133c61ae",
+      "refs": [
+        [
+          "223-1000",
+          "79"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223-1000\\80.flac",
+      "file": "dist\\assets\\final\\vehicles\\223-1000\\80.ogg",
+      "originalBytes": 197778,
+      "bytes": 56976,
+      "duration": 2.455465,
+      "sha256": "7d2e56ad4f4961798c050a84034966e918932d1cf16ecf9608cd509554fd4bc5",
+      "refs": [
+        [
+          "223-1000",
+          "80"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223-1000\\81.flac",
+      "file": "dist\\assets\\final\\vehicles\\223-1000\\81.ogg",
+      "originalBytes": 182317,
+      "bytes": 78776,
+      "duration": 3.798889,
+      "sha256": "8921301829cbc0182e8e47ae3f51df130d38f915ce400f5347208f48bd159677",
+      "refs": [
+        [
+          "223-1000",
+          "81"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223-1000\\82.flac",
+      "file": "dist\\assets\\final\\vehicles\\223-1000\\82.ogg",
+      "originalBytes": 452596,
+      "bytes": 117184,
+      "duration": 5.240136,
+      "sha256": "4a7b7bc4f0323ece927c172c4db32a77adb02504d0906b4e09b72ef67a84562c",
+      "refs": [
+        [
+          "223-1000",
+          "82"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223-1000\\83.flac",
+      "file": "dist\\assets\\final\\vehicles\\223-1000\\83.ogg",
+      "originalBytes": 250426,
+      "bytes": 68873,
+      "duration": 2.971066,
+      "sha256": "b1693394bbf9fcc9f7f2353e5ddb9b39853373aa933c16d121ecc3a801469774",
+      "refs": [
+        [
+          "223-1000",
+          "83"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223-1000\\84.flac",
+      "file": "dist\\assets\\final\\vehicles\\223-1000\\84.ogg",
+      "originalBytes": 562251,
+      "bytes": 122983,
+      "duration": 5.442721,
+      "sha256": "36f9f03c6a4e45b1ada2c6525d9f4698193e585962ba2d3d2b9cee4dfeb0bd4f",
+      "refs": [
+        [
+          "223-1000",
+          "84"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223\\27.flac",
+      "file": "dist\\assets\\final\\vehicles\\223\\27.ogg",
+      "originalBytes": 849768,
+      "bytes": 270924,
+      "duration": 12.666125,
+      "sha256": "1f099f7cb2435d7f6414f8c5ed9212ee2be7a6b8c398a04e128a46bd420cf12c",
+      "refs": [
+        [
+          "223",
+          "27"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223\\29.flac",
+      "file": "dist\\assets\\final\\vehicles\\223\\29.ogg",
+      "originalBytes": 286391,
+      "bytes": 89241,
+      "duration": 3.9975,
+      "sha256": "45ccd39a8b9207bb33016edb55e5d7e1a327aaeed999f517eff11cd56075e5e9",
+      "refs": [
+        [
+          "223",
+          "29"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223\\31.flac",
+      "file": "dist\\assets\\final\\vehicles\\223\\31.ogg",
+      "originalBytes": 858341,
+      "bytes": 257169,
+      "duration": 11.991396,
+      "sha256": "dfbb7bc8d88b486dfc058886220a4f373f792a464df96189fcf14c6e988a8515",
+      "refs": [
+        [
+          "223",
+          "31"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223\\37.flac",
+      "file": "dist\\assets\\final\\vehicles\\223\\37.ogg",
+      "originalBytes": 441878,
+      "bytes": 39605,
+      "duration": 1.536,
+      "sha256": "f293ae17fbaae077d06e1815e43d35e1d5dabd1daa805a4de43d2e6f3da10e68",
+      "refs": [
+        [
+          "223",
+          "37"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223\\38.flac",
+      "file": "dist\\assets\\final\\vehicles\\223\\38.ogg",
+      "originalBytes": 502716,
+      "bytes": 44386,
+      "duration": 1.744,
+      "sha256": "6dc5b164031310c9fdacf47856a381ea4a65e70f23987260c7f3fb39b9daf5bd",
+      "refs": [
+        [
+          "223",
+          "38"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223\\41.flac",
+      "file": "dist\\assets\\final\\vehicles\\223\\41.ogg",
+      "originalBytes": 318062,
+      "bytes": 48197,
+      "duration": 2.166729,
+      "sha256": "271003253da4a35f6cd0231ae232a8c8570dc35ae4e2da88784f7ec7f60482fa",
+      "refs": [
+        [
+          "223",
+          "41"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223\\42.flac",
+      "file": "dist\\assets\\final\\vehicles\\223\\42.ogg",
+      "originalBytes": 615525,
+      "bytes": 55297,
+      "duration": 2.208667,
+      "sha256": "8203d01b1a16ada7d19842adb8363940b1c660269fc88be627284e35d5d63eba",
+      "refs": [
+        [
+          "223",
+          "42"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223\\43.flac",
+      "file": "dist\\assets\\final\\vehicles\\223\\43.ogg",
+      "originalBytes": 448678,
+      "bytes": 66915,
+      "duration": 3.187708,
+      "sha256": "796d9b9f3cc642c067f8b76de418f6432391b0fdaeb2d8383e72e240079a755d",
+      "refs": [
+        [
+          "223",
+          "43"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223\\56.flac",
+      "file": "dist\\assets\\final\\vehicles\\223\\56.ogg",
+      "originalBytes": 18244,
+      "bytes": 7517,
+      "duration": 0.135261,
+      "sha256": "fedb64ed5d89c1f7d1c2a31f21dd09118139d42453375d4842f44be16bc7491f",
+      "refs": [
+        [
+          "223",
+          "56"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\223\\75.flac",
+      "file": "dist\\assets\\final\\vehicles\\223\\75.ogg",
+      "originalBytes": 22499,
+      "bytes": 19380,
+      "duration": 1.242971,
+      "sha256": "aeeddce49d4d3f6c36e5d071cfacf392d7067bf3fc310d001919e5ac8e0a07ef",
+      "refs": [
+        [
+          "223",
+          "75"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\29.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\29.ogg",
+      "originalBytes": 795664,
+      "bytes": 191845,
+      "duration": 8.955964,
+      "sha256": "8a1b4fb83215413213fa14becef8adaf0e8ef77f795407a6df16d1eaf187cfea",
+      "refs": [
+        [
+          "681",
+          "29"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\30.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\30.ogg",
+      "originalBytes": 686500,
+      "bytes": 161951,
+      "duration": 7.441202,
+      "sha256": "78f640d457e1c678c9d956fa5f0fdfda6c961a6116ee4150a64f5a82a5093c09",
+      "refs": [
+        [
+          "681",
+          "30"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\31.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\31.ogg",
+      "originalBytes": 818227,
+      "bytes": 181508,
+      "duration": 8.844694,
+      "sha256": "8e5052d5309e5d919b2cdd6f794a5628b679df8049c1f6f7f640cbac669eab2e",
+      "refs": [
+        [
+          "681",
+          "31"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\33.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\33.ogg",
+      "originalBytes": 786063,
+      "bytes": 195169,
+      "duration": 9.150658,
+      "sha256": "37964737fddc780ac9010fad9c0dbabe9827ccc083a7ba3409b21ca96cd4c657",
+      "refs": [
+        [
+          "681",
+          "33"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\34.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\34.ogg",
+      "originalBytes": 626884,
+      "bytes": 139545,
+      "duration": 6.514966,
+      "sha256": "58c8c3d34879fc7db28650f8dc791eab6dfad91a7f6c5e39b93ada99faa59d11",
+      "refs": [
+        [
+          "681",
+          "34"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\60.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\60.ogg",
+      "originalBytes": 581162,
+      "bytes": 145147,
+      "duration": 6.147458,
+      "sha256": "fc090515ebc5c9c0a389f1df4381374e44bb295d3808e5c656988e21034dec16",
+      "refs": [
+        [
+          "681",
+          "60"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\61.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\61.ogg",
+      "originalBytes": 224348,
+      "bytes": 65605,
+      "duration": 3.239184,
+      "sha256": "9797e601c625a60deb372989bc7abae36a19210af7bd23bba02aae24470cd50c",
+      "refs": [
+        [
+          "681",
+          "61"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\62.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\62.ogg",
+      "originalBytes": 142445,
+      "bytes": 37188,
+      "duration": 1.461208,
+      "sha256": "93106513e8354698ef27a1a8ad3963b4208300e142c240608e7f8797f4680552",
+      "refs": [
+        [
+          "681",
+          "62"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\63.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\63.ogg",
+      "originalBytes": 411620,
+      "bytes": 104633,
+      "duration": 4.608313,
+      "sha256": "9673def8c6fd665a97751f1bba49e582e8202b9be87e84d8150d084d884071c3",
+      "refs": [
+        [
+          "681",
+          "63"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\64.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\64.ogg",
+      "originalBytes": 707539,
+      "bytes": 173911,
+      "duration": 7.631563,
+      "sha256": "e14a050e66ffd38b23e48c02d80a60e6db18af87697df88233102b0c1878b15c",
+      "refs": [
+        [
+          "681",
+          "64"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\65.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\65.ogg",
+      "originalBytes": 307921,
+      "bytes": 78617,
+      "duration": 3.414014,
+      "sha256": "2c3b549b2c5b7d2f3894db7c06ab617c3ef0b11bbab5c0c4f33be7030c91b945",
+      "refs": [
+        [
+          "681",
+          "65"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\66.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\66.ogg",
+      "originalBytes": 378649,
+      "bytes": 95362,
+      "duration": 4.161134,
+      "sha256": "bbef18236d883cba9cdc09663690fa7bcaa44e215510bd6e976e399515d1f36c",
+      "refs": [
+        [
+          "681",
+          "66"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\67.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\67.ogg",
+      "originalBytes": 376944,
+      "bytes": 98882,
+      "duration": 4.253107,
+      "sha256": "40baead1f910117fa57fa8c538e44e5d8919fa6905e763a0945dffbcb330f19c",
+      "refs": [
+        [
+          "681",
+          "67"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\68.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\68.ogg",
+      "originalBytes": 391798,
+      "bytes": 101508,
+      "duration": 4.414286,
+      "sha256": "e6679a8e0b55037bf92151c23d050255cf5e37113a924204fde66ea40caaff47",
+      "refs": [
+        [
+          "681",
+          "68"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\69.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\69.ogg",
+      "originalBytes": 383058,
+      "bytes": 98983,
+      "duration": 4.299093,
+      "sha256": "462a45f1154736357d46502d97a9a5e5cbb69b64d4533bb6e612ccf082eee470",
+      "refs": [
+        [
+          "681",
+          "69"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\70.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\70.ogg",
+      "originalBytes": 263787,
+      "bytes": 70964,
+      "duration": 3.1039,
+      "sha256": "773ea700482edc43ff2d649a50aa5b7a8150bc9dc9ba1b14ee26fa55a8806632",
+      "refs": [
+        [
+          "681",
+          "70"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\71.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\71.ogg",
+      "originalBytes": 330820,
+      "bytes": 88270,
+      "duration": 3.90907,
+      "sha256": "878f34ae487b82db68bef56b9270343e97fbda19752778194e5adf8157d2b282",
+      "refs": [
+        [
+          "681",
+          "71"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\72.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\72.ogg",
+      "originalBytes": 368937,
+      "bytes": 97291,
+      "duration": 4.341224,
+      "sha256": "79deaf31c6829b50c813768edef555ebcdbc47f4db060dd04869bb88eb10a546",
+      "refs": [
+        [
+          "681",
+          "72"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\73.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\73.ogg",
+      "originalBytes": 320608,
+      "bytes": 85149,
+      "duration": 3.792063,
+      "sha256": "f494acd310f5dec9a7b3d6b6c40aa75a384a06cc5c3884c06d5ec23d69c48ad9",
+      "refs": [
+        [
+          "681",
+          "73"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\74.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\74.ogg",
+      "originalBytes": 377865,
+      "bytes": 93869,
+      "duration": 4.110295,
+      "sha256": "97724574bf3b71d18f4d60297eb4b2a54b6f0c765d90f8c5f817c50e02189fbc",
+      "refs": [
+        [
+          "681",
+          "74"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\75.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\75.ogg",
+      "originalBytes": 363904,
+      "bytes": 96833,
+      "duration": 4.333061,
+      "sha256": "9d6f6560a27fa17d6333d1b51645816e6ccea0856e42bcd9b370e317eb38cfac",
+      "refs": [
+        [
+          "681",
+          "75"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\76.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\76.ogg",
+      "originalBytes": 371618,
+      "bytes": 96919,
+      "duration": 4.344898,
+      "sha256": "4c8d25a1541d480a5597e24f9b8ac9f5e200de1119b757eddd6ff33f41e7c146",
+      "refs": [
+        [
+          "681",
+          "76"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\77.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\77.ogg",
+      "originalBytes": 380663,
+      "bytes": 100989,
+      "duration": 4.461995,
+      "sha256": "e81fc873cd6a4551ff49a851c2af589865a06113b4ba739c815e07ca130ff2a7",
+      "refs": [
+        [
+          "681",
+          "77"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\78.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\78.ogg",
+      "originalBytes": 364510,
+      "bytes": 97329,
+      "duration": 4.313651,
+      "sha256": "79f11519670fe0d053d3399885a256500784745e107b360427a18b257e88ce36",
+      "refs": [
+        [
+          "681",
+          "78"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\79.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\79.ogg",
+      "originalBytes": 290370,
+      "bytes": 75888,
+      "duration": 3.382268,
+      "sha256": "714a5c383db21f036264f63ff046522a60888b2d5d9bda0f76acc735804d35fe",
+      "refs": [
+        [
+          "681",
+          "79"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\80.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\80.ogg",
+      "originalBytes": 431880,
+      "bytes": 106394,
+      "duration": 4.836644,
+      "sha256": "2fb17dd0a3e94e7998a42669d3abe2ca2d65d62030752339873cd826a72c6ea4",
+      "refs": [
+        [
+          "681",
+          "80"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\81.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\81.ogg",
+      "originalBytes": 338958,
+      "bytes": 87415,
+      "duration": 3.897234,
+      "sha256": "dd00bc05bfc2be8a15cb4efc25adf22125cf3a176812c6a58d547db5bd3bb051",
+      "refs": [
+        [
+          "681",
+          "81"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\82.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\82.ogg",
+      "originalBytes": 368658,
+      "bytes": 89706,
+      "duration": 3.942721,
+      "sha256": "71536fbe79636b81e39abdbd3e1542a9214d43f175dfc3d74a22d81e419173e5",
+      "refs": [
+        [
+          "681",
+          "82"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\83.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\83.ogg",
+      "originalBytes": 428423,
+      "bytes": 119767,
+      "duration": 5.385714,
+      "sha256": "f0e00f36c053e07b635d2be0daa73204264d1f62d4fd71266b950e503050f6b9",
+      "refs": [
+        [
+          "681",
+          "83"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\84.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\84.ogg",
+      "originalBytes": 374896,
+      "bytes": 91485,
+      "duration": 4.064853,
+      "sha256": "bde8b53c3b6833f33d2a0845f4742ef811807cd4fadaa4ee72c66db24e4377fb",
+      "refs": [
+        [
+          "681",
+          "84"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\85.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\85.ogg",
+      "originalBytes": 327993,
+      "bytes": 82897,
+      "duration": 3.682404,
+      "sha256": "62053647d122e21eb1f57b294de0c86df00ffdd9984ccdf00ff05ea7c024605d",
+      "refs": [
+        [
+          "681",
+          "85"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\86.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\86.ogg",
+      "originalBytes": 284587,
+      "bytes": 69474,
+      "duration": 2.936417,
+      "sha256": "cb1cd212073b9aaca4e5af40c372f325f37546b6cdefd68551868a1ad5cce1d9",
+      "refs": [
+        [
+          "681",
+          "86"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\87.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\87.ogg",
+      "originalBytes": 306227,
+      "bytes": 73192,
+      "duration": 3.18127,
+      "sha256": "f64d5628ea397d3ef9a9d38d4fd762644f699101b14a6f5d5ca446bf48c2f29c",
+      "refs": [
+        [
+          "681",
+          "87"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\88.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\88.ogg",
+      "originalBytes": 406825,
+      "bytes": 101514,
+      "duration": 4.506576,
+      "sha256": "32768a21e314615e3e81f58bc4d5f449ce20a01a9f835ca0a51fe023bad76c31",
+      "refs": [
+        [
+          "681",
+          "88"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\89.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\89.ogg",
+      "originalBytes": 377581,
+      "bytes": 100266,
+      "duration": 4.38068,
+      "sha256": "b7af208450190ff22f431f9a7f6ead15371680a19d2e7b63908edf82fcad137a",
+      "refs": [
+        [
+          "681",
+          "89"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\90.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\90.ogg",
+      "originalBytes": 360250,
+      "bytes": 94708,
+      "duration": 4.153923,
+      "sha256": "8db7ac9cb4bca1857960fbbfe171062066f8e276153fa2b858cb407de7572bbf",
+      "refs": [
+        [
+          "681",
+          "90"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\91.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\91.ogg",
+      "originalBytes": 247273,
+      "bytes": 65508,
+      "duration": 2.819592,
+      "sha256": "e71320f04ab187495ab02f9e1f0cea093dca42a37390aad920a025f1c41ee9ad",
+      "refs": [
+        [
+          "681",
+          "91"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\92.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\92.ogg",
+      "originalBytes": 404780,
+      "bytes": 104631,
+      "duration": 4.706077,
+      "sha256": "7bcda2175dce0428de8aef445ac85d82285e0e295434aed357a2e288206b797d",
+      "refs": [
+        [
+          "681",
+          "92"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\93.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\93.ogg",
+      "originalBytes": 305765,
+      "bytes": 80666,
+      "duration": 3.555964,
+      "sha256": "a59921295b1532e7d100ee14acbcb626f4b17de72cfe257e90daef0f50d4fbe0",
+      "refs": [
+        [
+          "681",
+          "93"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\94.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\94.ogg",
+      "originalBytes": 391034,
+      "bytes": 104294,
+      "duration": 4.650295,
+      "sha256": "687798cdb375deae591d86143b06388dea33987b51b9e2f31921198eb4fc0236",
+      "refs": [
+        [
+          "681",
+          "94"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\95.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\95.ogg",
+      "originalBytes": 448110,
+      "bytes": 119416,
+      "duration": 5.387029,
+      "sha256": "a626503298683f6d32adb9b05ca16373f39ed23d4a23dccb7033d0ee9c79fd17",
+      "refs": [
+        [
+          "681",
+          "95"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\96.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\96.ogg",
+      "originalBytes": 426142,
+      "bytes": 115427,
+      "duration": 5.15483,
+      "sha256": "9a6fc26171ed2fb857909a020c0c30bb33492d5d950753dc88fab61a17381f31",
+      "refs": [
+        [
+          "681",
+          "96"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\97.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\97.ogg",
+      "originalBytes": 535564,
+      "bytes": 135621,
+      "duration": 6.107166,
+      "sha256": "70dbe48262eb3095be4e97ba5f71721389b5094986ca3fb9fd9935bb3b6f322e",
+      "refs": [
+        [
+          "681",
+          "97"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\98.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\98.ogg",
+      "originalBytes": 256139,
+      "bytes": 67338,
+      "duration": 2.962404,
+      "sha256": "5d1426a52242a6064a7b85123d53e664ea7e6ff9a37b9812df12cb5495308d15",
+      "refs": [
+        [
+          "681",
+          "98"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\99.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\99.ogg",
+      "originalBytes": 370587,
+      "bytes": 102095,
+      "duration": 4.458458,
+      "sha256": "0629f8cbf3084b77cd712a9d64ba41199037ef681f39c34f794ef089366eef24",
+      "refs": [
+        [
+          "681",
+          "99"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\100.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\100.ogg",
+      "originalBytes": 310180,
+      "bytes": 86108,
+      "duration": 3.715193,
+      "sha256": "0b5469b1db921651c1597773c94d30c32f9cdc934c74e9b53ee0170d732b50d5",
+      "refs": [
+        [
+          "681",
+          "100"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\101.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\101.ogg",
+      "originalBytes": 300087,
+      "bytes": 83317,
+      "duration": 3.599274,
+      "sha256": "474d2fc904aab9f678b587bc92a32f0af6e2cd53aefd09e9ff76e941e244e8a0",
+      "refs": [
+        [
+          "681",
+          "101"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\102.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\102.ogg",
+      "originalBytes": 372607,
+      "bytes": 95978,
+      "duration": 4.300816,
+      "sha256": "c48066f833b21bdf9440d4d498cfab68a7799f4d4adbadeb53cb77df4acf9ad2",
+      "refs": [
+        [
+          "681",
+          "102"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\103.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\103.ogg",
+      "originalBytes": 326254,
+      "bytes": 83548,
+      "duration": 3.738594,
+      "sha256": "cfc3301c22a554e10688763c0ddf920bd3fab6ceec97d207a767de28fb5aa6b9",
+      "refs": [
+        [
+          "681",
+          "103"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\104.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\104.ogg",
+      "originalBytes": 200487,
+      "bytes": 55379,
+      "duration": 2.200771,
+      "sha256": "0d043623319fdcdc1a321c71c653a30a3ef089ffe77dc16c0e819287d771a666",
+      "refs": [
+        [
+          "681",
+          "104"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\105.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\105.ogg",
+      "originalBytes": 247356,
+      "bytes": 69067,
+      "duration": 2.742041,
+      "sha256": "3fca234accdedd03a8e37907e777b4e7a466fb65e4042d2c950b478ee3a76eb4",
+      "refs": [
+        [
+          "681",
+          "105"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\106.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\106.ogg",
+      "originalBytes": 247285,
+      "bytes": 69999,
+      "duration": 2.762585,
+      "sha256": "0916bac19fa35e6abc8136b23bc9cfcc84169e4ccd45eb2595b87b22764733af",
+      "refs": [
+        [
+          "681",
+          "106"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\107.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\107.ogg",
+      "originalBytes": 204101,
+      "bytes": 58097,
+      "duration": 2.328254,
+      "sha256": "55f5a8c5a2ee9f147d82b5820085757ca34b4f3206badcf8cceb56c99be548e0",
+      "refs": [
+        [
+          "681",
+          "107"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\681\\108.flac",
+      "file": "dist\\assets\\final\\vehicles\\681\\108.ogg",
+      "originalBytes": 583116,
+      "bytes": 170239,
+      "duration": 7.662268,
+      "sha256": "311cb5aff55afe959ea9998de36570e1f130ca7ef522165096a1885d9438c4f7",
+      "refs": [
+        [
+          "681",
+          "108"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\28.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\28.ogg",
+      "originalBytes": 711602,
+      "bytes": 192517,
+      "duration": 9.000952,
+      "sha256": "95de2a7e20d2617d7fc476e95383fae3161d96d624217bc7234bff884bfacaff",
+      "refs": [
+        [
+          "e353",
+          "28"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\52.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\52.ogg",
+      "originalBytes": 47358,
+      "bytes": 18242,
+      "duration": 0.662132,
+      "sha256": "89af754ea71430fea9547f3991e7dc9477fc455a6f1a17648116c8ea0baf04c0",
+      "refs": [
+        [
+          "e353",
+          "52"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\72.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\72.ogg",
+      "originalBytes": 44127,
+      "bytes": 26557,
+      "duration": 1.097098,
+      "sha256": "c216fd527cfdd02987b94ce50a3eef3a3bf1ebf0b3c5ac41211cd18fab95908c",
+      "refs": [
+        [
+          "e353",
+          "72"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\73.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\73.ogg",
+      "originalBytes": 88545,
+      "bytes": 47349,
+      "duration": 2.089841,
+      "sha256": "27600d932e828d02918f0733e9be69991cbb035a79d7cba650b36e1805373b5f",
+      "refs": [
+        [
+          "e353",
+          "73"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\74.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\74.ogg",
+      "originalBytes": 149733,
+      "bytes": 73195,
+      "duration": 3.540998,
+      "sha256": "e0231e0d548cc8e9c7742c0327dccb35d9275d71533f2224b41dc2c517967d2c",
+      "refs": [
+        [
+          "e353",
+          "74"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\75.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\75.ogg",
+      "originalBytes": 131278,
+      "bytes": 68816,
+      "duration": 3.378639,
+      "sha256": "63a4d07964c5f64fe2d56285c06a2f0495d149deeb6d8ed28d9bd31d93edbf44",
+      "refs": [
+        [
+          "e353",
+          "75"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\76.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\76.ogg",
+      "originalBytes": 118822,
+      "bytes": 59075,
+      "duration": 3.343628,
+      "sha256": "ad3818d351f43808d80fba8c86d59953bba9407ed352a552b80f101a8ceb2421",
+      "refs": [
+        [
+          "e353",
+          "76"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\77.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\77.ogg",
+      "originalBytes": 92679,
+      "bytes": 47470,
+      "duration": 2.229206,
+      "sha256": "d1fcec9965301accc5b60a2dd8e511cfea806513757e93ad68826a687b59a3dd",
+      "refs": [
+        [
+          "e353",
+          "77"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\78.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\78.ogg",
+      "originalBytes": 164143,
+      "bytes": 76690,
+      "duration": 3.935918,
+      "sha256": "5cdfce4c922090a7cb59abcbb02edf87fc5366f04c32740d623c4382bf16b8c8",
+      "refs": [
+        [
+          "e353",
+          "78"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\79.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\79.ogg",
+      "originalBytes": 154799,
+      "bytes": 70589,
+      "duration": 3.225397,
+      "sha256": "af8cbdd8f00bb9caaa2937b0048aa9c06bc0089c44aa7c1eb38a567e05b4ee00",
+      "refs": [
+        [
+          "e353",
+          "79"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\80.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\80.ogg",
+      "originalBytes": 126155,
+      "bytes": 61261,
+      "duration": 3.01873,
+      "sha256": "646586c120b997e205f6b0507d350dbd8118e9b867d29c368329b2a033cf886d",
+      "refs": [
+        [
+          "e353",
+          "80"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\81.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\81.ogg",
+      "originalBytes": 450164,
+      "bytes": 155091,
+      "duration": 6.896281,
+      "sha256": "bd90fb8d5264ac4e590f501f289dc16169f58b11c00fa5290eb87607d48606f7",
+      "refs": [
+        [
+          "e353",
+          "81"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\82.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\82.ogg",
+      "originalBytes": 292877,
+      "bytes": 98820,
+      "duration": 4.591655,
+      "sha256": "51490a465cb3038935297063189830474e2f12d061defe83e60cc6ce767d989e",
+      "refs": [
+        [
+          "e353",
+          "82"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\83.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\83.ogg",
+      "originalBytes": 380197,
+      "bytes": 123172,
+      "duration": 5.516508,
+      "sha256": "adedcc24dd58533a3fee014a4ce2d8f63a336cc2f75ef5eabc991ce8a4dc20f5",
+      "refs": [
+        [
+          "e353",
+          "83"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\84.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\84.ogg",
+      "originalBytes": 348429,
+      "bytes": 106120,
+      "duration": 5.192917,
+      "sha256": "79a21acdcf29a9f94a29501a9fba7af5c920fa531320831e852107bb0b893e27",
+      "refs": [
+        [
+          "e353",
+          "84"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\85.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\85.ogg",
+      "originalBytes": 298976,
+      "bytes": 88209,
+      "duration": 4.198792,
+      "sha256": "14f33d1383e05b4427d1d738e0006d7318e152fd41bf6bd7e35776fec015e7fa",
+      "refs": [
+        [
+          "e353",
+          "85"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\86.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\86.ogg",
+      "originalBytes": 412052,
+      "bytes": 122685,
+      "duration": 5.825792,
+      "sha256": "70761519595fa8606eb80551910d106285371a5332744d11286e3e3a6f0fcfb3",
+      "refs": [
+        [
+          "e353",
+          "86"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\87.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\87.ogg",
+      "originalBytes": 368889,
+      "bytes": 109365,
+      "duration": 5.1345,
+      "sha256": "e09aeac02b45cb0e356be0da12557999febebd24c53eb405f0c8e11aa9623cc8",
+      "refs": [
+        [
+          "e353",
+          "87"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\88.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\88.ogg",
+      "originalBytes": 334618,
+      "bytes": 109347,
+      "duration": 5.014263,
+      "sha256": "df42472292fb3f624022c3f4eaf65f77d14c81a780d5202ff9a2bc40f7f30f45",
+      "refs": [
+        [
+          "e353",
+          "88"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\89.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\89.ogg",
+      "originalBytes": 461347,
+      "bytes": 141851,
+      "duration": 6.730975,
+      "sha256": "455222784f50fdb1d974d1b4915faaa9133813b4e57eeebcc51567e851086814",
+      "refs": [
+        [
+          "e353",
+          "89"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\90.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\90.ogg",
+      "originalBytes": 334685,
+      "bytes": 99113,
+      "duration": 4.679184,
+      "sha256": "f773174ae3e8b51e092a90cd1c982e4d216c0080306bb30322914ef281229dfb",
+      "refs": [
+        [
+          "e353",
+          "90"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\91.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\91.ogg",
+      "originalBytes": 210257,
+      "bytes": 74752,
+      "duration": 3.575147,
+      "sha256": "3d59e39ada7201e1852a68d82b3d938b6a399511bd3cd0e4769c230ae5d83f0d",
+      "refs": [
+        [
+          "e353",
+          "91"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\92.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\92.ogg",
+      "originalBytes": 291422,
+      "bytes": 91277,
+      "duration": 4.271167,
+      "sha256": "c828c49228816a2a3f813d0695aee595fcaa1dad3e794dc43bf35c90813d201d",
+      "refs": [
+        [
+          "e353",
+          "92"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\93.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\93.ogg",
+      "originalBytes": 242212,
+      "bytes": 72582,
+      "duration": 3.283833,
+      "sha256": "f1c4c8802443c0706f570952b2d10c5e2f5abaa9ffbf579dbb46987725a0c950",
+      "refs": [
+        [
+          "e353",
+          "93"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\94.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\94.ogg",
+      "originalBytes": 254920,
+      "bytes": 72713,
+      "duration": 3.298417,
+      "sha256": "63356449dc1638fea2492a7dd6ee8342a513cb39d8ac92d43b4a451675843f76",
+      "refs": [
+        [
+          "e353",
+          "94"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\95.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\95.ogg",
+      "originalBytes": 143604,
+      "bytes": 42736,
+      "duration": 1.84825,
+      "sha256": "e7332698b25b62d14b66a72b962b592637267ee9680252b1a64dfefc6212430e",
+      "refs": [
+        [
+          "e353",
+          "95"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\96.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\96.ogg",
+      "originalBytes": 128531,
+      "bytes": 42404,
+      "duration": 1.976417,
+      "sha256": "fde64fa5a2eebe05253c188051fc25a2148cc932965083b8a56c86e97d6fadac",
+      "refs": [
+        [
+          "e353",
+          "96"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\97.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\97.ogg",
+      "originalBytes": 110648,
+      "bytes": 59962,
+      "duration": 2.8755,
+      "sha256": "ede2ec51381a0789b9c145bf660dc4d1c07c9f8f4f8adecea0af29931ff7bcb3",
+      "refs": [
+        [
+          "e353",
+          "97"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\98.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\98.ogg",
+      "originalBytes": 118947,
+      "bytes": 67254,
+      "duration": 3.438375,
+      "sha256": "f6611e726400896453219611c94f2926984bc005762709593200a2d9554cd47c",
+      "refs": [
+        [
+          "e353",
+          "98"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\99.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\99.ogg",
+      "originalBytes": 110714,
+      "bytes": 53219,
+      "duration": 3.123458,
+      "sha256": "b5b4e4157a353576b644cf15961a250c35dfcbe4c0056414511c986ecf6c3e4c",
+      "refs": [
+        [
+          "e353",
+          "99"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\100.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\100.ogg",
+      "originalBytes": 109402,
+      "bytes": 47297,
+      "duration": 2.809042,
+      "sha256": "7bdee8787697d2f42a6b017d0bd60a64b5095b238b877059d7a1332a04d55a9e",
+      "refs": [
+        [
+          "e353",
+          "100"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\101.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\101.ogg",
+      "originalBytes": 148662,
+      "bytes": 73330,
+      "duration": 3.895958,
+      "sha256": "2218242cb383c299b18da0ac3d714a52f1add8435fcb08b860221e1ee1effd7d",
+      "refs": [
+        [
+          "e353",
+          "101"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\102.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\102.ogg",
+      "originalBytes": 83395,
+      "bytes": 47166,
+      "duration": 2.476083,
+      "sha256": "e1b55f3f6c5756ab490a81ee14f8d8a083cc9b9e2003afe781db03c3bb0829b5",
+      "refs": [
+        [
+          "e353",
+          "102"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\103.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\103.ogg",
+      "originalBytes": 97876,
+      "bytes": 58532,
+      "duration": 3.111417,
+      "sha256": "10eeb48d90ab7b55c4c719197257b3516a1f8b2584eb0f2e9f88d694ea0f951f",
+      "refs": [
+        [
+          "e353",
+          "103"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\104.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\104.ogg",
+      "originalBytes": 78406,
+      "bytes": 50072,
+      "duration": 2.432042,
+      "sha256": "fdb782916d2741455289f7b34aacfe976e10e69dcdb36f8454f663f01e475654",
+      "refs": [
+        [
+          "e353",
+          "104"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\105.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\105.ogg",
+      "originalBytes": 410994,
+      "bytes": 122824,
+      "duration": 5.825792,
+      "sha256": "1e6d2557de3a6e2e08b266728cd67c44571d75d6d9da605bb565c4fcf3b169d4",
+      "refs": [
+        [
+          "e353",
+          "105"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\106.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\106.ogg",
+      "originalBytes": 173960,
+      "bytes": 99846,
+      "duration": 5.825792,
+      "sha256": "b48130f1c0c2267f4c3c8e3f06c4dedbcf4f1e791d31221a0999efbac4336224",
+      "refs": [
+        [
+          "e353",
+          "106"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\107.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\107.ogg",
+      "originalBytes": 92138,
+      "bytes": 34377,
+      "duration": 1.369977,
+      "sha256": "77ceeb5d6d15246306d40de24710c4d9dee901ac1e40638fb2d26f4da748793f",
+      "refs": [
+        [
+          "e353",
+          "107"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\108.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\108.ogg",
+      "originalBytes": 142976,
+      "bytes": 51348,
+      "duration": 2.147846,
+      "sha256": "d13cc7f9b2669c8cadc07947147089b4752550f7ed23d2d6e22d8e35aed1bc53",
+      "refs": [
+        [
+          "e353",
+          "108"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\109.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\109.ogg",
+      "originalBytes": 164558,
+      "bytes": 58485,
+      "duration": 2.472925,
+      "sha256": "59aa5e4d78c98005b13eb08d6575d52420b1eb27275c54bf484740838944d0a7",
+      "refs": [
+        [
+          "e353",
+          "109"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\110.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\110.ogg",
+      "originalBytes": 104322,
+      "bytes": 37016,
+      "duration": 1.507823,
+      "sha256": "0f6c737cd3f7a7bda66f5b3f0852ca89e8850458cb00278ea3035545ca003a5b",
+      "refs": [
+        [
+          "e353",
+          "110"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\111.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\111.ogg",
+      "originalBytes": 131025,
+      "bytes": 46793,
+      "duration": 1.926757,
+      "sha256": "202346281565c31feb08d1ba44bbd5625391d51383b9b59100cd45742625a872",
+      "refs": [
+        [
+          "e353",
+          "111"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\112.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\112.ogg",
+      "originalBytes": 166975,
+      "bytes": 59485,
+      "duration": 2.484535,
+      "sha256": "b3550fda08e692a876a67a626cd0c37a2468951d35c760006c69aa7b1ec806bc",
+      "refs": [
+        [
+          "e353",
+          "112"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\113.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\113.ogg",
+      "originalBytes": 178250,
+      "bytes": 64984,
+      "duration": 2.73415,
+      "sha256": "93093a077770c4f83c669aca6d3b49314c7f5b60dadbb3cebca198d1e24458f6",
+      "refs": [
+        [
+          "e353",
+          "113"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\114.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\114.ogg",
+      "originalBytes": 162783,
+      "bytes": 60918,
+      "duration": 2.60644,
+      "sha256": "3875039b3f634e5ea617f900114a710d61be6fd3302a4c672764b3a0ec97856a",
+      "refs": [
+        [
+          "e353",
+          "114"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\115.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\115.ogg",
+      "originalBytes": 153229,
+      "bytes": 86503,
+      "duration": 4.505292,
+      "sha256": "a264de58be631d6c15d817fce4896bbdfd16e04e4fdfc5df20b1e78e7d8382e4",
+      "refs": [
+        [
+          "e353",
+          "115"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\116.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\116.ogg",
+      "originalBytes": 104834,
+      "bytes": 55689,
+      "duration": 2.907,
+      "sha256": "ce0623746886a22424e922edeba439e2878ed6fe16017473e50dc8919ec9695e",
+      "refs": [
+        [
+          "e353",
+          "116"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\117.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\117.ogg",
+      "originalBytes": 87664,
+      "bytes": 43914,
+      "duration": 2.313125,
+      "sha256": "94a4246729c3524162190ce1187f088061c82f23258fbc14fdac66d20dfdf010",
+      "refs": [
+        [
+          "e353",
+          "117"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\118.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\118.ogg",
+      "originalBytes": 669014,
+      "bytes": 307806,
+      "duration": 15.255625,
+      "sha256": "f4824f76183a3c7e20637f0d7522c3a9c460bdd4357d36f46ae052e184a1baae",
+      "refs": [
+        [
+          "e353",
+          "118"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e353\\119.flac",
+      "file": "dist\\assets\\final\\vehicles\\e353\\119.ogg",
+      "originalBytes": 154115,
+      "bytes": 58362,
+      "duration": 32.414104,
+      "sha256": "c7e40694fd79af01f67b4855ed14c7b654709ced626eae044746932f5225a734",
+      "refs": [
+        [
+          "e353",
+          "119"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\39.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\39.ogg",
+      "originalBytes": 315248,
+      "bytes": 69432,
+      "duration": 3.042979,
+      "sha256": "9afca554377e421e86743675757d151d283e8ed240e29a7a5912e9fa025e9976",
+      "refs": [
+        [
+          "383",
+          "39"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\40.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\40.ogg",
+      "originalBytes": 646158,
+      "bytes": 71441,
+      "duration": 3.009125,
+      "sha256": "d01bebaaa0e309f70cfecaa55740d538ec7876e72c3a3ee71783c1d9ff08e368",
+      "refs": [
+        [
+          "383",
+          "40"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\41.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\41.ogg",
+      "originalBytes": 50158,
+      "bytes": 21030,
+      "duration": 0.803832,
+      "sha256": "885744fa03825e57e2ba351baf0220b68867de3de95c0cffa1276a18bed8b4e7",
+      "refs": [
+        [
+          "383",
+          "41"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\42.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\42.ogg",
+      "originalBytes": 151158,
+      "bytes": 55923,
+      "duration": 2.231746,
+      "sha256": "290b78aa3bcf037200417e70d9803caa93128bc1c8084f2b841a627591bd7860",
+      "refs": [
+        [
+          "383",
+          "42"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\43.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\43.ogg",
+      "originalBytes": 164008,
+      "bytes": 57420,
+      "duration": 2.294649,
+      "sha256": "bbd3046079d9b345244fc4e3ca456cce4a8fb38178dd64a3762413af578eb53b",
+      "refs": [
+        [
+          "383",
+          "43"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\44.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\44.ogg",
+      "originalBytes": 166139,
+      "bytes": 56171,
+      "duration": 2.219751,
+      "sha256": "c3270f58e836681e99a30a53181fad0a2d6b2afb3dc2acbdf23bf49fe56ae405",
+      "refs": [
+        [
+          "383",
+          "44"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\45.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\45.ogg",
+      "originalBytes": 170861,
+      "bytes": 54136,
+      "duration": 2.171247,
+      "sha256": "c4f45a38e1905d6ab80a6467a615bcfe418bab4419e76596989d536e8564fe4e",
+      "refs": [
+        [
+          "383",
+          "45"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\46.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\46.ogg",
+      "originalBytes": 289564,
+      "bytes": 92238,
+      "duration": 4.10551,
+      "sha256": "69ddea11ff46f413d2393c2ceda70176f4620d261de6ccb6e4a58c85aba3b1ea",
+      "refs": [
+        [
+          "383",
+          "46"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\47.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\47.ogg",
+      "originalBytes": 301898,
+      "bytes": 100031,
+      "duration": 4.526961,
+      "sha256": "e6b9cce7512322a69d0900df7a9e743924a40fa7f55995a39d80aef3484413ac",
+      "refs": [
+        [
+          "383",
+          "47"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\48.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\48.ogg",
+      "originalBytes": 511429,
+      "bytes": 184041,
+      "duration": 8.458277,
+      "sha256": "def56cdd374dc2ac59d844e75d6e80450366865b0ad948a6a900f52726730d7d",
+      "refs": [
+        [
+          "383",
+          "48"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\49.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\49.ogg",
+      "originalBytes": 412508,
+      "bytes": 148706,
+      "duration": 6.796871,
+      "sha256": "056121d6bb53b588a5ce99d9a57904c9ee9a246951abcdb58796f08f9137e81d",
+      "refs": [
+        [
+          "383",
+          "49"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\50.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\50.ogg",
+      "originalBytes": 426446,
+      "bytes": 156104,
+      "duration": 7.145351,
+      "sha256": "5f62fe3a1e54db13e4cba4430dcba80a64c7837d109887dd38283691fb4a8f28",
+      "refs": [
+        [
+          "383",
+          "50"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\51.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\51.ogg",
+      "originalBytes": 264797,
+      "bytes": 79431,
+      "duration": 3.53737,
+      "sha256": "d5ec287ad008417f7e61b9c06b9855065a176ca8b77201e70da9540b6a5a17ef",
+      "refs": [
+        [
+          "383",
+          "51"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\52.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\52.ogg",
+      "originalBytes": 256587,
+      "bytes": 78234,
+      "duration": 3.568073,
+      "sha256": "52d2bf7c86d5a17d666c533bd67e7e52a6a5ac05a38ffd1ff2f02d9bfceac15c",
+      "refs": [
+        [
+          "383",
+          "52"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\53.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\53.ogg",
+      "originalBytes": 253387,
+      "bytes": 78754,
+      "duration": 3.57805,
+      "sha256": "0fd585ffbc6d8d66088215b73ac45cdd802d6b6bcfa47927e72c58fed19ed272",
+      "refs": [
+        [
+          "383",
+          "53"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\54.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\54.ogg",
+      "originalBytes": 232155,
+      "bytes": 70172,
+      "duration": 3.077528,
+      "sha256": "93613e0560bb485aa3a29f8748dcca7ae972966abafb112b520d9053e699127c",
+      "refs": [
+        [
+          "383",
+          "54"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\55.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\55.ogg",
+      "originalBytes": 266735,
+      "bytes": 80371,
+      "duration": 3.606803,
+      "sha256": "6b66489a6ffae7c1364608baf9873a25d60571d15138bf81fa9a4833d1c0c7f5",
+      "refs": [
+        [
+          "383",
+          "55"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\56.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\56.ogg",
+      "originalBytes": 167746,
+      "bytes": 51922,
+      "duration": 2.254467,
+      "sha256": "04bceac2761c933e9caf770775b2e81315f0348fbc4e0daad006eb6da95b5bc4",
+      "refs": [
+        [
+          "383",
+          "56"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\57.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\57.ogg",
+      "originalBytes": 150626,
+      "bytes": 45199,
+      "duration": 1.928617,
+      "sha256": "7d3605970b21b0b1d25374f22bacad38514493eae1f0892cc559f3ffdb7d6f5d",
+      "refs": [
+        [
+          "383",
+          "57"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\58.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\58.ogg",
+      "originalBytes": 388618,
+      "bytes": 113603,
+      "duration": 5.239274,
+      "sha256": "eb73ad84c3839d6a30114076571b90b6886a33e22ca224f104da1b81ae28558a",
+      "refs": [
+        [
+          "383",
+          "58"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\59.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\59.ogg",
+      "originalBytes": 269002,
+      "bytes": 73769,
+      "duration": 3.206667,
+      "sha256": "f5b6b5ac3649149ca5111fbf07233c638ecd46f49e4ced55aa477ce5558a9459",
+      "refs": [
+        [
+          "383",
+          "59"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\60.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\60.ogg",
+      "originalBytes": 466841,
+      "bytes": 121102,
+      "duration": 5.395782,
+      "sha256": "70652d8aac1414c67c8ead5a468b13ccfb4fd5d68c0ecb75f50a0778ff0618be",
+      "refs": [
+        [
+          "383",
+          "60"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\61.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\61.ogg",
+      "originalBytes": 568762,
+      "bytes": 142038,
+      "duration": 6.316848,
+      "sha256": "43c90145cf92fb41666024ec2f755258583b2b5bf14eea210c0c9951584328fd",
+      "refs": [
+        [
+          "383",
+          "61"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\62.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\62.ogg",
+      "originalBytes": 372958,
+      "bytes": 88337,
+      "duration": 3.904,
+      "sha256": "ff0bc950ae7f8139a98c04f10a32e187c4fae6d4b93c1ab77fb25bd876e65d2b",
+      "refs": [
+        [
+          "383",
+          "62"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\63.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\63.ogg",
+      "originalBytes": 405359,
+      "bytes": 145110,
+      "duration": 6.310748,
+      "sha256": "802491633c2a73b1c94a1a1c53691232d9a3c3529eb2390766d31e4350a010c3",
+      "refs": [
+        [
+          "383",
+          "63"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\64.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\64.ogg",
+      "originalBytes": 204254,
+      "bytes": 54335,
+      "duration": 2.340136,
+      "sha256": "3f293b8ad1f9ad86e7f97aa69bbcd9760a338ea119a22c42d68ba783d1ea4c6a",
+      "refs": [
+        [
+          "383",
+          "64"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\65.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\65.ogg",
+      "originalBytes": 325237,
+      "bytes": 88402,
+      "duration": 3.938345,
+      "sha256": "77080ecc9690087e206f38a6d1ab7a1db3714aa0baccb146da12954baf56634c",
+      "refs": [
+        [
+          "383",
+          "65"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\66.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\66.ogg",
+      "originalBytes": 307495,
+      "bytes": 80622,
+      "duration": 3.527302,
+      "sha256": "d145cb684fbdf7c182208af25e076059105aea4a627c400af83fa9ffd46e393d",
+      "refs": [
+        [
+          "383",
+          "66"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\67.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\67.ogg",
+      "originalBytes": 350404,
+      "bytes": 93328,
+      "duration": 4.152472,
+      "sha256": "6891786a5eaa8046730a9ac8092490658aa62175c05fd68538db5091c39d97ad",
+      "refs": [
+        [
+          "383",
+          "67"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\68.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\68.ogg",
+      "originalBytes": 294599,
+      "bytes": 80772,
+      "duration": 3.52737,
+      "sha256": "cf15f14914ed0bc4a9a383f65dc878bebecbdedd25282710892157de3a33494e",
+      "refs": [
+        [
+          "383",
+          "68"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\69.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\69.ogg",
+      "originalBytes": 413909,
+      "bytes": 113873,
+      "duration": 5.114853,
+      "sha256": "5a1ec9c5f41e9ce5bb211b9d554ab22bbe7e2972582322aa9cbc9f94319d07b9",
+      "refs": [
+        [
+          "383",
+          "69"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\70.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\70.ogg",
+      "originalBytes": 426410,
+      "bytes": 118231,
+      "duration": 5.330658,
+      "sha256": "d21f92e7c392947eb6cc84df019b8432c34b3f511ea1caf5cfef04fd781e4c5d",
+      "refs": [
+        [
+          "383",
+          "70"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\71.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\71.ogg",
+      "originalBytes": 392785,
+      "bytes": 108045,
+      "duration": 4.830317,
+      "sha256": "738bbd381fabb092bcd86944a32b3e49da57ba3d8922626d096efcb0ff8c4461",
+      "refs": [
+        [
+          "383",
+          "71"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\72.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\72.ogg",
+      "originalBytes": 328180,
+      "bytes": 91207,
+      "duration": 3.953991,
+      "sha256": "e3a686e6ee6d392e0c6416f9a6d8189c34e13d3cda07dbe3286e0506a97e0b8d",
+      "refs": [
+        [
+          "383",
+          "72"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\73.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\73.ogg",
+      "originalBytes": 364407,
+      "bytes": 104659,
+      "duration": 4.658322,
+      "sha256": "9641e277999cfbec841a81240de6e9464cc3c7c86420bca21bda90d182fbbc43",
+      "refs": [
+        [
+          "383",
+          "73"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\74.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\74.ogg",
+      "originalBytes": 274537,
+      "bytes": 80449,
+      "duration": 3.518866,
+      "sha256": "d0d5dc9297fa8c3ef30daa190c3c3a97c9eab74188e8e0cef0394cf710a697e1",
+      "refs": [
+        [
+          "383",
+          "74"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\75.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\75.ogg",
+      "originalBytes": 388748,
+      "bytes": 112442,
+      "duration": 4.967664,
+      "sha256": "80bed876c1afe796539db310500f57713ff46d70712a0210dd04cd5a844687f4",
+      "refs": [
+        [
+          "383",
+          "75"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\76.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\76.ogg",
+      "originalBytes": 302669,
+      "bytes": 87757,
+      "duration": 3.818662,
+      "sha256": "c75e5bf1aae8691186dfc43093453f29f4c95433a1c45ddcf11beab7b553cb1b",
+      "refs": [
+        [
+          "383",
+          "76"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\77.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\77.ogg",
+      "originalBytes": 409561,
+      "bytes": 118965,
+      "duration": 5.368549,
+      "sha256": "f6ec4e775cbc36da417656aab87b2da1ee0316b1f1e2313b93468d58aeb17ed0",
+      "refs": [
+        [
+          "383",
+          "77"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\78.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\78.ogg",
+      "originalBytes": 302185,
+      "bytes": 88686,
+      "duration": 3.938957,
+      "sha256": "f6f593fd07e5c551b673adcd357b9b565efb4e794f6e33a234e1e94db03ded2f",
+      "refs": [
+        [
+          "383",
+          "78"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\79.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\79.ogg",
+      "originalBytes": 627723,
+      "bytes": 180592,
+      "duration": 8.156825,
+      "sha256": "3823db37157151bf5e3d45ab87c5a0eb20f1157af7a7c859d6e1c737a9cad2cb",
+      "refs": [
+        [
+          "383",
+          "79"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\80.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\80.ogg",
+      "originalBytes": 308945,
+      "bytes": 95823,
+      "duration": 4.307619,
+      "sha256": "b67a58029f3de676506f36303f6ac1a5fc2ae620cd3f7d0122ba837eeec82ba7",
+      "refs": [
+        [
+          "383",
+          "80"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\81.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\81.ogg",
+      "originalBytes": 441311,
+      "bytes": 134553,
+      "duration": 6.150385,
+      "sha256": "07c5cd57bbe4005bab1d1ee0e785862fb987dd9c4db255c6513641165235df22",
+      "refs": [
+        [
+          "383",
+          "81"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\82.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\82.ogg",
+      "originalBytes": 351469,
+      "bytes": 104247,
+      "duration": 4.742812,
+      "sha256": "19a4a93f1868741a00ef77956669e15c6ef4cc7e042243a79488150657043dff",
+      "refs": [
+        [
+          "383",
+          "82"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\83.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\83.ogg",
+      "originalBytes": 210172,
+      "bytes": 61667,
+      "duration": 2.617823,
+      "sha256": "76a16bf0f02f1d927edad0487a7b4698baf546e16abd5fca4177b0e4317596ba",
+      "refs": [
+        [
+          "383",
+          "83"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\84.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\84.ogg",
+      "originalBytes": 455697,
+      "bytes": 129895,
+      "duration": 5.722041,
+      "sha256": "194301c0f34ab693f741268e8ce4979dcc507fa2fdafc685f78648df5cd459e2",
+      "refs": [
+        [
+          "383",
+          "84"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\85.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\85.ogg",
+      "originalBytes": 494044,
+      "bytes": 143607,
+      "duration": 6.377959,
+      "sha256": "ed3c681479632a6a0e5ddaf63d63ccd77ffcc733b1998de6693748e2f6aeab51",
+      "refs": [
+        [
+          "383",
+          "85"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\86.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\86.ogg",
+      "originalBytes": 488632,
+      "bytes": 137610,
+      "duration": 5.987687,
+      "sha256": "ff6b6b7f085c0be0de53764ab85c45ea491f7ad22515206d8a2658b502e8503c",
+      "refs": [
+        [
+          "383",
+          "86"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\87.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\87.ogg",
+      "originalBytes": 358608,
+      "bytes": 108789,
+      "duration": 4.89415,
+      "sha256": "5a8a07237bfbd816243be8e6dc180c8d40689d18f0fd4a6b1adb98ae0fd733c5",
+      "refs": [
+        [
+          "383",
+          "87"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\88.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\88.ogg",
+      "originalBytes": 294747,
+      "bytes": 89241,
+      "duration": 3.95381,
+      "sha256": "e9ef1c5d84c5ae0448509c204adb1df2a738018afbf4b05b551de6f6be3adb7b",
+      "refs": [
+        [
+          "383",
+          "88"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\89.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\89.ogg",
+      "originalBytes": 287508,
+      "bytes": 88280,
+      "duration": 3.846531,
+      "sha256": "46ff3d62f96e147e36c4f1fda2a722660a2fe5ff35274fc78db4d02471d6e479",
+      "refs": [
+        [
+          "383",
+          "89"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\90.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\90.ogg",
+      "originalBytes": 343023,
+      "bytes": 89108,
+      "duration": 4.107313,
+      "sha256": "a012e7b6c4bf99c0943fc449f82ca5fd85706817dd037753ac0911cd4d0bdc37",
+      "refs": [
+        [
+          "383",
+          "90"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\91.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\91.ogg",
+      "originalBytes": 188459,
+      "bytes": 43268,
+      "duration": 1.707,
+      "sha256": "0a3d36d7936ce77b1bd0dea9333bcf493ba8eb62c35385865a873a7680014b3b",
+      "refs": [
+        [
+          "383",
+          "91"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\92.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\92.ogg",
+      "originalBytes": 39165,
+      "bytes": 11389,
+      "duration": 0.315,
+      "sha256": "275ee42957aafcdc073b4b6ff8e6b98bbaf221ed06cf115a64e0ef0f1a5c2dea",
+      "refs": [
+        [
+          "383",
+          "92"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\383\\93.flac",
+      "file": "dist\\assets\\final\\vehicles\\383\\93.ogg",
+      "originalBytes": 238112,
+      "bytes": 56937,
+      "duration": 2.485667,
+      "sha256": "7912b372ce93f19d7155d7b9848e52153f145340ca6abdb3569429454e846e17",
+      "refs": [
+        [
+          "383",
+          "93"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\221\\48.flac",
+      "file": "dist\\assets\\final\\vehicles\\221\\48.ogg",
+      "originalBytes": 514904,
+      "bytes": 122776,
+      "duration": 5.282698,
+      "sha256": "487109396fd3619174cb46866c73869fe93d5d3d17a8c8169d942e2a8b355b4a",
+      "refs": [
+        [
+          "221",
+          "48"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\221\\49.flac",
+      "file": "dist\\assets\\final\\vehicles\\221\\49.ogg",
+      "originalBytes": 523929,
+      "bytes": 123383,
+      "duration": 5.273401,
+      "sha256": "d1744f9e45c3e3b3c99afb3b27a7564a30eea29efd9b4a83485ea960236b5e84",
+      "refs": [
+        [
+          "221",
+          "49"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\221\\50.flac",
+      "file": "dist\\assets\\final\\vehicles\\221\\50.ogg",
+      "originalBytes": 509682,
+      "bytes": 119063,
+      "duration": 5.000136,
+      "sha256": "2b8ea86fb67016a5e5d6df60661e0954030f7bd573cdbf3c686a533f4e246310",
+      "refs": [
+        [
+          "221",
+          "50"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\221\\51.flac",
+      "file": "dist\\assets\\final\\vehicles\\221\\51.ogg",
+      "originalBytes": 311700,
+      "bytes": 72671,
+      "duration": 2.992109,
+      "sha256": "4c2eb759232c889464058ec05f8e6d8641121e5ade290cf50b0b24a6139a28a1",
+      "refs": [
+        [
+          "221",
+          "51"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\221\\52.flac",
+      "file": "dist\\assets\\final\\vehicles\\221\\52.ogg",
+      "originalBytes": 550695,
+      "bytes": 122530,
+      "duration": 5.275306,
+      "sha256": "a63beab63b926e3dc8c0b4ab45251c19a587baed4aa50c9e7c3b65ad1d0840b4",
+      "refs": [
+        [
+          "221",
+          "52"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\221\\53.flac",
+      "file": "dist\\assets\\final\\vehicles\\221\\53.ogg",
+      "originalBytes": 567714,
+      "bytes": 124587,
+      "duration": 6.000023,
+      "sha256": "6602d2b85b52e29b04b433c8ea17c6dd87d6a84e511a87fe7072774c16e8d7a8",
+      "refs": [
+        [
+          "221",
+          "53"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\221\\55.flac",
+      "file": "dist\\assets\\final\\vehicles\\221\\55.ogg",
+      "originalBytes": 391330,
+      "bytes": 116665,
+      "duration": 4.844467,
+      "sha256": "1e8b564ebf4a196ae4b0f5a421016f09bbcb963316277b730360c620343c6af5",
+      "refs": [
+        [
+          "221",
+          "55"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\221\\56.flac",
+      "file": "dist\\assets\\final\\vehicles\\221\\56.ogg",
+      "originalBytes": 120972,
+      "bytes": 37604,
+      "duration": 1.515193,
+      "sha256": "19f26af0d75e888a49b8d50d755f5179f65102be9739704a85ff9507d75dcaf7",
+      "refs": [
+        [
+          "221",
+          "56"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\221\\57.flac",
+      "file": "dist\\assets\\final\\vehicles\\221\\57.ogg",
+      "originalBytes": 217925,
+      "bytes": 62364,
+      "duration": 2.667664,
+      "sha256": "b53da7016d3b27b91b2c6f84db4173b4d36c212b6d51cf841cbc953ebbac3052",
+      "refs": [
+        [
+          "221",
+          "57"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\221\\58.flac",
+      "file": "dist\\assets\\final\\vehicles\\221\\58.ogg",
+      "originalBytes": 433279,
+      "bytes": 118832,
+      "duration": 5.301134,
+      "sha256": "762bb1115b63ff187e90b35098c0eac8c203281af6337a2add66c3273077ef72",
+      "refs": [
+        [
+          "221",
+          "58"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\221\\59.flac",
+      "file": "dist\\assets\\final\\vehicles\\221\\59.ogg",
+      "originalBytes": 695473,
+      "bytes": 175614,
+      "duration": 7.954286,
+      "sha256": "ea5260c527b08edd85d12c29414f19c8f479d78ee66d607d1ba940c30e8de0cb",
+      "refs": [
+        [
+          "221",
+          "59"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\221\\60.flac",
+      "file": "dist\\assets\\final\\vehicles\\221\\60.ogg",
+      "originalBytes": 603170,
+      "bytes": 140107,
+      "duration": 5.327483,
+      "sha256": "88d174e1bd3ec9d5c7f262eaa2788670598e7589b445b5e1efa3d24023e1c54e",
+      "refs": [
+        [
+          "221",
+          "60"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\221\\61.flac",
+      "file": "dist\\assets\\final\\vehicles\\221\\61.ogg",
+      "originalBytes": 418499,
+      "bytes": 92100,
+      "duration": 4.017052,
+      "sha256": "aba135f7da56ccc9dcf592232f6a91bd2dedbd83f1fdc55c7c2e78e5f0e2789b",
+      "refs": [
+        [
+          "221",
+          "61"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\221\\62.flac",
+      "file": "dist\\assets\\final\\vehicles\\221\\62.ogg",
+      "originalBytes": 464544,
+      "bytes": 112843,
+      "duration": 5.430567,
+      "sha256": "9d617f5ffc526764dd0a4c5cbbaf78675aa7a11bba3afbf6aa03eeedbf836bf0",
+      "refs": [
+        [
+          "221",
+          "62"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\221\\87.flac",
+      "file": "dist\\assets\\final\\vehicles\\221\\87.ogg",
+      "originalBytes": 196856,
+      "bytes": 63040,
+      "duration": 2.879274,
+      "sha256": "4e2d6a3372a1038f5d7612022ec71fc9cbcc86c95dc94ce4b249e2deebed668d",
+      "refs": [
+        [
+          "221",
+          "87"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\221\\88.flac",
+      "file": "dist\\assets\\final\\vehicles\\221\\88.ogg",
+      "originalBytes": 156891,
+      "bytes": 51821,
+      "duration": 2.221361,
+      "sha256": "a14c4016e39eea4cca6d973b113831ea9b7e6eb573fbf1a8f5a3bc472762315e",
+      "refs": [
+        [
+          "221",
+          "88"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\719-5000\\20.flac",
+      "file": "dist\\assets\\final\\vehicles\\719-5000\\20.ogg",
+      "originalBytes": 975072,
+      "bytes": 207849,
+      "duration": 10.007292,
+      "sha256": "094b74ee4ebb7d9b7636b469d946b24117b2655c4718b5c3ac9dcf4d2d1788c5",
+      "refs": [
+        [
+          "719-5000",
+          "20"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\719-5000\\21.flac",
+      "file": "dist\\assets\\final\\vehicles\\719-5000\\21.ogg",
+      "originalBytes": 231347,
+      "bytes": 54892,
+      "duration": 2.432333,
+      "sha256": "f0b66fc14cc50d116453227eda6198cdde3d87a3af14430223e426b54b14706e",
+      "refs": [
+        [
+          "719-5000",
+          "21"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\719-5000\\22.flac",
+      "file": "dist\\assets\\final\\vehicles\\719-5000\\22.ogg",
+      "originalBytes": 1611361,
+      "bytes": 331523,
+      "duration": 15.845125,
+      "sha256": "4ace0c0f725e6a64cab279c36954993d37b6003e8d12862965bc4abf6271002b",
+      "refs": [
+        [
+          "719-5000",
+          "22"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\719-5000\\23.flac",
+      "file": "dist\\assets\\final\\vehicles\\719-5000\\23.ogg",
+      "originalBytes": 289792,
+      "bytes": 66295,
+      "duration": 3.002667,
+      "sha256": "0fba14c1ad17ff4563d44cf263316435b01314a1c0aa963d6c90610ee404d92a",
+      "refs": [
+        [
+          "719-5000",
+          "23"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\719-5000\\24.flac",
+      "file": "dist\\assets\\final\\vehicles\\719-5000\\24.ogg",
+      "originalBytes": 576686,
+      "bytes": 124486,
+      "duration": 5.80575,
+      "sha256": "1395447c095e9174952ac9b0eed1f49d1fe7e2b303a49b55fc00aec8ffddb630",
+      "refs": [
+        [
+          "719-5000",
+          "24"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\719-5000\\27.flac",
+      "file": "dist\\assets\\final\\vehicles\\719-5000\\27.ogg",
+      "originalBytes": 28124,
+      "bytes": 12193,
+      "duration": 0.405261,
+      "sha256": "33f8caf8e9ecfdbbce0ca85adccb65daa231b03e7e5441808af8b41c75a9fdab",
+      "refs": [
+        [
+          "719-5000",
+          "27"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\719-5000\\28.flac",
+      "file": "dist\\assets\\final\\vehicles\\719-5000\\28.ogg",
+      "originalBytes": 116995,
+      "bytes": 42939,
+      "duration": 1.926553,
+      "sha256": "ce864d0e2bc20670a9d549e2971c977c4d5f32f16fc6a743983f0f9207046581",
+      "refs": [
+        [
+          "719-5000",
+          "28"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\719-5000\\29.flac",
+      "file": "dist\\assets\\final\\vehicles\\719-5000\\29.ogg",
+      "originalBytes": 143650,
+      "bytes": 51268,
+      "duration": 2.496508,
+      "sha256": "b6271f261b65fe8103b92a1a4ca63164bed30ca0bb3bc73f07feaea7ba7021d9",
+      "refs": [
+        [
+          "719-5000",
+          "29"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\719-5000\\30.flac",
+      "file": "dist\\assets\\final\\vehicles\\719-5000\\30.ogg",
+      "originalBytes": 110055,
+      "bytes": 38462,
+      "duration": 1.842698,
+      "sha256": "451c4d8da5e0a38ce6d1775c0bbdbce69be25e32a13ec93707ffb4314ad3d570",
+      "refs": [
+        [
+          "719-5000",
+          "30"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\719-5000\\31.flac",
+      "file": "dist\\assets\\final\\vehicles\\719-5000\\31.ogg",
+      "originalBytes": 36301,
+      "bytes": 11279,
+      "duration": 0.335782,
+      "sha256": "776b4132f4c0ec2c84cf2bd306da1954224293f62038c2a40f76efe5d8e5dffc",
+      "refs": [
+        [
+          "719-5000",
+          "31"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\719-5000\\32.flac",
+      "file": "dist\\assets\\final\\vehicles\\719-5000\\32.ogg",
+      "originalBytes": 60744,
+      "bytes": 15661,
+      "duration": 0.544333,
+      "sha256": "a447a6bb4849dcf5677068e65c59542641d9fd81d5094a07227788b3e65ffaa8",
+      "refs": [
+        [
+          "719-5000",
+          "32"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\719-5000\\33.flac",
+      "file": "dist\\assets\\final\\vehicles\\719-5000\\33.ogg",
+      "originalBytes": 85488,
+      "bytes": 30465,
+      "duration": 1.432449,
+      "sha256": "e534662207f386ed4acb5167783a70bba30efe3a7904186f7d0954e22428225c",
+      "refs": [
+        [
+          "719-5000",
+          "33"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\719-5000\\34.flac",
+      "file": "dist\\assets\\final\\vehicles\\719-5000\\34.ogg",
+      "originalBytes": 57868,
+      "bytes": 17830,
+      "duration": 0.668118,
+      "sha256": "195c57fd77e50c61c7a574dd49a3323aa887cef100855a32cd9c9423b2152811",
+      "refs": [
+        [
+          "719-5000",
+          "34"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\719-5000\\35.flac",
+      "file": "dist\\assets\\final\\vehicles\\719-5000\\35.ogg",
+      "originalBytes": 123958,
+      "bytes": 41153,
+      "duration": 1.933061,
+      "sha256": "f821d13e2042c8648291806411a4381c8f4db0d9e34425852ee6de59ea0e271f",
+      "refs": [
+        [
+          "719-5000",
+          "35"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\719-5000\\36.flac",
+      "file": "dist\\assets\\final\\vehicles\\719-5000\\36.ogg",
+      "originalBytes": 163885,
+      "bytes": 59134,
+      "duration": 2.964127,
+      "sha256": "f58dff13f5a4ef57e0508495001bf4d722fe15a964b3624804c80f430a608f3b",
+      "refs": [
+        [
+          "719-5000",
+          "36"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\719-5000\\58.flac",
+      "file": "dist\\assets\\final\\vehicles\\719-5000\\58.ogg",
+      "originalBytes": 385455,
+      "bytes": 123306,
+      "duration": 5.99093,
+      "sha256": "674f260bb65a4bf28b5399b1d35fdab072ce06117cf4b88f721a5486f2411f49",
+      "refs": [
+        [
+          "719-5000",
+          "58"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\56.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\56.ogg",
+      "originalBytes": 711602,
+      "bytes": 192517,
+      "duration": 9.000952,
+      "sha256": "95de2a7e20d2617d7fc476e95383fae3161d96d624217bc7234bff884bfacaff",
+      "refs": [
+        [
+          "e257-5000",
+          "56"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\62.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\62.ogg",
+      "originalBytes": 44127,
+      "bytes": 26557,
+      "duration": 1.097098,
+      "sha256": "c216fd527cfdd02987b94ce50a3eef3a3bf1ebf0b3c5ac41211cd18fab95908c",
+      "refs": [
+        [
+          "e257-5000",
+          "62"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\63.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\63.ogg",
+      "originalBytes": 88545,
+      "bytes": 47349,
+      "duration": 2.089841,
+      "sha256": "27600d932e828d02918f0733e9be69991cbb035a79d7cba650b36e1805373b5f",
+      "refs": [
+        [
+          "e257-5000",
+          "63"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\64.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\64.ogg",
+      "originalBytes": 149733,
+      "bytes": 73195,
+      "duration": 3.540998,
+      "sha256": "e0231e0d548cc8e9c7742c0327dccb35d9275d71533f2224b41dc2c517967d2c",
+      "refs": [
+        [
+          "e257-5000",
+          "64"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\65.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\65.ogg",
+      "originalBytes": 131278,
+      "bytes": 68816,
+      "duration": 3.378639,
+      "sha256": "63a4d07964c5f64fe2d56285c06a2f0495d149deeb6d8ed28d9bd31d93edbf44",
+      "refs": [
+        [
+          "e257-5000",
+          "65"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\66.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\66.ogg",
+      "originalBytes": 118822,
+      "bytes": 59075,
+      "duration": 3.343628,
+      "sha256": "ad3818d351f43808d80fba8c86d59953bba9407ed352a552b80f101a8ceb2421",
+      "refs": [
+        [
+          "e257-5000",
+          "66"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\67.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\67.ogg",
+      "originalBytes": 92679,
+      "bytes": 47470,
+      "duration": 2.229206,
+      "sha256": "d1fcec9965301accc5b60a2dd8e511cfea806513757e93ad68826a687b59a3dd",
+      "refs": [
+        [
+          "e257-5000",
+          "67"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\68.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\68.ogg",
+      "originalBytes": 164143,
+      "bytes": 76690,
+      "duration": 3.935918,
+      "sha256": "5cdfce4c922090a7cb59abcbb02edf87fc5366f04c32740d623c4382bf16b8c8",
+      "refs": [
+        [
+          "e257-5000",
+          "68"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\69.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\69.ogg",
+      "originalBytes": 154799,
+      "bytes": 70589,
+      "duration": 3.225397,
+      "sha256": "af8cbdd8f00bb9caaa2937b0048aa9c06bc0089c44aa7c1eb38a567e05b4ee00",
+      "refs": [
+        [
+          "e257-5000",
+          "69"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\70.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\70.ogg",
+      "originalBytes": 126155,
+      "bytes": 61261,
+      "duration": 3.01873,
+      "sha256": "646586c120b997e205f6b0507d350dbd8118e9b867d29c368329b2a033cf886d",
+      "refs": [
+        [
+          "e257-5000",
+          "70"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\71.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\71.ogg",
+      "originalBytes": 450164,
+      "bytes": 155091,
+      "duration": 6.896281,
+      "sha256": "bd90fb8d5264ac4e590f501f289dc16169f58b11c00fa5290eb87607d48606f7",
+      "refs": [
+        [
+          "e257-5000",
+          "71"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\72.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\72.ogg",
+      "originalBytes": 292877,
+      "bytes": 98820,
+      "duration": 4.591655,
+      "sha256": "51490a465cb3038935297063189830474e2f12d061defe83e60cc6ce767d989e",
+      "refs": [
+        [
+          "e257-5000",
+          "72"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\73.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\73.ogg",
+      "originalBytes": 380197,
+      "bytes": 123172,
+      "duration": 5.516508,
+      "sha256": "adedcc24dd58533a3fee014a4ce2d8f63a336cc2f75ef5eabc991ce8a4dc20f5",
+      "refs": [
+        [
+          "e257-5000",
+          "73"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\74.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\74.ogg",
+      "originalBytes": 348429,
+      "bytes": 106120,
+      "duration": 5.192917,
+      "sha256": "79a21acdcf29a9f94a29501a9fba7af5c920fa531320831e852107bb0b893e27",
+      "refs": [
+        [
+          "e257-5000",
+          "74"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\75.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\75.ogg",
+      "originalBytes": 298976,
+      "bytes": 88209,
+      "duration": 4.198792,
+      "sha256": "14f33d1383e05b4427d1d738e0006d7318e152fd41bf6bd7e35776fec015e7fa",
+      "refs": [
+        [
+          "e257-5000",
+          "75"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\76.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\76.ogg",
+      "originalBytes": 412052,
+      "bytes": 122685,
+      "duration": 5.825792,
+      "sha256": "70761519595fa8606eb80551910d106285371a5332744d11286e3e3a6f0fcfb3",
+      "refs": [
+        [
+          "e257-5000",
+          "76"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\77.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\77.ogg",
+      "originalBytes": 368889,
+      "bytes": 109365,
+      "duration": 5.1345,
+      "sha256": "e09aeac02b45cb0e356be0da12557999febebd24c53eb405f0c8e11aa9623cc8",
+      "refs": [
+        [
+          "e257-5000",
+          "77"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\78.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\78.ogg",
+      "originalBytes": 334618,
+      "bytes": 109347,
+      "duration": 5.014263,
+      "sha256": "df42472292fb3f624022c3f4eaf65f77d14c81a780d5202ff9a2bc40f7f30f45",
+      "refs": [
+        [
+          "e257-5000",
+          "78"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\79.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\79.ogg",
+      "originalBytes": 461347,
+      "bytes": 141851,
+      "duration": 6.730975,
+      "sha256": "455222784f50fdb1d974d1b4915faaa9133813b4e57eeebcc51567e851086814",
+      "refs": [
+        [
+          "e257-5000",
+          "79"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\80.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\80.ogg",
+      "originalBytes": 334685,
+      "bytes": 99113,
+      "duration": 4.679184,
+      "sha256": "f773174ae3e8b51e092a90cd1c982e4d216c0080306bb30322914ef281229dfb",
+      "refs": [
+        [
+          "e257-5000",
+          "80"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\81.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\81.ogg",
+      "originalBytes": 210257,
+      "bytes": 74752,
+      "duration": 3.575147,
+      "sha256": "3d59e39ada7201e1852a68d82b3d938b6a399511bd3cd0e4769c230ae5d83f0d",
+      "refs": [
+        [
+          "e257-5000",
+          "81"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\82.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\82.ogg",
+      "originalBytes": 291422,
+      "bytes": 91277,
+      "duration": 4.271167,
+      "sha256": "c828c49228816a2a3f813d0695aee595fcaa1dad3e794dc43bf35c90813d201d",
+      "refs": [
+        [
+          "e257-5000",
+          "82"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\83.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\83.ogg",
+      "originalBytes": 242212,
+      "bytes": 72582,
+      "duration": 3.283833,
+      "sha256": "f1c4c8802443c0706f570952b2d10c5e2f5abaa9ffbf579dbb46987725a0c950",
+      "refs": [
+        [
+          "e257-5000",
+          "83"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\84.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\84.ogg",
+      "originalBytes": 254920,
+      "bytes": 72713,
+      "duration": 3.298417,
+      "sha256": "63356449dc1638fea2492a7dd6ee8342a513cb39d8ac92d43b4a451675843f76",
+      "refs": [
+        [
+          "e257-5000",
+          "84"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\85.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\85.ogg",
+      "originalBytes": 143604,
+      "bytes": 42736,
+      "duration": 1.84825,
+      "sha256": "e7332698b25b62d14b66a72b962b592637267ee9680252b1a64dfefc6212430e",
+      "refs": [
+        [
+          "e257-5000",
+          "85"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\86.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\86.ogg",
+      "originalBytes": 128531,
+      "bytes": 42404,
+      "duration": 1.976417,
+      "sha256": "fde64fa5a2eebe05253c188051fc25a2148cc932965083b8a56c86e97d6fadac",
+      "refs": [
+        [
+          "e257-5000",
+          "86"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\87.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\87.ogg",
+      "originalBytes": 110648,
+      "bytes": 59962,
+      "duration": 2.8755,
+      "sha256": "ede2ec51381a0789b9c145bf660dc4d1c07c9f8f4f8adecea0af29931ff7bcb3",
+      "refs": [
+        [
+          "e257-5000",
+          "87"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\88.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\88.ogg",
+      "originalBytes": 118947,
+      "bytes": 67254,
+      "duration": 3.438375,
+      "sha256": "f6611e726400896453219611c94f2926984bc005762709593200a2d9554cd47c",
+      "refs": [
+        [
+          "e257-5000",
+          "88"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\89.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\89.ogg",
+      "originalBytes": 110714,
+      "bytes": 53219,
+      "duration": 3.123458,
+      "sha256": "b5b4e4157a353576b644cf15961a250c35dfcbe4c0056414511c986ecf6c3e4c",
+      "refs": [
+        [
+          "e257-5000",
+          "89"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\90.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\90.ogg",
+      "originalBytes": 109402,
+      "bytes": 47297,
+      "duration": 2.809042,
+      "sha256": "7bdee8787697d2f42a6b017d0bd60a64b5095b238b877059d7a1332a04d55a9e",
+      "refs": [
+        [
+          "e257-5000",
+          "90"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\91.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\91.ogg",
+      "originalBytes": 148662,
+      "bytes": 73330,
+      "duration": 3.895958,
+      "sha256": "2218242cb383c299b18da0ac3d714a52f1add8435fcb08b860221e1ee1effd7d",
+      "refs": [
+        [
+          "e257-5000",
+          "91"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\92.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\92.ogg",
+      "originalBytes": 83395,
+      "bytes": 47166,
+      "duration": 2.476083,
+      "sha256": "e1b55f3f6c5756ab490a81ee14f8d8a083cc9b9e2003afe781db03c3bb0829b5",
+      "refs": [
+        [
+          "e257-5000",
+          "92"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\93.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\93.ogg",
+      "originalBytes": 97876,
+      "bytes": 58532,
+      "duration": 3.111417,
+      "sha256": "10eeb48d90ab7b55c4c719197257b3516a1f8b2584eb0f2e9f88d694ea0f951f",
+      "refs": [
+        [
+          "e257-5000",
+          "93"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\94.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\94.ogg",
+      "originalBytes": 78406,
+      "bytes": 50072,
+      "duration": 2.432042,
+      "sha256": "fdb782916d2741455289f7b34aacfe976e10e69dcdb36f8454f663f01e475654",
+      "refs": [
+        [
+          "e257-5000",
+          "94"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\95.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\95.ogg",
+      "originalBytes": 410994,
+      "bytes": 122824,
+      "duration": 5.825792,
+      "sha256": "1e6d2557de3a6e2e08b266728cd67c44571d75d6d9da605bb565c4fcf3b169d4",
+      "refs": [
+        [
+          "e257-5000",
+          "95"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\96.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\96.ogg",
+      "originalBytes": 173960,
+      "bytes": 99846,
+      "duration": 5.825792,
+      "sha256": "b48130f1c0c2267f4c3c8e3f06c4dedbcf4f1e791d31221a0999efbac4336224",
+      "refs": [
+        [
+          "e257-5000",
+          "96"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\97.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\97.ogg",
+      "originalBytes": 92138,
+      "bytes": 34377,
+      "duration": 1.369977,
+      "sha256": "77ceeb5d6d15246306d40de24710c4d9dee901ac1e40638fb2d26f4da748793f",
+      "refs": [
+        [
+          "e257-5000",
+          "97"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\98.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\98.ogg",
+      "originalBytes": 142976,
+      "bytes": 51348,
+      "duration": 2.147846,
+      "sha256": "d13cc7f9b2669c8cadc07947147089b4752550f7ed23d2d6e22d8e35aed1bc53",
+      "refs": [
+        [
+          "e257-5000",
+          "98"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\99.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\99.ogg",
+      "originalBytes": 164558,
+      "bytes": 58485,
+      "duration": 2.472925,
+      "sha256": "59aa5e4d78c98005b13eb08d6575d52420b1eb27275c54bf484740838944d0a7",
+      "refs": [
+        [
+          "e257-5000",
+          "99"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\100.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\100.ogg",
+      "originalBytes": 104322,
+      "bytes": 37016,
+      "duration": 1.507823,
+      "sha256": "0f6c737cd3f7a7bda66f5b3f0852ca89e8850458cb00278ea3035545ca003a5b",
+      "refs": [
+        [
+          "e257-5000",
+          "100"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\101.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\101.ogg",
+      "originalBytes": 131025,
+      "bytes": 46793,
+      "duration": 1.926757,
+      "sha256": "202346281565c31feb08d1ba44bbd5625391d51383b9b59100cd45742625a872",
+      "refs": [
+        [
+          "e257-5000",
+          "101"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\102.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\102.ogg",
+      "originalBytes": 166975,
+      "bytes": 59485,
+      "duration": 2.484535,
+      "sha256": "b3550fda08e692a876a67a626cd0c37a2468951d35c760006c69aa7b1ec806bc",
+      "refs": [
+        [
+          "e257-5000",
+          "102"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\103.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\103.ogg",
+      "originalBytes": 178250,
+      "bytes": 64984,
+      "duration": 2.73415,
+      "sha256": "93093a077770c4f83c669aca6d3b49314c7f5b60dadbb3cebca198d1e24458f6",
+      "refs": [
+        [
+          "e257-5000",
+          "103"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\104.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\104.ogg",
+      "originalBytes": 162783,
+      "bytes": 60918,
+      "duration": 2.60644,
+      "sha256": "3875039b3f634e5ea617f900114a710d61be6fd3302a4c672764b3a0ec97856a",
+      "refs": [
+        [
+          "e257-5000",
+          "104"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\105.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\105.ogg",
+      "originalBytes": 153229,
+      "bytes": 86503,
+      "duration": 4.505292,
+      "sha256": "a264de58be631d6c15d817fce4896bbdfd16e04e4fdfc5df20b1e78e7d8382e4",
+      "refs": [
+        [
+          "e257-5000",
+          "105"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\106.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\106.ogg",
+      "originalBytes": 104834,
+      "bytes": 55689,
+      "duration": 2.907,
+      "sha256": "ce0623746886a22424e922edeba439e2878ed6fe16017473e50dc8919ec9695e",
+      "refs": [
+        [
+          "e257-5000",
+          "106"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\107.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\107.ogg",
+      "originalBytes": 87664,
+      "bytes": 43914,
+      "duration": 2.313125,
+      "sha256": "94a4246729c3524162190ce1187f088061c82f23258fbc14fdac66d20dfdf010",
+      "refs": [
+        [
+          "e257-5000",
+          "107"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\108.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\108.ogg",
+      "originalBytes": 669014,
+      "bytes": 307806,
+      "duration": 15.255625,
+      "sha256": "f4824f76183a3c7e20637f0d7522c3a9c460bdd4357d36f46ae052e184a1baae",
+      "refs": [
+        [
+          "e257-5000",
+          "108"
+        ]
+      ]
+    },
+    {
+      "source": "dist\\assets\\final\\vehicles\\e257-5000\\109.flac",
+      "file": "dist\\assets\\final\\vehicles\\e257-5000\\109.ogg",
+      "originalBytes": 154115,
+      "bytes": 58362,
+      "duration": 32.414104,
+      "sha256": "c7e40694fd79af01f67b4855ed14c7b654709ced626eae044746932f5225a734",
+      "refs": [
+        [
+          "e257-5000",
+          "109"
+        ]
+      ]
+    }
+  ]
+}

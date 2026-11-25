@@ -1,10 +1,11 @@
-import {loadServiceRoutes} from './service-fixture.mjs';
+import {loadTobuServiceRoutes as loadServiceRoutes} from './service-fixture.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {serviceChoices,makeServiceRoute} from '../dist/train-selection.js';
 const assets=new URL('../dist/assets/final/',import.meta.url);
 const {trains}=JSON.parse(await readFile(new URL('vehicle-recipes.json',assets),'utf8'));
+trains.push(...JSON.parse(await readFile(new URL('tobu114/vehicle-patch.json',assets),'utf8')).trains);
 
 test('大糸線は信濃大町でE127系と211系の運転区間を分ける',async()=>{
  const r=JSON.parse(await readFile(new URL('oito-route.json',assets),'utf8'));

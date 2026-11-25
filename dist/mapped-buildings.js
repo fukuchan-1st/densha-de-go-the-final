@@ -1,14 +1,14 @@
-import {stationBuildingClear} from './station-space.js?v=113';
-import * as T from './assets/vendor/three.module.js?v=113';
-import {interpolateKnots} from './track-layout.js?v=113';
-import {residentialAllowed} from './yamagata-mountain.js?v=113';
-import {estimateBuildingHeight} from './building-estimate.js?v=113';
+import {stationBuildingClear} from './station-space.js?v=114';
+import * as T from './assets/vendor/three.module.js?v=114';
+import {interpolateKnots} from './track-layout.js?v=114';
+import {residentialAllowed} from './yamagata-mountain.js?v=114';
+import {estimateBuildingHeight} from './building-estimate.js?v=114';
 const pending=new Map(),grids=new WeakMap();let districtPending;
 const fictional=route=>route.id==='toho'||route.id?.startsWith('toho-');
 function point(points,s){let lo=0,hi=points.length-1;while(hi-lo>1){const m=(lo+hi)>>1;if(points[m][0]<=s)lo=m;else hi=m;}const a=points[lo],b=points[hi],t=(s-a[0])/(b[0]-a[0]);return [a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t];}
 export function decodeBuildingRows(route,rows){return rows.map(([ss,dx,dz,w,d,a,h,estimated])=>{const s=ss/10,p=point(route.points,s);return [s,p[0]+dx/10,p[1]+dz/10,w/10,d/10,a/1000,estimateBuildingHeight(route,s,w/10,d/10,h/10,Boolean(estimated))];});}
 export async function loadMappedBuildings(route){
- if(fictional(route)||!route.id||!route.points?.length)return route;
+ if(Array.isArray(route.mappedBuildings)||fictional(route)||!route.id||!route.points?.length)return route;
  const id=route.id;if(!pending.has(id))pending.set(id,(async()=>{const response=await fetch(`./assets/buildings/${id}.json.gz?v=105`);if(!response.ok)throw Error('建物の位置データを読み込めません');const bytes=new Uint8Array(await response.arrayBuffer());return bytes[0]===31&&bytes[1]===139?new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).json():JSON.parse(new TextDecoder().decode(bytes));})().catch(error=>{pending.delete(id);throw error;}));
  const data=await pending.get(id);let decoded=decodeBuildingRows(route,data.rows);
  if(['chuo','chuo-extended','yamanote'].includes(id)){districtPending??=fetch('./assets/buildings/shinjuku-district111.json.gz').then(async r=>{if(!r.ok)throw Error('新宿の建物データを読み込めません');const bytes=new Uint8Array(await r.arrayBuffer());return bytes[0]===31?new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).json():JSON.parse(new TextDecoder().decode(bytes));});const district=await districtPending,extra=decodeBuildingRows(route,district.routes[id==='yamanote'?'yamanote':'chuo']),buckets=new Map();for(const row of decoded){const k=Math.floor(row[1]/3)+':'+Math.floor(row[2]/3);if(!buckets.has(k))buckets.set(k,[]);buckets.get(k).push(row);}for(const row of extra){let duplicate=false;const x=Math.floor(row[1]/3),z=Math.floor(row[2]/3);for(let a=x-1;a<=x+1;a++)for(let b=z-1;b<=z+1;b++)if((buckets.get(a+':'+b)??[]).some(r=>Math.hypot(r[1]-row[1],r[2]-row[2])<2&&Math.abs(r[3]-row[3])<3&&Math.abs(r[4]-row[4])<3))duplicate=true;if(!duplicate)decoded.push(row);}decoded.sort((a,b)=>a[0]-b[0]);}

@@ -1,0 +1,69 @@
+Tobu vehicle assets, revision 114
+
+Vehicle catalog patch: assets/final/tobu114/vehicle-patch.json
+Append/replace entries in patch.trains by id; merge patch.manifestTrains into
+assets/final/vehicles/manifest.json's trains object. Alternatively call
+integrateTobuVehicles(recipes,packs) from dist/tobu-vehicles.js after the
+standard catalogs have loaded. The existing LocalCabPanel and LocalTrainAudio
+support these recipes, including the separate 500 console/needle assets.
+
+Exterior patch: assets/opposing/tobu114/opposing-patch.json
+Merge patch.models into assets/opposing/manifest.json's models object.
+Merge patch.doorLayouts into the exported DOOR_LAYOUTS object from train-doors.js
+before PlayerTrain.load. Resource paths already have a tobu114/ prefix.
+20400 formation is head,middle,motor,tail; retain that four-role formation.
+Scenario overrides may vary car counts. Apply recipe.carLengthM to spacing:
+20400 is 18m, the other supplied types are 20m. 6050 remains unchanged.
+
+20400: exact dengo_thef/train/tob20400 panel/day/night and door OGGs.
+Motor samples and the complete sparse per-speed frequency/volume tables come
+from dengo_thef/train/tob9050, as requested. These are substitute 9050 recordings.
+The supplied panel has no original needle: the independent authored needle is
+calibrated to the photographed 0-120km/h dial. Cab viewpoint is approximate.
+4 cars, 18m, acceleration 2.23km/h/s, maximum 110km/h and braking 3.7/4.5km/h/s
+are sourced from Tobu's corporate book, not the original 20000-type's 3.3 figure.
+130t empty mass is an approximation within the published subtype ranges.
+P4/B7 are browser control settings. Exterior is the genuine am_tb20400 MQO pack.
+20400.rsm2 is a sound project archive and contains no exterior geometry.
+
+500: the previously authored transparent console and separate PNG needle are
+kept separate and driven by real speed. Exterior, door, horn and brake effects
+come from ST_tobu500_RTM ver0.0. Traction audio comes from the requested
+sounds/pmsm bank: AnSync/AS0-AS5 and Sync/S0-S13 (20 separate q7 Vorbis clips).
+The actual supplied sounds/pmsm/6_15/MotorNoise.txt configuration selects
+Power/powerfreq.csv, Power/powervol.csv, Brake/brakefreq.csv and Brake/brakevol.csv.
+Their original sparse rows, numeric channel IDs, fixed frequency portions and
+phase-specific volume/pitch transitions are retained without invented bands.
+Slots 0-5 map to AS0-AS5; 6-19 map to S0-S13. The original power tables contain
+19 channels and brake tables 20 channels; slot 19 is therefore brake-only.
+Source table copies are retained under pmsm-6_15; table/sample SHA256 hashes and
+decoded frame counts are in 500-pmsm-source.json. All 20 samples decode; 19
+retain exact frame counts and S8 has 98 terminal codec samples (2.04ms at 48kHz).
+PMSM payload is 1,797,848 bytes. Run tools/install-500-pmsm114.py after a fresh
+base import. Holding-speed brake label is included between B1 and N. The root's
+cab crop/origin were preserved. Cab artwork and source screen details remain
+approximate.
+
+10030: cab, source sound effects and rolling/SIV audio are supplied by
+TI11655F-6.txt / 10030-S.txt and the 10000-family BVE pack. The pictured cab is
+10050 subtype. Six-car source mass 220.5t; performance calibrated to official
+10030 acceleration 2.5km/h/s. The source contains no standalone traction motor
+samples for this leading trailer cab. Exterior is an explicitly provisional
+10000-family structure from ARATobu, since no 10030 exterior was supplied there.
+
+70000: genuine ARATobu seven-car cab/audio, traction tables and BVE exterior.
+Separate source door-leaf D meshes are included in the closed exterior.
+
+MQO passenger-door positions are measured independently by role for 20400 and
+500; the BVE 10000/70000 door layouts are approximate. ATS plugins, detailed
+electrical behavior and cab information screens are browser approximations.
+
+All 117 audio assets decoded successfully with ffmpeg. All image/audio and
+exterior binary/index/texture references were checked. Cab alpha and layouts
+were visually inspected. Cab/audio payload 10,032,350 bytes; exterior approx
+3,233,399 bytes. Source readmes are retained beside this file.
+
+Primary performance source (equipment tables pp. 11-13):
+https://www.tobu.co.jp/pdf/corporation/book_02.pdf
+Requested background reference:
+https://ja.wikipedia.org/wiki/東武20000系電車#20400型

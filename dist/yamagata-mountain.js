@@ -1,4 +1,4 @@
-import {YAMAGATA_MOUNTAIN} from './yamagata-mountain-data.js?v=113';
+import {YAMAGATA_MOUNTAIN} from './yamagata-mountain-data.js?v=114';
 const cache=new WeakMap();
 // Source chainage survives reversing and slicing, including the Akaiwa shuttle.
 export function yamagataSourcePosition(route,s){

@@ -1,4 +1,4 @@
-import {interpolateKnots} from './track-layout.js?v=113';
+import {interpolateKnots} from './track-layout.js?v=114';
 export const TUNNEL_FLOOR_EYE=.28;
 export function tunnelRanges(world){
  const rows=world.route?.structures??world.ranges?.tunnels??world.routeStructures?.structures??[],out=[];

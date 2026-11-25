@@ -105,15 +105,16 @@ export function resolvePublishedSchedule(route,startS,spec,planSection){
   const anchor=all[end];if(anchor.arrival==null&&end!==all.length-1)continue;
   const a=all[at],desiredDeparture=a.departure??a.time+(a.stop?25:0),departure=Math.max(desiredDeparture,a.time+(a.stop?23:0));departureTimes[a.s]=departure;
   const target=anchor.arrival;
-  const calculate=factor=>{let t=departure,v=carry;const times=[],speeds=[];for(let i=at+1;i<=end;i++){
+  const calculate=factor=>{let t=departure,v=carry;const times=[],speeds=[],departures={};for(let i=at+1;i<=end;i++){
+   if(route.tobuScenario&&i-1>at&&all[i-1].stop){t=Math.max(t+25,all[i-1].departure??-Infinity);departures[all[i-1].s]=t;}
    const prior={...all[i-1],time:t,stop:i-1===at?all[i-1].stop:false},next={...all[i],time:null},plan=planSection(prior,next,route.limits??[],{...spec,departureTimes:{[prior.s]:t},maxSpeedKmh:(spec.maxSpeedKmh??110)*factor},v);
    t+=plan.duration;v=plan.speeds.at(-1);times.push(t);speeds.push(v);
-  }return {time:t,times,speeds};};
+  }return {time:t,times,speeds,departures};};
   const fastest=calculate(1);let result=fastest;
   if(target!=null&&target>fastest.time){let lo=.1,hi=1;for(let j=0;j<25;j++){const mid=(lo+hi)/2;if(calculate(mid).time>target)lo=mid;else hi=mid;}result=calculate(hi);}
   else if(target!=null&&fastest.time>target+1)adjustments.push({station:anchor.name,published:target,adjusted:Math.ceil(fastest.time),seconds:Math.ceil(fastest.time-target)});
   for(let i=at+1;i<=end;i++){all[i].time=result.times[i-at-1];if(all[i].arrival!=null&&Math.abs(all[i].time-all[i].arrival)>1)all[i].adjusted=true;}
-  carry=result.speeds.at(-1);at=end;
+  Object.assign(departureTimes,result.departures);carry=result.speeds.at(-1);at=end;
  }
  // Starting at an intermediate station uses that station's own departure window.
  const selected=all.find(x=>Math.abs(x.s-startS)<.5);const clockStart=selected?.departure!=null?Math.max(selected.time,selected.departure-30):selected?.time??first.time;

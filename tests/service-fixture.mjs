@@ -1,2 +1,5 @@
 import {readFile} from 'node:fs/promises';import {buildConnectingRoutes} from '../dist/service-catalog.js';
+import {assembleTobuRoutes} from '../dist/tobu-routes.js';
+const readTobu=async id=>[id,JSON.parse(await readFile(new URL('../dist/assets/final/'+id+'-route.json',import.meta.url),'utf8'))];
+export async function loadTobuServiceRoutes(){const original=await loadServiceRoutes(),parts=Object.fromEntries(await Promise.all(['tobu-skytree','tobu-nikko','tobu-kinugawa','aizu'].map(readTobu))),tobu=assembleTobuRoutes(parts,original.get('yagan'));original.set('tobu-aizu',tobu.main);original.set('tobu-nikko',tobu.nikko);return original;}
 export async function loadServiceRoutes(){const ids=['yamagata','yamanote','chuo','osaka','tokaido','yagan','chuo-extended','shinonoi-extended','chuo-kofu','chuo-shinshu','shinonoi','oito','ome','ome-okutama','itsukaichi','tatsuno','toho','toho-village','toho-center'];const routes=new Map(await Promise.all(ids.map(async id=>[id,JSON.parse(await readFile(new URL('../dist/assets/final/'+id+'-route.json',import.meta.url),'utf8'))])));for(const [id,r]of buildConnectingRoutes(routes))routes.set(id,r);return routes;}
