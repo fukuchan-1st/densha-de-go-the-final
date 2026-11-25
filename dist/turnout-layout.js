@@ -1,4 +1,4 @@
-import {interpolateKnots} from './track-layout.js?v=115';
+import {interpolateKnots} from './track-layout.js?v=116';
 
 const MAX_GAP = 70;
 const MAX_OFFSET = 12;

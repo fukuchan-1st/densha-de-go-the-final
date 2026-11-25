@@ -1,5 +1,5 @@
-import * as T from './assets/vendor/three.module.js?v=115';
-import {obasuteInfo,obasuteServing,obasuteActive} from './obasute-operations.js?v=115';
+import * as T from './assets/vendor/three.module.js?v=116';
+import {obasuteInfo,obasuteServing,obasuteActive} from './obasute-operations.js?v=116';
 const clamp=T.MathUtils.clamp;
 let pending;
 export function obasuteRegion(route,s,margin=2100){const info=obasuteInfo(route);return !!info&&Math.abs(s-info.s)<margin;}
@@ -9,7 +9,7 @@ export function demHeight(grid,lon,lat){const x=clamp(((lon-grid.lon)*111320*Mat
 export class ObasuteScenery{
  constructor(world){this.world=world;this.info=obasuteInfo(world.route);this.group=new T.Group();this.group.visible=false;this.materials=[];this.geometries=[];this.ready=this.info?this.load():Promise.resolve();}
  async load(){
-  pending??=fetch('./assets/obasute112.json.gz?v=115').then(async r=>{if(!r.ok)throw Error('姨捨の地形を読み込めません');const bytes=new Uint8Array(await r.arrayBuffer());return new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).json();}).catch(e=>{pending=null;throw e;});
+  pending??=fetch('./assets/obasute112.json.gz?v=116').then(async r=>{if(!r.ok)throw Error('姨捨の地形を読み込めません');const bytes=new Uint8Array(await r.arrayBuffer());return new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).json();}).catch(e=>{pending=null;throw e;});
   const data=await pending;if(this.disposed)return;this.data=data;const w=this.world,{s,sign}=this.info;
   this.axis=new T.Vector2(...data.axis);this.eastScale=111320*Math.cos(data.origin[1]*Math.PI/180);
   this.network=new Map(data.network.map(r=>[r.id,r.points.map(([e,n])=>[e*this.axis.x+n*this.axis.y,e*this.axis.y-n*this.axis.x]).sort((a,b)=>a[0]-b[0])]));

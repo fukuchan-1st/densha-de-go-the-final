@@ -1,9 +1,9 @@
-import {applyStationWiring} from './station-wiring.js?v=115';
-import {prepareSpecialStations} from './special-station-layouts.js?v=115';
-import {prepareTobuStations} from './tobu-station-layouts.js?v=115';
-import {widenBoardingClearance,mergePlatformSurfaces} from './platform-details.js?v=115';
-import {yamanoteParallel} from './yamanote-parallel.js?v=115';
-import {interpolateKnots} from './track-layout.js?v=115';
+import {applyStationWiring} from './station-wiring.js?v=116';
+import {prepareSpecialStations} from './special-station-layouts.js?v=116';
+import {prepareTobuStations} from './tobu-station-layouts.js?v=116';
+import {widenBoardingClearance,mergePlatformSurfaces} from './platform-details.js?v=116';
+import {yamanoteParallel} from './yamanote-parallel.js?v=116';
+import {interpolateKnots} from './track-layout.js?v=116';
 
 // All offsets are measured to the driver's right. A direction belongs to a
 // rail, rather than being guessed from its distance to the player's train.

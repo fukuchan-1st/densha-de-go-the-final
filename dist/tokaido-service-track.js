@@ -1,4 +1,4 @@
-import {interpolateKnots} from './track-layout.js?v=115';
+import {interpolateKnots} from './track-layout.js?v=116';
 const outerStops=new Set(['京都','高槻','新大阪','大阪','尼崎','芦屋','三ノ宮','神戸']);
 const major=new Set(['京都','新大阪','大阪','神戸']);
 const tracks=[-8,0,8,16];

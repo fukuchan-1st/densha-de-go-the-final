@@ -1,12 +1,12 @@
-import {stationVoiceData} from './station-voice-data.js?v=115';
+import {stationVoiceData} from './station-voice-data.js?v=116';
 export function stationCueRefs(line,station,kind,carCount){
  const data=stationVoiceData[line],name=typeof station==='string'?station:station?.name;
  if(!data||!name||!['approach','departure'].includes(kind))return [];
  const ref=file=>({entryIndex:'station-voice:'+file,driverVoiceFile:'./assets/final/driver-voice/'+file});
  const file=data.stations[name];
  if(!file){const old=data.fallbacks[name]?.[kind];if(old)return [ref(old)];if(data.genericFallback)return (kind==='departure'?[data.ontime]:[data.stop,data.position[carCount]]).filter(Boolean).map(ref);return [];}
- // 東武方式: 停車駅の手前で「駅名、停車、〇両、ブザーよし」。発車時の喚呼は tobuDepartureRefs が担う。
- if(data.style==='tobu')return kind==='departure'?[]:[file,data.stop,data.tobu.cars[carCount],data.tobu.buzzer].filter(Boolean).map(ref);
+ // 東武方式: 停車駅の手前で「駅名、停車、〇両、ブザーよし」、動き出したら「駅名、発車」。戸閉め後の喚呼は tobuDepartureRefs。
+ if(data.style==='tobu')return (kind==='departure'?[file,data.tobu.depart]:[file,data.stop,data.tobu.cars[carCount],data.tobu.buzzer]).filter(Boolean).map(ref);
  if(kind==='departure')return [file,data.ontime].map(ref);
  const position=data.position[carCount];
  // Do not substitute a different car count when that formation is unrecorded.
