@@ -25,6 +25,11 @@ export function scoringStations(route){const end=route.stations?.at(-1)?.s??Infi
 export function scoreHazards(route){
  const hazards=[],tunnels=(route.structures??[]).filter(x=>x.kind==='tunnel').map(x=>({s:x.sStart??x.s,end:x.sEnd??x.sStart??x.s})).filter(x=>Number.isFinite(x.s)).sort((a,b)=>a.s-b.s);
  for(const t of tunnels){const previous=hazards.at(-1);if(previous&&t.s<=previous.end+1)previous.end=Math.max(previous.end,t.end);else hazards.push({id:'tunnel:'+t.s,s:t.s,end:t.end,name:'トンネル'});}
+ for(const crossing of route.structures??[]){
+  if(crossing.kind!=='crossing'||!crossing.hornOnly)continue;
+  const s=crossing.sOrigin??(crossing.sStart+crossing.sEnd)/2;
+  if(Number.isFinite(s))hazards.push({id:'crossing:'+s,s,name:crossing.name||'踏切'});
+ }
  for(const x of [...(route.structures??[]).filter(x=>['workers','maintenance'].includes(x.kind)),...(route.workers??[]),...(route.maintenanceWorkers??[])]){
   const s=x.sStart??x.s??x.position;if(Number.isFinite(s)&&!hazards.some(h=>h.id==='worker:'+s))hazards.push({id:'worker:'+s,s,name:'保線作業員'});
  }
