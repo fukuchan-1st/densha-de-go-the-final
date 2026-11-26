@@ -1,4 +1,4 @@
-import {progress} from './scenario-progress.js?v=117';
+import {progress} from './scenario-progress.js?v=118';
 export function cheatClockStep(state,dt,{enabled=false,frozen=false,slow=false}={}){if(!enabled||(!frozen&&!slow)){delete state.cheatFrozenClock;return;}if(frozen){state.cheatFrozenClock??=state.clockStart+state.elapsed-dt;state.clockStart=state.cheatFrozenClock-state.elapsed;}else{delete state.cheatFrozenClock;state.clockStart-=.75*dt;}state.cheatUsed=true;}
 export function jumpToStation(state,target,stops,limit,maxSpeed){
  const stop=stops.findIndex(st=>Math.abs(st.s-target.s)<.5),next=stop>=0?stop:stops.findIndex(st=>st.s>target.s);

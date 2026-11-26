@@ -1,4 +1,4 @@
-import * as T from './assets/vendor/three.module.js?v=117';
+import * as T from './assets/vendor/three.module.js?v=118';
 export function repair701Body(group,front,under,resources){
  const material=(options)=>{const m=new T.MeshStandardMaterial({roughness:.78,metalness:.1,...options});resources.materials.set('701-repair-'+resources.materials.size,m);return m;};
  const add=(geometry,mat,x,y,z)=>{resources.geometries.add(geometry);const mesh=new T.Mesh(geometry,mat);mesh.userData.shadowCaster=true;mesh.position.set(x,y,z);group.add(mesh);return mesh;};

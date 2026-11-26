@@ -1,0 +1,20 @@
+from pathlib import Path
+root=Path(__file__).resolve().parents[1];dist=root/'dist'
+def edit(name,old,new):
+ p=dist/name;s=p.read_text(encoding='utf-8');assert old in s,(name,old[:70]);p.write_text(s.replace(old,new),encoding='utf-8')
+edit('service-routes.js',"const finite=Number.isFinite;","import {mapNatural,sliceNatural,joinNatural} from './natural-data.js?v=118';\nconst finite=Number.isFinite;")
+edit('service-routes.js','const result={...route,mappedBuildings:', 'const result={...route,naturalFeatures:mapNatural(route.naturalFeatures,p=>p,s=>length-s,{reverse:true}),mappedBuildings:')
+edit('service-routes.js','return {...route,length:b-a,loop:false,mappedBuildings:', 'return {...route,length:b-a,loop:false,naturalFeatures:sliceNatural(route.naturalFeatures,a,b),mappedBuildings:')
+edit('service-routes.js','stations:[],points:[],structures:[],mappedBuildings:', 'stations:[],points:[],structures:[],naturalFeatures:undefined,mappedBuildings:')
+edit('service-routes.js','  const points=[[0,...start]', '  out.naturalFeatures=joinNatural(out.naturalFeatures,part.naturalFeatures,transform,offset);\n  const points=[[0,...start]')
+edit('final-world.js',"const clamp=T.MathUtils.clamp;", "import {NaturalScenery,groundAt} from './natural-scenery.js?v=118';\nconst clamp=T.MathUtils.clamp;")
+edit('final-world.js',"this.obasute=new ObasuteScenery(this);", "this.natural=new NaturalScenery(this);this.obasute=new ObasuteScenery(this);")
+edit('final-world.js',"].includes(route.id);\n  this.chuoCorridor", "].includes(route.id)||!!route.naturalFeatures;\n  this.chuoCorridor")
+edit('final-world.js',' point(s){', ' groundHeight(s,x,z){return groundAt(this,s,x,z);}\n point(s){')
+edit('final-world.js','  {const finish=end;', '  this.natural.add(group,start,end);\n  if(!this.natural.enabled){const finish=end;')
+edit('final-world.js',"if(this.rural&&!obasuteRegion(this.route,(start+end)/2)&&mountainArea", "if(this.rural&&!this.natural.enabled&&!obasuteRegion(this.route,(start+end)/2)&&mountainArea")
+edit('final-world.js',' disposeChunk(group){', ' disposeChunk(group){this.natural.release(group);')
+edit('final-world.js',' dispose(){this.obasute?.dispose();', ' dispose(){this.natural?.dispose();this.obasute?.dispose();')
+edit('mapped-buildings.js','base=world.point?world.point(s).y:world.frame(s).p.y;', 'base=world.groundHeight?.(s,x,z)??(world.point?world.point(s).y:world.frame(s).p.y);')
+edit('road-separation.js',"terrain=(world.point?.(row.s)??world.frame(row.s).p).y,base=terrain-.1", "terrain=world.groundHeight&&path.points?.length?world.groundHeight(row.s,...path.points[Math.floor(path.points.length/2)]):(world.point?.(row.s)??world.frame(row.s).p).y,base=terrain-.1")
+print('Integrated mapped terrain transforms, surface renderer and ground alignment')

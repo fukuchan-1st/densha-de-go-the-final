@@ -1,43 +1,44 @@
-import {ObasuteScenery,obasuteRegion} from './obasute-scenery.js?v=117';
-import {addMappedBuildings} from './mapped-buildings.js?v=117';
-import {tamaTown} from './tama-scenery.js?v=117';
-import {StationCharacters} from './station-characters.js?v=117';
-import {residentialAllowed} from './yamagata-mountain.js?v=117';
-import {sceneryDensity} from './scenery-profile.js?v=117';
-import {platformExtent} from './station-platform-length.js?v=117';
-import {BasinScenery,addBasinFields} from './basin-scenery.js?v=117';
-import {basinDensity,basinAnchors,basinTerrainAreas,basinTerrainAt} from './basin-profile.js?v=117';
-import {TohoLandmarks} from './toho-landmarks.js?v=117';
-import {isToho,villageAt,woodMaterial,addTohoHouses} from './toho-scenery.js?v=117';
-import {filmingChunkIndices} from './railfan-tunnel.js?v=117';
-import {chuoScenery,mountainArea} from './geographic-sections.js?v=117';
-import {prepareUrbanViaduct,railDeckSpans} from './urban-viaduct.js?v=117';
-import {RoadScenery} from './road-scenery.js?v=117';
-import {BallastDetail} from './ballast-detail.js?v=117';
-import {whiteRailPost,tactileMaterial,safePlatformBounds,platformStripClear} from './platform-details.js?v=117';
-import {LevelCrossings} from './crossings.js?v=117';
-import {createTerrainMaterial,createBuildingMaterial,terrainKind,terrainShade,buildingVariant,buildingPalette} from './terrain-materials.js?v=117';
-import {SceneAtmosphere} from './scene-atmosphere.js?v=117';
-import {RealTrees,treeVariant} from './real-trees.js?v=117';
-import {PlayerTrain} from './player-train.js?v=117';
-import {prepareLeftTraffic} from './route-traffic.js?v=117';
-import {prepareCorridorScenery,corridorSceneryType} from './corridor-scenery.js?v=117';
-import {sampleRouteCurve} from './route-curve.js?v=117';
-import {prepareTurnoutLayout} from './turnout-layout.js?v=117';
-import {addTurnouts} from './turnout-scene.js?v=117';
-import {OpposingTrains} from './opposing-trains.js?v=117';
-import * as T from './assets/vendor/three.module.js?v=117';
-import {CabSuspension} from './cab-motion.js?v=117';
-import {addTrackSignal} from './track-signal.js?v=117';
-import {addStoppingMarker} from './stop-scene.js?v=117';
-import {interpolateKnots} from './track-layout.js?v=117';
-import {addYaganHillsides,addYaganTunnel} from './yagan-scenery.js?v=117';
+import {ObasuteScenery,obasuteRegion} from './obasute-scenery.js?v=118';
+import {addMappedBuildings} from './mapped-buildings.js?v=118';
+import {tamaTown} from './tama-scenery.js?v=118';
+import {StationCharacters} from './station-characters.js?v=118';
+import {residentialAllowed} from './yamagata-mountain.js?v=118';
+import {sceneryDensity} from './scenery-profile.js?v=118';
+import {platformExtent} from './station-platform-length.js?v=118';
+import {BasinScenery,addBasinFields} from './basin-scenery.js?v=118';
+import {basinDensity,basinAnchors,basinTerrainAreas,basinTerrainAt} from './basin-profile.js?v=118';
+import {TohoLandmarks} from './toho-landmarks.js?v=118';
+import {isToho,villageAt,woodMaterial,addTohoHouses} from './toho-scenery.js?v=118';
+import {filmingChunkIndices} from './railfan-tunnel.js?v=118';
+import {chuoScenery,mountainArea} from './geographic-sections.js?v=118';
+import {prepareUrbanViaduct,railDeckSpans} from './urban-viaduct.js?v=118';
+import {RoadScenery} from './road-scenery.js?v=118';
+import {BallastDetail} from './ballast-detail.js?v=118';
+import {whiteRailPost,tactileMaterial,safePlatformBounds,platformStripClear} from './platform-details.js?v=118';
+import {LevelCrossings} from './crossings.js?v=118';
+import {createTerrainMaterial,createBuildingMaterial,terrainKind,terrainShade,buildingVariant,buildingPalette} from './terrain-materials.js?v=118';
+import {SceneAtmosphere} from './scene-atmosphere.js?v=118';
+import {RealTrees,treeVariant} from './real-trees.js?v=118';
+import {PlayerTrain} from './player-train.js?v=118';
+import {prepareLeftTraffic} from './route-traffic.js?v=118';
+import {prepareCorridorScenery,corridorSceneryType} from './corridor-scenery.js?v=118';
+import {sampleRouteCurve} from './route-curve.js?v=118';
+import {prepareTurnoutLayout} from './turnout-layout.js?v=118';
+import {addTurnouts} from './turnout-scene.js?v=118';
+import {OpposingTrains} from './opposing-trains.js?v=118';
+import * as T from './assets/vendor/three.module.js?v=118';
+import {CabSuspension} from './cab-motion.js?v=118';
+import {addTrackSignal} from './track-signal.js?v=118';
+import {addStoppingMarker} from './stop-scene.js?v=118';
+import {interpolateKnots} from './track-layout.js?v=118';
+import {addYaganHillsides,addYaganTunnel} from './yagan-scenery.js?v=118';
+import {NaturalScenery,groundAt} from './natural-scenery.js?v=118';
 const clamp=T.MathUtils.clamp;
 // Original streamed scenery. Track coordinates come from the route JSON; buildings and platforms are approximate.
 export class FinalWorld {
  constructor(container,route,{quality='standard',drawDistance=1500}={}){
   route=prepareUrbanViaduct(prepareLeftTraffic(prepareCorridorScenery(route)));
-  this.quality=quality;this.route=route;this.sceneryStations=(route.sceneryStations??route.stations).filter(st=>!st.displayOnly);this.points=route.points;this.length=route.stations.at(-1).s;this.chunks=new Map();this.suspension=new CabSuspension();this.materials=new Map();this.rural=['tohoku','yamagata','toho','toho-village','toho-center','tatsuno','tatsuno-nagano','yagan','shinonoi','oito','chuo-shinshu','chuo-kofu','chuo-system','ome','itsukaichi','chuo-itsukaichi','ome-okutama','chuo-ome','chuo-oito','suwa-nagano','chuo-extended','shinonoi-extended','chuo'].includes(route.id);
+  this.quality=quality;this.route=route;this.sceneryStations=(route.sceneryStations??route.stations).filter(st=>!st.displayOnly);this.points=route.points;this.length=route.stations.at(-1).s;this.chunks=new Map();this.suspension=new CabSuspension();this.materials=new Map();this.rural=['tohoku','yamagata','toho','toho-village','toho-center','tatsuno','tatsuno-nagano','yagan','shinonoi','oito','chuo-shinshu','chuo-kofu','chuo-system','ome','itsukaichi','chuo-itsukaichi','ome-okutama','chuo-ome','chuo-oito','suwa-nagano','chuo-extended','shinonoi-extended','chuo'].includes(route.id)||!!route.naturalFeatures;
   this.chuoCorridor=['chuo','chuo-extended','chuo-ome','chuo-oito'].includes(route.id);
   this.mountainStart=this.chuoCorridor?(this.sceneryStations.find(st=>st.name==='高尾')?.s??Infinity):-Infinity;
   this.cityEnd=this.chuoCorridor?(this.sceneryStations.find(st=>st.name==='中野')?.s??0):0;
@@ -59,7 +60,7 @@ export class FinalWorld {
    this.camera.add(this.headlight,this.headlight.target);
    this.scene.add(this.camera);
   }
-  this.obasute=new ObasuteScenery(this);this.basin=new BasinScenery(this);this.atmosphere=new SceneAtmosphere(this);this.crossings=new LevelCrossings(this);this.ballastDetail=new BallastDetail(this);this.roadScenery=new RoadScenery(this);this.landmarks=isToho(route)?new TohoLandmarks(this):null;this.characters=isToho(route)?new StationCharacters(this):null;
+  this.natural=new NaturalScenery(this);this.obasute=new ObasuteScenery(this);this.basin=new BasinScenery(this);this.atmosphere=new SceneAtmosphere(this);this.crossings=new LevelCrossings(this);this.ballastDetail=new BallastDetail(this);this.roadScenery=new RoadScenery(this);this.landmarks=isToho(route)?new TohoLandmarks(this):null;this.characters=isToho(route)?new StationCharacters(this):null;
  }
  setQuality(quality){this.atmosphere.setQuality(quality);}
  mat(color){
@@ -72,6 +73,7 @@ export class FinalWorld {
    this.materials.set(color,material);
   }return this.materials.get(color);
  }
+ groundHeight(s,x,z){return groundAt(this,s,x,z);}
  point(s){const [x,z,y]=sampleRouteCurve(this.points,s);return new T.Vector3(x,y,-z);}
  frame(s,offset=0){const p=this.point(s),dir=this.point(s+3).sub(this.point(s-3)).normalize(),right=new T.Vector3(-dir.z,0,dir.x).normalize();p.addScaledVector(right,offset);return {p,dir,right,angle:Math.atan2(-dir.x,-dir.z)};}
  driveOffset(s){return this.route.drivingTrack?interpolateKnots(this.route.drivingTrack,s):0;}
@@ -158,7 +160,8 @@ export class FinalWorld {
   }
  }
  buildChunk(index){const group=new T.Group(),start=Math.max(-300,index*500),end=Math.min(this.length+300,(index+1)*500);if(end<=start)return group;this.roadScenery.prepareProfiles(Math.floor((start+end)/480));
-  {const finish=end;for(let a=start;a<finish;a+=50){const b=Math.min(finish,a+50),kind=this.sceneryTypeAt((a+b)/2);if(!obasuteRegion(this.route,(a+b)/2)&&basinTerrainAt(this.route,(a+b)/2))this.ribbon(group,a,b,0,2200,-.8,'#869177',10);if(!obasuteRegion(this.route,(a+b)/2))this.ribbon(group,a,b,0,260,-.2,kind==='mountain'?'#869177':'#9a9d93',10);}}
+  this.natural.add(group,start,end);
+  if(!this.natural.enabled){const finish=end;for(let a=start;a<finish;a+=50){const b=Math.min(finish,a+50),kind=this.sceneryTypeAt((a+b)/2);if(!obasuteRegion(this.route,(a+b)/2)&&basinTerrainAt(this.route,(a+b)/2))this.ribbon(group,a,b,0,2200,-.8,'#869177',10);if(!obasuteRegion(this.route,(a+b)/2))this.ribbon(group,a,b,0,260,-.2,kind==='mountain'?'#869177':'#9a9d93',10);}}
   let tracks=[{start,end,offset:s=>this.driveOffset(s)}];
   const nearby=(this.sceneryStations??this.route.stations).filter(st=>st.s+360>=start&&st.s-420<=end);
   if(this.route.neighborTracks){
@@ -177,7 +180,7 @@ export class FinalWorld {
   const structures=(this.route.structures??[]).filter(item=>item.sStart<end&&item.sEnd>start);
   let seed=(index*1297+this.route.id.length*701)>>>0;
   const random=()=>{seed=(1664525*seed+1013904223)>>>0;return seed/4294967296;};
-  if(this.rural&&!obasuteRegion(this.route,(start+end)/2)&&mountainArea(this.route,(start+end)/2))addYaganHillsides(T,this,group,start,end,trackEnvelope,structures.filter(item=>item.kind==='bridge'),random);
+  if(this.rural&&!this.natural.enabled&&!obasuteRegion(this.route,(start+end)/2)&&mountainArea(this.route,(start+end)/2))addYaganHillsides(T,this,group,start,end,trackEnvelope,structures.filter(item=>item.kind==='bridge'),random);
   if(this.route.elevatedTrack){
    for(let a=start;a<end;a+=6){
     const depth=Math.min(6,end-a),s=a+depth/2,height=this.deckHeight(s);
@@ -319,7 +322,7 @@ export class FinalWorld {
   this.landmarks?.add(group,start,end,trackEnvelope,random);addTurnouts(this,group,this.turnouts,this.railTracks,start,end);
   for(const c of this.route.structures??[])if(c.kind==='crossing'&&(c.sOrigin??c.sStart)>=start&&(c.sOrigin??c.sStart)<end)this.crossings.add(group,c);this.atmosphere.prepare(group);this.scene.add(group);return group;
  }
- disposeChunk(group){this.crossings.release(group);this.trees.release(group);this.scene.remove(group);const cached=new Set(this.materials.values());group.traverse(o=>{if(o.isInstancedMesh)o.dispose();if(o.userData.sharedDistrictResource)return;if(o.geometry&&o.geometry!==this.box&&o.geometry!==this.platformRailGeometry&&o.geometry!==this.pine&&o.geometry!==this.canopy&&o.geometry!==this.houseRoof)o.geometry.dispose();if(o.material?.map&&!cached.has(o.material)){o.material.map.dispose();o.material.dispose();}else if(o.userData.disposeWithChunk&&!cached.has(o.material))o.material.dispose();});}
+ disposeChunk(group){this.natural.release(group);this.crossings.release(group);this.trees.release(group);this.scene.remove(group);const cached=new Set(this.materials.values());group.traverse(o=>{if(o.isInstancedMesh)o.dispose();if(o.userData.sharedDistrictResource)return;if(o.geometry&&o.geometry!==this.box&&o.geometry!==this.platformRailGeometry&&o.geometry!==this.pine&&o.geometry!==this.canopy&&o.geometry!==this.houseRoof)o.geometry.dispose();if(o.material?.map&&!cached.has(o.material)){o.material.map.dispose();o.material.dispose();}else if(o.userData.disposeWithChunk&&!cached.has(o.material))o.material.dispose();});}
  setPlayerTrain(id,count){this.playerTrain?.dispose();this.playerTrain=new PlayerTrain(this,id,count);}
  setCabView(origin){this.viewOrigin=origin;this.currentView=undefined;}
  refreshScenery(){for(const g of this.chunks.values())this.disposeChunk(g);this.chunks.clear();}
@@ -328,5 +331,5 @@ export class FinalWorld {
 
   const f=this.driveFrame(s),head=this.drivePoint(s+45),motion=this.suspension.update({s,speed:v,curvature:this.curvature(s),acceleration},dt,shake),eye=Number(this.route.eyeHeight??2.7),offset=(this.route.eyeOffset??0)+motion.lateral;this.camera.position.copy(f.p).addScaledVector(f.right,offset);this.camera.position.y+=eye+motion.vertical;head.addScaledVector(f.right,offset);head.y+=eye+motion.vertical;this.camera.lookAt(head);this.camera.rotateX(motion.pitch);this.camera.rotateY(motion.yaw);this.camera.rotateZ(motion.roll);const tunnel=(this.route.structures??[]).some(t=>t.kind==='tunnel'&&(railfan?focus:s)>=t.sStart&&(railfan?focus:s)<=t.sEnd);this.sky.intensity=this.route.night?.22:tunnel?.6:2.1;this.sun.intensity=this.route.night?.04:tunnel?.3:2.1;if(this.headlight)this.headlight.intensity=this.route.night?750:tunnel?550:0;this.trees.update(s,focus);this.traffic.update(s,dt);this.playerTrain?.update(s,outer);if(outer)this.playerTrain?.camera(s,railfan,v,dt);this.crossings.update(s,v,dt,(this.playerTrain?.count??2)*20);this.ballastDetail.update(s,railfan?this.playerTrain?.railfanController.spot?.s??s:s);this.roadScenery.update(s,v,dt,railfan?this.playerTrain?.railfanController.spot?.s??s:s);this.atmosphere.update(s,dt,{tunnel,clock,moving:Math.abs(v)>.1||this.traffic.trains.length>0});this.landmarks?.update(focus??s,dt);this.characters?.update(focus??s);this.basin?.update(focus??s);this.obasute?.update(focus??s);if(windowView){const f=this.driveFrame(s-5);this.playerTrain.group.visible=false;this.camera.position.copy(f.p).addScaledVector(f.right,1.3*(this.obasute.info?.sign??1));this.camera.position.y+=2.55;this.camera.lookAt(f.p.clone().addScaledVector(f.right,70*(this.obasute.info?.sign??1)).addScaledVector(f.dir,-20).add(new T.Vector3(0,1.4,0)));}this.atmosphere.render();
  }
- dispose(){this.obasute?.dispose();this.characters?.dispose();this.basin?.dispose();this.landmarks?.dispose();this.roadScenery.dispose();this.ballastDetail.dispose();this.crossings.dispose();this.atmosphere.dispose();this.trees.dispose();this.playerTrain?.dispose();this.traffic.dispose();for(const g of this.chunks.values())this.disposeChunk(g);this.chunks.clear();for(const m of this.materials.values()){m.map?.dispose();m.emissiveMap?.dispose();m.bumpMap?.dispose();m.userData.richNormalMap?.dispose();m.dispose();}this.box.dispose();this.platformRailGeometry?.dispose();this.houseRoof.dispose();this.pine?.dispose();this.canopy?.dispose();this.renderer.dispose();this.renderer.forceContextLoss();this.renderer.domElement.remove();}
+ dispose(){this.natural?.dispose();this.obasute?.dispose();this.characters?.dispose();this.basin?.dispose();this.landmarks?.dispose();this.roadScenery.dispose();this.ballastDetail.dispose();this.crossings.dispose();this.atmosphere.dispose();this.trees.dispose();this.playerTrain?.dispose();this.traffic.dispose();for(const g of this.chunks.values())this.disposeChunk(g);this.chunks.clear();for(const m of this.materials.values()){m.map?.dispose();m.emissiveMap?.dispose();m.bumpMap?.dispose();m.userData.richNormalMap?.dispose();m.dispose();}this.box.dispose();this.platformRailGeometry?.dispose();this.houseRoof.dispose();this.pine?.dispose();this.canopy?.dispose();this.renderer.dispose();this.renderer.forceContextLoss();this.renderer.domElement.remove();}
 }

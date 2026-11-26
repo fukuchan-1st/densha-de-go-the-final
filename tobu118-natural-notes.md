@@ -1,0 +1,19 @@
+# v118 natural feature data
+
+Rebuild with `python tools/build-tobu-natural118.py`. It reads retained Kanto/Tohoku OSM PBFs and cached/downloaded GSI DEM PNG tiles, then invokes `finalize-tobu-natural118.py` for water deduplication and validation. Only the new `dist/assets/final/tobu118-natural.json.gz` is written. Existing route profiles and physics are unchanged.
+
+The gzip JSON has `routes` keyed by `tobu-skytree`, `tobu-nikko`, `tobu-kinugawa`, `aizu`, and original `yagan`. All local X/Z coordinates match those raw route assets. Heights are metres relative to each route rail datum. The four OSM route datums reconstruct the original v114 GSI processing exactly. Original yagan uses a DEM origin offset and a piecewise affine geographic fit to station coordinates, which is approximate rather than surveyed alignment.
+
+`terrain.rows`: `[s, railHeight, bedHeight, points]`. Each `points` entry is `[localX, localZ, relativeGroundHeight, valid]`; columns use offsets `[-1600,-1000,-600,-300,-120,-40,0,40,120,300,600,1000,1600]`. Positive offset means right of the canonical northbound route. Rows are 100 m apart, plus the exact final endpoint. `bedHeight` is the unmodified center-column DEM ground; `railHeight` comes from existing route points. This cross section is actual bilinearly sampled GSI terrain, not a decorative sine wave or a second train elevation profile. DEM missing values are null with valid=0.
+
+Render ground outside a 40 m rail-clear half-width and blend to the measured ground by 120 m. The actual sample heights remain unchanged in the asset so bridge valleys, rivers, and mountain slopes remain inspectable. The renderer must preserve existing rails, platforms, bridge decks, and tunnel interiors instead of moving rails to terrain.
+
+`waterLines` has `points: [[x,z,y], ...]`, finite `sStart/sEnd`, OSM IDs and names, waterway kind, mapped `width` (null when not supplied), and `renderWidth`. `renderWidth` defaults are explicitly display estimates. `waterAreas` and `landAreas` have `points: [exteriorRing, ...holeRings]`; every ring contains `[x,z,y]` vertices. Their `kind` is water, forest, or farmland. Both multipolygon relations and closed ways are supported. Full geometries are intersected with an 1800 m corridor, so a river crossing whose first point or centroid is outside the corridor is retained. Geometry is simplified by 3 m for lines / 5 m for polygons. Water-line portions already covered by mapped water polygons are removed.
+
+Water vertex elevations are GSI ground approximations, not a water surface survey. Runtime must keep rivers below crossing bridge rails and handle DEM gaps without invented source claims. OSM feature absence does not establish that the real feature is absent. Forest polygons support tree placement only inside mapped land; tree species/individual positions are procedural.
+
+Existing v114 Skytree geography contains 9,145 mapped building rows with chainage 0–7031.8 m (Asakusa–Kita-Senju) within its nominal 170 m centroid buffer. This is a count of existing imported footprint representations, not a Google Street View count, and does not quantify the wider 500 m corridor.
+
+Final validation: gzip 1,024,277 bytes; all 25,883 terrain samples valid; no DEM download failures. The retained Kanto/Tohoku PBF timestamps are both 2026-11-12T21:23:05Z. Five source geometry conversion/processing failures were skipped during regional extraction and are recorded in `validity.geometryErrors`; their exact local corridor relevance is not established, so coverage is not claimed complete.
+
+Water lines / water areas / land areas: Skytree 925 / 182 / 1088; Nikko 1737 / 276 / 2163; Kinugawa 179 / 31 / 149; Aizu 300 / 12 / 668; Yagan 175 / 28 / 121. Terrain relative height ranges include Kinugawa -100.81 to 449.06 m and Nikko -3.37 to 819.94 m, so the asset contains actual valley and mountain cross sections rather than only rail elevation.

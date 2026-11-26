@@ -1,4 +1,4 @@
-import {interpolateKnots} from './track-layout.js?v=117';
+import {interpolateKnots} from './track-layout.js?v=118';
 const clamp=x=>Math.max(0,Math.min(1,x)),smooth=x=>{x=clamp(x);return x*x*(3-2*x);};
 export function mergeRoadSpans(spans,gap=100){const out=[];for(const x of [...spans].sort((a,b)=>a.start-b.start)){const last=out.at(-1);if(last&&x.start-last.end<gap){last.end=Math.max(last.end,x.end);last.height=Math.max(last.height,x.height);}else out.push({...x});}return out;}
 export function roadElevation(profile,distance){let y=profile.base;for(const span of profile.spans){const weight=Math.min(smooth((distance-span.start+100)/100),smooth((span.end+100-distance)/100));y=Math.max(y,profile.base+(span.height-profile.base)*weight);}if(profile.junctions){for(const [key,d]of[[profile.startNode,distance],[profile.endNode,profile.length-distance]]){const target=profile.junctions.get(key);if(Number.isFinite(target))y=Math.max(y,profile.base+(target-profile.base)*smooth(1-d/100));}}for(const span of profile.underpasses??[]){const weight=Math.min(smooth((distance-span.start+100)/100),smooth((span.end+100-distance)/100));y=Math.min(y,profile.base+(span.height-profile.base)*weight);}return y;}
@@ -20,7 +20,7 @@ export class RoadSeparation{
    }return p;
   });
  }
- profile(row,path,crossings){const world=this.world,terrain=(world.point?.(row.s)??world.frame(row.s).p).y,base=terrain-.1,spans=[],underpasses=[],raised=row.bridge||Number(row.osmLayer)>0,underground=row.osmTunnel&&!['no','false','0'].includes(row.osmTunnel);if(raised)spans.push({start:0,end:path.length,height:terrain+6});if(underground)underpasses.push({start:0,end:path.length,height:terrain-5});
+ profile(row,path,crossings){const world=this.world,terrain=world.groundHeight&&path.points?.length?world.groundHeight(row.s,...path.points[Math.floor(path.points.length/2)]):(world.point?.(row.s)??world.frame(row.s).p).y,base=terrain-.1,spans=[],underpasses=[],raised=row.bridge||Number(row.osmLayer)>0,underground=row.osmTunnel&&!['no','false','0'].includes(row.osmTunnel);if(raised)spans.push({start:0,end:path.length,height:terrain+6});if(underground)underpasses.push({start:0,end:path.length,height:terrain-5});
   if(!path.points?.length)return {base,terrain,spans,length:path.length};
   let i=1;for(let d=0;d<=path.length;d+=5){while(i<path.distances.length-1&&path.distances[i]<d)i++;const a=path.points[i-1],b=path.points[i],f=clamp((d-path.distances[i-1])/Math.max(.001,path.distances[i]-path.distances[i-1])),x=a[0]+(b[0]-a[0])*f,z=-(a[1]+(b[1]-a[1])*f),rail=this.nearest(x,z);
    if(rail.distance>(row.width??6)/2+2.1||rail.y-base>=3.8)continue;
