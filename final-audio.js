@@ -5,11 +5,12 @@ import {TrainPassbyAudio} from './train-passby-audio.js?v=118';
 import {timingVoiceRefs,timingPreloadRefs,restrictionVoiceRefs} from './station-timing.js?v=118';
 import {stationCueRefs,stationVoiceBank,tobuDepartureRefs} from './station-voice.js?v=118';
 import {createMixGains,voiceCategory} from './audio-mix.js?v=118';
-import {interpolateColumn} from './final-vehicle.js?v=118';
+import {interpolateColumn} from './final-vehicle.js?v=122';
 import {runPitch} from './assets/audio/run-pitch.js?v=118';
 import {HeldHorn} from './assets/audio/held-horn.js?v=118';
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const whistle={entryIndex:'departure-whistle'};
+const tobu20400Departure={entryIndex:'20400-departure',driverVoiceFile:'./assets/station-broadcast/tobu/20400_joukou.mp3',mixCategory:'se'};
 const voiceBanks={e235:['kanko0','uta'],e233:['kanko1','utb'],323:['kanko2','utd'],207:['kanko3','ute']};
 const driverCallNumbers={doorsClosed:'001',departure:'003',stationStop:'065'};
 const surfaces=['long','bridge','tunnel'];
@@ -82,7 +83,7 @@ export class LocalTrainAudio {
  callRestriction(kmh){return this.queueDriverCalls(restrictionVoiceRefs(this.driverRouteLine,kmh));}
  callStationTiming(kind,station,error){return this.queueDriverCalls(timingVoiceRefs(this.driverRouteLine,station,kind,error));}
  async prepare(){
-  await Promise.all([...this.assetRefs(),whistle].map(ref=>this.buffer(ref)));
+  await Promise.all([...this.assetRefs(),this.effectRef('whistle')].map(ref=>this.buffer(ref)));
   const stationRefs=[...timingPreloadRefs(this.driverRouteLine,this.driverRoute?.stations),...(this.driverRoute?.stations??[]).flatMap(st=>['approach','departure'].flatMap(kind=>this.stationRefs(kind,st))),...Object.keys(driverCallNumbers).map(name=>this.driverCallRef(name)).filter(Boolean)];
   await Promise.all([...new Map(stationRefs.map(ref=>[ref.entryIndex,ref])).values()].map(ref=>this.buffer(ref)));
  }
@@ -133,7 +134,7 @@ export class LocalTrainAudio {
  effectRef(name){
   const {door,horn,mastercontroller,brakehandle,pilotlamp,brake}=this.recipe.sounds;
   return {
-   whistle,
+   whistle:this.recipe.id==='20400'?tobu20400Departure:whistle,
    open:door?.openright??door?.['open right']??door?.openleft??door?.['open left'],
    close:door?.closeright??door?.['close right']??door?.closeleft??door?.['close left'],
    hornPrimary:horn?.primary??horn?.secondary,hornSecondary:horn?.secondary,
