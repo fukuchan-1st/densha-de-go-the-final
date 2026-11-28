@@ -1,4 +1,5 @@
 import {obasuteServing,updateObasuteOperation,obasuteDirection,obasuteActive,obasuteShunting,obasuteDoorReady,advanceObasute,obasuteCaption,obasuteTarget,obasuteSpeedLimit} from './obasute-operations.js?v=118';
+import {readStaticJson} from './static-json.js';
 import {DriveIntro} from './drive-intro.js?v=118';
 import {omeOnboardFile} from './station-broadcast.js?v=118';
 import {wallet,SCENARIO_PRICE} from './scenario-wallet.js?v=118';
@@ -38,7 +39,7 @@ import {serviceChoices,makeServiceRoute} from './train-selection.js?v=118';
 import {GeneratedCab,generatedCab} from './generated-cab.js?v=118';
 import {FinalWorld} from './final-world.js?v=119';
 import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=118';
-import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=122';
+import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=123';
 import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,routeLimitAt,stopPosition,finishStop,beginDoorClosing,isDoorClosing,takeDepartureCall} from './final-model.js?v=118';
 import {STATIONS as TOHOKU_STATIONS} from './route-data.js?v=118';
 import {FINAL_SCENARIOS,scenarioJourney} from './final-scenarios.js?v=118';
@@ -386,9 +387,9 @@ requestAnimationFrame(frame);
 try {
  const routeLoads=META.map(async meta=>{
   if(meta.id==='tohoku')return loadTohokuRoute();
-  const response=await fetch(`./assets/final/${meta.id}-route.json?v=104`);
+  const response=await fetch(`./assets/final/${meta.id}-route.json?v=123`);
   if(!response.ok)throw Error('路線データを読み込めません');
-  return response.json();
+  return readStaticJson(response);
  });
  [recipes,packs,...routes]=await Promise.all([loadVehicleRecipes(),loadBundledTrainPacks(),...routeLoads]);
  await integrateTobuVehicles(recipes,packs);
@@ -398,8 +399,8 @@ try {
  $('compactRoute').innerHTML=META.map((m,i)=>`<option value="${i}">${m.name} · ${m.train}</option>`).join('');
  $('compactRoute').onchange=event=>{choose(Number(event.target.value));openTrainSelection();};
  const additions=await Promise.all(['chuo-extended','shinonoi-extended','chuo-kofu','chuo-shinshu','shinonoi','oito','ome','ome-okutama','itsukaichi','tatsuno','toho-village','toho-center'].map(async id=>{
- const response=await fetch('./assets/final/'+id+'-route.json?v=104');
- if(response.ok)extraRoutes.set(id,await response.json());
+ const response=await fetch('./assets/final/'+id+'-route.json?v=123');
+ if(response.ok)extraRoutes.set(id,await readStaticJson(response));
 }));
  for(const [id,r] of buildConnectingRoutes(extraRoutes))extraRoutes.set(id,r);
  const originalYagan=await loadRoadAsset(routes[META.findIndex(m=>m.id==='yagan')]);
