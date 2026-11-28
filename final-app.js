@@ -13,7 +13,7 @@ import {WEATHER,weatherType,updateWeatherStatus} from './weather.js?v=118';
 import {gradeLabel} from './tunnel-effects.js?v=118';
 import {updateDoorVisual} from './train-doors.js?v=118';
 import {scheduledBoardingDelay} from './published-schedules.js?v=118';
-import {loadRoadAsset} from './road-assets.js?v=118';import {OnboardBroadcast} from './onboard-broadcast.js?v=121';
+import {loadRoadAsset} from './road-assets.js?v=118';import {OnboardBroadcast,hasLibertyDepartureCue} from './onboard-broadcast.js?v=124';
 import {CrossingAudio} from './crossings.js?v=119';
 import {VIEW_LABELS,normalizedView,replayViewMode} from './view-modes.js?v=118';
 import {yaganPlanningSpec,yaganBoardingReady,yaganBoardingDelay} from './yagan-timetable.js?v=118';
@@ -39,7 +39,7 @@ import {serviceChoices,makeServiceRoute} from './train-selection.js?v=118';
 import {GeneratedCab,generatedCab} from './generated-cab.js?v=118';
 import {FinalWorld} from './final-world.js?v=119';
 import {setMenuPhoto,mountMenuMusic} from './photo-menu.js?v=118';
-import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=123';
+import {loadVehicleRecipes,loadBundledTrainPacks,LocalCabPanel,LocalTrainAudio} from './final-vehicle.js?v=124';
 import {clamp,controlsFor,notchLabel,createJourney,driveStep,brakeAssist,distanceLabel,routeLimitAt,stopPosition,finishStop,beginDoorClosing,isDoorClosing,takeDepartureCall} from './final-model.js?v=118';
 import {STATIONS as TOHOKU_STATIONS} from './route-data.js?v=118';
 import {FINAL_SCENARIOS,scenarioJourney} from './final-scenarios.js?v=118';
@@ -172,6 +172,9 @@ async function closeSequence(generation){
   const departureKey=activeRun.startingDeparture&&r.stations[activeRun.startIndex].departureSound;
   if(departureKey){await sound.playRouteAnnouncement(r.stations[activeRun.startIndex].announcementRouteId??r.id,departureKey);if(!current())return;}
   await sound.playStationDeparture(r.stations[stationIndex],current);if(!current())return;
+  if(stationIndex<activeRun.endIndex&&hasLibertyDepartureCue(r,sound.recipe?.id,chosenService,stationIndex)){
+   await effect('libertyDeparture');if(!current())return;
+  }
   if(!omeOnboardFile(r,r.stations[stationIndex]))await effect('whistle');if(!current())return;
   activeRun.doorPhase='closing';const completed=await effect('close');
   if(!current()||!completed)return;

@@ -97,4 +97,4 @@ export function interpolateColumn(table,column,speed,defaultValue=0){
  return points.at(-1)[1];
 }
 export {LocalCabPanel} from './final-panel.js?v=118';
-export {LocalTrainAudio} from './final-audio.js?v=123';
+export {LocalTrainAudio} from './final-audio.js?v=124';

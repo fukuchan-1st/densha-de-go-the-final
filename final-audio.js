@@ -5,11 +5,12 @@ import {TrainPassbyAudio} from './train-passby-audio.js?v=118';
 import {timingVoiceRefs,timingPreloadRefs,restrictionVoiceRefs} from './station-timing.js?v=118';
 import {stationCueRefs,stationVoiceBank,tobuDepartureRefs} from './station-voice.js?v=118';
 import {createMixGains,voiceCategory} from './audio-mix.js?v=118';
-import {interpolateColumn} from './final-vehicle.js?v=123';
+import {interpolateColumn} from './final-vehicle.js?v=124';
 import {runPitch} from './assets/audio/run-pitch.js?v=118';
 import {HeldHorn} from './assets/audio/held-horn.js?v=118';
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const whistle={entryIndex:'departure-whistle'};
+const libertyDeparture={entryIndex:'liberty-departure',driverVoiceFile:'./assets/onboard/liberty/joukou.mp3',mixCategory:'se'};
 const tobu20400Departure={entryIndex:'20400-departure',driverVoiceFile:'./assets/station-broadcast/tobu/20400_joukou.mp3',mixCategory:'se'};
 const voiceBanks={e235:['kanko0','uta'],e233:['kanko1','utb'],323:['kanko2','utd'],207:['kanko3','ute']};
 const driverCallNumbers={doorsClosed:'001',departure:'003',stationStop:'065'};
@@ -71,6 +72,7 @@ export class LocalTrainAudio {
  assetRefs(){
   const sounds=this.recipe.sounds;
   const effects=['open','close','hornPrimary','hornSecondary','hornPrimaryRelease','hornSecondaryRelease','powerUp','powerDown','brakeApply','brakeRelease','relayOn','relayOff'];
+  if(this.recipe.id==='500')effects.push('libertyDeparture');
   if(this.recipe.id==='6050')effects.push('brakeMin','brakeMax');
   const rolling=this.recipe.id==='6050'?Object.values(sounds.run??{}):surfaces.map(surface=>this.runRef(surface));
   return [...effects.map(name=>this.effectRef(name)),sounds.others?.noise,
@@ -135,6 +137,7 @@ export class LocalTrainAudio {
   const {door,horn,mastercontroller,brakehandle,pilotlamp,brake}=this.recipe.sounds;
   return {
    whistle:this.recipe.id==='20400'?tobu20400Departure:whistle,
+   libertyDeparture,
    open:door?.openright??door?.['open right']??door?.openleft??door?.['open left'],
    close:door?.closeright??door?.['close right']??door?.closeleft??door?.['close left'],
    hornPrimary:horn?.primary??horn?.secondary,hornSecondary:horn?.secondary,
