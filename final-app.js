@@ -171,11 +171,13 @@ async function closeSequence(generation){
  try{
   const departureKey=activeRun.startingDeparture&&r.stations[activeRun.startIndex].departureSound;
   if(departureKey){await sound.playRouteAnnouncement(r.stations[activeRun.startIndex].announcementRouteId??r.id,departureKey);if(!current())return;}
-  await sound.playStationDeparture(r.stations[stationIndex],current);if(!current())return;
   if(stationIndex<activeRun.endIndex&&hasLibertyDepartureCue(r,sound.recipe?.id,chosenService,stationIndex)){
-   await effect('libertyDeparture');if(!current())return;
+   await effect('libertyDeparture');
+  }else{
+   await sound.playStationDeparture(r.stations[stationIndex],current);if(!current())return;
+   if(!omeOnboardFile(r,r.stations[stationIndex]))await effect('whistle');
   }
-  if(!omeOnboardFile(r,r.stations[stationIndex]))await effect('whistle');if(!current())return;
+  if(!current())return;
   activeRun.doorPhase='closing';const completed=await effect('close');
   if(!current()||!completed)return;
   if(!finishStop(activeRun,r,attempt.stationIndex)){activeRun.doorPhase='audio-error';toast('停車位置を確認できません。戸開状態を維持します。',10);return;}
