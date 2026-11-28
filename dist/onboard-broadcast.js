@@ -14,7 +14,7 @@ export const ONBOARD_SETS={
  'liberty150':{vehicles:['500'],service:/^特急リバティ会津150号$/,route:/^tobu-aizu$/,order:line('会津田島 中荒井 会津荒海 会津山村道場 七ヶ岳登山口 会津高原尾瀬口 男鹿高原 上三依塩原温泉口 中三依温泉 湯西川温泉 川治湯元 川治温泉 龍王峡 新藤原 鬼怒川公園 鬼怒川温泉 東武ワールドスクウェア 小佐越 新高徳 大桑 大谷向 下今市')}
 };
 let manifestPending;
-function loadManifest(){manifestPending??=fetch(new URL('./assets/onboard/manifest.json?v=121',import.meta.url)).then(r=>r.ok?r.json():null).catch(()=>{manifestPending=null;return null;});return manifestPending;}
+function loadManifest(){manifestPending??=fetch(new URL('./assets/onboard/manifest.json?v=124',import.meta.url)).then(r=>r.ok?r.json():null).catch(()=>{manifestPending=null;return null;});return manifestPending;}
 // 停車駅がその組の順序どおりに並んでいるか(逆方向の列車には流さない)
 export function chooseOnboardSet(sets,vehicle,service,routeId,stopNames){
  for(const [id,set] of Object.entries(ONBOARD_SETS)){
@@ -47,25 +47,17 @@ export function onboardCue(state,route,stations){
  if(!played['m'+state.next]&&remaining<=arrivalBefore){played['m'+state.next]=true;if(clips.soon)return {kind:'soon',...clips.soon};}
  return null;
 }
-function libertyNoticeRange(route){
- const stations=route.sceneryStations??route.stations;
- const to=stations.find(station=>station.name==='会津田島');
- if(!to)return null;
- // Some duties end at Shimo-imaichi and never reach Tochigi.
- const from=stations.find(station=>station.name==='栃木')??(stations[0]===to?stations.at(-1):stations[0]);
- return [Math.min(from.s,to.s),Math.max(from.s,to.s)];
-}
-
-export function libertyNoticeCue(state,route,notice){
- if(!notice||state.finished||state.doors||state.onboardNoticePlayed||!(state.v>0))return null;
- const next=route.stations[state.next],prev=route.stations[state.next-1];
- if(!prev||!next)return null;
- const [start,end]=notice.range;
- // Allow the entire notice to play before the next approach announcement.
- const speed=(state.v??0)+5;
- if(state.s<Math.max(start,prev.s)+DEPARTURE_AFTER_M||Math.min(end,next.s)-state.s<=Math.max(850,speed*(notice.seconds+25)))return null;
- state.onboardNoticePlayed=true;
- return notice;
+// 停車駅から次の停車駅までが栃木〜会津田島の区間内にある発車を対象にする。
+export function hasLibertyDepartureCue(route,vehicle,service,stationIndex){
+ if(vehicle!=='500'||route.id!=='tobu-aizu'||!/リバティ/.test(service??''))return false;
+ const station=route.stations[stationIndex],next=route.stations[stationIndex+1];
+ if(!station||!next)return false;
+ const scenery=route.sceneryStations??route.stations;
+ const aizu=scenery.find(stop=>stop.name==='会津田島');
+ if(!aizu)return false;
+ // 150号の運転区間は下今市までなので、栃木を含まない。
+ const tochigi=scenery.find(stop=>stop.name==='栃木')??(scenery[0]===aizu?scenery.at(-1):scenery[0]);
+ return station.s>=Math.min(aizu.s,tochigi.s)&&next.s<=Math.max(aizu.s,tochigi.s);
 }
 
 export class OnboardBroadcast{
@@ -73,23 +65,14 @@ export class OnboardBroadcast{
   if(!sound?.playOnboard)return null;
   const manifest=await loadManifest();if(!manifest)return null;
   const id=chooseOnboardSet(manifest.sets,vehicle,service,route.id,route.stations.map(s=>s.name));
-  const range=vehicle==='500'&&route.id==='tobu-aizu'&&/リバティ/.test(service??'')?libertyNoticeRange(route):null;
-  const notice=range&&manifest.libertyNotice?{...manifest.libertyNotice,range}:null;
-  return id||notice?new OnboardBroadcast(sound,manifest.sets[id]?.stations,id,notice):null;
+  return id?new OnboardBroadcast(sound,manifest.sets[id].stations,id):null;
  }
- constructor(sound,stations,id,notice){this.sound=sound;this.stations=stations??{};this.id=id;this.notice=notice;}
+ constructor(sound,stations,id){this.sound=sound;this.stations=stations;this.id=id;}
  // 走行区間の放送だけ先に読み込んでおく
  preload(route,startIndex,endIndex){
   const files=new Set(route.stations.slice(startIndex,endIndex+1).flatMap(st=>Object.values(this.stations[st.name]??{}).map(c=>c.file)));
-  if(this.notice)files.add(this.notice.file);
   return Promise.all([...files].map(f=>this.sound.preloadOnboard('./assets/onboard/'+f).catch(()=>null)));
  }
- update(state,route){
-  const cue=onboardCue(state,route,this.stations)
-   ??(!this.pending&&!this.sound.onboardSource?libertyNoticeCue(state,route,this.notice):null);
-  if(!cue)return;
-  const pending=this.pending=this.sound.playOnboard('./assets/onboard/'+cue.file);
-  Promise.resolve(pending).finally(()=>{if(this.pending===pending)this.pending=null;}).catch(()=>{});
- }
+ update(state,route){const cue=onboardCue(state,route,this.stations);if(cue)this.sound.playOnboard('./assets/onboard/'+cue.file);}
  stop(){this.sound?.stopOnboard?.();}
 }
