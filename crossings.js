@@ -1,5 +1,5 @@
-import {RailJointAudio} from './rail-joints.js?v=117';
-import * as T from './assets/vendor/three.module.js?v=117';
+import {RailJointAudio} from './rail-joints.js?v=118';
+import * as T from './assets/vendor/three.module.js?v=118';
 export function crossingCenter(c){return c.sOrigin??((c.sStart+c.sEnd)/2);}
 export function crossingActive(c,s,speed,length=40){const x=crossingCenter(c);return s>=x-Math.max(320,speed*20)&&s-length<=x+25;}
 export function crossingDoppler(s,speed,crossing,lateral=6){const delta=crossing-s,radial=speed*delta/Math.hypot(delta,lateral);return Math.max(.7,Math.min(1.3,(343+radial)/343));}
@@ -16,13 +16,15 @@ export class LevelCrossings{
   mesh(right-left+18,.12,5.5,(left+right)/2,.055,0,'#4a4d4a');for(const edge of [-2.6,2.6])mesh(right-left+17,.018,.1,(left+right)/2,.125,edge,'#e7dfb0');
   const lamps=[],arms=[];
   for(const [side,x]of[[-1,left],[1,right]]){
-   const z=side*3.3;mesh(.32,.3,.32,x,.15,z,'#77756b');
+   const z=side*3.3;
+   mesh(.5,.9,.5,x,.45,-z,'#555b56');
+   if(c.hornOnly)continue;
+   mesh(.32,.3,.32,x,.15,z,'#77756b');
    for(let i=0;i<11;i++)mesh(.15,.26,.15,x,.43+i*.26,z,i%2?'#e5bc24':'#292a24');
    for(const angle of[-.65,.65]){const cross=mesh(.17,1.05,.09,x,3.25,z,'#eac32d');cross.rotation.z=angle;}
    for(const sign of[-1,1]){mesh(.38,.4,.15,x+sign*.25,2.62,z,'#222322');const material=new T.MeshStandardMaterial({color:'#8b0806',emissive:'#ff1608',emissiveIntensity:0});const light=new T.Mesh(this.lamp,material);light.position.set(x+sign*.25,2.62,z-.11);group.add(light);lamps.push({light,phase:sign>0?1:0});}
    const hinge=new T.Group();hinge.position.set(x,1.05,-z);group.add(hinge);const length=Math.min(6,(right-left)/2+1);
    for(let i=0;i<16;i++){const bar=new T.Mesh(this.box,this.mat(i%2?'#d8af22':'#272821'));bar.scale.set(.09,.08,length/16);bar.position.z=side*(i+.5)*length/16;hinge.add(bar);}arms.push({hinge,side});
-   mesh(.5,.9,.5,x,.45,-z,'#555b56');
   }
   parent.add(group);world.atmosphere?.prepare(group);const item={group,c,lamps,arms,angle:null};this.items.push(item);return item;
  }
@@ -31,10 +33,28 @@ export class LevelCrossings{
  dispose(){this.disposed=true;for(const item of this.items){item.group.parent?.remove(item.group);for(const {light}of item.lamps)light.material.dispose();}for(const m of this.materials.values())m.dispose();this.box.dispose();this.pole.dispose();this.lamp.dispose();this.items=[];}
 }
 export class CrossingAudio{
- constructor(sound){this.sound=sound;this.context=sound.context??sound.ctx;this.nodes=new Map();this.joints=new RailJointAudio(sound);this.ready=fetch(new URL('./assets/audio/crossing.mp3',import.meta.url)).then(r=>{if(!r.ok)throw Error('crossing audio unavailable');return r.arrayBuffer();}).then(b=>this.context.decodeAudioData(b)).then(b=>{this.buffer=b;}).catch(e=>{this.error=e;});this.ready=Promise.all([this.ready,this.joints.ready]);}
- update(world,s,v,viewMode,paused=false,length=40){this.joints.update(world,s,v,paused,length);if(!this.buffer||this.disposed)return;const now=this.context.currentTime,active=new Set(),rows=world.route?.structures??world.routeStructures?.structures??[];
-  for(const c of rows){if(c.kind!=='crossing'||!crossingActive(c,s,v,length))continue;const cs=crossingCenter(c),point=world.frame(cs,world.driveOffset?.(cs)??0).p.clone();point.y+=2;const distance=point.distanceTo(world.camera.position);if(distance>250)continue;const key=cs;active.add(key);let node=this.nodes.get(key);
-   if(!node){const source=this.context.createBufferSource(),gain=this.context.createGain(),pan=this.context.createStereoPanner();source.buffer=this.buffer;source.loop=true;source.connect(gain).connect(pan).connect(this.sound.mix?.gains.se??this.sound.master);gain.gain.value=0;source.start();node={source,gain,pan};this.nodes.set(key,node);}
+ constructor(sound,route){
+  this.sound=sound;
+  this.context=sound.context??sound.ctx;
+  this.nodes=new Map();
+  this.buffers=new Map();
+  this.joints=new RailJointAudio(sound);
+  const clips=new Map([['default','crossing.mp3']]);
+  for(const row of route?.structures??[]){
+   if(row.kind==='crossing'&&!row.hornOnly&&/^tobu[234]$/.test(row.sound??'')){
+    clips.set(row.sound,'tobu_crossing'+row.sound.at(-1)+'.mp3');
+   }
+  }
+  const loads=[...clips].map(async ([key,file])=>{
+   const response=await fetch(new URL('./assets/audio/'+file,import.meta.url));
+   if(!response.ok)throw Error('crossing audio unavailable: '+file);
+   this.buffers.set(key,await this.context.decodeAudioData(await response.arrayBuffer()));
+  });
+  this.ready=Promise.all([Promise.allSettled(loads),this.joints.ready]);
+ }
+ update(world,s,v,viewMode,paused=false,length=40){this.joints.update(world,s,v,paused,length);if(this.disposed)return;const now=this.context.currentTime,active=new Set(),rows=world.route?.structures??world.routeStructures?.structures??[];
+  for(const c of rows){if(c.kind!=='crossing'||c.hornOnly||!crossingActive(c,s,v,length))continue;const buffer=this.buffers.get(c.sound??'default');if(!buffer)continue;const cs=crossingCenter(c),point=world.frame(cs,world.driveOffset?.(cs)??0).p.clone();point.y+=2;const distance=point.distanceTo(world.camera.position);if(distance>250)continue;const key=cs;active.add(key);let node=this.nodes.get(key);
+   if(!node){const source=this.context.createBufferSource(),gain=this.context.createGain(),pan=this.context.createStereoPanner();source.buffer=buffer;source.loop=true;source.connect(gain).connect(pan).connect(this.sound.mix?.gains.se??this.sound.master);gain.gain.value=0;source.start();node={source,gain,pan};this.nodes.set(key,node);}
    const pitch=viewMode<2?crossingDoppler(s,v,cs):1;node.source.playbackRate.setTargetAtTime(pitch,now,.045);node.gain.gain.setTargetAtTime(paused?0:.65/(1+(distance/27)**2),now,.065);const right=new T.Vector3(1,0,0).applyQuaternion(world.camera.quaternion),delta=point.sub(world.camera.position);node.pan.pan.setTargetAtTime(T.MathUtils.clamp(delta.dot(right)/Math.max(8,distance),-1,1),now,.065);
   }
   for(const [key,node]of this.nodes)if(!active.has(key)){node.source.stop();node.source.disconnect();node.gain.disconnect();node.pan.disconnect();this.nodes.delete(key);}

@@ -1,8 +1,8 @@
-import {stationBuildingClear} from './station-space.js?v=117';
-import * as T from './assets/vendor/three.module.js?v=117';
-import {interpolateKnots} from './track-layout.js?v=117';
-import {residentialAllowed} from './yamagata-mountain.js?v=117';
-import {estimateBuildingHeight} from './building-estimate.js?v=117';
+import {stationBuildingClear} from './station-space.js?v=118';
+import * as T from './assets/vendor/three.module.js?v=118';
+import {interpolateKnots} from './track-layout.js?v=118';
+import {residentialAllowed} from './yamagata-mountain.js?v=118';
+import {estimateBuildingHeight} from './building-estimate.js?v=118';
 const pending=new Map(),grids=new WeakMap();let districtPending;
 const fictional=route=>route.id==='toho'||route.id?.startsWith('toho-');
 function point(points,s){let lo=0,hi=points.length-1;while(hi-lo>1){const m=(lo+hi)>>1;if(points[m][0]<=s)lo=m;else hi=m;}const a=points[lo],b=points[hi],t=(s-a[0])/(b[0]-a[0]);return [a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t];}
@@ -33,5 +33,5 @@ export function addMappedBuildings(world,group,start,end){
  const rows=world.route?.mappedBuildings??world.sceneryRoute?.mappedBuildings;if(!rows)return;
  let lo=0,hi=rows.length;while(lo<hi){const m=(lo+hi)>>1;if(rows[m][0]<start)lo=m+1;else hi=m;}
  const bins=new Map();for(let i=lo;i<rows.length&&rows[i][0]<end;i++){const row=rows[i];if(!mappedBuildingClear(world,row))continue;const key=(row[6]>9?'office:':'house:')+(Math.abs(Math.round(row[1]*7+row[2]*11))%8);if(!bins.has(key))bins.set(key,[]);bins.get(key).push(row);}
- for(const [key,items]of bins){const material=world.mat('facade:'+key),mesh=new T.InstancedMesh(world.box,material,items.length),o=new T.Object3D();for(let i=0;i<items.length;i++){const [s,x,z,w,d,angle,h]=items[i],base=world.point?world.point(s).y:world.frame(s).p.y;o.position.set(x,base+h/2,-z);o.rotation.set(0,angle,0);o.scale.set(w,h,d);o.updateMatrix();mesh.setMatrixAt(i,o.matrix);}mesh.computeBoundingSphere();mesh.userData.shadowCaster=true;group.add(mesh);}
+ for(const [key,items]of bins){const material=world.mat('facade:'+key),mesh=new T.InstancedMesh(world.box,material,items.length),o=new T.Object3D();for(let i=0;i<items.length;i++){const [s,x,z,w,d,angle,h]=items[i],base=world.groundHeight?.(s,x,z)??(world.point?world.point(s).y:world.frame(s).p.y);o.position.set(x,base+h/2,-z);o.rotation.set(0,angle,0);o.scale.set(w,h,d);o.updateMatrix();mesh.setMatrixAt(i,o.matrix);}mesh.computeBoundingSphere();mesh.userData.shadowCaster=true;group.add(mesh);}
 }

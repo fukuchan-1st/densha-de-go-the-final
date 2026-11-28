@@ -1,4 +1,4 @@
-import {interpolateKnots} from './track-layout.js?v=117';
+import {interpolateKnots} from './track-layout.js?v=118';
 const smooth=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
 // Keep both running rails continuous while the schematic adds station sidings.
 export function fitYamagataOpposing(rails,drive,station,lo,hi,platforms,preferred){

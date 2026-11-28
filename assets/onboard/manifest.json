@@ -756,6 +756,464 @@
      }
     }
    }
+  },
+  "liberty101": {
+   "stations": {
+    "とうきょうスカイツリー": {
+     "next": {
+      "file": "liberty101/01-next.mp3",
+      "seconds": 10.85
+     },
+     "soon": {
+      "file": "liberty101/01-soon.mp3",
+      "seconds": 18.59,
+      "leadForDuration": true
+     }
+    },
+    "北千住": {
+     "next": {
+      "file": "liberty101/02-next.mp3",
+      "seconds": 10.18
+     },
+     "soon": {
+      "file": "liberty101/02-soon.mp3",
+      "seconds": 18.2,
+      "leadForDuration": true
+     }
+    },
+    "春日部": {
+     "next": {
+      "file": "liberty101/03-next.mp3",
+      "seconds": 9.61
+     },
+     "soon": {
+      "file": "liberty101/03-soon.mp3",
+      "seconds": 15.63,
+      "leadForDuration": true
+     }
+    },
+    "板倉東洋大前": {
+     "next": {
+      "file": "liberty101/04-next.mp3",
+      "seconds": 11.07
+     },
+     "soon": {
+      "file": "liberty101/04-soon.mp3",
+      "seconds": 19.28,
+      "leadForDuration": true
+     }
+    },
+    "栃木": {
+     "next": {
+      "file": "liberty101/05-next.mp3",
+      "seconds": 9.02
+     },
+     "soon": {
+      "file": "liberty101/05-soon.mp3",
+      "seconds": 17.28,
+      "leadForDuration": true
+     }
+    },
+    "新鹿沼": {
+     "next": {
+      "file": "liberty101/06-next.mp3",
+      "seconds": 9.68
+     },
+     "soon": {
+      "file": "liberty101/06-soon.mp3",
+      "seconds": 17.48,
+      "leadForDuration": true
+     }
+    },
+    "下今市": {
+     "next": {
+      "file": "liberty101/07-next.mp3",
+      "seconds": 9.89
+     },
+     "soon": {
+      "file": "liberty101/07-soon.mp3",
+      "seconds": 28.35,
+      "leadForDuration": true
+     }
+    },
+    "新高徳": {
+     "next": {
+      "file": "liberty101/08-next.mp3",
+      "seconds": 9.81
+     },
+     "soon": {
+      "file": "liberty101/08-soon.mp3",
+      "seconds": 30.01,
+      "leadForDuration": true
+     }
+    },
+    "東武ワールドスクウェア": {
+     "next": {
+      "file": "liberty101/09-next.mp3",
+      "seconds": 10.77
+     },
+     "soon": {
+      "file": "liberty101/09-soon.mp3",
+      "seconds": 31.35,
+      "leadForDuration": true
+     }
+    },
+    "鬼怒川温泉": {
+     "next": {
+      "file": "liberty101/10-next.mp3",
+      "seconds": 10.23
+     },
+     "soon": {
+      "file": "liberty101/10-soon.mp3",
+      "seconds": 30.87,
+      "leadForDuration": true
+     }
+    },
+    "鬼怒川公園": {
+     "next": {
+      "file": "liberty101/11-next.mp3",
+      "seconds": 10.38
+     },
+     "soon": {
+      "file": "liberty101/11-soon.mp3",
+      "seconds": 30.92,
+      "leadForDuration": true
+     }
+    },
+    "新藤原": {
+     "next": {
+      "file": "liberty101/12-next.mp3",
+      "seconds": 10.18
+     },
+     "soon": {
+      "file": "liberty101/12-soon.mp3",
+      "seconds": 29.89,
+      "leadForDuration": true
+     }
+    },
+    "龍王峡": {
+     "next": {
+      "file": "liberty101/13-next.mp3",
+      "seconds": 10.15
+     },
+     "soon": {
+      "file": "liberty101/13-soon.mp3",
+      "seconds": 28.41,
+      "leadForDuration": true
+     }
+    },
+    "川治湯元": {
+     "next": {
+      "file": "liberty101/14-next.mp3",
+      "seconds": 9.79
+     },
+     "soon": {
+      "file": "liberty101/14-soon.mp3",
+      "seconds": 29.38,
+      "leadForDuration": true
+     }
+    },
+    "湯西川温泉": {
+     "next": {
+      "file": "liberty101/15-next.mp3",
+      "seconds": 10.15
+     },
+     "soon": {
+      "file": "liberty101/15-soon.mp3",
+      "seconds": 30.39,
+      "leadForDuration": true
+     }
+    },
+    "中三依温泉": {
+     "next": {
+      "file": "liberty101/16-next.mp3",
+      "seconds": 10.6
+     },
+     "soon": {
+      "file": "liberty101/16-soon.mp3",
+      "seconds": 32.27,
+      "leadForDuration": true
+     }
+    },
+    "上三依塩原温泉口": {
+     "next": {
+      "file": "liberty101/17-next.mp3",
+      "seconds": 11.9
+     },
+     "soon": {
+      "file": "liberty101/17-soon.mp3",
+      "seconds": 34.14,
+      "leadForDuration": true
+     }
+    },
+    "会津高原尾瀬口": {
+     "next": {
+      "file": "liberty101/18-next.mp3",
+      "seconds": 11.14
+     },
+     "soon": {
+      "file": "liberty101/18-soon.mp3",
+      "seconds": 31.21,
+      "leadForDuration": true
+     }
+    },
+    "会津田島": {
+     "next": {
+      "file": "liberty101/19-next.mp3",
+      "seconds": 10.49
+     },
+     "soon": {
+      "file": "liberty101/19-soon.mp3",
+      "seconds": 17.31,
+      "leadForDuration": true
+     }
+    }
+   }
+  },
+  "liberty150": {
+   "stations": {
+    "中荒井": {
+     "next": {
+      "file": "liberty150/01-next.mp3",
+      "seconds": 8.9
+     },
+     "soon": {
+      "file": "liberty150/01-soon.mp3",
+      "seconds": 26.98,
+      "leadForDuration": true
+     }
+    },
+    "会津荒海": {
+     "next": {
+      "file": "liberty150/02-next.mp3",
+      "seconds": 9.48
+     },
+     "soon": {
+      "file": "liberty150/02-soon.mp3",
+      "seconds": 28.43,
+      "leadForDuration": true
+     }
+    },
+    "会津山村道場": {
+     "next": {
+      "file": "liberty150/03-next.mp3",
+      "seconds": 10.24
+     },
+     "soon": {
+      "file": "liberty150/03-soon.mp3",
+      "seconds": 30.58,
+      "leadForDuration": true
+     }
+    },
+    "七ヶ岳登山口": {
+     "next": {
+      "file": "liberty150/04-next.mp3",
+      "seconds": 10.29
+     },
+     "soon": {
+      "file": "liberty150/04-soon.mp3",
+      "seconds": 31.42,
+      "leadForDuration": true
+     }
+    },
+    "会津高原尾瀬口": {
+     "next": {
+      "file": "liberty150/05-next.mp3",
+      "seconds": 11.14
+     },
+     "soon": {
+      "file": "liberty150/05-soon.mp3",
+      "seconds": 30.05,
+      "leadForDuration": true
+     }
+    },
+    "男鹿高原": {
+     "next": {
+      "file": "liberty150/06-next.mp3",
+      "seconds": 9.33
+     },
+     "soon": {
+      "file": "liberty150/06-soon.mp3",
+      "seconds": 30.4,
+      "leadForDuration": true
+     }
+    },
+    "上三依塩原温泉口": {
+     "next": {
+      "file": "liberty150/07-next.mp3",
+      "seconds": 11.9
+     },
+     "soon": {
+      "file": "liberty150/07-soon.mp3",
+      "seconds": 33.6,
+      "leadForDuration": true
+     }
+    },
+    "中三依温泉": {
+     "next": {
+      "file": "liberty150/08-next.mp3",
+      "seconds": 10.6
+     },
+     "soon": {
+      "file": "liberty150/08-soon.mp3",
+      "seconds": 30.52,
+      "leadForDuration": true
+     }
+    },
+    "湯西川温泉": {
+     "next": {
+      "file": "liberty150/09-next.mp3",
+      "seconds": 10.15
+     },
+     "soon": {
+      "file": "liberty150/09-soon.mp3",
+      "seconds": 29.58,
+      "leadForDuration": true
+     }
+    },
+    "川治湯元": {
+     "next": {
+      "file": "liberty150/10-next.mp3",
+      "seconds": 9.79
+     },
+     "soon": {
+      "file": "liberty150/10-soon.mp3",
+      "seconds": 30.09,
+      "leadForDuration": true
+     }
+    },
+    "川治温泉": {
+     "next": {
+      "file": "liberty150/11-next.mp3",
+      "seconds": 10.86
+     },
+     "soon": {
+      "file": "liberty150/11-soon.mp3",
+      "seconds": 29.95,
+      "leadForDuration": true
+     }
+    },
+    "龍王峡": {
+     "next": {
+      "file": "liberty150/12-next.mp3",
+      "seconds": 10.15
+     },
+     "soon": {
+      "file": "liberty150/12-soon.mp3",
+      "seconds": 28.8,
+      "leadForDuration": true
+     }
+    },
+    "新藤原": {
+     "next": {
+      "file": "liberty150/13-next.mp3",
+      "seconds": 10.18
+     },
+     "soon": {
+      "file": "liberty150/13-soon.mp3",
+      "seconds": 30.12,
+      "leadForDuration": true
+     }
+    },
+    "鬼怒川公園": {
+     "next": {
+      "file": "liberty150/14-next.mp3",
+      "seconds": 10.38
+     },
+     "soon": {
+      "file": "liberty150/14-soon.mp3",
+      "seconds": 30.97,
+      "leadForDuration": true
+     }
+    },
+    "鬼怒川温泉": {
+     "next": {
+      "file": "liberty150/15-next.mp3",
+      "seconds": 10.23
+     },
+     "soon": {
+      "file": "liberty150/15-soon.mp3",
+      "seconds": 31.26,
+      "leadForDuration": true
+     }
+    },
+    "東武ワールドスクウェア": {
+     "next": {
+      "file": "liberty150/16-next.mp3",
+      "seconds": 10.77
+     },
+     "soon": {
+      "file": "liberty150/16-soon.mp3",
+      "seconds": 30.59,
+      "leadForDuration": true
+     }
+    },
+    "小佐越": {
+     "next": {
+      "file": "liberty150/17-next.mp3",
+      "seconds": 9.47
+     },
+     "soon": {
+      "file": "liberty150/17-soon.mp3",
+      "seconds": 27.85,
+      "leadForDuration": true
+     }
+    },
+    "新高徳": {
+     "next": {
+      "file": "liberty150/18-next.mp3",
+      "seconds": 9.81
+     },
+     "soon": {
+      "file": "liberty150/18-soon.mp3",
+      "seconds": 28.76,
+      "leadForDuration": true
+     }
+    },
+    "大桑": {
+     "next": {
+      "file": "liberty150/19-next.mp3",
+      "seconds": 9.52
+     },
+     "soon": {
+      "file": "liberty150/19-soon.mp3",
+      "seconds": 28.08,
+      "leadForDuration": true
+     }
+    },
+    "大谷向": {
+     "next": {
+      "file": "liberty150/20-next.mp3",
+      "seconds": 9.96
+     },
+     "soon": {
+      "file": "liberty150/20-soon.mp3",
+      "seconds": 28.61,
+      "leadForDuration": true
+     }
+    },
+    "下今市": {
+     "next": {
+      "file": "liberty150/21-next.mp3",
+      "seconds": 9.89
+     },
+     "soon": {
+      "file": "liberty150/21-soon.mp3",
+      "seconds": 17.87,
+      "leadForDuration": true
+     }
+    },
+    "会津田島": {
+     "departure": {
+      "file": "liberty150/aizutajima.mp3",
+      "announces": "中荒井"
+     }
+    }
+   }
   }
+ },
+ "libertyNotice": {
+  "file": "liberty/joukou.mp3",
+  "seconds": 9.48
  }
 }

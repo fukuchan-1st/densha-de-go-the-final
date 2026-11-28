@@ -1,10 +1,10 @@
-import {whiteRailPost,tactileMaterial,platformStripClear} from './platform-details.js?v=117';
-import {createTerrainMaterial} from './terrain-materials.js?v=117';
-import * as T from './assets/vendor/three.module.js?v=117';
-import {interpolateKnots} from './track-layout.js?v=117';
-import {createSurfaceMaterial} from './vegetation.js?v=117';
-import {segmentIntersects} from './structure-ranges.js?v=117';
-import {addStoppingMarker} from './stop-scene.js?v=117';
+import {whiteRailPost,tactileMaterial,platformStripClear} from './platform-details.js?v=118';
+import {createTerrainMaterial} from './terrain-materials.js?v=118';
+import * as T from './assets/vendor/three.module.js?v=118';
+import {interpolateKnots} from './track-layout.js?v=118';
+import {createSurfaceMaterial} from './vegetation.js?v=118';
+import {segmentIntersects} from './structure-ranges.js?v=118';
+import {addStoppingMarker} from './stop-scene.js?v=118';
 export function buildRailways(world){
  const rails=[],railIndices=[],bed=[],bedIndices=[],sleepers=[],supports=[];const layout=world.trackLayout;
  function vertex(target,s,x,y){const f=world.frame(s,x);target.push(f.p.x,f.p.y+y,f.p.z);}

@@ -1,12 +1,18 @@
-import {joinRoutes,sliceRoute} from './service-routes.js?v=117';
+import {applyTobuBve2} from './tobu-bve2.js?v=118';
+import {joinRoutes,sliceRoute} from './service-routes.js?v=118';
 const cache=new Map();
+let enhanced;
+async function sceneryData(){enhanced??=Promise.all([json('./assets/final/tobu118-natural.json.gz?v=118'),json('./assets/final/tobu118-buildings.json.gz?v=118'),json('./assets/final/tobu118-bve2-profile.json?v=118')]);return enhanced;}
 async function json(url){const response=await fetch(url);if(!response.ok)throw Error(`東武路線データを読み込めません: ${url}`);const bytes=new Uint8Array(await response.arrayBuffer());return bytes[0]===31&&bytes[1]===139?new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).json():JSON.parse(new TextDecoder().decode(bytes));}
 export async function loadTobuRouteParts(){
- const entries=await Promise.all(['tobu-skytree','tobu-nikko','tobu-kinugawa','aizu'].map(async id=>{if(!cache.has(id))cache.set(id,(async()=>{const route=await json(`./assets/final/${id}-route.json?v=117`),geo=await json(`./assets/final/${id}-geography.json.gz?v=117`);return {...route,roads:geo.roads,mappedBuildings:geo.mappedBuildings,mappedBuildingSource:geo.source,mappedBuildingBuffer:geo.bufferM,roadAsset:undefined};})());return [id,await cache.get(id)];}));return Object.fromEntries(entries);
+ const [natural,buildings,bve]=await sceneryData();
+ const entries=await Promise.all(['tobu-skytree','tobu-nikko','tobu-kinugawa','aizu'].map(async id=>{if(!cache.has(id))cache.set(id,(async()=>{const route=await json(`./assets/final/${id}-route.json?v=119`),geo=await json(`./assets/final/${id}-geography.json.gz?v=118`),mapped=buildings.routes[id];return applyTobuBve2({...route,roads:geo.roads,naturalFeatures:natural.routes[id],mappedBuildings:mapped.mappedBuildings,mappedBuildingSource:buildings.source,mappedBuildingBuffer:mapped.bufferM,roadAsset:undefined},bve);})());return [id,await cache.get(id)];}));return {...Object.fromEntries(entries),yaganNatural:natural.routes.yagan,bve2Profile:bve};
 }
 export function assembleTobuRoutes(parts,yagan){
+ if(parts.yaganNatural)yagan.naturalFeatures=parts.yaganNatural;
+ if(parts.bve2Profile)Object.assign(yagan,applyTobuBve2(yagan,parts.bve2Profile));
  const main=joinRoutes([parts['tobu-skytree'],sliceRoute(parts['tobu-nikko'],'東武動物公園','下今市'),parts['tobu-kinugawa'],yagan,parts.aizu],'tobu-aizu','東武・野岩・会津鉄道 浅草〜会津田島');
- main.geometryQuality='OpenStreetMap実線形＋提供BVE野岩線。駅接続部・GSI推定勾配は近似';main.roadAsset=undefined;
+ main.geometryQuality='OSM線形・建物・水面＋GSI地形／提供BVE制限と高架高さ（未提供部は近似）';main.roadAsset=undefined;
  main.limits.push({sStart:main.stations.find(x=>x.name==='新藤原').s,sEnd:main.stations.find(x=>x.name==='会津高原尾瀬口').s,kmh:70,source:'既存野岩線の運転上限'});
  const nikko=sliceRoute(parts['tobu-nikko'],'南栗橋','東武日光');nikko.id='tobu-nikko';nikko.name='東武日光線 南栗橋〜東武日光';
  return {main,nikko};

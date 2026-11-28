@@ -1,12 +1,12 @@
-import {retimeMatsumotoLocals} from './matsumoto-timetable.js?v=117';
-import {resolvePublishedSchedule} from './published-schedules.js?v=117';
-import {routePlanningSpec,operatingBand,operatingCap} from './planning-profile.js?v=117';
+import {retimeMatsumotoLocals} from './matsumoto-timetable.js?v=118';
+import {resolvePublishedSchedule} from './published-schedules.js?v=118';
+import {routePlanningSpec,operatingBand,operatingCap} from './planning-profile.js?v=118';
 export {routePlanningSpec};
-import {yaganPlanningSpec,rebuildYaganTimetable,planningGrade} from './yagan-timetable.js?v=117';
-import {osakaPlanningSpec,rebuildOsakaTimetable} from './osaka-timetable.js?v=117';
-import {ScoreAudio} from './score-audio.js?v=117';
-import {ScoreEngine,timeSeconds} from './score-engine.js?v=117';
-import {restrictionSigns} from './restriction-signs.js?v=117';
+import {yaganPlanningSpec,rebuildYaganTimetable,planningGrade} from './yagan-timetable.js?v=118';
+import {osakaPlanningSpec,rebuildOsakaTimetable} from './osaka-timetable.js?v=118';
+import {ScoreAudio} from './score-audio.js?v=118';
+import {ScoreEngine,timeSeconds} from './score-engine.js?v=118';
+import {restrictionSigns} from './restriction-signs.js?v=118';
 export function mountScoring(parent,{badge,volume=()=>.65,blueTolerance=3}={}){
  const hud=document.createElement('div');hud.className='score-hud';hud.innerHTML='<small><b class="chain-number">0</b> chain</small><strong><b class="points-number">0</b> points</strong>';
  if(badge){[...badge.children].forEach(c=>c.hidden=true);badge.append(hud);badge.classList.add('scoring-badge');}else parent.append(hud);
@@ -25,6 +25,11 @@ export function scoringStations(route){const end=route.stations?.at(-1)?.s??Infi
 export function scoreHazards(route){
  const hazards=[],tunnels=(route.structures??[]).filter(x=>x.kind==='tunnel').map(x=>({s:x.sStart??x.s,end:x.sEnd??x.sStart??x.s})).filter(x=>Number.isFinite(x.s)).sort((a,b)=>a.s-b.s);
  for(const t of tunnels){const previous=hazards.at(-1);if(previous&&t.s<=previous.end+1)previous.end=Math.max(previous.end,t.end);else hazards.push({id:'tunnel:'+t.s,s:t.s,end:t.end,name:'トンネル'});}
+ for(const crossing of route.structures??[]){
+  if(crossing.kind!=='crossing'||!crossing.hornOnly)continue;
+  const s=crossing.sOrigin??(crossing.sStart+crossing.sEnd)/2;
+  if(Number.isFinite(s))hazards.push({id:'crossing:'+s,s,name:crossing.name||'踏切'});
+ }
  for(const x of [...(route.structures??[]).filter(x=>['workers','maintenance'].includes(x.kind)),...(route.workers??[]),...(route.maintenanceWorkers??[])]){
   const s=x.sStart??x.s??x.position;if(Number.isFinite(s)&&!hazards.some(h=>h.id==='worker:'+s))hazards.push({id:'worker:'+s,s,name:'保線作業員'});
  }

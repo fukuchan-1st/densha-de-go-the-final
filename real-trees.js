@@ -1,5 +1,5 @@
-import * as T from './assets/vendor/three.module.js?v=117';
-import {decodeVertices} from './model-format.js?v=117';
+import * as T from './assets/vendor/three.module.js?v=118';
+import {decodeVertices} from './model-format.js?v=118';
 export function treeVariant(value){return Math.min(4,Math.max(0,Math.floor(value*5)));}
 export function treeDetail(distance,light=false,high=false){return distance<(high?180:light?40:75)?0:1;}
 // Five source meshes, shared materials, and per-instance near/far selection.

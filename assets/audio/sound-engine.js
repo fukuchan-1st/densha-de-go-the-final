@@ -1,14 +1,14 @@
-import {extrapolatedPitch,SlipPitchController} from '../../motor-pitch.js?v=111';
-import {AmbientAudio} from '../../ambient-audio.js?v=111';
-import {TrainPassbyAudio} from '../../train-passby-audio.js?v=111';
-import {stationCueRefs,driverWordRefs,stationVoiceBank} from '../../station-voice.js?v=111';
-import {timingVoiceRefs,timingPreloadRefs,restrictionVoiceRefs} from '../../station-timing.js?v=111';
-import {STATIONS} from '../../route-data.js?v=111';
-import {createMixGains} from '../../audio-mix.js?v=111';
-import {sharedEffects} from '../../buffered-effects.js?v=111';
-import {departureFilesFor,STATION_DEPARTURE_AUDIO} from '../../train-operations.js?v=111';
-import {runPitch} from './run-pitch.js?v=111';
-import {HeldHorn} from './held-horn.js?v=111';
+import {extrapolatedPitch,SlipPitchController} from '../../motor-pitch.js?v=118';
+import {AmbientAudio} from '../../ambient-audio.js?v=118';
+import {TrainPassbyAudio} from '../../train-passby-audio.js?v=118';
+import {stationCueRefs,driverWordRefs,stationVoiceBank} from '../../station-voice.js?v=118';
+import {timingVoiceRefs,timingPreloadRefs,restrictionVoiceRefs} from '../../station-timing.js?v=118';
+import {STATIONS} from '../../route-data.js?v=118';
+import {createMixGains} from '../../audio-mix.js?v=118';
+import {sharedEffects} from '../../buffered-effects.js?v=118';
+import {departureFilesFor,STATION_DEPARTURE_AUDIO} from '../../train-operations.js?v=118';
+import {runPitch} from './run-pitch.js?v=118';
+import {HeldHorn} from './held-horn.js?v=118';
 // Browser port of the supplied RTM RSM2 sound_701.js. Speed input is km/h.
 export function interpolate(points, speed) {
   if (points.length === 1) return 0;
@@ -63,7 +63,7 @@ export class SoundEngine {
       };
       this.nodes=await Promise.all(this.config.tracks.filter(track=>/motor/i.test(track.fileName)).map(async track=>({track,buffer:await load(track.url),gain:null,source:null})));
       this.effects={};
-      const bveResponse=await fetch(new URL('./bve/config.json?v=32',import.meta.url));if(!bveResponse.ok)throw Error('BVE音源設定を読み込めません');
+      const bveResponse=await fetch(new URL('./bve/config.json?v=118',import.meta.url));if(!bveResponse.ok)throw Error('BVE音源設定を読み込めません');
       this.bveConfig=await bveResponse.json();
       await Promise.all(Object.entries(this.bveConfig.files).map(async([key,path])=>{this.effects[key]=await load('bve/'+path);}));
       this.departureBuffers=new Map();

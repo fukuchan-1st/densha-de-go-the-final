@@ -1,4 +1,4 @@
-import * as T from './assets/vendor/three.module.js?v=117';
+import * as T from './assets/vendor/three.module.js?v=118';
 export const OUTER_CAMERA_OFFSETS=[[-30,27,12],[30,27,12],[-24,20,20],[24,20,20],[-45,30,28],[45,30,28],[-14,12,7],[14,12,7],[-6,7,5],[6,7,5],[0,7,3.5],[0,4,3]];
 export function chooseOuterCamera(candidates,isClear,preferred=0){const order=[preferred,...candidates.map((_,i)=>i).filter(i=>i!==preferred)];for(const i of order)if(isClear(candidates[i]))return i;return candidates.length-1;}
 export function tunnelCameraWeight(s,tunnels){

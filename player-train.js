@@ -1,11 +1,11 @@
-import {stationDoorMode} from './door-policy.js?v=117';
-import {panoramaAtFront} from './train-formation.js?v=117';
-import {prepareCarDoors,applyCarDoors,platformDoorSide} from './train-doors.js?v=117';
-import {setRailPose} from './rail-pose.js?v=117';
-import {RailfanCamera} from './railfan-camera.js?v=117';
-import {OuterCamera} from './outer-camera.js?v=117';
-import * as T from './assets/vendor/three.module.js?v=117';
-import {ImportedTrafficModels} from './opposing-models.js?v=117';
+import {stationDoorMode} from './door-policy.js?v=118';
+import {panoramaAtFront} from './train-formation.js?v=118';
+import {prepareCarDoors,applyCarDoors,platformDoorSide} from './train-doors.js?v=118';
+import {setRailPose} from './rail-pose.js?v=118';
+import {RailfanCamera} from './railfan-camera.js?v=118';
+import {OuterCamera} from './outer-camera.js?v=118';
+import * as T from './assets/vendor/three.module.js?v=118';
+import {ImportedTrafficModels} from './opposing-models.js?v=118';
 const COLORS={'207':'#3879ba','681':'#215b9c',e127:'#5dad9e','223-1000':'#b5a176'};
 export class PlayerTrain{
  constructor(world,id,count=2){this.world=world;this.id=id;this.count=count;this.carLength=world.route.carLengthM??20;this.models=new ImportedTrafficModels();this.group=new T.Group();this.group.visible=false;world.scene.add(this.group);this.cars=[];this.own=[];this.cameraController=new OuterCamera(world,this.group,s=>this.frame(s));this.railfanController=new RailfanCamera(world,this.group,s=>this.frame(s));this.ready=this.load();}
