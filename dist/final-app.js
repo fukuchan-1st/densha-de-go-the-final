@@ -12,7 +12,7 @@ import {WEATHER,weatherType,updateWeatherStatus} from './weather.js?v=118';
 import {gradeLabel} from './tunnel-effects.js?v=118';
 import {updateDoorVisual} from './train-doors.js?v=118';
 import {scheduledBoardingDelay} from './published-schedules.js?v=118';
-import {loadRoadAsset} from './road-assets.js?v=118';import {OnboardBroadcast} from './onboard-broadcast.js?v=118';
+import {loadRoadAsset} from './road-assets.js?v=118';import {OnboardBroadcast} from './onboard-broadcast.js?v=121';
 import {CrossingAudio} from './crossings.js?v=119';
 import {VIEW_LABELS,normalizedView,replayViewMode} from './view-modes.js?v=118';
 import {yaganPlanningSpec,yaganBoardingReady,yaganBoardingDelay} from './yagan-timetable.js?v=118';
